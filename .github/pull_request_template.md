@@ -1,9 +1,9 @@
 # Pull Request
 
 <!-- Links -->
-[code-quality-link]: https://refarch.oss.muenchen.de/templates/develop#code-quality
-[refarch-create-issue-link]: https://github.com/it-at-m/refarch/issues/new/choose
-[refarch-create-documentation-issue-link]: https://github.com/it-at-m/refarch/issues/new?template=4-documentation-change.yml
+[code-quality-link]: https://erzwingungshaft.oss.muenchen.de/templates/develop#code-quality
+[erzwingungshaft-create-issue-link]: https://github.com/it-at-m/erzwingungshaft/issues/new/choose
+[erzwingungshaft-create-documentation-issue-link]: https://github.com/it-at-m/erzwingungshaft/issues/new?template=4-documentation-change.yml
 
 ## Changes
 
@@ -23,8 +23,8 @@ Issue: #XXX
 - [ ] ~~I have read the Contribution Guidelines (TBD)~~
 - [ ] Met all acceptance criteria of the issue
 - [ ] Added meaningful PR title and list of changes in the description
-- [ ] Opened documentation issue in [refarch repository][refarch-create-documentation-issue-link] (if applicable)
-- [ ] Opened follow-up issue in [refarch repository][refarch-create-issue-link] (if applicable)
+- [ ] Opened documentation issue in [erzwingungshaft repository][erzwingungshaft-create-documentation-issue-link] (if applicable)
+- [ ] Opened follow-up issue in [erzwingungshaft repository][erzwingungshaft-create-issue-link] (if applicable)
 
 ### Code
 
