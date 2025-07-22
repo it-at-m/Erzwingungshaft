@@ -25,7 +25,7 @@
 [made-with-love-shield]: https://img.shields.io/badge/made%20with%20%E2%9D%A4%20by-it%40M-yellow?style=for-the-badge
 [license-shield]: https://img.shields.io/github/license/it-at-m/refarch-templates?style=for-the-badge
 
-# Erzwingungshaft
+# RefArch Templates
 
 [![Documentation][documentation-shield]][documentation]
 [![New issue][new-issue-shield]][new-issue]

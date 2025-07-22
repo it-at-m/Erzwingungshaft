@@ -26,6 +26,13 @@ spring:
           audiences:
             - ${sso.client}
 
+# Enable swagger-ui
+springdoc:
+  swagger-ui:
+    enabled: true
+  api-docs:
+    enabled: true
+
 # Define the local keycloak configuration here
 # Deduplication-only property
 sso:
@@ -33,6 +40,8 @@ sso:
   realm: local_realm
   client: local
 
-security:
-  user-info-uri: ${sso.url}/auth/realms/${sso.realm}/protocol/openid-connect/userinfo
-  logging-mode: all
+refarch:
+  security:
+    client-id: ${sso.client}
+    user-info-uri: ${sso.url}/auth/realms/${sso.realm}/protocol/openid-connect/userinfo
+    logging-mode: all
