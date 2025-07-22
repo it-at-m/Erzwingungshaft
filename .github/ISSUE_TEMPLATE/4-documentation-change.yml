@@ -22,7 +22,6 @@ body:
         - erzwingungshaft-frontend
         - erzwingungshaft-backend
         - erzwingungshaft-eai
-        - erzwingungshaft-webcomponent
         - Other
     validations:
       required: true

@@ -21,6 +21,3 @@
 "Template: Frontend":
   - changed-files:
       - any-glob-to-any-file: ['erzwingungshaft-frontend/**']
-"Template: Webcomponent":
-  - changed-files:
-      - any-glob-to-any-file: ['erzwingungshaft-webcomponent/**']

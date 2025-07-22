@@ -59,7 +59,6 @@ body:
         - erzwingungshaft-frontend
         - erzwingungshaft-backend
         - erzwingungshaft-eai
-        - erzwingungshaft-webcomponent
     validations:
       required: false
   - type: input
