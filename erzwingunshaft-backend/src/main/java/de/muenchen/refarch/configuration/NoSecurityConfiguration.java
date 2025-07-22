@@ -1,4 +1,4 @@
-package de.muenchen.refarch.configuration;
+package de.muenchen.erzwingungshaft.configuration;
 
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;

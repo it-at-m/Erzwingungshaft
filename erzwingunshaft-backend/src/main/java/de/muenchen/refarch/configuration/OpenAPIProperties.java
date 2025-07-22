@@ -1,4 +1,4 @@
-package de.muenchen.refarch.configuration;
+package de.muenchen.erzwingungshaft.configuration;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

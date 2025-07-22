@@ -1,4 +1,4 @@
-package de.muenchen.refarch.configuration;
+package de.muenchen.erzwingungshaft.configuration;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfiguration;

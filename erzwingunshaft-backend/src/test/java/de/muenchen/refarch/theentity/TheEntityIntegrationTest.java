@@ -1,7 +1,7 @@
-package de.muenchen.refarch.theentity;
+package de.muenchen.erzwingungshaft.theentity;
 
-import static de.muenchen.refarch.TestConstants.SPRING_NO_SECURITY_PROFILE;
-import static de.muenchen.refarch.TestConstants.SPRING_TEST_PROFILE;
+import static de.muenchen.erzwingungshaft.TestConstants.SPRING_NO_SECURITY_PROFILE;
+import static de.muenchen.erzwingungshaft.TestConstants.SPRING_TEST_PROFILE;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -14,8 +14,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.muenchen.refarch.TestConstants;
-import de.muenchen.refarch.theentity.dto.TheEntityRequestDTO;
+import de.muenchen.erzwingungshaft.TestConstants;
+import de.muenchen.erzwingungshaft.theentity.dto.TheEntityRequestDTO;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

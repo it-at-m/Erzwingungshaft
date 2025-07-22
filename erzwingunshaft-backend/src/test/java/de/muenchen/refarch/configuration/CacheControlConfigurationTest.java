@@ -1,12 +1,12 @@
-package de.muenchen.refarch.configuration;
+package de.muenchen.erzwingungshaft.configuration;
 
-import static de.muenchen.refarch.TestConstants.SPRING_NO_SECURITY_PROFILE;
-import static de.muenchen.refarch.TestConstants.SPRING_TEST_PROFILE;
+import static de.muenchen.erzwingungshaft.TestConstants.SPRING_NO_SECURITY_PROFILE;
+import static de.muenchen.erzwingungshaft.TestConstants.SPRING_TEST_PROFILE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import de.muenchen.refarch.MicroServiceApplication;
-import de.muenchen.refarch.TestConstants;
+import de.muenchen.erzwingungshaft.MicroServiceApplication;
+import de.muenchen.erzwingungshaft.TestConstants;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

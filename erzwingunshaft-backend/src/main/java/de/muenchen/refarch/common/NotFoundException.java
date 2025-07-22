@@ -1,4 +1,4 @@
-package de.muenchen.refarch.common;
+package de.muenchen.erzwingungshaft.common;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;

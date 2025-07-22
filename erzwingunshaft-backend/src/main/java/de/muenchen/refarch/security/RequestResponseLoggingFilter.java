@@ -1,6 +1,6 @@
-package de.muenchen.refarch.security;
+package de.muenchen.erzwingungshaft.security;
 
-import de.muenchen.refarch.configuration.SecurityProperties;
+import de.muenchen.erzwingungshaft.configuration.SecurityProperties;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;

@@ -1,4 +1,4 @@
-package de.muenchen.refarch.configuration.filter.nfcconverter;
+package de.muenchen.erzwingungshaft.configuration.filter.nfcconverter;
 
 import jakarta.servlet.ReadListener;
 import jakarta.servlet.ServletInputStream;

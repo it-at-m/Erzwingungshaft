@@ -1,4 +1,4 @@
-package de.muenchen.refarch.configuration.filter.nfcconverter;
+package de.muenchen.erzwingungshaft.configuration.filter.nfcconverter;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;

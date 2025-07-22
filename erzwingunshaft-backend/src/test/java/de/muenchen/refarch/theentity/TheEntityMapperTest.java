@@ -1,11 +1,11 @@
-package de.muenchen.refarch.theentity;
+package de.muenchen.erzwingungshaft.theentity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import de.muenchen.refarch.theentity.dto.TheEntityMapper;
-import de.muenchen.refarch.theentity.dto.TheEntityRequestDTO;
-import de.muenchen.refarch.theentity.dto.TheEntityResponseDTO;
+import de.muenchen.erzwingungshaft.theentity.dto.TheEntityMapper;
+import de.muenchen.erzwingungshaft.theentity.dto.TheEntityRequestDTO;
+import de.muenchen.erzwingungshaft.theentity.dto.TheEntityResponseDTO;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Nested;

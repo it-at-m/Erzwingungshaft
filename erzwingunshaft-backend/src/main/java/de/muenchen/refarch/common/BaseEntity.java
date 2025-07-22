@@ -1,4 +1,4 @@
-package de.muenchen.refarch.common;
+package de.muenchen.erzwingungshaft.common;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;

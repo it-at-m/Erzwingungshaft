@@ -1,4 +1,4 @@
-package de.muenchen.refarch.theentity.dto;
+package de.muenchen.erzwingungshaft.theentity.dto;
 
 import java.util.UUID;
 

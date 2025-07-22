@@ -1,4 +1,4 @@
-package de.muenchen.refarch.configuration.nfcconverter;
+package de.muenchen.erzwingungshaft.configuration.nfcconverter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

@@ -1,7 +1,7 @@
-package de.muenchen.refarch.configuration.security;
+package de.muenchen.erzwingungshaft.configuration.security;
 
-import de.muenchen.refarch.configuration.filter.RequestResponseLoggingFilter;
-import de.muenchen.refarch.configuration.filter.RequestResponseLoggingFilter.LoggingMode;
+import de.muenchen.erzwingungshaft.configuration.filter.RequestResponseLoggingFilter;
+import de.muenchen.erzwingungshaft.configuration.filter.RequestResponseLoggingFilter.LoggingMode;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import edu.umd.cs.findbugs.annotations.SuppressMatchType;
 import jakarta.validation.constraints.NotBlank;
@@ -17,7 +17,7 @@ import org.springframework.validation.annotation.Validated;
 /**
  * Properties class that holds configuration data relevant for security mechanisms
  */
-@ConfigurationProperties(prefix = "refarch.security")
+@ConfigurationProperties(prefix = "erzwingungshaft.security")
 @Validated
 @Profile("!no-security")
 @Data

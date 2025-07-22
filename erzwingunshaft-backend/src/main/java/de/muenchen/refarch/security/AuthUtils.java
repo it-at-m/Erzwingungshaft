@@ -1,4 +1,4 @@
-package de.muenchen.refarch.security;
+package de.muenchen.erzwingungshaft.security;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

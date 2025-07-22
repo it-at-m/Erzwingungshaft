@@ -1,4 +1,4 @@
-package de.muenchen.refarch.configuration.filter;
+package de.muenchen.erzwingungshaft.configuration.filter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

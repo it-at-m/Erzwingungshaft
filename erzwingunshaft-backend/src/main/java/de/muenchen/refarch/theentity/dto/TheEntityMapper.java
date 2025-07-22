@@ -1,6 +1,6 @@
-package de.muenchen.refarch.theentity.dto;
+package de.muenchen.erzwingungshaft.theentity.dto;
 
-import de.muenchen.refarch.theentity.TheEntity;
+import de.muenchen.erzwingungshaft.theentity.TheEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

@@ -1,6 +1,6 @@
-package de.muenchen.refarch.theentity;
+package de.muenchen.erzwingungshaft.theentity;
 
-import de.muenchen.refarch.common.BaseEntity;
+import de.muenchen.erzwingungshaft.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotNull;

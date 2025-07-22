@@ -3,8 +3,8 @@ import { withMermaid } from "vitepress-plugin-mermaid";
 
 // https://vitepress.dev/reference/site-config
 const vitepressConfig = defineConfig({
-  title: "RefArch Docs Template",
-  description: "Documentation template from the RefArch Templates",
+  title: "erzwingungshaft Docs Template",
+  description: "Documentation template from the erzwingungshaft Templates",
   head: [
     [
       "link",

@@ -1,11 +1,11 @@
-package de.muenchen.refarch.theentity;
+package de.muenchen.erzwingungshaft.theentity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import de.muenchen.refarch.common.NotFoundException;
+import de.muenchen.erzwingungshaft.common.NotFoundException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;

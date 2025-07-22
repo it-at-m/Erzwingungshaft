@@ -1,4 +1,4 @@
-package de.muenchen.refarch.theentity;
+package de.muenchen.erzwingungshaft.theentity;
 
 import java.util.UUID;
 import org.springframework.data.repository.CrudRepository;

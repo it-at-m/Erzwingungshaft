@@ -1,4 +1,4 @@
-package de.muenchen.refarch.configuration.security;
+package de.muenchen.erzwingungshaft.configuration.security;
 
 import java.util.Collection;
 import java.util.Collections;

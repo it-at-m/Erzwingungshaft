@@ -1,8 +1,8 @@
-package de.muenchen.refarch.theentity;
+package de.muenchen.erzwingungshaft.theentity;
 
-import de.muenchen.refarch.theentity.dto.TheEntityMapper;
-import de.muenchen.refarch.theentity.dto.TheEntityRequestDTO;
-import de.muenchen.refarch.theentity.dto.TheEntityResponseDTO;
+import de.muenchen.erzwingungshaft.theentity.dto.TheEntityMapper;
+import de.muenchen.erzwingungshaft.theentity.dto.TheEntityRequestDTO;
+import de.muenchen.erzwingungshaft.theentity.dto.TheEntityResponseDTO;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;

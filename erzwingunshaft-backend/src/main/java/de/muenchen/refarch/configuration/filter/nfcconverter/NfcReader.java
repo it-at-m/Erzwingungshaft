@@ -1,4 +1,4 @@
-package de.muenchen.refarch.configuration.filter.nfcconverter;
+package de.muenchen.erzwingungshaft.configuration.filter.nfcconverter;
 
 import java.io.CharArrayReader;
 import java.io.IOException;

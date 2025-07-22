@@ -40,7 +40,7 @@ sso:
   realm: local_realm
   client: local
 
-refarch:
+erzwingungshaft:
   security:
     client-id: ${sso.client}
     user-info-uri: ${sso.url}/auth/realms/${sso.realm}/protocol/openid-connect/userinfo

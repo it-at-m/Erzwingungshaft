@@ -1,6 +1,6 @@
-package de.muenchen.refarch.configuration.filter;
+package de.muenchen.erzwingungshaft.configuration.filter;
 
-import de.muenchen.refarch.configuration.filter.nfcconverter.NfcRequestFilter;
+import de.muenchen.erzwingungshaft.configuration.filter.nfcconverter.NfcRequestFilter;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
