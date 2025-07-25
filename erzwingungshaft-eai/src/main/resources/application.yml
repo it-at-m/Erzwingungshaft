@@ -2,6 +2,10 @@ spring:
   application:
     name: @project.artifactId@
 
+logging:
+  level:
+    de.muenchen.eh: DEBUG
+
 server:
   error:
     whitelabel:
@@ -57,4 +61,12 @@ camel:
       context-path: /api/*
 
 # Custom properties
-output: direct:foo
+xjustiz:
+  version: 3.6.2
+  interface:
+    document:
+      processor: direct:xjustiz-document-processor
+    file:
+      consume:
+      error:
+    eakte:

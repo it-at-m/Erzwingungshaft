@@ -73,6 +73,10 @@
         <p2.username /> <!-- must be empty, override via Maven settings.xml if needed -->
         <p2.password /> <!-- must be empty, override via Maven settings.xml if needed -->
         <p2.mirror>download.eclipse.org</p2.mirror>
+
+        <!-- xJustiz XML Generation -->
+        <xjustiz.converter>0.0.1-SNAPSHOT</xjustiz.converter>
+
     </properties>
 
     <dependencyManagement>
@@ -98,6 +102,17 @@
         <dependency>
             <groupId>org.apache.camel.springboot</groupId>
             <artifactId>camel-servlet-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-bindy-starter</artifactId>
+        </dependency>
+
+        <!-- it@m -->
+        <dependency>
+            <groupId>de.muenchen.oss</groupId>
+            <artifactId>xjustiz-starter</artifactId>
+            <version>${xjustiz.converter}</version>
         </dependency>
 
         <!--  Spring-Boot-Actuator (https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.enabling) -->

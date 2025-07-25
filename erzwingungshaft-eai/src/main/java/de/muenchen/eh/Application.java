@@ -1,4 +1,4 @@
-package de.muenchen.erzwingungshaft;
+package de.muenchen.eh;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

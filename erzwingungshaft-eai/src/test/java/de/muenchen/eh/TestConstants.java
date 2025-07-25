@@ -1,4 +1,4 @@
-package de.muenchen.erzwingungshaft;
+package de.muenchen.eh;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
