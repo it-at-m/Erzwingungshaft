@@ -22,29 +22,29 @@ import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
-public class BeteiligterContentContainerFactory {
+public class EhCaseContentContainerFactory {
 
-    private final Beteiligter beteiligter;
+    private final EhCase ehCase;
 
     public ContentContainer supplyContentContainer() {
 
         return new ContentContainer(supplyFachdatenContent(), supplyGrunddatenContent());
     }
 
-    private FachdatenContent supplyFachdatenContent() {
+    private FachdatenContent supplyFachdatenContent()  {
 
         FachdatenContent fachdatenContent = new FachdatenContent();
 
-        var startDate = getLocalDate(getBeteiligter().getEhtatdatv());
-        fachdatenContent.setAnfangsDatumUhrzeit(LocalDateTime.of(startDate.getYear(), startDate.getMonth(), startDate.getDayOfMonth(), Integer.valueOf(getBeteiligter().getEhtatstdv()), Integer.valueOf(getBeteiligter().getEhtatminv())));
-        LocalDate endDate = getBeteiligter().getEhtatdatb().isBlank() ? startDate : getLocalDate(getBeteiligter().getEhtatdatb());
-        fachdatenContent.setEndeDatumUhrzeit(LocalDateTime.of(endDate.getYear(), endDate.getMonth(), endDate.getDayOfMonth(), Integer.valueOf(getBeteiligter().getEhtatstdb()), Integer.valueOf(getBeteiligter().getEhtatminb())));
+        var startDate = getLocalDate(getEhCase().getEhtatdatv());
+        fachdatenContent.setAnfangsDatumUhrzeit(LocalDateTime.of(startDate.getYear(), startDate.getMonth(), startDate.getDayOfMonth(), Integer.parseInt(getEhCase().getEhtatstdv()), Integer.parseInt(getEhCase().getEhtatminv())));
+        LocalDate endDate = getEhCase().getEhtatdatb().isBlank() ? startDate : getLocalDate(getEhCase().getEhtatdatb());
+        fachdatenContent.setEndeDatumUhrzeit(LocalDateTime.of(endDate.getYear(), endDate.getMonth(), endDate.getDayOfMonth(), Integer.parseInt(getEhCase().getEhtatstdb()), Integer.parseInt(getEhCase().getEhtatminb())));
 
         Tatort tatortContent = new Tatort();
-        tatortContent.getStrasseHausnummer().add(new StrasseHausnummer(getBeteiligter().getEhtatstr1(), getBeteiligter().getEhtathnr1()));
-        if (!getBeteiligter().getEhtatstr2().isBlank())
-            tatortContent.getStrasseHausnummer().add(new StrasseHausnummer(getBeteiligter().getEhtatstr2(), getBeteiligter().getEhtathnr2()));
-        tatortContent.setOrt(getBeteiligter().getEhtatort());
+        tatortContent.getStrasseHausnummer().add(new StrasseHausnummer(getEhCase().getEhtatstr1(), getEhCase().getEhtathnr1()));
+        if (!getEhCase().getEhtatstr2().isBlank())
+            tatortContent.getStrasseHausnummer().add(new StrasseHausnummer(getEhCase().getEhtatstr2(), getEhCase().getEhtathnr2()));
+        tatortContent.setOrt(getEhCase().getEhtatort());
 
         //      tatortContent.setOrtsbeschreibung(getEhtat..);
 
@@ -70,18 +70,18 @@ public class BeteiligterContentContainerFactory {
     private void setPersonalData(Beteiligung ehBetroffener) {
 
         var person = ehBetroffener.generateBeteiligter().generateNatuerlichePerson();
-        person.setGeschlecht(supplyGeschlecht(getBeteiligter().getEhp1geschl()));
+        person.setGeschlecht(supplyGeschlecht(getEhCase().getEhp1geschl()));
 
         var name = person.generateVollerName();
-        name.setVorname(getBeteiligter().getEhp1vorname());
-        name.setNachname(getBeteiligter().getEhp1name());
-        name.setTitel(getBeteiligter().getEhp1akad());
-        name.setNamensvorsatz(getBeteiligter().getEhp1nambest());
-        name.setGeburtsname(getBeteiligter().getEhp1gebname());
+        name.setVorname(getEhCase().getEhp1vorname());
+        name.setNachname(getEhCase().getEhp1name());
+        name.setTitel(getEhCase().getEhp1akad());
+        name.setNamensvorsatz(getEhCase().getEhp1nambest());
+        name.setGeburtsname(getEhCase().getEhp1gebname());
 
         var geburt = person.generateGeburt();
-        geburt.setGeburtsdatum(dateFormatConverter(getBeteiligter().getEhp1gebdat()));
-        geburt.setGeburtsort(getBeteiligter().getEhp1gebort());
+        geburt.setGeburtsdatum(dateFormatConverter(getEhCase().getEhp1gebdat()));
+        geburt.setGeburtsort(getEhCase().getEhp1gebort());
 
         person.addAnschrift(setAddress());
     }
@@ -90,13 +90,13 @@ public class BeteiligterContentContainerFactory {
 
         var anschrift = new Anschrift();
 
-        anschrift.setAnschriftenzusatz(getBeteiligter().getEhp1zusatz());
-        anschrift.setStrasse(getBeteiligter().getEhp1strasse());
-        anschrift.setHausnummer(getBeteiligter().getEhp1hausnr());
-        anschrift.setPostfachnummer(getBeteiligter().getEhp1postf());
-        anschrift.setPlz(getBeteiligter().getEhp1plz());
-        anschrift.setOrt(getBeteiligter().getEhp1ort());
-        anschrift.setWohnungsgeber(getBeteiligter().getEhp1whgeber());
+        anschrift.setAnschriftenzusatz(getEhCase().getEhp1zusatz());
+        anschrift.setStrasse(getEhCase().getEhp1strasse());
+        anschrift.setHausnummer(getEhCase().getEhp1hausnr());
+        anschrift.setPostfachnummer(getEhCase().getEhp1postf());
+        anschrift.setPlz(getEhCase().getEhp1plz());
+        anschrift.setOrt(getEhCase().getEhp1ort());
+        anschrift.setWohnungsgeber(getEhCase().getEhp1whgeber());
         anschrift.setStaat(XoevCodeGDSStaatenTyp3.DEUTSCHLAND.getDescriptor());
 
         return anschrift;

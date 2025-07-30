@@ -68,5 +68,6 @@ xjustiz:
       processor: direct:xjustiz-document-processor
     file:
       consume:
+      line-break: \n
       error:
     eakte:
