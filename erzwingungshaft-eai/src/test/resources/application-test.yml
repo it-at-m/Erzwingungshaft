@@ -1,3 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: admin
+    password: admin
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
 management:
   endpoints:
     access:
@@ -20,7 +30,7 @@ xjustiz:
     document:
       processor: direct:xjustiz-document-processor
     file:
-      consume: file:src/test/resources/?noop=true&include=Muster_EH-mit-Titel.*
+      consume: file:src/test/resources/?noop=true&include=D.KVU.*&charset=iso-8859-1
       error: mock:error
     eakte: mock:xjustizXml
   xjustiz0500straf:

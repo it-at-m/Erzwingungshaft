@@ -19,22 +19,32 @@ public class EhRouteBuilder extends RouteBuilder {
     @Override
     public void configure() {
 
-        onException(Exception.class).handled(true).log(LoggingLevel.ERROR, "${exception}");
+        onException(Exception.class)
+                .handled(true)
+                .log(LoggingLevel.ERROR, "${exception}")
+                .bean("ehService", "logError")
+                .to("{{xjustiz.interface.file.error}}");;
 
         onException(IllegalArgumentException.class)
                 .handled(true)
                 .log(LoggingLevel.ERROR, "${exception}")
+                 // @TODO Add attribute name to message.
+                .bean("ehService", "logError")
                 .to("{{xjustiz.interface.file.error}}");
 
         from("{{xjustiz.interface.file.consume")
                 .routeId("kvue-eh-processing")
                 .split(body().tokenize(lineBreak))
                 .to("log:de.muenchen.eh?level=DEBUG")
+                .bean("ehService", "logEntry")
                 .unmarshal().bindy(BindyType.Fixed, EhCase.class)
                 .to("log:de.muenchen.eh?level=DEBUG")
+                .bean("ehService", "logUnmarshall")
                 .transform().simple("${body.supplyXJustizRequestContent()}")
+                .bean("ehService", "logContent")
                 .to("{{xjustiz.interface.document.processor}}")
                 .to("log:de.muenchen.eh?level=DEBUG")
+                .bean("ehService", "logXml")
                 .to("{{xjustiz.interface.eakte}}");
 
     }

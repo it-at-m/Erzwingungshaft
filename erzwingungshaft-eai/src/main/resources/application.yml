@@ -1,6 +1,18 @@
 spring:
   application:
     name: @project.artifactId@
+  datasource:
+    url:
+    username:
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+  flyway:
+    enabled: true
+    baseline-on-migrate: false
+    schemas: eh_log
 
 logging:
   level:
