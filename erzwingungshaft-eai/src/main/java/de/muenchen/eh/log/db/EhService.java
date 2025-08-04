@@ -2,6 +2,8 @@ package de.muenchen.eh.log.db;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.muenchen.eh.common.BindyIllegalArgumentMessageEnricher;
+import de.muenchen.eh.common.XmlUnmarshaller;
 import de.muenchen.eh.kvue.EhCase;
 import de.muenchen.eh.log.Constants;
 import de.muenchen.eh.log.StatusProcessingType;
@@ -10,7 +12,7 @@ import de.muenchen.eh.log.db.entity.*;
 import de.muenchen.eh.log.db.repository.*;
 import de.muenchen.xjustiz.generated.NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010;
 import de.muenchen.xjustiz.xjustiz0500straf.content.ContentContainer;
-import jakarta.xml.bind.JAXBContext;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.camel.Exchange;
@@ -18,7 +20,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.stereotype.Service;
 
-import java.io.StringReader;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -94,8 +95,24 @@ public class EhService {
 
         try {
             LogEntity logEntity = (LogEntity) EntityFactory.configureEntity(new LogEntity(), exchange);
-            logEntity.setMessage_typ(MessageType.ERROR);
+            logEntity.setMessageTyp(MessageType.ERROR);
             logEntity.setMessage(exchange.getException() != null ? exchange.getException().getMessage() : ((Exception) exchange.getAllProperties().get(Exchange.EXCEPTION_CAUGHT)).getMessage());
+            var stack = exchange.getException() != null ? exchange.getException().getStackTrace() : ((Exception) exchange.getAllProperties().get(Exchange.EXCEPTION_CAUGHT)).getStackTrace();
+            logEntity.setComment(stack.length > 0 ? Arrays.toString(stack) : "No stack trace available.");
+            logRepository.save(logEntity);
+        } catch (Exception e) {
+            exchange.setException(e);
+        }
+
+    }
+
+    public void logIllegalArgumentException(final Exchange exchange) {
+
+        try {
+            LogEntity logEntity = (LogEntity) EntityFactory.configureEntity(new LogEntity(), exchange);
+            logEntity.setMessageTyp(MessageType.ERROR);
+            var message = exchange.getException() != null ? exchange.getException().getMessage() : ((Exception) exchange.getAllProperties().get(Exchange.EXCEPTION_CAUGHT)).getMessage();
+            logEntity.setMessage(BindyIllegalArgumentMessageEnricher.enrich(message, EhCase.class));
             var stack = exchange.getException() != null ? exchange.getException().getStackTrace() : ((Exception) exchange.getAllProperties().get(Exchange.EXCEPTION_CAUGHT)).getStackTrace();
             logEntity.setComment(stack.length > 0 ? Arrays.toString(stack) : "No stack trace available.");
             logRepository.save(logEntity);
@@ -116,7 +133,7 @@ public class EhService {
             writeInfoLogMessage(StatusProcessingType.XJUSTIZ_MESSAGE_CREATED, exchange);
 
             var entryEntity = EntityFactory.entryEntityFacade(exchange);
-            NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010 justiz0500010 = parseXML(xml);
+            NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010 justiz0500010 = XmlUnmarshaller.unmarshalNachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010(xml);
             entryEntity.setEhUuid(UUID.fromString(justiz0500010.getNachrichtenkopf().getAbsender().getEigeneNachrichtenID()));
             entryRepository.save(entryEntity);
             writeInfoLogMessage(StatusProcessingType.EH_UUID_UPDATED, exchange);
@@ -129,18 +146,13 @@ public class EhService {
     private void writeInfoLogMessage(StatusProcessingType processingType, Exchange exchange) {
         try {
             LogEntity logEntity = (LogEntity) EntityFactory.configureEntity(new LogEntity(), exchange);
-            logEntity.setMessage_typ(MessageType.INFO);
+            logEntity.setMessageTyp(MessageType.INFO);
             logEntity.setMessage(processingType.name());
             logEntity.setComment(processingType.getDescriptor());
             logRepository.save(logEntity);
         } catch (Exception e) {
             exchange.setException(e);
         }
-    }
-
-    protected NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010 parseXML(String xml) throws Exception {
-        JAXBContext context = JAXBContext.newInstance(NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010.class);
-        return (NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010) context.createUnmarshaller().unmarshal(new StringReader(xml));
     }
 
 }

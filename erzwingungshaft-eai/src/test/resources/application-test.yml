@@ -35,10 +35,20 @@ xjustiz:
     eakte: mock:xjustizXml
   xjustiz0500straf:
     nachrichtenkopf:
-      auswahl-absender-sonstige: ABC 1.234
+      auswahl-absender-sonstige: Stadt München
       auswahl-herstellerinformation-produkt: myProdukt
       auswahl-herstellerinformation-produkt-name: myProduktname
       auswahl-herstellerinformation-produkt-version: myProduktversion
+    grunddaten:
+      verfahrensdaten:
+        beteiligung:
+          organisation:
+            bezeichnung-aktuell: Landeshauptstadt München Referat
+            bezeichnung-anschrift-strasse: Straße
+            bezeichnung-anschrift-hausnummer: 1
+            bezeichnung-anschrift-plz: 8000
+            bezeichnung-anschrift-ort: München
+            bezeichnung-bankverbindung: DE99 9999 9999 9999 9999 00
   codelisten:
     gds-rollenbezeichnung:
       current-version: 3.5
@@ -47,6 +57,7 @@ xjustiz:
         gds-rollenbezeichnung-3-5:
           betroffener: '040'
           antragsteller: '016'
+          bussgeldempfaenger: '046'
     gds-gerichte:
       current-version: 3.6
       kennung: urn:xoev-de:xjustiz:codeliste:gds.gerichte

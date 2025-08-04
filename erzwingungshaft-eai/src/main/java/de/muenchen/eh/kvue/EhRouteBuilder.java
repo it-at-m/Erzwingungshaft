@@ -28,8 +28,7 @@ public class EhRouteBuilder extends RouteBuilder {
         onException(IllegalArgumentException.class)
                 .handled(true)
                 .log(LoggingLevel.ERROR, "${exception}")
-                 // @TODO Add attribute name to message.
-                .bean("ehService", "logError")
+                .bean("ehService", "logIllegalArgumentException")
                 .to("{{xjustiz.interface.file.error}}");
 
         from("{{xjustiz.interface.file.consume")

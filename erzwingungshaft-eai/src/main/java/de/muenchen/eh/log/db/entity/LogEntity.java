@@ -19,7 +19,7 @@ public class LogEntity extends BaseEntity {
     @NotEmpty
     @Column(name = "message_typ")
     @Enumerated(EnumType.STRING)
-    private MessageType message_typ;
+    private MessageType messageTyp;
 
     @NotEmpty
     private String message;
