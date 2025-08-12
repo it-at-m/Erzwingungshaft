@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.7</version> <!-- must match the chosen Camel version in properties -> camel-spring-boot-dependencies.version, see e.g. https://central.sonatype.com/artifact/org.apache.camel.springboot/camel-spring-boot/dependencies and search for 'spring-boot-starter' -->
+        <version>3.5.3</version> <!-- must match the chosen Camel version in properties -> camel-spring-boot-dependencies.version, see e.g. https://central.sonatype.com/artifact/org.apache.camel.springboot/camel-spring-boot/dependencies and search for 'spring-boot-starter' -->
         <relativePath />
     </parent>
 
@@ -46,7 +46,7 @@
         <maven.compiler.release>${java.version}</maven.compiler.release>
 
         <!-- Core Frameworks -->
-        <camel-spring-boot-dependencies.version>4.10.6</camel-spring-boot-dependencies.version>
+        <camel-spring-boot-dependencies.version>4.11.0</camel-spring-boot-dependencies.version>
         <cxf.version>4.1.1</cxf.version>
         <cxf-xjc.version>4.1.0</cxf-xjc.version>
 
@@ -70,6 +70,7 @@
 
         <!-- Utility -->
         <refarch-tools.version>1.2.0</refarch-tools.version>
+        <mapstruct.version>1.6.3</mapstruct.version>
 
         <!-- Spotless P2 Mirror configuration (e.g. required when using company internal registry -->
         <p2.username /> <!-- must be empty, override via Maven settings.xml if needed -->
@@ -97,10 +98,22 @@
             <groupId>org.apache.camel.springboot</groupId>
             <artifactId>camel-spring-boot-starter</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.apache.camel.springboot</groupId>
             <artifactId>camel-servlet-starter</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-endpointdsl-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-file-starter</artifactId>
+        </dependency>
+
 
         <!--  Spring-Boot-Actuator (https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.enabling) -->
         <dependency>
@@ -158,6 +171,11 @@
             <groupId>com.github.spotbugs</groupId>
             <artifactId>spotbugs-annotations</artifactId>
             <version>${spotbugs-annotations.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${mapstruct.version}</version>
         </dependency>
 
         <!-- Apache CXF für beBPo XTA2 -->
