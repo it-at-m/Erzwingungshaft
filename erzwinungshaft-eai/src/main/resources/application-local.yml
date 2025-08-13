@@ -1,2 +1,21 @@
 server:
   port: 8085
+
+bebpo:
+  xta:
+    management-port-uri: https://my-xta-server.de/MB_XTA-WS/XTA210managementPort.svc
+    msg-boxport-uri: https://my-xta-server.de/MB_XTA-WS/XTA210msgBoxPort.svc
+    send-port-uri: https://my-xta-server.de/MB_XTA-WS/XTA210sendPort.svc
+    client-cert-keystore:
+      url: classpath:cert/client-keystore.p12
+      password: changeme
+      type: PKCS12
+    trust-store:
+      url: classpath:cert/truststore.jks
+      password: changeme
+      type: JKS
+    client-identifiers:
+      - category: Antragsempfänger
+        value: gae:environment@my-xta-server.de
+        name: Name
+
