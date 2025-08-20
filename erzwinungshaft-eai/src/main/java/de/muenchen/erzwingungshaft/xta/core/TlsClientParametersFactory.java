@@ -11,19 +11,40 @@ import org.apache.cxf.transport.https.httpclient.DefaultHostnameVerifier;
 import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
 import org.apache.hc.client5.http.ssl.TrustAllStrategy;
 import org.apache.hc.core5.ssl.SSLContextBuilder;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
 import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.security.*;
 import java.security.cert.CertificateException;
 
-@Component()
+@Service
 @RequiredArgsConstructor
 @Slf4j
 public class TlsClientParametersFactory {
 
     private final XtaClientConfig config;
 
+    public TLSClientParameters create() throws XtaClientInitializationException {
+        log.debug("Creating TLS client parameters using config");
+
+        try {
+            TLSClientParameters tlsClientParameters = new TLSClientParameters();
+
+            SSLContext sslContext = buildSslContext();
+            tlsClientParameters.setSSLSocketFactory(sslContext.getSocketFactory());
+
+            var hostnameVerifier = (config.isTrustAll())
+                    ? new DefaultHostnameVerifier()
+                    : new NoopHostnameVerifier();
+            tlsClientParameters.setHostnameVerifier(hostnameVerifier);
+
+            return tlsClientParameters;
+        } catch (XtaClientInitializationException e) {
+            throw new XtaClientInitializationException("TLS configuration failed: " + e.getMessage(), e);
+        }
+    }
 
     private SSLContextBuilder createSslContextBuilder() {
         return SSLContextBuilder.create().setProtocol(config.getTlsProtocol());
@@ -33,7 +54,7 @@ public class TlsClientParametersFactory {
         SSLContextBuilder sslContextBuilder = createSslContextBuilder();
 
         try {
-            if (config.getTrustStore() != null) {
+            if (config.isTrustAll()) {
                 sslContextBuilder.loadTrustMaterial(
                         config.getTrustStore().url(),
                         config.getTrustStore().storePassword()

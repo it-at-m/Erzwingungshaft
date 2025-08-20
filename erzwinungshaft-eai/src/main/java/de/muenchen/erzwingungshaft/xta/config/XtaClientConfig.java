@@ -9,8 +9,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.annotation.Validated;
 
 import java.net.URL;
@@ -20,11 +18,9 @@ import java.util.function.Predicate;
 import static java.util.Collections.emptyList;
 
 @Getter
-@Configuration
-@EnableConfigurationProperties(XtaClientConfig.class)
 @Validated
-@ConfigurationProperties(prefix = "bebpo.xta")
 @Setter
+@ConfigurationProperties(prefix = "bebpo.xta")
 public class XtaClientConfig {
 
     /**
@@ -59,6 +55,10 @@ public class XtaClientConfig {
      */
     @Valid
     private final KeyStore trustStore = null;
+
+    public boolean isTrustAll()  {
+        return trustStore == null;
+    }
 
     /**
      * Client-Identifikatoren zum Abruf von Nachrichten.
