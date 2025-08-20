@@ -70,7 +70,7 @@ public class XtaClientConfig {
      * Optionaler Filter für Nachrichten vor dem Abruf.
      * Wenn null, werden alle Nachrichten geholt.
      */
-    private final Predicate<XtaMessageMetaData> isMessageSupported = null;
+    private final Predicate<XtaMessageMetaData> messageMetaDataFilter = null;
 
     /**
      * Anzahl der Metadaten-Elemente pro Abruf.
@@ -85,14 +85,14 @@ public class XtaClientConfig {
     private final boolean schemaValidation = true;
 
     /**
-     * Ob SOAP-Requests geloggt werden.
+     * Soap spezifische Einstellungen - alle mit Defaults vorbelegt.
      */
     private final boolean logSoapRequests = false;
-
-    /**
-     * Ob SOAP-Responses geloggt werden.
-     */
     private final boolean logSoapResponses = false;
+    private final long connectionTimeout = 300000L;
+    private final long receiveTimeout = 300000L;
+    private final long connectionRequestTimeout = 300000L;
+    private final String tlsProtocol = "TLSv1.2";
 
     /**
      * Konfiguration für einen Keystore (Client-Zertifikat oder Truststore).
@@ -100,14 +100,23 @@ public class XtaClientConfig {
     public record KeyStore(
             @NotNull URL url,
             @NotBlank String type,
-            @NotNull char[] password
+            @NotNull char[] storePassword,
+            char[] keyPassword,
+            String keyAlias
+
     ) {
+
+        public char[] effectiveKeyPassword() {
+            return (keyPassword == null) ? storePassword : keyPassword;
+        }
+
         @Override
         public String toString() {
             return "KeyStore{" +
-                    "password=" + (password.length == 0 ? "EMPTY" : "********") +
-                    ", url=" + url +
+                    "url=" + url +
                     ", type='" + type + '\'' +
+                    ", storePassword=" + (storePassword.length == 0 ? "EMPTY" : "********")  +
+                    ", keyPassword=" + (keyPassword == null ? "STORE_PASSWORD" : "********")  +
                     '}';
         }
     }
