@@ -4,19 +4,16 @@ import de.muenchen.erzwingungshaft.xta.dto.XtaMessage;
 import de.muenchen.erzwingungshaft.xta.mapper.RequestMapper;
 import genv3.de.xoev.transport.xta.x211.*;
 import genv3.eu.osci.ws.x2008.x05.transport.X509TokenContainerType;
-import genv3.eu.osci.ws.x2014.x10.transport.MessageMetaData;
 import genv3.eu.osci.ws.x2014.x10.transport.PartyType;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.apache.cxf.ws.addressing.AttributedURIType;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @Getter
 @RequiredArgsConstructor
 public class XtaServiceWrapper {
 
     private final RequestMapper requestMapper;
-    private final XtaPorts xtaPorts;
+    private final XtaServicePorts xtaServicePorts;
 
     /**
      * Versendet eine Nachricht über die Operation {@code sendMessage} gemäß Spezifikation XTA_2_Version_3.1.1, Abschnitt 5.4.2.2.2.
@@ -64,7 +61,7 @@ public class XtaServiceWrapper {
      * @throws ParameterIsNotValidException wenn einer der übergebenen Parameter ungültig ist
      */
     public void sendMessage(XtaMessage xtaMessage, X509TokenContainerType x509TokenContainerType) throws SyncAsyncException, XTAWSTechnicalProblemException, MessageVirusDetectionException, MessageSchemaViolationException, PermissionDeniedException, ParameterIsNotValidException {
-        xtaPorts.sendPortType().sendMessage(
+        xtaServicePorts.sendPortType().sendMessage(
                         requestMapper.mapXtaMessageToGenericContentContainer(xtaMessage),
                         requestMapper.mapXtaMessageMetaDataToMessageMetaData(xtaMessage.metaData()),
                         x509TokenContainerType);
@@ -98,6 +95,6 @@ public class XtaServiceWrapper {
      */
     public String createMessageId() throws XTAWSTechnicalProblemException, PermissionDeniedException {
         PartyType partyType = new PartyType();
-        return xtaPorts.managementPortType().createMessageId(partyType).getValue();
+        return xtaServicePorts.managementPortType().createMessageId(partyType).getValue();
     }
 }
