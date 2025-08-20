@@ -4,7 +4,7 @@ import genv3.de.xoev.transport.xta.x211.ManagementPortType;
 import genv3.de.xoev.transport.xta.x211.MsgBoxPortType;
 import genv3.de.xoev.transport.xta.x211.SendPortType;
 
-public record XtaPorts (
+public record XtaServicePorts(
 
         /*
          * used for: createMessageId, cancelMessage, getTransportReport, lookupService, checkAccountActive
