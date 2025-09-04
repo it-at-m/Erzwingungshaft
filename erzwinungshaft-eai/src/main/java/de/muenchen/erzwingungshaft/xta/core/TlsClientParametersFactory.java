@@ -5,13 +5,11 @@ import de.muenchen.erzwingungshaft.xta.config.XtaClientConfig;
 import de.muenchen.erzwingungshaft.xta.exception.XtaClientInitializationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.camel.spi.annotations.Component;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.transport.https.httpclient.DefaultHostnameVerifier;
 import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
 import org.apache.hc.client5.http.ssl.TrustAllStrategy;
 import org.apache.hc.core5.ssl.SSLContextBuilder;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.net.ssl.SSLContext;
@@ -32,7 +30,7 @@ public class TlsClientParametersFactory {
         try {
             TLSClientParameters tlsClientParameters = new TLSClientParameters();
 
-            SSLContext sslContext = buildSslContext();
+            SSLContext sslContext = buildSSLContext();
             tlsClientParameters.setSSLSocketFactory(sslContext.getSocketFactory());
 
             var hostnameVerifier = (config.isTrustAll())
@@ -46,12 +44,12 @@ public class TlsClientParametersFactory {
         }
     }
 
-    private SSLContextBuilder createSslContextBuilder() {
+    private SSLContextBuilder createSSLContextBuilder() {
         return SSLContextBuilder.create().setProtocol(config.getTlsProtocol());
     }
 
-    private SSLContext buildSslContext() throws XtaClientInitializationException {
-        SSLContextBuilder sslContextBuilder = createSslContextBuilder();
+    private SSLContext buildSSLContext() throws XtaClientInitializationException {
+        SSLContextBuilder sslContextBuilder = createSSLContextBuilder();
 
         try {
             if (config.isTrustAll()) {

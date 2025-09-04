@@ -18,4 +18,11 @@ bebpo:
       - category: Antragsempfänger
         value: gae:environment@my-xta-server.de
         name: Name
+    business-scenario:
+      code: XMELD_DATA
+      listVersionId: 1.0
+      listUri: urn:de:xta:codeliste:business.scenario_2
+    message-type:
+      code: administration.freitext.0905
+      payloadSchema: http://www.osci.de/xmeld241
 
