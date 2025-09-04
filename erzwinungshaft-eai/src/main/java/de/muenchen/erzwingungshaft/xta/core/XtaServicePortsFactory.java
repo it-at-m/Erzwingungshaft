@@ -1,6 +1,7 @@
 package de.muenchen.erzwingungshaft.xta.core;
 
 import de.muenchen.erzwingungshaft.xta.config.XtaClientConfig;
+import de.muenchen.erzwingungshaft.xta.dto.XtaMessageMetaData;
 import de.muenchen.erzwingungshaft.xta.exception.XtaClientInitializationException;
 import genv3.de.xoev.transport.xta.x211.XTAService;
 import jakarta.xml.ws.BindingProvider;
