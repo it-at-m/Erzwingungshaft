@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://xoev.de/transport/xta/211" elementFormDefault="qualified" attributeFormDefault="unqualified" version="2.1.1" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xta="http://xoev.de/transport/xta/211" xmlns:oscimeta="http://www.osci.eu/ws/2014/10/transport" xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+  <xs:annotation>
+    <xs:documentation>Dies ist die Liste der globalen Elemente, welche durch die Operationen des XTA-WS verwendet werden .</xs:documentation>
+  </xs:annotation>
+  <xs:include schemaLocation="XTA-Webservice-Datentypen.xsd"/>
+  <xs:import namespace="http://www.w3.org/2001/04/xmlenc#" schemaLocation="xenc-schema.xsd"/>
+  <xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="xmldsig-core-schema.xsd"/>
+  <xs:import namespace="http://www.osci.eu/ws/2014/10/transport" schemaLocation="OSCI_MessageMetaData_V2.02.xsd"/>
+  <xs:element name="GenericContentContainer">
+    <xs:annotation>
+      <xs:documentation>Der GenericContentContainer nimmt den zu transportierenden oder abzuliefernden Inhalt auf, z.B. eine XÖV-Nachricht mit ihren Anlagen. Diese Inhalte können unverschlüsselt (Element ContentContainer) oder auch verschlüsselt (Element xenc:EncryptedData) hinterlegt werden. Die Verschlüsselung an dieser Stelle eignet sich für Ende-zu-Ende-Verschlüsselung durch den Autor, wenn dieses Objekt durch den Autor erstellt wird.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:choice>
+        <xs:element ref="xenc:EncryptedData">
+          <xs:annotation>
+            <xs:documentation>Dieses Objekt ist dafür vorgesehen, den Container-Inhalt verschlüsselt zu hinterlegen. Im entschlüsselten Zustand müssen die Daten dem Schwester-Element ContentContainer entsprechen.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="ContentContainer">
+          <xs:annotation>
+            <xs:documentation>Der ContentContainer enthält genau eine Nachricht (Element Message) und null bis beliebig viele Anlagen, die alle in technisch neutraler Darstellung (base64-kodiert) eingefügt werden (Element Attachment). Die Gesamtgröße des Containers darf 40 MB nicht überschreiten.</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Message" type="xta:ContentType">
+                <xs:annotation>
+                  <xs:documentation>Enthält den base64-kodierten Inhalt, der zwischen WebService-Client und XTA-Server transportiert wird.  Die Attribute sind der MIME-Spezifikation (RFC 2183) entnommen.
+Die zu übermittelnde Nachricht als primärer Inhalt dieses Containers ist optional durch Anhänge (Element Attachment) zu ergänzen. 
+In die Attribute wird je nach Kontext Metainformation zur Nachricht eingetragen.</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="Attachment" type="xta:ContentType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                  <xs:documentation>Hier können optional ergänzende Anhänge zur übermittelnden Nachricht eingefügt werden. 
+Die Attribute transportieren je nach Kontext Metainformation zum enthaltenen Anhang.</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="LookupServiceRequest">
+    <xs:annotation>
+      <xs:documentation>Dies ist eine Liste von Dienstanfragen.
+Jede Anfrage dient dazu, zu ermitteln, ob der Dienst von diesem Anbieter angeboten wird, und über welche technischen Parameter er angesprochen werden kann.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="LookupServiceRequestList" maxOccurs="unbounded">
+          <xs:annotation>
+            <xs:documentation>Dies ist die Struktur für eine Liste von Dienstanfragen.</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="LookupService" type="xta:LookupServiceType">
+                <xs:annotation>
+                  <xs:documentation>Dies ist eine Service-Anfrage. Sie enthält Daten zum potentiellen Diensteanbieter (Leser) und dem Dienst, der angefragt werden soll. Diese Anfrage dient dazu, zu ermitteln, ob der Dienst von diesem Anbieter angeboten wird, und über welche technischen Parameter er angesprochen werden kann.</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="LookupServiceResponse">
+    <xs:annotation>
+      <xs:documentation>Dies ist das Ergebnis zu einer Liste von Dienstanfragen, also eine Liste von Dienstanfrageergebnissen. Die Anfrage wird jeweils zitiert und das zugehörige Ergebnis ausgegeben.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="LookupServiceResultList">
+          <xs:annotation>
+            <xs:documentation>Die Struktur einer Liste von Dienstanfrageergebnissen.</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="LookupServiceResult" type="xta:LookupServiceResultType" nillable="true" maxOccurs="unbounded">
+                <xs:annotation>
+                  <xs:documentation>Dies ist die Struktur der Liste von Ergebnissen zur Liste von Diensteanfragen.</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="TransportReport">
+    <xs:annotation>
+      <xs:documentation>Der TransportReport ist die Struktur des durch XTA standardisierten Transportprotokolls. Neben den übermittelten Nachrichten ruft das Fachverfahren (in den Rollen Autor und Leser) über den Webservice-Client Zusatzinformationen über den Transportauftrag und die Transportereignisse vom XTA-WS ab.
+
+ Um Autor und Leser die Möglichkeit zu geben, die Abarbeitung ihrer Transportaufträge zu überwachen, erstellen Sender und Empfänger Transportprotokolle, die in einer XML-Struktur des Typs TransportReport dargestellt und für Abruf und Auswertung bereit liegen.
+
+Die Datenstruktur aggregiert die Information zum erteilten Transportauftrag, zum Verlauf des sich anschließenden Transports einschließlich Zertifikatsüberprüfungen mit Ergebnissen.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="oscimeta:MessageMetaData">
+          <xs:annotation>
+            <xs:documentation>Dieser Container umfasst alle Daten des Transportauftrags, auf dessen Ausführung sich der TransportReport bezieht. Zu den Informationen gehören die Identifizierung von Absender und (einem oder mehreren) Empfängern, Metainformation zu Inhalt und Identität der zu transportierenden Fachnachricht (Payload) sowie weitere Attribute, die Auslieferung, Quittungen und Service Qualität betreffen.
+Weitere Informationen zu diesem Objekt sind in  zu finden.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="ReportTime" type="xs:dateTime">
+          <xs:annotation>
+            <xs:documentation>Zeitpunkt der letzten Aktualisierung des Protokolls. Ist bei Fortschreibung des Protokolls zu überschreiben.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="XTAServerIdentity" type="xs:token">
+          <xs:annotation>
+            <xs:documentation>Hier protokolliert der den TransportReport erstellende Prozess seine Identität als Software-Instanz, indem er z.B. die Server-IP-Adresse oder die URI seines XTA-WS einträgt.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="MessageStatus" type="xta:MessageStatusType">
+          <xs:annotation>
+            <xs:documentation>Enthält Information über den Veraluf des Transports. Es werden hier Listen mit aufgetretenen Fehler-, Warnungs- und Informationsmeldungen geführt. Außerdem ist nach Schließung des Transportauftrags im Feld Status eine "Schnell-Info" verfügbar.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="AdditionalReports" type="xta:AdditionalReportListType" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Hier sind weitere Prüfberichte abgelegt bzw. abzulegen, welche das XTA-Protokoll (TransportReport) ergänzen sollen.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="ds:Signature" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Falls der TransportReport signiert ist, findet sich hier die Signatur.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

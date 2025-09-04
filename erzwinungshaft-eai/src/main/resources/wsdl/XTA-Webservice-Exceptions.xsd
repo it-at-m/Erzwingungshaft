@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://xoev.de/transport/xta/211" version="2.1.1" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xta="http://xoev.de/transport/xta/211">
+  <xs:annotation>
+    <xs:documentation>Hier wird die Sammlung von Typen dargestellt, welche innerhalb des Standards XTA verwendet werden, um SOAP Exceptions zu definieren und zu verwenden.</xs:documentation>
+  </xs:annotation>
+  <xs:include schemaLocation="XTA-Webservice-Datentypen.xsd"/>
+  <xs:complexType name="CancelDeniedExceptionType">
+    <xs:annotation>
+      <xs:documentation>Dieser abgeleitete Typ wird vom zugehörigen Exception-Objeikt verwendet.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="xta:ExceptionType"/>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ExceptionType">
+    <xs:annotation>
+      <xs:documentation>Dieser Datentyp legt die grundlegende Struktur einer Exception im Rahmen des XTA Webservice fest. Sie kapselt Information zu Identität und Bedeutung eines aufgetretenen Fehlers.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="errorCode" type="xta:Code.Fehlernummer">
+        <xs:annotation>
+          <xs:documentation>In diesem Element werden Fehlernummer und Fehlertext übermittelt, die einen Fehler näher beschreiben  (gemäß verlinkter Codeliste). 
+In das Unterelement code ist die Fehlernummer einzutragen, ins Unterelement name die entsprechende textuelle Repräsentation.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="InvalidMessageIDExceptionType">
+    <xs:annotation>
+      <xs:documentation>Dieser abgeleitete Typ wird vom zugehörigen Exception-Objekt verwendet.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="xta:ExceptionType"/>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="MessageSchemaViolationExceptionType">
+    <xs:annotation>
+      <xs:documentation>Dieser abgeleitete Typ wird vom zugehörigen Exception-Objekt verwendet.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="xta:ExceptionType"/>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="MessageVirusDetectionExceptionType">
+    <xs:annotation>
+      <xs:documentation>Dieser abgeleitete Typ wird vom zugehörigen Exception-Objekt verwendet.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="xta:ExceptionType"/>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ParameterIsNotValidExceptionType">
+    <xs:annotation>
+      <xs:documentation>Dieser abgeleitete Typ wird vom zugehörigen Exception-Objekt verwendet.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="xta:ExceptionType"/>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PermissionDeniedExceptionType">
+    <xs:annotation>
+      <xs:documentation>Dieser abgeleitete Typ wird vom zugehörigen Exception-Objekt verwendet.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="xta:ExceptionType"/>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="SyncAsyncExceptionType">
+    <xs:annotation>
+      <xs:documentation>Dieser abgeleitete Typ wird vom zugehörigen Exception-Objekt verwendet.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="xta:ExceptionType"/>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="XTAWSTechnicalProblemExceptionType">
+    <xs:annotation>
+      <xs:documentation>Dieser abgeleitete Typ wird vom zugehörigen Exception-Objekt verwendet.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="xta:ExceptionType"/>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="CancelDeniedException" type="xta:CancelDeniedExceptionType">
+    <xs:annotation>
+      <xs:documentation>Diese Exception wird geworfen, falls die Methode cancelMessage aufgerufen wurde, aber der Transportauftrag aus einem der folgenden Gründe nicht zurückgezogen werden kann:
+
+  Der bei Erteilung des Transportauftrags über den Schalter NotBefore gesetzte Termin ist erreicht.
+
+Der Schalter NotBefore wurde bei Erteilung des Transportauftrags nicht gesetzt.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="InvalidMessageIDException" type="xta:InvalidMessageIDExceptionType">
+    <xs:annotation>
+      <xs:documentation>Diese Exception wird geworfen, wenn in einem gegebenen Kontext die anhand der ID bezeichnete Nachricht nicht bekannt ist, also beispielsweise nicht geliefert werden kann.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="MessageSchemaViolationException" type="xta:MessageSchemaViolationExceptionType">
+    <xs:annotation>
+      <xs:documentation>Diese Exception wird geworfen, wenn eine Fachnachricht  nicht der jeweiligen Schema-Definition entspricht.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="MessageVirusDetectionException" type="xta:MessageVirusDetectionExceptionType">
+    <xs:annotation>
+      <xs:documentation>Diese Exception wird geworfen, wenn schadhafter Code in einem der übergebenen Container ermittelt wurde.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="ParameterIsNotValidException" type="xta:ParameterIsNotValidExceptionType">
+    <xs:annotation>
+      <xs:documentation>Diese Fehlermeldung wird geworfen, wenn ein Parameter nicht korrekt an die Methode übergeben wurde.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="PermissionDeniedException" type="xta:PermissionDeniedExceptionType">
+    <xs:annotation>
+      <xs:documentation>Diese Exception wird geworfen, wenn der Account gesperrt oder nicht vorhanden ist.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="SyncAsyncException" type="xta:SyncAsyncExceptionType">
+    <xs:annotation>
+      <xs:documentation>Diese Exception wird geworfen falls dem XTA-Webservice
+
+  eine Nachricht, die nur für die synchrone Weiterleitung gültig ist, für die asynchrone Weiterleitung übergeben wurde oder
+  
+eine Nachricht für die synchrone Weiterleitung übergeben wurde, die nur für die asynchrone Weiterleitung gültig ist.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="XTAWSTechnicalProblemException" type="xta:XTAWSTechnicalProblemExceptionType">
+    <xs:annotation>
+      <xs:documentation>Diese Exception wird allgemein geworfen, wenn ein technisches Problem im XTA-WS aufgetreten ist. Sie kann z. B. durch ein Problem beim Zugriff auf die interne Datenbank des XTA-Servers ausgelöst worden sein.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+</xs:schema>
