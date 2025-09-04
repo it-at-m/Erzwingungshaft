@@ -1,6 +1,9 @@
 package de.muenchen.erzwingungshaft.xta.config;
 
+import de.muenchen.erzwingungshaft.xta.dto.XtaBusinessScenario;
+import de.muenchen.erzwingungshaft.xta.dto.XtaIdentifier;
 import de.muenchen.erzwingungshaft.xta.dto.XtaMessageMetaData;
+import de.muenchen.erzwingungshaft.xta.dto.XtaMessageType;
 import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -68,9 +71,21 @@ public class XtaClientConfig {
 
     /**
      * Optionaler Filter für Nachrichten vor dem Abruf.
-     * Wenn null, werden alle Nachrichten geholt.
+     *      * Wenn null, werden alle Nachrichten geholt.
      */
     private final Predicate<XtaMessageMetaData> messageMetaDataFilter = null;
+
+    /**
+     * Set Business Scenario!
+     */
+    @NotEmpty
+    private XtaBusinessScenario businessScenario;
+
+    /**
+     * Set MessageType!
+     */
+    @NotEmpty
+    private XtaMessageType messageType;
 
     /**
      * Anzahl der Metadaten-Elemente pro Abruf.
@@ -119,16 +134,6 @@ public class XtaClientConfig {
                     ", keyPassword=" + (keyPassword == null ? "STORE_PASSWORD" : "********")  +
                     '}';
         }
-    }
-
-    /**
-     * XTA-Party-Identifier für Clients oder Server.
-     */
-    public record XtaIdentifier(
-            @Nullable String name,
-            @Nullable String category,
-            @NotBlank String value
-    ) {
     }
 }
 
