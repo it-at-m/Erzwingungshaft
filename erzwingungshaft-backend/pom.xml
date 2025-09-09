@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>de.muenchen.erzwingungshaft</groupId>
-    <artifactId>erzwingunshaft-backend</artifactId>
+    <artifactId>erzwingungshaft-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
     <name>erzwingungshaft-backend</name>
