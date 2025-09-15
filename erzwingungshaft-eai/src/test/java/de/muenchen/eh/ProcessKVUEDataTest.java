@@ -2,9 +2,9 @@ package de.muenchen.eh;
 
 import de.muenchen.eh.common.XmlUnmarshaller;
 import de.muenchen.eh.log.Constants;
-import de.muenchen.eh.log.db.entity.EntryEntity;
+import de.muenchen.eh.log.db.entity.ClaimEntity;
 import de.muenchen.eh.log.db.entity.MessageType;
-import de.muenchen.eh.log.db.repository.LogRepository;
+import de.muenchen.eh.log.db.repository.ClaimLogRepository;
 import de.muenchen.xjustiz.generated.NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Exchange;
@@ -31,7 +31,7 @@ class ProcessKVUEDataTest {
     private MockEndpoint failures;
 
     @Autowired
-    private LogRepository logRepository;
+    private ClaimLogRepository claimLogRepository;
 
     @Test
     void test_readDataAndCreateXustizXml() throws Exception {
@@ -58,8 +58,8 @@ class ProcessKVUEDataTest {
         var exception = (Exception) exchange.getAllProperties().get(Exchange.EXCEPTION_CAUGHT);
         assertEquals("The mandatory field defined at the position 31 is empty for the line: 1", exception.getMessage());
 
-        var entry = exchange.getIn().getHeader(Constants.ENTRY_ENTITY, EntryEntity.class);
-        var logs = logRepository.findByEntryIdAndMessageTyp(entry.getId(), MessageType.ERROR);
+        var entry = exchange.getIn().getHeader(Constants.ENTRY_ENTITY, ClaimEntity.class);
+        var logs = claimLogRepository.findByClaimIdAndMessageTyp(entry.getId(), MessageType.ERROR);
         assertEquals("The mandatory field defined at the position 31 (de.muenchen.eh.kvue.EhCase.ehtatstdb) is empty for the line: 1", logs.getLast().getMessage());
 
     }

@@ -1,6 +1,7 @@
 package de.muenchen.eh.log.db.entity;
 
-import de.muenchen.eh.common.BaseEntity;
+import de.muenchen.eh.log.db.BaseEntity;
+import de.muenchen.eh.log.db.IClaimEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -11,12 +12,12 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = "erzwingungshaft_content", schema = "eh_log")
-public class ContentEntity extends BaseEntity {
+@Table(name = "claim_content", schema = "eh_log")
+public class ClaimContentEntity extends BaseEntity implements IClaimEntity {
 
     @NotEmpty
-    @Column(name = "entry_id")
-    private Integer entryId ;
+    @Column(name = "claim_id")
+    private Integer claimId ;
 
     @NotEmpty
     private String json;

@@ -2,7 +2,7 @@
  * Copyright (c): it@M - Dienstleister für Informations- und Telekommunikationstechnik
  * der Landeshauptstadt München, 2022
  */
-package de.muenchen.eh.common;
+package de.muenchen.eh.log.db;
 
 
 import jakarta.persistence.GeneratedValue;
@@ -20,7 +20,8 @@ import java.io.Serializable;
 @Setter
 @ToString
 @EqualsAndHashCode
-public abstract class BaseEntity implements Entity, Cloneable, Serializable {
+public abstract class BaseEntity implements Serializable {
+
 
     @Serial
     private static final long serialVersionUID = 1L;

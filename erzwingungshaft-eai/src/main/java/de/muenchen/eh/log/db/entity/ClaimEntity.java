@@ -1,6 +1,6 @@
 package de.muenchen.eh.log.db.entity;
 
-import de.muenchen.eh.common.BaseEntity;
+import de.muenchen.eh.log.db.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -13,11 +13,15 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = "erzwingungshaft_entry", schema = "eh_log")
-public class EntryEntity extends BaseEntity {
+@Table(name = "claim", schema = "eh_log")
+public class ClaimEntity extends BaseEntity {
 
     @Column(name = "eh_uuid")
     private UUID ehUuid;
+
+    @NotEmpty
+    @Column(name = "import_id")
+    private Integer importId;
 
     @Column(name = "geschaeftspartner_id")
     private String geschaeftspartnerId;
@@ -36,13 +40,4 @@ public class EntryEntity extends BaseEntity {
     @Column(name = "file_line_index")
     private Integer fileLineIndex;
 
-    @Override
-    public Integer getEntryId() {
-        return getId();
-    }
-
-    @Override
-    public void setEntryId(Integer entryId) {
-        this.setId(entryId);
-    }
 }

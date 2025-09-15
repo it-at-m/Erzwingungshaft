@@ -1,14 +1,12 @@
-package de.muenchen.eh.kvue;
+package de.muenchen.eh.kvue.claim;
 
-import de.muenchen.eh.XJustizContentProvider;
-import de.muenchen.xjustiz.xjustiz0500straf.content.ContentContainer;
 import lombok.Data;
 import org.apache.camel.dataformat.bindy.annotation.DataField;
 import org.apache.camel.dataformat.bindy.annotation.FixedLengthRecord;
 
 @Data
 @FixedLengthRecord(length = 3542, paddingChar = ' ')
-public class EhCase implements XJustizContentProvider {
+public class EhClaimData {
 
     @DataField(pos = 1, length = 4, trim = true, align = "B") private String ehsatzlaenge;
 
@@ -234,13 +232,5 @@ public class EhCase implements XJustizContentProvider {
 
     // Geschaeftspartner
     @DataField(pos = 3533, length = 10, trim = true, align = "B") private String ehgpid;
-
-    @Override
-    public ContentContainer supplyXJustizRequestContent() {
-
-        EhCaseContentContainerFactory contentContainerFactory = new EhCaseContentContainerFactory(this);
-        return contentContainerFactory.supplyContentContainer();
-    }
-
 
 }
