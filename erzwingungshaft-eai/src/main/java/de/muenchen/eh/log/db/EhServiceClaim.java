@@ -47,10 +47,6 @@ public class EhServiceClaim {
         try {
             ClaimEntity entryEntity = new ClaimEntity();
 
-//            entryEntity.setSourceFileName(exchange.getIn().getHeader(Exchange.FILE_NAME, String.class));
-//            entryEntity.setFileLineIndex((Integer) exchange.getAllProperties().get(Exchange.SPLIT_INDEX));
-//            entryEntity.setStorageLocation(dataSource);
-
             ImportEntity importedClaim = exchange.getMessage().getBody(EhClaimDataWrapper.class).getImportEntity();
             entryEntity.setImportId(importedClaim.getId());
             entryEntity.setSourceFileName(importedClaim.getSourceFileName());

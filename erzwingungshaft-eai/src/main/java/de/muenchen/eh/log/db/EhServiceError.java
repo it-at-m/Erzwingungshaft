@@ -18,7 +18,7 @@ import java.util.Optional;
 public class EhServiceError {
 
     private final ClaimLogRepository claimLogRepository;
-    protected final ImportLogRepository importLogRepository;
+    private final ImportLogRepository importLogRepository;
 
     public void logError(final Exchange exchange) {
 

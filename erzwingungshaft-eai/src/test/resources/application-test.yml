@@ -22,33 +22,48 @@ logging:
 camel:
   main:
     tracing: false
+  component:
+    aws2-s3:
+      override-endpoint: http://127.0.0.1:9000
+      region: local
 
 # Custom properties
 xjustiz:
-  version: 3.6.2
+  credentials:
+    s3:
+      access-key: minio
+      secret-key: Test1234
+      version: 3.6.2
   interface:
     document:
       processor: direct:xjustiz-document-processor
+    jpa:
+      import: jpa
     file:
-      consume: file:src/test/resources/?noop=true&include=D.KVU.*&charset=iso-8859-1
+      common: accessKey=${xjustiz.credentials.s3.access-key}&secretKey=${xjustiz.credentials.s3.secret-key}&region=${camel.component.aws2-s3.region}&overrideEndpoint=true&uriEndpointOverride=${camel.component.aws2-s3.override-endpoint}
+      consume: aws2-s3://eh-import-antrag?${xjustiz.interface.file.common}
       error: mock:error
+      file-output: aws2-s3://eh-import-progress?${xjustiz.interface.file.common}
+    pdf:
+      consume: aws2-s3://eh-import-pdf?${xjustiz.interface.file.common}
+      file-output: aws2-s3://eh-import-progress?${xjustiz.interface.file.common}
     eakte: mock:xjustizXml
   xjustiz0500straf:
     nachrichtenkopf:
       auswahl-absender-sonstige: Stadt München
-      auswahl-herstellerinformation-produkt: myProdukt
-      auswahl-herstellerinformation-produkt-name: myProduktname
-      auswahl-herstellerinformation-produkt-version: myProduktversion
+      auswahl-herstellerinformation-produkt: KVUweb
+      auswahl-herstellerinformation-produkt-name: LHM-itM-KM15
+      auswahl-herstellerinformation-produkt-version: 1.0
     grunddaten:
       verfahrensdaten:
         beteiligung:
           organisation:
-            bezeichnung-aktuell: Landeshauptstadt München Referat
-            bezeichnung-anschrift-strasse: Straße
-            bezeichnung-anschrift-hausnummer: 1
-            bezeichnung-anschrift-plz: 8000
+            bezeichnung-aktuell: Landeshauptstadt München Stadtkämmerei
+            bezeichnung-anschrift-strasse: Landsbergerstraße
+            bezeichnung-anschrift-hausnummer: 36
+            bezeichnung-anschrift-plz: 80339
             bezeichnung-anschrift-ort: München
-            bezeichnung-bankverbindung: DE99 9999 9999 9999 9999 00
+            bezeichnung-bankverbindung: DE86 7015 0000 0000 2030 00
   codelisten:
     gds-rollenbezeichnung:
       current-version: 3.5
@@ -101,3 +116,36 @@ xjustiz:
           weiblich: 2
           divers: 3
           saechlich: 4
+    gds-dokumentklasse:
+      current-version: 1.4
+      kennung: urn:xoev-de:xjustiz:codeliste:gds.dokumentklasse
+      codelist-versions:
+        gds-dokumentklasse-1-4:
+          antrag-behoerde: '016'
+          bescheid: '017'
+    gds-bestandteiltyp:
+      #      current-version: 2.4  : org.xml.sax.SAXParseException: cvc-complex-type.3.1: Wert '2.4' des Attributs 'listVersionID' des Elements 'ns2:bestandteil' ist ungültig in Bezug auf die entsprechende Attributverwendung. Attribut 'listVersionID' hat den festen Wert '2.5'., Line : 165, Column : 58
+      current-version: 2.5
+      kennung: urn:xoev-de:xjustiz:codeliste:gds.bestandteiltyp
+      codelist-versions:
+        gds-bestandteiltyp-2-5:
+          original: '001'
+          repraesentant: '002'
+    gds-aktentyp:
+      current-version: 2.2
+      kennung: urn:xoev-de:xjustiz:codeliste:gds.aktentyp
+      codelist-versions:
+        gds-aktentyp-2-2:
+          bussgeldakte: '010'
+    gds-aktenzeichenart:
+      current-version: 2.0
+      kennung: urn:xoev-de:xjustiz:codeliste:gds.aktenzeichenart
+      codelist-versions:
+        gds-aktenzeichenart-2-0:
+          aktuell: '001'
+    gds-registerzeichen:
+      current-version: 3.4
+      kennung: urn:xoev-de:xjustiz:codeliste:gds.registerzeichen
+      codelist-versions:
+        gds-registerzeichen-3-4:
+          bussgeldverfahren: OWi

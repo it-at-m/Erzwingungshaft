@@ -11,8 +11,5 @@ import java.util.UUID;
 public interface ImportRepository extends CrudRepository<ImportEntity, UUID> {
 
     List<ImportEntity> findByIsDataImportTrueAndIsAntragImportTrueAndIsBescheidImportTrue();
-
-
-    List<ImportEntity> findByOutputDirectory(String outputDirectory);
-
+    List<ImportEntity> findByOutputDirectoryAndIsAntragImportIsNullAndIsBescheidImportIsNull(String outputDirectory);
 }
