@@ -1,7 +1,5 @@
 package de.muenchen.eh.kvue.file;
 
-import de.muenchen.eh.kvue.claim.EhClaimContentContainerFactory;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.camel.dataformat.bindy.annotation.DataField;
@@ -10,7 +8,7 @@ import org.apache.camel.dataformat.bindy.annotation.FixedLengthRecord;
 @Getter
 @Setter
 @FixedLengthRecord(length = 3542, paddingChar = ' ')
-public class ClaimImportData {
+public class ImportClaimIdentifierData {
 
     @DataField(pos = 1169, length = 20, trim = true, align = "B")
     private String ehkassz;

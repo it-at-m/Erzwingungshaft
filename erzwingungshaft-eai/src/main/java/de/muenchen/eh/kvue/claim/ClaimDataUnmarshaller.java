@@ -14,23 +14,23 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class EhClaimDataUnmarshaller implements Processor {
+public class ClaimDataUnmarshaller implements Processor {
 
     private final EhServiceClaim ehServiceClaim;
 
-    @Produce(value = EhClaimRouteBuilder.UNMARSHALL_EH_CLAIM_DATA)
+    @Produce(value = ClaimRouteBuilder.UNMARSHALL_EH_CLAIM_DATA)
     private ProducerTemplate unmarshalProducer;
 
-    EhClaimDataWrapper ehDataWrapper;
+    ClaimDataWrapper ehDataWrapper;
 
     public void process(Exchange exchange) {
 
-        ehDataWrapper = new EhClaimDataWrapper();
+        ehDataWrapper = new ClaimDataWrapper();
 
         ehDataWrapper.setImportEntity(exchange.getMessage().getBody(ImportEntity.class));
 
         Exchange unmarshalledEhClaimData = unmarshallClaimData(exchange);
-        ehDataWrapper.setEhClaimData(unmarshalledEhClaimData.getMessage().getBody(EhClaimData.class));
+        ehDataWrapper.setEhClaimData(unmarshalledEhClaimData.getMessage().getBody(ClaimData.class));
 
         exchange.getMessage().setBody(ehDataWrapper);
 

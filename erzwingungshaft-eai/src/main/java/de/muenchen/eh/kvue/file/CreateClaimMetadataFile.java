@@ -1,6 +1,5 @@
 package de.muenchen.eh.kvue.file;
 
-import de.muenchen.eh.log.db.EhServiceImport;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -22,7 +21,7 @@ public class CreateClaimMetadataFile implements Processor {
 
         ImportDataWrapper dataWrapper = exchange.getMessage().getBody(ImportDataWrapper.class);
 
-        var fileName = dataWrapper.getClaimImportData().getPathName().concat("/").concat(dataWrapper.getClaimImportData().getFileName());
+        var fileName = dataWrapper.getImportClaimIdentifierData().getPathName().concat("/").concat(dataWrapper.getImportClaimIdentifierData().getFileName());
         Exchange marshalContent = ExchangeBuilder.anExchange(exchange.getContext()).withBody(dataWrapper.getClaimRawData()).withHeader(AWS2S3Constants.KEY, fileName ).build();
         s3Producer.send(marshalContent);
 

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class EhClaimContentDataEnricher implements Processor {
+public class ClaimContentDataEnricher implements Processor {
 
     private final EhServiceClaim ehServiceClaim;
 
@@ -19,8 +19,8 @@ public class EhClaimContentDataEnricher implements Processor {
         try {
             ehServiceClaim.logUnmarshall(exchange);
 
-            EhClaimDataWrapper dataWrapper = exchange.getMessage().getBody(EhClaimDataWrapper.class);
-            EhClaimContentContainerFactory contentContainerFactory = new EhClaimContentContainerFactory(dataWrapper.getEhClaimData(), dataWrapper.getImportEntity());
+            ClaimDataWrapper dataWrapper = exchange.getMessage().getBody(ClaimDataWrapper.class);
+            ClaimContentContainerFactory contentContainerFactory = new ClaimContentContainerFactory(dataWrapper.getEhClaimData(), dataWrapper.getImportEntity());
             dataWrapper.setContentContainer(contentContainerFactory.supplyContentContainer());
 
             ehServiceClaim.logContent(exchange);

@@ -43,7 +43,7 @@ public class EhServiceImport {
             importEntity.setStorageLocation(dataSource);
             importEntity.setContent(dataWrapper.getClaimRawData());
 
-            var caseImportEntity = dataWrapper.getClaimImportData();
+            var caseImportEntity = dataWrapper.getImportClaimIdentifierData();
             importEntity.setKassenzeichen(caseImportEntity.getEhkassz());
             importEntity.setGeschaeftspartnerId(caseImportEntity.getEhgpid());
             importEntity.setOutputDirectory(caseImportEntity.getPathName());

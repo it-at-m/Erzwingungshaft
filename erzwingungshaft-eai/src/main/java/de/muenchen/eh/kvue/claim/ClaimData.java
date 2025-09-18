@@ -6,7 +6,7 @@ import org.apache.camel.dataformat.bindy.annotation.FixedLengthRecord;
 
 @Data
 @FixedLengthRecord(length = 3542, paddingChar = ' ')
-public class EhClaimData {
+public class ClaimData {
 
     @DataField(pos = 1, length = 4, trim = true, align = "B") private String ehsatzlaenge;
 

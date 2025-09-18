@@ -1,7 +1,7 @@
 package de.muenchen.eh.kvue.file;
 
 import de.muenchen.eh.kvue.BaseRouteBuilder;
-import de.muenchen.eh.kvue.claim.EhClaimRouteBuilder;
+import de.muenchen.eh.kvue.claim.ClaimRouteBuilder;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.model.dataformat.BindyType;
@@ -36,7 +36,7 @@ public class FileImportRouteBuilder extends BaseRouteBuilder {
                 });
 
         from(CLAIM_IMPORT_DATA_UNMARSHALL).routeId("import-data-unmarshall")
-                .unmarshal().bindy(BindyType.Fixed, ClaimImportData.class);
+                .unmarshal().bindy(BindyType.Fixed, ImportClaimIdentifierData.class);
 
         from(S3_UPLOAD).routeId("s3-upload")
                .to("{{xjustiz.interface.file.file-output}}");
@@ -53,7 +53,7 @@ public class FileImportRouteBuilder extends BaseRouteBuilder {
                 .completionTimeout(2000)
                 .bean("importEntityCache", "clear")
                 .log(LoggingLevel.DEBUG, "de.muenchen.eh" ,"'${body.size}' pdf files imported.")
-                .to(EhClaimRouteBuilder.PROCESS_CLAIMS);
+                .to(ClaimRouteBuilder.PROCESS_CLAIMS);
 
     }
 

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class EhClaimRouteBuilder extends BaseRouteBuilder {
+public class ClaimRouteBuilder extends BaseRouteBuilder {
 
     public static final String PROCESS_CLAIMS = "direct:processClaims";
     public static final String UNMARSHALL_EH_CLAIM_DATA = "direct:unmarshalEhClaimData";
@@ -32,7 +32,7 @@ public class EhClaimRouteBuilder extends BaseRouteBuilder {
                 .to("log:de.muenchen.eh?level=DEBUG")
 
         //        .pollEnrich().simple("file:testdata/out/?fileName=${body.getOutputDirectory()}/${body.getOutputFile()}")
-                .process("ehClaimDataUnmarshaller")
+                .process("claimDataUnmarshaller")
 
 //                .bean("ehServiceClaim", "logEntry")
 //                .setBody(simple("${body.getContent()}"))
@@ -43,16 +43,16 @@ public class EhClaimRouteBuilder extends BaseRouteBuilder {
 //                .bean("ehServiceClaim", "logUnmarshall")
 //                .pollEnrich("")
 //                .transform().simple("${body.ehClaimData.supplyXJustizRequestContent()}")
-                .process("ehClaimContentDataEnricher")
+                .process("claimContentDataEnricher")
  //               .bean("ehServiceClaim", "logContent")
  //               .to("{{xjustiz.interface.document.processor}}")
-                .process("ehClaimXJustizXmlEnricher")
+                .process("claimXJustizXmlEnricher")
                 .to("log:de.muenchen.eh?level=DEBUG")
  //               .bean("ehServiceClaim", "logXml")
                 .to("{{xjustiz.interface.eakte}}");
 
          from(UNMARSHALL_EH_CLAIM_DATA).routeId("unmarshal-eh-claimdata")
-              .unmarshal().bindy(BindyType.Fixed, EhClaimData.class);
+              .unmarshal().bindy(BindyType.Fixed, ClaimData.class);
 
          from(PROCESS_XJUSTIZ_DOCUMENT).routeId("process-xjustiz-document")
               .to("{{xjustiz.interface.document.processor}}");

@@ -11,17 +11,17 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class EhClaimXJustizXmlEnricher implements Processor {
+public class ClaimXJustizXmlEnricher implements Processor {
 
     private final EhServiceClaim ehServiceClaim;
 
-    @Produce(EhClaimRouteBuilder.PROCESS_XJUSTIZ_DOCUMENT)
+    @Produce(ClaimRouteBuilder.PROCESS_XJUSTIZ_DOCUMENT)
     private ProducerTemplate xjustizProducer;
 
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        EhClaimDataWrapper wrapper = exchange.getMessage().getBody(EhClaimDataWrapper.class);
+        ClaimDataWrapper wrapper = exchange.getMessage().getBody(ClaimDataWrapper.class);
 
         Exchange xjustizContent = ExchangeBuilder.anExchange(exchange.getContext()).withBody(wrapper.getContentContainer()).build();
         Exchange xJustizXML = xjustizProducer.send(xjustizContent);

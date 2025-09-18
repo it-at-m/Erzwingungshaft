@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.eh.common.BindyIllegalArgumentMessageEnricher;
 import de.muenchen.eh.common.XmlUnmarshaller;
-import de.muenchen.eh.kvue.claim.EhClaimData;
-import de.muenchen.eh.kvue.claim.EhClaimDataWrapper;
+import de.muenchen.eh.kvue.claim.ClaimData;
+import de.muenchen.eh.kvue.claim.ClaimDataWrapper;
 import de.muenchen.eh.log.Constants;
 import de.muenchen.eh.log.StatusProcessingType;
 import de.muenchen.eh.log.convert.DataEntityMapper;
@@ -47,7 +47,7 @@ public class EhServiceClaim {
         try {
             ClaimEntity entryEntity = new ClaimEntity();
 
-            ImportEntity importedClaim = exchange.getMessage().getBody(EhClaimDataWrapper.class).getImportEntity();
+            ImportEntity importedClaim = exchange.getMessage().getBody(ClaimDataWrapper.class).getImportEntity();
             entryEntity.setImportId(importedClaim.getId());
             entryEntity.setSourceFileName(importedClaim.getSourceFileName());
             entryEntity.setFileLineIndex(importedClaim.getFileLineIndex());
@@ -66,7 +66,7 @@ public class EhServiceClaim {
     public void logUnmarshall(final Exchange exchange) {
 
         try {
-            var dataEntity = DataEntityMapper.INSTANCE.toClaimDataEntity(exchange.getMessage().getBody(EhClaimDataWrapper.class).getEhClaimData());
+            var dataEntity = DataEntityMapper.INSTANCE.toClaimDataEntity(exchange.getMessage().getBody(ClaimDataWrapper.class).getEhClaimData());
             dataEntity.setClaimId(ClaimFactory.entryEntityFacade(exchange).getId());
             claimDataRepository.save(dataEntity);
             writeInfoClaimLogMessage(StatusProcessingType.DATA_UNMARSHALLED, exchange);
@@ -89,7 +89,7 @@ public class EhServiceClaim {
             ClaimLogEntity claimLogEntity = (ClaimLogEntity) ClaimFactory.configureEntity(new ClaimLogEntity(), exchange);
             claimLogEntity.setMessageTyp(MessageType.ERROR);
             var message = EhServiceError.getMessage(exchange);
-            claimLogEntity.setMessage(BindyIllegalArgumentMessageEnricher.enrich(message, EhClaimData.class));
+            claimLogEntity.setMessage(BindyIllegalArgumentMessageEnricher.enrich(message, ClaimData.class));
             var stack = EhServiceError.getStack(exchange);
             claimLogEntity.setComment(stack.length > 0 ? Arrays.toString(stack) : "No stack trace available.");
             claimLogRepository.save(claimLogEntity);
@@ -103,7 +103,7 @@ public class EhServiceClaim {
     public void logContent(final Exchange exchange) {
 
         try {
-            ContentContainer contentContainer = exchange.getMessage().getBody(EhClaimDataWrapper.class).getContentContainer();
+            ContentContainer contentContainer = exchange.getMessage().getBody(ClaimDataWrapper.class).getContentContainer();
             ClaimContentEntity claimContentEntity = (ClaimContentEntity) ClaimFactory.configureEntity(new ClaimContentEntity(), exchange);
             ObjectMapper mapper = mapperBuilder.build();
             claimContentEntity.setJson(mapper.writeValueAsString(contentContainer));

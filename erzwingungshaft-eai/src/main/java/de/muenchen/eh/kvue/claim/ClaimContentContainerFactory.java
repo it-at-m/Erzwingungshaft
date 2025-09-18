@@ -29,9 +29,9 @@ import java.util.*;
 
 @Getter
 @RequiredArgsConstructor
-public class EhClaimContentContainerFactory {
+public class ClaimContentContainerFactory {
 
-    private final EhClaimData ehClaimData;
+    private final ClaimData ehClaimData;
     private final ImportEntity metadata;
 
     public ContentContainer supplyContentContainer() throws DatatypeConfigurationException {

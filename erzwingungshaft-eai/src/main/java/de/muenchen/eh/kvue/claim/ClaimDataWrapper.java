@@ -9,10 +9,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class EhClaimDataWrapper  {
+public class ClaimDataWrapper {
 
     private ImportEntity importEntity;
-    private EhClaimData ehClaimData;
+    private ClaimData ehClaimData;
     private ContentContainer contentContainer;
     private String xjustizXml;
 

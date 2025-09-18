@@ -10,6 +10,6 @@ import lombok.Setter;
 public class ImportDataWrapper {
 
     private String claimRawData;
-    private ClaimImportData claimImportData;
+    private ImportClaimIdentifierData importClaimIdentifierData;
 
 }

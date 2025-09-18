@@ -1,6 +1,5 @@
 package de.muenchen.eh.kvue.file;
 
-import de.muenchen.eh.log.db.EhServiceImport;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -27,8 +26,8 @@ public class ImportDataEnricher implements Processor {
 
         dataWrapper.setClaimRawData(exchange.getMessage().getBody(String.class));
         Exchange unmarshalledData = unmarshallClaimImportData(exchange);
-        dataWrapper.setClaimImportData(unmarshalledData.getMessage().getBody(ClaimImportData.class));
-        dataWrapper.getClaimImportData().setPrintDate(DateExtractor.extractDate(exchange.getMessage().getHeader(AWS2S3Constants.KEY, String.class)));
+        dataWrapper.setImportClaimIdentifierData(unmarshalledData.getMessage().getBody(ImportClaimIdentifierData.class));
+        dataWrapper.getImportClaimIdentifierData().setPrintDate(DateExtractor.extractDate(exchange.getMessage().getHeader(AWS2S3Constants.KEY, String.class)));
         exchange.getMessage().setBody(dataWrapper);
 
     }
