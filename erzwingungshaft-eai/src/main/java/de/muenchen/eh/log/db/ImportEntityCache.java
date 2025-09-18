@@ -3,6 +3,7 @@ package de.muenchen.eh.log.db;
 import de.muenchen.eh.log.db.entity.ImportEntity;
 import de.muenchen.eh.log.db.repository.ImportRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class ImportEntityCache {
@@ -31,15 +33,10 @@ public class ImportEntityCache {
     }
 
     public void clear() {
-        importEntityCache.forEach((key, entities) ->
-                entities.removeIf(entity ->
-                        entity.getIsAntragImport() != null && entity.getIsBescheidImport() != null
-                )
-        );
-
         importEntityCache.entrySet().removeIf(entry ->
                 entry.getValue().stream()
                         .allMatch(entity -> entity.getIsAntragImport() != null && entity.getIsBescheidImport() != null)
         );
+        log.debug("Import entity cache is cleared. '{}' remaining entities.", importEntityCache.size());
     }
 }
