@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.eh.common.BindyIllegalArgumentMessageEnricher;
 import de.muenchen.eh.common.XmlUnmarshaller;
-import de.muenchen.eh.kvue.claim.ClaimData;
+import de.muenchen.eh.kvue.claim.ImportClaimData;
 import de.muenchen.eh.kvue.claim.ClaimDataWrapper;
 import de.muenchen.eh.log.Constants;
 import de.muenchen.eh.log.StatusProcessingType;
@@ -42,18 +42,18 @@ public class EhServiceClaim {
     private final Jackson2ObjectMapperBuilder mapperBuilder;
 
 
-    public void logEntry(final Exchange exchange) {
+    public void logClaim(final Exchange exchange) {
 
         try {
-            ClaimEntity entryEntity = new ClaimEntity();
+            ClaimEntity claim = new ClaimEntity();
 
-            ImportEntity importedClaim = exchange.getMessage().getBody(ClaimDataWrapper.class).getImportEntity();
-            entryEntity.setImportId(importedClaim.getId());
-            entryEntity.setSourceFileName(importedClaim.getSourceFileName());
-            entryEntity.setFileLineIndex(importedClaim.getFileLineIndex());
-            entryEntity.setStorageLocation(dataSource);
+            ClaimImport importedClaim = exchange.getMessage().getBody(ClaimDataWrapper.class).getClaimImport();
+            claim.setClaimImportId(importedClaim.getId());
+            claim.setSourceFileName(importedClaim.getSourceFileName());
+            claim.setFileLineIndex(importedClaim.getFileLineIndex());
+            claim.setStorageLocation(dataSource);
 
-            exchange.getMessage().setHeader(Constants.ENTRY_ENTITY, claimRepository.save(entryEntity));
+            exchange.getMessage().setHeader(Constants.CLAIM, claimRepository.save(claim));
 
             writeInfoClaimLogMessage(StatusProcessingType.DATA_READ, exchange);
 
@@ -66,15 +66,16 @@ public class EhServiceClaim {
     public void logUnmarshall(final Exchange exchange) {
 
         try {
-            var dataEntity = DataEntityMapper.INSTANCE.toClaimDataEntity(exchange.getMessage().getBody(ClaimDataWrapper.class).getEhClaimData());
-            dataEntity.setClaimId(ClaimFactory.entryEntityFacade(exchange).getId());
-            claimDataRepository.save(dataEntity);
+            ClaimData claimData = DataEntityMapper.INSTANCE.toClaimDataEntity(exchange.getMessage().getBody(ClaimDataWrapper.class).getEhImportClaimData());
+
+            claimData.setClaimId(ClaimFactory.claimFacade(exchange).getId());
+            claimDataRepository.save(claimData);
             writeInfoClaimLogMessage(StatusProcessingType.DATA_UNMARSHALLED, exchange);
 
-            var entryEntity = ClaimFactory.entryEntityFacade(exchange);
-            entryEntity.setKassenzeichen(dataEntity.getEhkassz());
-            entryEntity.setGeschaeftspartnerId(dataEntity.getEhgpid());
-            claimRepository.save(entryEntity);
+            var claim = ClaimFactory.claimFacade(exchange);
+            claim.setKassenzeichen(claimData.getEhkassz());
+            claim.setGeschaeftspartnerId(claimData.getEhgpid());
+            claimRepository.save(claim);
             writeInfoClaimLogMessage(StatusProcessingType.EH_KASSENZEICHEN_GESCHAEFTSPARTNERID_UPDATED, exchange);
 
         } catch (Exception e) {
@@ -86,13 +87,13 @@ public class EhServiceClaim {
     public void logIllegalArgumentException(final Exchange exchange) {
 
         try {
-            ClaimLogEntity claimLogEntity = (ClaimLogEntity) ClaimFactory.configureEntity(new ClaimLogEntity(), exchange);
-            claimLogEntity.setMessageTyp(MessageType.ERROR);
+            ClaimLog claimLog = (ClaimLog) ClaimFactory.configureEntity(new ClaimLog(), exchange);
+            claimLog.setMessageTyp(MessageType.ERROR);
             var message = EhServiceError.getMessage(exchange);
-            claimLogEntity.setMessage(BindyIllegalArgumentMessageEnricher.enrich(message, ClaimData.class));
+            claimLog.setMessage(BindyIllegalArgumentMessageEnricher.enrich(message, ImportClaimData.class));
             var stack = EhServiceError.getStack(exchange);
-            claimLogEntity.setComment(stack.length > 0 ? Arrays.toString(stack) : "No stack trace available.");
-            claimLogRepository.save(claimLogEntity);
+            claimLog.setComment(stack.length > 0 ? Arrays.toString(stack) : "No stack trace available.");
+            claimLogRepository.save(claimLog);
         } catch (Exception e) {
             exchange.setException(e);
             log.error(e);
@@ -104,10 +105,10 @@ public class EhServiceClaim {
 
         try {
             ContentContainer contentContainer = exchange.getMessage().getBody(ClaimDataWrapper.class).getContentContainer();
-            ClaimContentEntity claimContentEntity = (ClaimContentEntity) ClaimFactory.configureEntity(new ClaimContentEntity(), exchange);
+            ClaimContent claimContent = (ClaimContent) ClaimFactory.configureEntity(new ClaimContent(), exchange);
             ObjectMapper mapper = mapperBuilder.build();
-            claimContentEntity.setJson(mapper.writeValueAsString(contentContainer));
-            claimContentRepository.save(claimContentEntity);
+            claimContent.setJson(mapper.writeValueAsString(contentContainer));
+            claimContentRepository.save(claimContent);
             writeInfoClaimLogMessage(StatusProcessingType.CONTENT_CREATED, exchange);
 
         } catch (JsonProcessingException e) {
@@ -119,14 +120,13 @@ public class EhServiceClaim {
     public void logXml(final Exchange exchange) {
 
         try {
-            String xml = exchange.getMessage().getBody(String.class);
-
-            ClaimXmlEntity claimXmlEntity = (ClaimXmlEntity) ClaimFactory.configureEntity(new ClaimXmlEntity(), exchange);
-            claimXmlEntity.setContent(xml);
-            claimXmlRepository.save(claimXmlEntity);
+            String xml = exchange.getMessage().getBody(ClaimDataWrapper.class).getXjustizXml()  ;
+            ClaimXml claimXml = (ClaimXml) ClaimFactory.configureEntity(new ClaimXml(), exchange);
+            claimXml.setContent(xml);
+            claimXmlRepository.save(claimXml);
             writeInfoClaimLogMessage(StatusProcessingType.XJUSTIZ_MESSAGE_CREATED, exchange);
 
-            var entryEntity = ClaimFactory.entryEntityFacade(exchange);
+            var entryEntity = ClaimFactory.claimFacade(exchange);
             NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010 justiz0500010 = XmlUnmarshaller.unmarshalNachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010(xml);
             entryEntity.setEhUuid(UUID.fromString(justiz0500010.getNachrichtenkopf().getAbsender().getEigeneNachrichtenID()));
             claimRepository.save(entryEntity);
@@ -140,11 +140,11 @@ public class EhServiceClaim {
 
     private void writeInfoClaimLogMessage(StatusProcessingType processingType, Exchange exchange) {
         try {
-            ClaimLogEntity claimLogEntity = (ClaimLogEntity) ClaimFactory.configureEntity(new ClaimLogEntity(), exchange);
-            claimLogEntity.setMessageTyp(MessageType.INFO);
-            claimLogEntity.setMessage(processingType.name());
-            claimLogEntity.setComment(processingType.getDescriptor());
-            claimLogRepository.save(claimLogEntity);
+            ClaimLog claimLog = (ClaimLog) ClaimFactory.configureEntity(new ClaimLog(), exchange);
+            claimLog.setMessageTyp(MessageType.INFO);
+            claimLog.setMessage(processingType.name());
+            claimLog.setComment(processingType.getDescriptor());
+            claimLogRepository.save(claimLog);
         } catch (Exception e) {
             exchange.setException(e);
             log.error(e);

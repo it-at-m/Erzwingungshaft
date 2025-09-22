@@ -4,7 +4,6 @@ import de.muenchen.eh.log.Constants;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.dataformat.BindyType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +21,7 @@ public class BaseRouteBuilder extends RouteBuilder {
                 .handled(true)
                 .log(LoggingLevel.ERROR, "${exception}")
                 .choice()
-                    .when(simple(String.format("${header.%1$s} != null || ${header.%2$s} != null", Constants.ENTRY_ENTITY, Constants.IMPORT_ENTITY)))
+                    .when(simple(String.format("${header.%1$s} != null || ${header.%2$s} != null", Constants.CLAIM, Constants.CLAIM_IMPORT)))
                      .bean("ehServiceError", "logError")
                 .end()
                 .to("{{xjustiz.interface.file.error}}");;
@@ -31,7 +30,7 @@ public class BaseRouteBuilder extends RouteBuilder {
                 .handled(true)
                 .log(LoggingLevel.ERROR, "${exception}")
                 .choice()
-                    .when(simple(String.format("${header.%s} != null", Constants.ENTRY_ENTITY)))
+                    .when(simple(String.format("${header.%s} != null", Constants.CLAIM)))
                         .bean("ehServiceClaim", "logIllegalArgumentException")
                 .end()
                 .to("{{xjustiz.interface.file.error}}");

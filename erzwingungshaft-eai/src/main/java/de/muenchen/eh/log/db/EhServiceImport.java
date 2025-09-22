@@ -4,17 +4,18 @@ import de.muenchen.eh.common.ExtractEhIdentifier;
 import de.muenchen.eh.kvue.file.ImportDataWrapper;
 import de.muenchen.eh.log.Constants;
 import de.muenchen.eh.log.StatusProcessingType;
-import de.muenchen.eh.log.db.entity.ImportEntity;
-import de.muenchen.eh.log.db.entity.ImportLogEntity;
+import de.muenchen.eh.log.db.entity.ClaimImport;
+import de.muenchen.eh.log.db.entity.ClaimImportLog;
 import de.muenchen.eh.log.db.entity.MessageType;
-import de.muenchen.eh.log.db.repository.ImportLogRepository;
-import de.muenchen.eh.log.db.repository.ImportRepository;
+import de.muenchen.eh.log.db.repository.ClaimImportLogRepository;
+import de.muenchen.eh.log.db.repository.ClaimImportRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.aws2.s3.AWS2S3Constants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -25,32 +26,32 @@ public class EhServiceImport {
     @Value("${xjustiz.interface.file.consume}")
     private String dataSource;
 
-    private final ImportRepository importRepository;
-    private final ImportLogRepository importLogRepository;
+    private final ClaimImportRepository claimImportRepository;
+    private final ClaimImportLogRepository claimImportLogRepository;
 
-    private final ImportEntityCache importEntityCache;
+    private final ImportEntityCache claimImportCache;
 
 
-   public void logImportEh(final Exchange exchange) {
+    public void logClaimImport(final Exchange exchange) {
 
         try {
             ImportDataWrapper dataWrapper = exchange.getMessage().getBody(ImportDataWrapper.class);
 
-            ImportEntity importEntity = new ImportEntity();
+            ClaimImport claimImport = new ClaimImport();
 
-            importEntity.setSourceFileName(exchange.getIn().getHeader(AWS2S3Constants.KEY, String.class));
-            importEntity.setFileLineIndex((Integer) exchange.getAllProperties().get(Exchange.SPLIT_INDEX));
-            importEntity.setStorageLocation(dataSource);
-            importEntity.setContent(dataWrapper.getClaimRawData());
+            claimImport.setSourceFileName(exchange.getIn().getHeader(AWS2S3Constants.KEY, String.class));
+            claimImport.setFileLineIndex((Integer) exchange.getAllProperties().get(Exchange.SPLIT_INDEX));
+            claimImport.setStorageLocation(dataSource);
+            claimImport.setContent(dataWrapper.getClaimRawData());
 
             var caseImportEntity = dataWrapper.getImportClaimIdentifierData();
-            importEntity.setKassenzeichen(caseImportEntity.getEhkassz());
-            importEntity.setGeschaeftspartnerId(caseImportEntity.getEhgpid());
-            importEntity.setOutputDirectory(caseImportEntity.getPathName());
-            importEntity.setOutputFile(caseImportEntity.getFileName());
-            importEntity.setIsDataImport(true);
+            claimImport.setKassenzeichen(caseImportEntity.getEhkassz());
+            claimImport.setGeschaeftspartnerId(caseImportEntity.getEhgpid());
+            claimImport.setOutputDirectory(caseImportEntity.getPathName());
+            claimImport.setOutputFile(caseImportEntity.getFileName());
+            claimImport.setIsDataImport(true);
 
-            exchange.getIn().setHeader(Constants.IMPORT_ENTITY, importRepository.save(importEntity));
+            exchange.getIn().setHeader(Constants.CLAIM_IMPORT, claimImportRepository.save(claimImport));
 
             writeInfoImportLogMessage(StatusProcessingType.DATA_FILE_CREATED, exchange);
 
@@ -59,39 +60,39 @@ public class EhServiceImport {
         }
     }
 
-    public void logImportPdf(final Exchange exchange) {
-        final String EXTENSION = "_EH.PDF";
+    public void logPdfImport(final Exchange exchange) {
+
         try {
             var fileName = ExtractEhIdentifier.getFileName(exchange.getIn().getHeader(AWS2S3Constants.KEY, String.class));
             var ehkasszEhgpidPrintDate = ExtractEhIdentifier.getIdentifier(fileName);
-            List<ImportEntity> importEntities = importEntityCache.getImportEntities(ehkasszEhgpidPrintDate);
-            importEntities.forEach(entity -> {
-            if (fileName.toUpperCase().endsWith(EXTENSION)) {
-                    entity.setIsAntragImport(true);
-            } else {
-                    entity.setIsBescheidImport(true);
-            }
-            var updateImportEntity =  importRepository.save(entity);
-            importEntityCache.put(ehkasszEhgpidPrintDate, updateImportEntity);
-            exchange.getIn().setHeader(Constants.IMPORT_ENTITY, updateImportEntity);
-            writeInfoImportLogMessage(fileName.toUpperCase().endsWith(EXTENSION) ? StatusProcessingType.ANTRAG_IMPORT : StatusProcessingType.BESCHEID_IMPORT , exchange);
-            }
+            List<ClaimImport> claimImports = claimImportCache.getImportEntities(ehkasszEhgpidPrintDate);
+            claimImports.forEach(claimImport -> {
+                        if (fileName.toUpperCase().endsWith(Constants.ANTRAG_EXTENSION)) {
+                            claimImport.setIsAntragImport(true);
+                        } else {
+                            claimImport.setIsBescheidImport(true);
+                        }
+                        var updateClaimImport = claimImportRepository.save(claimImport);
+                        claimImportCache.put(ehkasszEhgpidPrintDate, updateClaimImport);
+                        exchange.getIn().setHeader(Constants.CLAIM_IMPORT, updateClaimImport);
+                        writeInfoImportLogMessage(fileName.toUpperCase().endsWith(Constants.ANTRAG_EXTENSION) ? StatusProcessingType.ANTRAG_IMPORT_DIRECTORY : StatusProcessingType.BESCHEID_IMPORT_DIRECTORY, exchange);
+                    }
             );
         } catch (Exception e) {
             exchange.setException(e);
         }
     }
 
-    private void writeInfoImportLogMessage(StatusProcessingType processingType, Exchange exchange) {
+    public void writeInfoImportLogMessage(StatusProcessingType processingType, Exchange exchange) {
         try {
 
-            ImportLogEntity importLogEntity = new ImportLogEntity();
-            ImportEntity importEntity = exchange.getIn().getHeader(Constants.IMPORT_ENTITY, ImportEntity.class);
-            importLogEntity.setImportId(importEntity.getId());
-            importLogEntity.setMessageTyp(MessageType.INFO);
-            importLogEntity.setMessage(processingType.name());
-            importLogEntity.setComment(processingType.getDescriptor());
-            importLogRepository.save(importLogEntity);
+            ClaimImportLog claimImportLog = new ClaimImportLog();
+            ClaimImport claimImport = exchange.getIn().getHeader(Constants.CLAIM_IMPORT, ClaimImport.class);
+            claimImportLog.setClaimImportId(claimImport.getId());
+            claimImportLog.setMessageTyp(MessageType.INFO);
+            claimImportLog.setMessage(processingType.name());
+            claimImportLog.setComment(processingType.getDescriptor());
+            claimImportLogRepository.save(claimImportLog);
         } catch (Exception e) {
             exchange.setException(e);
         }

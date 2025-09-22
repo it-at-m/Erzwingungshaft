@@ -3,7 +3,7 @@ package de.muenchen.eh.log.db;
 import de.muenchen.eh.log.Constants;
 import de.muenchen.eh.log.db.entity.*;
 import de.muenchen.eh.log.db.repository.ClaimLogRepository;
-import de.muenchen.eh.log.db.repository.ImportLogRepository;
+import de.muenchen.eh.log.db.repository.ClaimImportLogRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.camel.Exchange;
@@ -18,35 +18,44 @@ import java.util.Optional;
 public class EhServiceError {
 
     private final ClaimLogRepository claimLogRepository;
-    private final ImportLogRepository importLogRepository;
+    private final ClaimImportLogRepository claimImportLogRepository;
 
     public void logError(final Exchange exchange) {
 
         try {
-            Optional<ImportEntity> importEntity = Optional.ofNullable(exchange.getIn().getHeader(Constants.IMPORT_ENTITY, ImportEntity.class));
+            Optional<ClaimImport> importEntity = Optional.ofNullable(exchange.getIn().getHeader(Constants.CLAIM_IMPORT, ClaimImport.class));
             importEntity.ifPresentOrElse( ie -> {
-                ImportLogEntity importLogEntity = new ImportLogEntity();
-                importLogEntity.setImportId(ie.getId());
-                importLogEntity.setMessageTyp(MessageType.ERROR);
-                importLogEntity.setMessage(getMessage(exchange));
+                ClaimImportLog claimImportLog = new ClaimImportLog();
+                claimImportLog.setClaimImportId(ie.getId());
+                claimImportLog.setMessageTyp(MessageType.ERROR);
+                claimImportLog.setMessage(getMessage(exchange));
                 var stack = getStack(exchange);
-                importLogEntity.setComment(stack.length > 0 ? Arrays.toString(stack) : "No stack trace available.");
-                importLogRepository.save(importLogEntity);
-                log.error(importLogEntity.toString());
+                claimImportLog.setComment(stack.length > 0 ? Arrays.toString(stack) : "No stack trace available.");
+                claimImportLogRepository.save(claimImportLog);
+                log.error(claimImportLog.toString());
+
+                if(exchange.getMessage().getHeader(Constants.CLAIM) != null) {
+                    createClaimLogError(exchange);
+                }
+
             } , () -> {
-                ClaimLogEntity claimLogEntity = (ClaimLogEntity) ClaimFactory.configureEntity(new ClaimLogEntity(), exchange);
-                claimLogEntity.setMessageTyp(MessageType.ERROR);
-                claimLogEntity.setMessage(getMessage(exchange));
-                var stack = getStack(exchange);
-                claimLogEntity.setComment(stack.length > 0 ? Arrays.toString(stack) : "No stack trace available.");
-                claimLogRepository.save(claimLogEntity);
-                log.error(claimLogEntity.toString());
+                createClaimLogError(exchange);
             });
         } catch (Exception e) {
             exchange.setException(e);
             log.error(e.getMessage());
         }
 
+    }
+
+    private void createClaimLogError(Exchange exchange) {
+        ClaimLog claimLogEntity = (ClaimLog) ClaimFactory.configureEntity(new ClaimLog(), exchange);
+        claimLogEntity.setMessageTyp(MessageType.ERROR);
+        claimLogEntity.setMessage(getMessage(exchange));
+        var stack = getStack(exchange);
+        claimLogEntity.setComment(stack.length > 0 ? Arrays.toString(stack) : "No stack trace available.");
+        claimLogRepository.save(claimLogEntity);
+        log.error(claimLogEntity.toString());
     }
 
     public static StackTraceElement[] getStack(Exchange exchange) {

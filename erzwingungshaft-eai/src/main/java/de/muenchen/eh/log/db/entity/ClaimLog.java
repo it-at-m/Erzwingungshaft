@@ -10,15 +10,21 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = "claim_xml", schema = "eh_log")
-public class ClaimXmlEntity extends BaseEntity implements IClaimEntity {
+@Table(name = "claim_log", schema = "eh_log")
+public class ClaimLog extends BaseEntity implements IClaimEntity {
 
     @NotEmpty
     @Column(name = "claim_id")
     private Integer claimId ;
 
     @NotEmpty
-    @Column(columnDefinition = "xml")
-    private String content;
+    @Column(name = "message_typ")
+    @Enumerated(EnumType.STRING)
+    private MessageType messageTyp;
+
+    @NotEmpty
+    private String message;
+
+    private String comment;
 
 }

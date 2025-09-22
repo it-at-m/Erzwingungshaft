@@ -9,6 +9,9 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.Type;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -17,11 +20,11 @@ import java.util.UUID;
 @Data
 @Entity
 @Table(name = "claim_document", schema = "eh_log")
-public class ClaimDocumentEntity extends BaseEntity  implements IClaimEntity {
+public class ClaimDocument extends BaseEntity {
 
     @NotEmpty
-    @Column(name = "claim_id")
-    private Integer claimId;
+    @Column(name = "claim_import_id")
+    private Integer claimImportId;
 
     @NotEmpty
     @Column(name = "document_reference")
@@ -36,8 +39,12 @@ public class ClaimDocumentEntity extends BaseEntity  implements IClaimEntity {
     @Column(name = "file_size")
     private Long file_size;
 
+    @Column(name = "document_type")
+    private String documentType;
+
     @Lob
     @Column(name = "document", columnDefinition = "BYTEA")
+    @JdbcTypeCode(SqlTypes.BINARY)
     private byte[] document;
 
     @Column(name = "uploaded_on")
@@ -48,5 +55,8 @@ public class ClaimDocumentEntity extends BaseEntity  implements IClaimEntity {
 
     @Column(name = "metadata")
     private String metadata;
+
+    @Column(name = "awss3etag")
+    private String awsS3ETag;
 
 }

@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @Entity
 @Table(name = "claim_data", schema = "eh_log")
-public class ClaimDataEntity extends BaseEntity implements IClaimEntity {
+public class ClaimData extends BaseEntity implements IClaimEntity {
 
     @NotEmpty
     @Column(name = "claim_id")

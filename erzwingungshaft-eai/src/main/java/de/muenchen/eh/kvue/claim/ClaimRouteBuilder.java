@@ -1,7 +1,7 @@
 package de.muenchen.eh.kvue.claim;
 
 import de.muenchen.eh.kvue.BaseRouteBuilder;
-import de.muenchen.eh.log.db.repository.ImportRepository;
+import de.muenchen.eh.log.db.repository.ClaimImportRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.model.dataformat.BindyType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ public class ClaimRouteBuilder extends BaseRouteBuilder {
     public static final String PROCESS_XJUSTIZ_DOCUMENT = "direct:processXjustizDocument";
 
     @Autowired
-    private ImportRepository importRepository;
+    private ClaimImportRepository claimImportRepository;
 
     @Override
     public void configure() {
@@ -27,7 +27,9 @@ public class ClaimRouteBuilder extends BaseRouteBuilder {
                 .routeId("application-eh-process")
 //                .autoStartup(false)
 //                 .split(body().tokenize(lineBreak))
-                .setBody(method(importRepository, "findByIsDataImportTrueAndIsAntragImportTrueAndIsBescheidImportTrue"))
+
+                .setBody(method(claimImportRepository, "findByIsDataImportTrueAndIsAntragImportTrueAndIsBescheidImportTrue"))
+                
                 .split().body()
                 .to("log:de.muenchen.eh?level=DEBUG")
 
@@ -41,6 +43,7 @@ public class ClaimRouteBuilder extends BaseRouteBuilder {
                 .to("log:de.muenchen.eh?level=DEBUG")
 
 //                .bean("ehServiceClaim", "logUnmarshall")
+
 //                .pollEnrich("")
 //                .transform().simple("${body.ehClaimData.supplyXJustizRequestContent()}")
                 .process("claimContentDataEnricher")
@@ -52,7 +55,7 @@ public class ClaimRouteBuilder extends BaseRouteBuilder {
                 .to("{{xjustiz.interface.eakte}}");
 
          from(UNMARSHALL_EH_CLAIM_DATA).routeId("unmarshal-eh-claimdata")
-              .unmarshal().bindy(BindyType.Fixed, ClaimData.class);
+              .unmarshal().bindy(BindyType.Fixed, ImportClaimData.class);
 
          from(PROCESS_XJUSTIZ_DOCUMENT).routeId("process-xjustiz-document")
               .to("{{xjustiz.interface.document.processor}}");

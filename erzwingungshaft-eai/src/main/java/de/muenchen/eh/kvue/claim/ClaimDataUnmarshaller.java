@@ -1,7 +1,7 @@
 package de.muenchen.eh.kvue.claim;
 
 import de.muenchen.eh.log.db.EhServiceClaim;
-import de.muenchen.eh.log.db.entity.ImportEntity;
+import de.muenchen.eh.log.db.entity.ClaimImport;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
@@ -27,18 +27,20 @@ public class ClaimDataUnmarshaller implements Processor {
 
         ehDataWrapper = new ClaimDataWrapper();
 
-        ehDataWrapper.setImportEntity(exchange.getMessage().getBody(ImportEntity.class));
+        ehDataWrapper.setClaimImport(exchange.getMessage().getBody(ClaimImport.class));
 
         Exchange unmarshalledEhClaimData = unmarshallClaimData(exchange);
-        ehDataWrapper.setEhClaimData(unmarshalledEhClaimData.getMessage().getBody(ClaimData.class));
+        ehDataWrapper.setEhImportClaimData(unmarshalledEhClaimData.getMessage().getBody(ImportClaimData.class));
 
         exchange.getMessage().setBody(ehDataWrapper);
 
-        ehServiceClaim.logEntry(exchange);
+        ehServiceClaim.logClaim(exchange);
+        ehServiceClaim.logUnmarshall(exchange);
+
     }
 
     private Exchange unmarshallClaimData(Exchange exchange) {
-        Exchange marshalContent = ExchangeBuilder.anExchange(exchange.getContext()).withBody(ehDataWrapper.getImportEntity().getContent()).build();
+        Exchange marshalContent = ExchangeBuilder.anExchange(exchange.getContext()).withBody(ehDataWrapper.getClaimImport().getContent()).build();
         return unmarshalProducer.send(marshalContent);
     }
 }

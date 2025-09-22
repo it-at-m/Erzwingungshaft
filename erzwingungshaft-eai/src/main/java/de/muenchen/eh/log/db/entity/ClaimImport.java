@@ -1,9 +1,7 @@
 package de.muenchen.eh.log.db.entity;
 
 import de.muenchen.eh.log.db.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
@@ -12,8 +10,8 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = "import_file", schema = "eh_log")
-public class ImportEntity extends BaseEntity {
+@Table(name = "claim_import", schema = "eh_log")
+public class ClaimImport extends BaseEntity {
 
     @Column(name = "geschaeftspartner_id")
     private String geschaeftspartnerId;
@@ -49,5 +47,9 @@ public class ImportEntity extends BaseEntity {
 
     @Column(name = "bescheid_import")
     private Boolean isBescheidImport;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id", referencedColumnName = "claim_import_id")
+    private ClaimEntity claim;
 
 }

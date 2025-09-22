@@ -1,6 +1,6 @@
 package de.muenchen.eh.kvue.claim;
 
-import de.muenchen.eh.log.db.entity.ImportEntity;
+import de.muenchen.eh.log.db.entity.ClaimImport;
 import de.muenchen.xjustiz.xjustiz0500straf.content.ContentContainer;
 import de.muenchen.xjustiz.xjustiz0500straf.content.FachdatenContent;
 import de.muenchen.xjustiz.xjustiz0500straf.content.GrunddatenContent;
@@ -31,8 +31,8 @@ import java.util.*;
 @RequiredArgsConstructor
 public class ClaimContentContainerFactory {
 
-    private final ClaimData ehClaimData;
-    private final ImportEntity metadata;
+    private final ImportClaimData ehImportClaimData;
+    private final ClaimImport metadata;
 
     public ContentContainer supplyContentContainer() throws DatatypeConfigurationException {
 
@@ -43,16 +43,16 @@ public class ClaimContentContainerFactory {
 
         FachdatenContent fachdatenContent = new FachdatenContent();
 
-        var startDate = getLocalDate(getEhClaimData().getEhtatdatv());
-        fachdatenContent.setAnfangsDatumUhrzeit(LocalDateTime.of(startDate.getYear(), startDate.getMonth(), startDate.getDayOfMonth(), Integer.parseInt(getEhClaimData().getEhtatstdv()), Integer.parseInt(getEhClaimData().getEhtatminv())));
-        LocalDate endDate = getEhClaimData().getEhtatdatb().isBlank() ? startDate : getLocalDate(getEhClaimData().getEhtatdatb());
-        fachdatenContent.setEndeDatumUhrzeit(LocalDateTime.of(endDate.getYear(), endDate.getMonth(), endDate.getDayOfMonth(), Integer.parseInt(getEhClaimData().getEhtatstdb()), Integer.parseInt(getEhClaimData().getEhtatminb())));
+        var startDate = getLocalDate(getEhImportClaimData().getEhtatdatv());
+        fachdatenContent.setAnfangsDatumUhrzeit(LocalDateTime.of(startDate.getYear(), startDate.getMonth(), startDate.getDayOfMonth(), Integer.parseInt(getEhImportClaimData().getEhtatstdv()), Integer.parseInt(getEhImportClaimData().getEhtatminv())));
+        LocalDate endDate = getEhImportClaimData().getEhtatdatb().isBlank() ? startDate : getLocalDate(getEhImportClaimData().getEhtatdatb());
+        fachdatenContent.setEndeDatumUhrzeit(LocalDateTime.of(endDate.getYear(), endDate.getMonth(), endDate.getDayOfMonth(), Integer.parseInt(getEhImportClaimData().getEhtatstdb()), Integer.parseInt(getEhImportClaimData().getEhtatminb())));
 
         Tatort tatortContent = new Tatort();
-        tatortContent.getStrasseHausnummer().add(new StrasseHausnummer(getEhClaimData().getEhtatstr1(), getEhClaimData().getEhtathnr1()));
-        if (!getEhClaimData().getEhtatstr2().isBlank())
-            tatortContent.getStrasseHausnummer().add(new StrasseHausnummer(getEhClaimData().getEhtatstr2(), getEhClaimData().getEhtathnr2()));
-        tatortContent.setOrt(getEhClaimData().getEhtatort());
+        tatortContent.getStrasseHausnummer().add(new StrasseHausnummer(getEhImportClaimData().getEhtatstr1(), getEhImportClaimData().getEhtathnr1()));
+        if (!getEhImportClaimData().getEhtatstr2().isBlank())
+            tatortContent.getStrasseHausnummer().add(new StrasseHausnummer(getEhImportClaimData().getEhtatstr2(), getEhImportClaimData().getEhtathnr2()));
+        tatortContent.setOrt(getEhImportClaimData().getEhtatort());
 
         //      tatortContent.setOrtsbeschreibung(getEhtat..);
 
@@ -128,11 +128,19 @@ public class ClaimContentContainerFactory {
 
         Identifikation identifikationAkte = new Identifikation(uuidIdentAkte, BigInteger.valueOf(1));
 
+        // Xaver kann das Optional auch weggelassen werden ????
         Laufzeit laufzeit = new Laufzeit(getXMLGregorianCalendar("2099-01-01"), getXMLGregorianCalendar("2099-12-31"));
+
+        // Xaver Optional kann weg ?
         AnwendungspezifischeErweiterung anwendungspezifischeErweiterung = new AnwendungspezifischeErweiterung("TODO", "TODO");
+
+    //    Xaver    AktenzeichenFreitext   statt AktenzeichenStrukuriert ??
         AktenzeichenStrukuriert aktenzeichenStrukuriert = new AktenzeichenStrukuriert("TODO", "TODO","TODO","1", "TODO");
+
         FachspezifischeDatenAkte fachspezifischeDatenAkte = new FachspezifischeDatenAkte(aktenzeichenStrukuriert);
 
+
+ //       Akte akte = new Akte(identifikationAkte, null, anwendungspezifischeErweiterung, fachspezifischeDatenAkte);
         Akte akte = new Akte(identifikationAkte, laufzeit, anwendungspezifischeErweiterung, fachspezifischeDatenAkte);
         akten.add(akte);
 
@@ -142,18 +150,18 @@ public class ClaimContentContainerFactory {
     private void setPersonalData(Beteiligung ehBetroffener) {
 
         var person = ehBetroffener.generateBeteiligter().generateNatuerlichePerson();
-        person.setGeschlecht(supplyGeschlecht(getEhClaimData().getEhp1geschl()));
+        person.setGeschlecht(supplyGeschlecht(getEhImportClaimData().getEhp1geschl()));
 
         var name = person.generateVollerName();
-        name.setVorname(getEhClaimData().getEhp1vorname());
-        name.setNachname(getEhClaimData().getEhp1name());
-        name.setTitel(getEhClaimData().getEhp1akad());
-        name.setNamensvorsatz(getEhClaimData().getEhp1nambest());
-        name.setGeburtsname(getEhClaimData().getEhp1gebname());
+        name.setVorname(getEhImportClaimData().getEhp1vorname());
+        name.setNachname(getEhImportClaimData().getEhp1name());
+        name.setTitel(getEhImportClaimData().getEhp1akad());
+        name.setNamensvorsatz(getEhImportClaimData().getEhp1nambest());
+        name.setGeburtsname(getEhImportClaimData().getEhp1gebname());
 
         var geburt = person.generateGeburt();
-        geburt.setGeburtsdatum(dateFormatConverter(getEhClaimData().getEhp1gebdat(), "yyyy-MM-dd"));
-        geburt.setGeburtsort(getEhClaimData().getEhp1gebort());
+        geburt.setGeburtsdatum(dateFormatConverter(getEhImportClaimData().getEhp1gebdat(), "yyyy-MM-dd"));
+        geburt.setGeburtsort(getEhImportClaimData().getEhp1gebort());
 
         person.addAnschrift(setAddress());
     }
@@ -162,13 +170,13 @@ public class ClaimContentContainerFactory {
 
         var anschrift = new Anschrift();
 
-        anschrift.setAnschriftenzusatz(getEhClaimData().getEhp1zusatz());
-        anschrift.setStrasse(getEhClaimData().getEhp1strasse());
-        anschrift.setHausnummer(getEhClaimData().getEhp1hausnr());
-        anschrift.setPostfachnummer(getEhClaimData().getEhp1postf());
-        anschrift.setPlz(getEhClaimData().getEhp1plz());
-        anschrift.setOrt(getEhClaimData().getEhp1ort());
-        anschrift.setWohnungsgeber(getEhClaimData().getEhp1whgeber());
+        anschrift.setAnschriftenzusatz(getEhImportClaimData().getEhp1zusatz());
+        anschrift.setStrasse(getEhImportClaimData().getEhp1strasse());
+        anschrift.setHausnummer(getEhImportClaimData().getEhp1hausnr());
+        anschrift.setPostfachnummer(getEhImportClaimData().getEhp1postf());
+        anschrift.setPlz(getEhImportClaimData().getEhp1plz());
+        anschrift.setOrt(getEhImportClaimData().getEhp1ort());
+        anschrift.setWohnungsgeber(getEhImportClaimData().getEhp1whgeber());
         anschrift.setStaat(XoevCodeGDSStaatenTyp3.DEUTSCHLAND.getDescriptor());
 
         return anschrift;

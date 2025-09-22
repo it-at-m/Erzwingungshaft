@@ -8,4 +8,7 @@ import java.util.UUID;
 
 @Repository
 public interface ClaimRepository extends CrudRepository<ClaimEntity, UUID> {
+
+    ClaimEntity findByClaimImportId(Integer claimImportId);
+
 }

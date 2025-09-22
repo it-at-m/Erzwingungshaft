@@ -20,8 +20,8 @@ public class ClaimEntity extends BaseEntity {
     private UUID ehUuid;
 
     @NotEmpty
-    @Column(name = "import_id")
-    private Integer importId;
+    @Column(name = "claim_import_id")
+    private Integer claimImportId;
 
     @Column(name = "geschaeftspartner_id")
     private String geschaeftspartnerId;

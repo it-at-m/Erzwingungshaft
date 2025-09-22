@@ -10,12 +10,12 @@ public class ClaimFactory {
 
     public static IClaimEntity configureEntity(IClaimEntity entity, Exchange exchange) {
 
-        entity.setClaimId(entryEntityFacade(exchange).getId());
+        entity.setClaimId(claimFacade(exchange).getId());
         return entity;
     }
 
-    public static ClaimEntity entryEntityFacade(Exchange exchange) {
-        Optional<ClaimEntity> entryOptional = Optional.ofNullable(exchange.getMessage().getHeader(Constants.ENTRY_ENTITY, ClaimEntity.class));
+    public static ClaimEntity claimFacade(Exchange exchange) {
+        Optional<ClaimEntity> entryOptional = Optional.ofNullable(exchange.getMessage().getHeader(Constants.CLAIM, ClaimEntity.class));
         return entryOptional.orElseThrow(() -> new RuntimeException("No EntryEntity found. The required EntryEntity is initially created with the 'EhService.logEntry' call. This must be executed first."));
 
     }

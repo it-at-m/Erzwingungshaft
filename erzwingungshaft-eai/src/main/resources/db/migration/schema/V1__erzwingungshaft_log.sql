@@ -1,6 +1,6 @@
 CREATE SCHEMA IF NOT EXISTS eh_log;
 
-CREATE TABLE eh_log.import_file
+CREATE TABLE eh_log.claim_import
 (
 
     id                   SERIAL PRIMARY KEY,    -- INT PK
@@ -19,29 +19,50 @@ CREATE TABLE eh_log.import_file
 
 );
 
-CREATE INDEX idx_import_geschaeftspartner_kassenzeichen ON eh_log.import_file (geschaeftspartner_id, kassenzeichen);
+CREATE INDEX idx_import_geschaeftspartner_kassenzeichen ON eh_log.claim_import (geschaeftspartner_id, kassenzeichen);
 
-CREATE TABLE eh_log.import_log
+CREATE TABLE eh_log.claim_import_log
 (
 
     id          SERIAL PRIMARY KEY, -- INT PK
-    import_id    INTEGER NOT NULL,
+    claim_import_id   INTEGER NOT NULL,
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     message_typ TEXT    NOT NULL,
     message     TEXT    NOT NULL,
     comment     TEXT      DEFAULT '',
 
-    CONSTRAINT fk_import_file FOREIGN KEY (import_id) REFERENCES eh_log.import_file (id) ON DELETE CASCADE
+    CONSTRAINT fk_claim_import FOREIGN KEY (claim_import_id) REFERENCES eh_log.claim_import (id) ON DELETE CASCADE
 
 );
 
-CREATE INDEX idx_import_log_import_id ON eh_log.import_log (import_id);
+CREATE INDEX idx_import_log_claim_import_id ON eh_log.claim_import_log (claim_import_id);
+
+CREATE TABLE eh_log.claim_document
+(
+    id                 SERIAL PRIMARY KEY, -- INT PK
+    claim_import_id    INTEGER      NOT NULL,
+    document_reference UUID,
+    document_type      TEXT  NOT NULL,
+    file_name          VARCHAR(255) NOT NULL,
+    file_type          VARCHAR(50)  NOT NULL,
+    file_size          BIGINT,
+    document           BYTEA,
+    uploaded_on        TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_on         TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    metadata           TEXT,               -- claim entity as json
+    awss3etag          TEXT,                -- The hex encoded 128-bit MD5 digest of the associated object according to RFC 1864. This data is used as an integrity check to verify that the data received by the caller is the same data that was sent by Amazon S3.
+
+    CONSTRAINT fk_claim_import FOREIGN KEY (claim_import_id) REFERENCES eh_log.claim_import (id) ON DELETE CASCADE
+
+);
+CREATE INDEX idx_claim_import_document_claim_id ON eh_log.claim_document (claim_import_id);
+CREATE INDEX idx_claim_import_document_document_reference ON eh_log.claim_document (document_reference);
 
 CREATE TABLE eh_log.claim
 (
 
     id                   SERIAL PRIMARY KEY, -- INT PK
-    import_id            INTEGER      NOT NULL,
+    claim_import_id      INTEGER      NOT NULL,
     eh_uuid              UUID,               -- Assigned during XML creation
     geschaeftspartner_id VARCHAR(10),
     kassenzeichen        VARCHAR(20),
@@ -50,10 +71,10 @@ CREATE TABLE eh_log.claim
     file_line_index      INTEGER,
     created_at           TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT fk_import_file FOREIGN KEY (import_id) REFERENCES eh_log.import_file (id) ON DELETE CASCADE
+    CONSTRAINT fk_claim_import FOREIGN KEY (claim_import_id) REFERENCES eh_log.claim_import (id) ON DELETE CASCADE
 
 );
-CREATE INDEX idx_claim_import_id ON eh_log.claim (import_id);
+CREATE INDEX idx_claim_claim_import_id ON eh_log.claim (claim_import_id);
 CREATE INDEX idx_claim_geschaeftspartner_kassenzeichen ON eh_log.claim (geschaeftspartner_id, kassenzeichen);
 
 CREATE TABLE eh_log.claim_log
@@ -97,25 +118,6 @@ CREATE TABLE eh_log.claim_content
 );
 
 CREATE INDEX idx_claim_content_claim_id ON eh_log.claim_content (claim_id);
-
-CREATE TABLE eh_log.claim_document
-(
-    id                 SERIAL PRIMARY KEY, -- INT PK
-    claim_id           INTEGER      NOT NULL,
-    document_reference UUID,
-    file_name          VARCHAR(255) NOT NULL,
-    file_type          VARCHAR(50)  NOT NULL,
-    file_size          BIGINT,
-    document           BYTEA,
-    uploaded_on        TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_on         TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    metadata           TEXT,               -- claim entity as json
-
-    CONSTRAINT fk_claim FOREIGN KEY (claim_id) REFERENCES eh_log.claim (id) ON DELETE CASCADE
-
-);
-CREATE INDEX idx_claim_document_claim_id ON eh_log.claim_document (claim_id);
-CREATE INDEX idx_claim_document_document_reference ON eh_log.claim_document (document_reference);
 
 CREATE TABLE eh_log.claim_data
 (

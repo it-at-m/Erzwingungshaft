@@ -17,10 +17,9 @@ public class ClaimContentDataEnricher implements Processor {
     public void process(Exchange exchange) {
 
         try {
-            ehServiceClaim.logUnmarshall(exchange);
 
             ClaimDataWrapper dataWrapper = exchange.getMessage().getBody(ClaimDataWrapper.class);
-            ClaimContentContainerFactory contentContainerFactory = new ClaimContentContainerFactory(dataWrapper.getEhClaimData(), dataWrapper.getImportEntity());
+            ClaimContentContainerFactory contentContainerFactory = new ClaimContentContainerFactory(dataWrapper.getEhImportClaimData(), dataWrapper.getClaimImport());
             dataWrapper.setContentContainer(contentContainerFactory.supplyContentContainer());
 
             ehServiceClaim.logContent(exchange);

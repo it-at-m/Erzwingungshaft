@@ -26,11 +26,11 @@ public class FileImportRouteBuilder extends BaseRouteBuilder {
         from("{{xjustiz.interface.file.consume}}")
                 .routeId("generate-import-files")
                 .split(body().tokenize(lineBreak), new GroupedBodyAggregationStrategy())
-                   .process("importDataEnricher")
-                   .process("createClaimMetadataFile")
-                   .bean("ehServiceImport", "logImportEh")
+                .process("importDataEnricher")
+                .process("createClaimMetadataFile")
+                .bean("ehServiceImport", "logClaimImport")
                 .end()
-                .log(LoggingLevel.DEBUG, "de.muenchen.eh" ,"'${body.size}' claims imported.")
+                .log(LoggingLevel.DEBUG, "de.muenchen.eh", "'${body.size}' claims imported.")
                 .process(exchange -> {
                     exchange.getContext().getRouteController().startRoute("import-pdfs");
                 });
@@ -39,7 +39,7 @@ public class FileImportRouteBuilder extends BaseRouteBuilder {
                 .unmarshal().bindy(BindyType.Fixed, ImportClaimIdentifierData.class);
 
         from(S3_UPLOAD).routeId("s3-upload")
-               .to("{{xjustiz.interface.file.file-output}}");
+                .to("{{xjustiz.interface.file.file-output}}");
 
         from("{{xjustiz.interface.pdf.consume}}")
                 .routeId("import-pdfs")
@@ -47,12 +47,13 @@ public class FileImportRouteBuilder extends BaseRouteBuilder {
                 .idempotentConsumer(simple("${header.CamelAwsS3Key}"), MemoryIdempotentRepository.memoryIdempotentRepository(1000))
                 .process(new S3ObjectName())
                 .toD("{{xjustiz.interface.pdf.file-output}}")
-                .bean("ehServiceImport", "logImportPdf")
+                .bean("ehServiceImport", "logPdfImport")
+                .process("documentImport")
                 .aggregate(constant(true), new GroupedBodyAggregationStrategy())
                 .completionSize(100)
                 .completionTimeout(2000)
                 .bean("importEntityCache", "clear")
-                .log(LoggingLevel.DEBUG, "de.muenchen.eh" ,"'${body.size}' pdf files imported.")
+                .log(LoggingLevel.DEBUG, "de.muenchen.eh", "'${body.size}' pdf files imported.")
                 .to(ClaimRouteBuilder.PROCESS_CLAIMS);
 
     }

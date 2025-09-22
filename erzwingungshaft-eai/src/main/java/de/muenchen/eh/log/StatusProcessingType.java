@@ -6,9 +6,11 @@ import lombok.Getter;
 public enum StatusProcessingType {
 
     DATA_FILE_CREATED("Raw data line read from original multi-line import file. Claim file (*.fix) generated in newly created 'claim-directory'."),
-    DATA_FILE_IMPORT_FINISHED("Generate import files finished. Start import-pdfs process."),
-    ANTRAG_IMPORT("Antrag PDF is imported and assigned to directory."),
-    BESCHEID_IMPORT("Bescheid PDF is imported and assigned to directory."),
+    DATA_FILE_IMPORT_FINISHED("Generate claim import files finished. Start import-pdfs process."),
+    ANTRAG_IMPORT_DIRECTORY("Antrag PDF is imported and assigned to directory."),
+    BESCHEID_IMPORT_DIRECTORY("Bescheid PDF is imported and assigned to directory."),
+    ANTRAG_IMPORT_DB("Antrag PDF is imported and assigned to database."),
+    BESCHEID_IMPORT_DB("Bescheid PDF is imported and assigned to database."),
     DATA_READ("Raw data line read from generated claim file."),
     DATA_UNMARSHALLED("Data unmarshalled from claim file line."),
     CONTENT_CREATED("Content created for xJustiz message generation."),

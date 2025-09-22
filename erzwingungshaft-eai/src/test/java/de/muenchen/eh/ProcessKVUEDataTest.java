@@ -47,7 +47,7 @@ class ProcessKVUEDataTest {
     @Autowired
     private ClaimLogRepository claimLogRepository;
 
-    private static final String EH_BUCKET_IMPORT = "eh-import-progress";
+    private static final String EH_BUCKET_IMPORT = "eh-backup";
     private static final String EH_BUCKET_PDF = "eh-import-pdf";
     private static final String EH_BUCKET_ANTRAG = "eh-import-antrag";
 
@@ -113,7 +113,7 @@ class ProcessKVUEDataTest {
         var exception = (Exception) exchange.getAllProperties().get(Exchange.EXCEPTION_CAUGHT);
         assertEquals("The mandatory field defined at the position 31 is empty for the line: 1", exception.getMessage());
 
-        var entry = exchange.getIn().getHeader(Constants.ENTRY_ENTITY, ClaimEntity.class);
+        var entry = exchange.getIn().getHeader(Constants.CLAIM, ClaimEntity.class);
         var logs = claimLogRepository.findByClaimIdAndMessageTyp(entry.getId(), MessageType.ERROR);
         assertEquals("The mandatory field defined at the position 31 (de.muenchen.eh.kvue.EhCase.ehtatstdb) is empty for the line: 1", logs.getLast().getMessage());
 

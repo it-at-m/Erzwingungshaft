@@ -1,7 +1,7 @@
 package de.muenchen.eh.log.db;
 
-import de.muenchen.eh.log.db.entity.ImportEntity;
-import de.muenchen.eh.log.db.repository.ImportRepository;
+import de.muenchen.eh.log.db.entity.ClaimImport;
+import de.muenchen.eh.log.db.repository.ClaimImportRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -16,27 +16,27 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ImportEntityCache {
 
-    private final ImportRepository importRepository;
-    private final HashMap<String, List<ImportEntity>> importEntityCache = new HashMap<>();
+    private final ClaimImportRepository claimImportRepository;
+    private final HashMap<String, List<ClaimImport>> claimImportCache = new HashMap<>();
 
 
-    public List<ImportEntity> getImportEntities(final String key) {
+    public List<ClaimImport> getImportEntities(final String key) {
 
-        if (!importEntityCache.containsKey(key)) {
-            importEntityCache.put(key, importRepository.findByOutputDirectoryAndIsAntragImportIsNullAndIsBescheidImportIsNull(key));
+        if (!claimImportCache.containsKey(key)) {
+            claimImportCache.put(key, claimImportRepository.findByOutputDirectoryAndIsAntragImportIsNullAndIsBescheidImportIsNull(key));
         }
-        return importEntityCache.get(key);
+        return claimImportCache.get(key);
     }
 
-    public void put(String key, ImportEntity value) {
-        importEntityCache.put(key, new ArrayList<>(Arrays.asList(value)));
+    public void put(String key, ClaimImport value) {
+        claimImportCache.put(key, new ArrayList<>(Arrays.asList(value)));
     }
 
     public void clear() {
-        importEntityCache.entrySet().removeIf(entry ->
+        claimImportCache.entrySet().removeIf(entry ->
                 entry.getValue().stream()
                         .allMatch(entity -> entity.getIsAntragImport() != null && entity.getIsBescheidImport() != null)
         );
-        log.debug("Import entity cache is cleared. '{}' remaining entities.", importEntityCache.size());
+        log.debug("Import entity cache is cleared. '{}' remaining entities.", claimImportCache.size());
     }
 }

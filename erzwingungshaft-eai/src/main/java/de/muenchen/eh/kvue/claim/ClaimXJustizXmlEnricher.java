@@ -26,6 +26,7 @@ public class ClaimXJustizXmlEnricher implements Processor {
         Exchange xjustizContent = ExchangeBuilder.anExchange(exchange.getContext()).withBody(wrapper.getContentContainer()).build();
         Exchange xJustizXML = xjustizProducer.send(xjustizContent);
         wrapper.setXjustizXml(xJustizXML.getMessage().getBody(String.class));
+        exchange.setException(xJustizXML.getException());
 
         ehServiceClaim.logXml(exchange);
 
