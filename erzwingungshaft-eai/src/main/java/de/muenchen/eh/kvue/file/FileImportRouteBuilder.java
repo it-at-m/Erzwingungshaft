@@ -8,6 +8,7 @@ import org.apache.camel.model.dataformat.BindyType;
 import org.apache.camel.processor.aggregate.GroupedBodyAggregationStrategy;
 import org.apache.camel.support.processor.idempotent.MemoryIdempotentRepository;
 import org.springframework.stereotype.Component;
+import java.nio.charset.StandardCharsets;
 
 @Component
 @RequiredArgsConstructor
@@ -25,6 +26,7 @@ public class FileImportRouteBuilder extends BaseRouteBuilder {
 
         from("{{xjustiz.interface.file.consume}}")
                 .routeId("generate-import-files")
+                .convertBodyTo(String.class, StandardCharsets.ISO_8859_1.name())
                 .split(body().tokenize(lineBreak), new GroupedBodyAggregationStrategy())
                 .process("importDataEnricher")
                 .process("createClaimMetadataFile")
