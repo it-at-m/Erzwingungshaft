@@ -2,6 +2,7 @@ package de.muenchen.eh.kvue.claim;
 
 import de.muenchen.eh.kvue.BaseRouteBuilder;
 import de.muenchen.eh.log.db.repository.ClaimImportRepository;
+import de.muenchen.eh.log.db.service.ClaimService;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.model.dataformat.BindyType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +16,8 @@ public class ClaimRouteBuilder extends BaseRouteBuilder {
     public static final String UNMARSHALL_EH_CLAIM_DATA = "direct:unmarshalEhClaimData";
     public static final String PROCESS_XJUSTIZ_DOCUMENT = "direct:processXjustizDocument";
 
-    @Autowired
-    private ClaimImportRepository claimImportRepository;
+  // private final ClaimImportRepository claimImportRepository;
+    private final ClaimService claimService;
 
     @Override
     public void configure() {
@@ -25,33 +26,13 @@ public class ClaimRouteBuilder extends BaseRouteBuilder {
 
         from(PROCESS_CLAIMS)
                 .routeId("application-eh-process")
-//                .autoStartup(false)
-//                 .split(body().tokenize(lineBreak))
-
-                .setBody(method(claimImportRepository, "findByIsDataImportTrueAndIsAntragImportTrueAndIsBescheidImportTrue"))
+                .setBody(method(claimService, "claimsForProcessing"))
                 
                 .split().body()
-                .to("log:de.muenchen.eh?level=DEBUG")
-
-        //        .pollEnrich().simple("file:testdata/out/?fileName=${body.getOutputDirectory()}/${body.getOutputFile()}")
                 .process("claimDataUnmarshaller")
-
-//                .bean("ehServiceClaim", "logEntry")
-//                .setBody(simple("${body.getContent()}"))
-//                .unmarshal().bindy(BindyType.Fixed, EhClaimData.class)
-
                 .to("log:de.muenchen.eh?level=DEBUG")
-
-//                .bean("ehServiceClaim", "logUnmarshall")
-
-//                .pollEnrich("")
-//                .transform().simple("${body.ehClaimData.supplyXJustizRequestContent()}")
                 .process("claimContentDataEnricher")
- //               .bean("ehServiceClaim", "logContent")
- //               .to("{{xjustiz.interface.document.processor}}")
                 .process("claimXJustizXmlEnricher")
-                .to("log:de.muenchen.eh?level=DEBUG")
- //               .bean("ehServiceClaim", "logXml")
                 .to("{{xjustiz.interface.eakte}}");
 
          from(UNMARSHALL_EH_CLAIM_DATA).routeId("unmarshal-eh-claimdata")

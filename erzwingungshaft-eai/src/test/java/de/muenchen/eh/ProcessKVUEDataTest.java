@@ -1,13 +1,10 @@
 package de.muenchen.eh;
 
 import de.muenchen.eh.common.XmlUnmarshaller;
-import de.muenchen.eh.log.Constants;
-import de.muenchen.eh.log.db.entity.ClaimEntity;
-import de.muenchen.eh.log.db.entity.MessageType;
+import de.muenchen.eh.kvue.claim.ClaimDataWrapper;
 import de.muenchen.eh.log.db.repository.ClaimLogRepository;
 import de.muenchen.xjustiz.generated.NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010;
 import org.apache.camel.EndpointInject;
-import org.apache.camel.Exchange;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.junit.jupiter.api.BeforeEach;
@@ -85,37 +82,30 @@ class ProcessKVUEDataTest {
     }
 
     @Test
-    void test_readDataAndCreateXustizXml() throws Exception {
+    void test_readDataAndCreateXjustizXml() throws Exception {
 
         uploadBucketTestFileConfiguration();
 
         // Start test ...
-
-        xjustizXml.expectedMessageCount(3);
+        xjustizXml.expectedMessageCount(1);
         xjustizXml.assertIsSatisfied(TimeUnit.SECONDS.toMillis(1));
 
-        failures.expectedMessageCount(2);
+        failures.expectedMessageCount(0);
         failures.assertIsSatisfied(TimeUnit.SECONDS.toMillis(1));
 
-        NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010 lastXJustizMessage = XmlUnmarshaller.unmarshalNachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010(xjustizXml.getExchanges().getLast().getMessage().getBody(String.class));
+        ClaimDataWrapper dataWrapper = xjustizXml.getExchanges().getLast().getMessage().getBody(ClaimDataWrapper.class);
+
+        NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010 lastXJustizMessage = XmlUnmarshaller.unmarshalNachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010(dataWrapper.getXjustizXml());
 
         var betroffener = lastXJustizMessage.getGrunddaten().getVerfahrensdaten().getBeteiligungs().getFirst().getBeteiligter().getAuswahlBeteiligter().getNatuerlichePerson();
 
-        assertEquals("TESTILIMON", betroffener.getVollerName().getNachname());
-        assertEquals("CXXXXX", betroffener.getVollerName().getVorname());
+        assertEquals("TESTT", betroffener.getVollerName().getNachname());
+        assertEquals("EXXXX", betroffener.getVollerName().getVorname());
 
         var beteiligung = lastXJustizMessage.getGrunddaten().getVerfahrensdaten().getBeteiligungs().getLast();
         assertEquals("046", beteiligung.getRolles().getFirst().getRollenbezeichnung().getCode());
 
         assertEquals("Stadt München",lastXJustizMessage.getNachrichtenkopf().getAbsender().getInformationen().getAuswahlKommunikationspartner().getSonstige());
-
-        var exchange = failures.getReceivedExchanges().getLast();
-        var exception = (Exception) exchange.getAllProperties().get(Exchange.EXCEPTION_CAUGHT);
-        assertEquals("The mandatory field defined at the position 31 is empty for the line: 1", exception.getMessage());
-
-        var entry = exchange.getIn().getHeader(Constants.CLAIM, ClaimEntity.class);
-        var logs = claimLogRepository.findByClaimIdAndMessageTyp(entry.getId(), MessageType.ERROR);
-        assertEquals("The mandatory field defined at the position 31 (de.muenchen.eh.kvue.EhCase.ehtatstdb) is empty for the line: 1", logs.getLast().getMessage());
 
     }
 

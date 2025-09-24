@@ -2,16 +2,21 @@ package de.muenchen.eh.log.db.entity;
 
 import de.muenchen.eh.log.db.BaseEntity;
 import jakarta.persistence.*;
-
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 @Table(name = "claim_import", schema = "eh_log")
+@NoArgsConstructor
 public class ClaimImport extends BaseEntity {
+
+    public ClaimImport(ClaimEntity claim) {
+        this.claim = claim;
+    }
 
     @Column(name = "geschaeftspartner_id")
     private String geschaeftspartnerId;
@@ -49,7 +54,7 @@ public class ClaimImport extends BaseEntity {
     private Boolean isBescheidImport;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id", referencedColumnName = "claim_import_id")
+    @JoinColumn(name = "id", referencedColumnName = "idClaimImport")
     private ClaimEntity claim;
 
 }
