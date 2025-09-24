@@ -21,11 +21,11 @@ public class ClaimDataUnmarshaller implements Processor {
     @Produce(value = ClaimRouteBuilder.UNMARSHALL_EH_CLAIM_DATA)
     private ProducerTemplate unmarshalProducer;
 
-    ClaimDataWrapper ehDataWrapper;
+    ClaimProcessingContentWrapper ehDataWrapper;
 
     public void process(Exchange exchange) {
 
-        ehDataWrapper = new ClaimDataWrapper();
+        ehDataWrapper = new ClaimProcessingContentWrapper();
 
         ehDataWrapper.setClaimImport(exchange.getMessage().getBody(ClaimImport.class));
 

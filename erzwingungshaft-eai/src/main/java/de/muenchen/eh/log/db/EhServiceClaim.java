@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.eh.common.BindyIllegalArgumentMessageEnricher;
 import de.muenchen.eh.common.XmlUnmarshaller;
 import de.muenchen.eh.kvue.claim.ImportClaimData;
-import de.muenchen.eh.kvue.claim.ClaimDataWrapper;
+import de.muenchen.eh.kvue.claim.ClaimProcessingContentWrapper;
 import de.muenchen.eh.log.Constants;
 import de.muenchen.eh.log.StatusProcessingType;
 import de.muenchen.eh.log.convert.DataEntityMapper;
@@ -47,7 +47,7 @@ public class EhServiceClaim {
         try {
             Claim claim = new Claim();
 
-            ClaimImport importedClaim = exchange.getMessage().getBody(ClaimDataWrapper.class).getClaimImport();
+            ClaimImport importedClaim = exchange.getMessage().getBody(ClaimProcessingContentWrapper.class).getClaimImport();
             claim.setClaimImportId(importedClaim.getId());
             claim.setSourceFileName(importedClaim.getSourceFileName());
             claim.setFileLineIndex(importedClaim.getFileLineIndex());
@@ -66,7 +66,7 @@ public class EhServiceClaim {
     public void logUnmarshall(final Exchange exchange) {
 
         try {
-            ClaimData claimData = DataEntityMapper.INSTANCE.toClaimDataEntity(exchange.getMessage().getBody(ClaimDataWrapper.class).getEhImportClaimData());
+            ClaimData claimData = DataEntityMapper.INSTANCE.toClaimDataEntity(exchange.getMessage().getBody(ClaimProcessingContentWrapper.class).getEhImportClaimData());
 
             claimData.setClaimId(ClaimFactory.claimFacade(exchange).getId());
             claimDataRepository.save(claimData);
@@ -104,7 +104,7 @@ public class EhServiceClaim {
     public void logContent(final Exchange exchange) {
 
         try {
-            ContentContainer contentContainer = exchange.getMessage().getBody(ClaimDataWrapper.class).getContentContainer();
+            ContentContainer contentContainer = exchange.getMessage().getBody(ClaimProcessingContentWrapper.class).getContentContainer();
             ClaimContent claimContent = (ClaimContent) ClaimFactory.configureEntity(new ClaimContent(), exchange);
             ObjectMapper mapper = mapperBuilder.build();
             claimContent.setJson(mapper.writeValueAsString(contentContainer));
@@ -120,7 +120,7 @@ public class EhServiceClaim {
     public void logXml(final Exchange exchange) {
 
         try {
-            String xml = exchange.getMessage().getBody(ClaimDataWrapper.class).getXjustizXml()  ;
+            String xml = exchange.getMessage().getBody(ClaimProcessingContentWrapper.class).getXjustizXml()  ;
             ClaimXml claimXml = (ClaimXml) ClaimFactory.configureEntity(new ClaimXml(), exchange);
             claimXml.setContent(xml);
             claimXmlRepository.save(claimXml);

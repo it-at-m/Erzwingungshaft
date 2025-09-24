@@ -1,7 +1,7 @@
 package de.muenchen.eh;
 
 import de.muenchen.eh.common.XmlUnmarshaller;
-import de.muenchen.eh.kvue.claim.ClaimDataWrapper;
+import de.muenchen.eh.kvue.claim.ClaimProcessingContentWrapper;
 import de.muenchen.eh.log.db.repository.ClaimLogRepository;
 import de.muenchen.xjustiz.generated.NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010;
 import org.apache.camel.EndpointInject;
@@ -93,7 +93,7 @@ class ProcessKVUEDataTest {
         failures.expectedMessageCount(0);
         failures.assertIsSatisfied(TimeUnit.SECONDS.toMillis(1));
 
-        ClaimDataWrapper dataWrapper = xjustizXml.getExchanges().getLast().getMessage().getBody(ClaimDataWrapper.class);
+        ClaimProcessingContentWrapper dataWrapper = xjustizXml.getExchanges().getLast().getMessage().getBody(ClaimProcessingContentWrapper.class);
 
         NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010 lastXJustizMessage = XmlUnmarshaller.unmarshalNachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010(dataWrapper.getXjustizXml());
 

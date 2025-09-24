@@ -20,7 +20,7 @@ public class ClaimContentDataEnricher implements Processor {
 
         try {
 
-            ClaimDataWrapper dataWrapper = exchange.getMessage().getBody(ClaimDataWrapper.class);
+            ClaimProcessingContentWrapper dataWrapper = exchange.getMessage().getBody(ClaimProcessingContentWrapper.class);
             ClaimContentContainerFactory contentContainerFactory = new ClaimContentContainerFactory(dataWrapper.getEhImportClaimData(), dataWrapper.getClaimImport(), claimDocumentRepository);
             dataWrapper.setContentContainer(contentContainerFactory.supplyContentContainer());
 

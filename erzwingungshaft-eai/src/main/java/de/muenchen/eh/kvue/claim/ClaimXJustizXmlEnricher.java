@@ -21,7 +21,7 @@ public class ClaimXJustizXmlEnricher implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        ClaimDataWrapper wrapper = exchange.getMessage().getBody(ClaimDataWrapper.class);
+        ClaimProcessingContentWrapper wrapper = exchange.getMessage().getBody(ClaimProcessingContentWrapper.class);
 
         Exchange xjustizContent = ExchangeBuilder.anExchange(exchange.getContext()).withBody(wrapper.getContentContainer()).build();
         Exchange xJustizXML = xjustizProducer.send(xjustizContent);

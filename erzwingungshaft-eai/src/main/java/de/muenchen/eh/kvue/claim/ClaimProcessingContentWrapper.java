@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ClaimDataWrapper {
+public class ClaimProcessingContentWrapper {
 
     private ClaimImport claimImport;
     private ImportClaimData ehImportClaimData;
