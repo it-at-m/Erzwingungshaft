@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ClaimImport extends BaseEntity {
 
-    public ClaimImport(ClaimEntity claim) {
+    public ClaimImport(Claim claim) {
         this.claim = claim;
     }
 
@@ -55,6 +55,6 @@ public class ClaimImport extends BaseEntity {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id", referencedColumnName = "idClaimImport")
-    private ClaimEntity claim;
+    private Claim claim;
 
 }

@@ -1,6 +1,6 @@
 package de.muenchen.eh.log.db.service;
 
-import de.muenchen.eh.log.db.entity.ClaimEntity;
+import de.muenchen.eh.log.db.entity.Claim;
 import de.muenchen.eh.log.db.entity.ClaimImport;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -26,7 +26,7 @@ public class ClaimService {
         CriteriaQuery<Object[]> query = cb.createQuery(Object[].class);
         Root<ClaimImport> claimImportRoot = query.from(ClaimImport.class);
 
-        Join<ClaimImport, ClaimEntity> claimImportClaimJoin = claimImportRoot.join("claim", JoinType.LEFT);
+        Join<ClaimImport, Claim> claimImportClaimJoin = claimImportRoot.join("claim", JoinType.LEFT);
 
         query.where(cb.equal(claimImportRoot.get("isDataImport"), true),
                     cb.equal(claimImportRoot.get("isAntragImport"), true),

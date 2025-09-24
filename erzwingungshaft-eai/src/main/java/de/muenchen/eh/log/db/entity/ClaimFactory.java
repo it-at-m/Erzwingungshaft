@@ -14,8 +14,8 @@ public class ClaimFactory {
         return entity;
     }
 
-    public static ClaimEntity claimFacade(Exchange exchange) {
-        Optional<ClaimEntity> entryOptional = Optional.ofNullable(exchange.getMessage().getHeader(Constants.CLAIM, ClaimEntity.class));
+    public static Claim claimFacade(Exchange exchange) {
+        Optional<Claim> entryOptional = Optional.ofNullable(exchange.getMessage().getHeader(Constants.CLAIM, Claim.class));
         return entryOptional.orElseThrow(() -> new RuntimeException("No EntryEntity found. The required EntryEntity is initially created with the 'EhService.logEntry' call. This must be executed first."));
 
     }

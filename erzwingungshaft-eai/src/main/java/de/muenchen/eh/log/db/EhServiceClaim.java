@@ -45,7 +45,7 @@ public class EhServiceClaim {
     public void logClaim(final Exchange exchange) {
 
         try {
-            ClaimEntity claim = new ClaimEntity();
+            Claim claim = new Claim();
 
             ClaimImport importedClaim = exchange.getMessage().getBody(ClaimDataWrapper.class).getClaimImport();
             claim.setClaimImportId(importedClaim.getId());

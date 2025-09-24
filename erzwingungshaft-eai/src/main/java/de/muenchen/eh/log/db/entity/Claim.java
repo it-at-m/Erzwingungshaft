@@ -12,7 +12,7 @@ import java.util.UUID;
 @Data
 @Entity
 @Table(name = "claim", schema = "eh_log")
-public class ClaimEntity extends BaseEntity {
+public class Claim extends BaseEntity {
 
     @Column(name = "eh_uuid")
     private UUID ehUuid;
