@@ -124,7 +124,7 @@ public class ClaimContentContainerFactory {
         List<Akte> akten = new ArrayList<>();
 
         Identifikation identifikationAkte = new Identifikation(uuidIdentAkte, nummer);
-        FachspezifischeDatenAkte fachspezifischeDatenAkte = new FachspezifischeDatenAkte(null, "TODO : Freitext", false);
+        FachspezifischeDatenAkte fachspezifischeDatenAkte = new FachspezifischeDatenAkte.Builder().choiceFreitext( "TODO : Freitext", false).build();
 
         Akte akte = new Akte(identifikationAkte, null, null, fachspezifischeDatenAkte);
 
