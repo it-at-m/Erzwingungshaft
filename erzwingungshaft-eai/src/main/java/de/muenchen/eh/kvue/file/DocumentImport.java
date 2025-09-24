@@ -3,7 +3,7 @@ package de.muenchen.eh.kvue.file;
 import de.muenchen.eh.log.Constants;
 import de.muenchen.eh.log.PdfImportType;
 import de.muenchen.eh.log.StatusProcessingType;
-import de.muenchen.eh.log.db.EhServiceImport;
+import de.muenchen.eh.log.db.LogServiceImport;
 import de.muenchen.eh.log.db.entity.ClaimDocument;
 import de.muenchen.eh.log.db.entity.ClaimImport;
 import de.muenchen.eh.log.db.repository.ClaimDocumentRepository;
@@ -21,7 +21,7 @@ import java.util.UUID;
 public class DocumentImport implements Processor {
 
     private final ClaimDocumentRepository claimDocumentRepository;
-    private final EhServiceImport ehServiceImport;
+    private final LogServiceImport logServiceImport;
 
     @Override
     public void process(Exchange exchange) throws Exception {
@@ -45,7 +45,7 @@ public class DocumentImport implements Processor {
         claimDocument.setDocument(exchange.getIn().getBody(byte[].class));
         claimDocumentRepository.save(claimDocument);
 
-        ehServiceImport.writeInfoImportLogMessage(claimDocument.getFileName().toUpperCase().endsWith(Constants.ANTRAG_EXTENSION) ? StatusProcessingType.ANTRAG_IMPORT_DB : StatusProcessingType.BESCHEID_IMPORT_DB, exchange);
+        logServiceImport.writeInfoImportLogMessage(claimDocument.getFileName().toUpperCase().endsWith(Constants.ANTRAG_EXTENSION) ? StatusProcessingType.ANTRAG_IMPORT_DB : StatusProcessingType.BESCHEID_IMPORT_DB, exchange);
 
     }
 }

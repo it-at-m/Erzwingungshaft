@@ -1,6 +1,6 @@
 package de.muenchen.eh.kvue.claim;
 
-import de.muenchen.eh.log.db.EhServiceClaim;
+import de.muenchen.eh.log.db.LogServiceClaim;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ClaimXJustizXmlEnricher implements Processor {
 
-    private final EhServiceClaim ehServiceClaim;
+    private final LogServiceClaim logServiceClaim;
 
     @Produce(ClaimRouteBuilder.PROCESS_XJUSTIZ_DOCUMENT)
     private ProducerTemplate xjustizProducer;
@@ -28,7 +28,7 @@ public class ClaimXJustizXmlEnricher implements Processor {
         wrapper.setXjustizXml(xJustizXML.getMessage().getBody(String.class));
         exchange.setException(xJustizXML.getException());
 
-        ehServiceClaim.logXml(exchange);
+        logServiceClaim.logXml(exchange);
 
     }
 

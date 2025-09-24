@@ -30,7 +30,7 @@ public class FileImportRouteBuilder extends BaseRouteBuilder {
                 .split(body().tokenize(lineBreak), new GroupedBodyAggregationStrategy())
                 .process("importDataEnricher")
                 .process("createClaimMetadataFile")
-                .bean("ehServiceImport", "logClaimImport")
+                .bean("logServiceImport", "logClaimImport")
                 .end()
                 .log(LoggingLevel.DEBUG, "de.muenchen.eh", "'${body.size}' claims imported.")
                 .process(exchange -> {
@@ -49,7 +49,7 @@ public class FileImportRouteBuilder extends BaseRouteBuilder {
                 .idempotentConsumer(simple("${header.CamelAwsS3Key}"), MemoryIdempotentRepository.memoryIdempotentRepository(1000))
                 .process(new S3ObjectName())
                 .toD("{{xjustiz.interface.pdf.file-output}}")
-                .bean("ehServiceImport", "logPdfImport")
+                .bean("logServiceImport", "logPdfImport")
                 .process("documentImport")
                 .aggregate(constant(true), new GroupedBodyAggregationStrategy())
                 .completionSize(100)

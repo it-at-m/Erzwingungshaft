@@ -1,6 +1,6 @@
 package de.muenchen.eh.kvue.claim;
 
-import de.muenchen.eh.log.db.EhServiceClaim;
+import de.muenchen.eh.log.db.LogServiceClaim;
 import de.muenchen.eh.log.db.entity.ClaimImport;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ClaimDataUnmarshaller implements Processor {
 
-    private final EhServiceClaim ehServiceClaim;
+    private final LogServiceClaim logServiceClaim;
 
     @Produce(value = ClaimRouteBuilder.UNMARSHALL_EH_CLAIM_DATA)
     private ProducerTemplate unmarshalProducer;
@@ -34,8 +34,8 @@ public class ClaimDataUnmarshaller implements Processor {
 
         exchange.getMessage().setBody(ehDataWrapper);
 
-        ehServiceClaim.logClaim(exchange);
-        ehServiceClaim.logUnmarshall(exchange);
+        logServiceClaim.logClaim(exchange);
+        logServiceClaim.logUnmarshall(exchange);
 
     }
 

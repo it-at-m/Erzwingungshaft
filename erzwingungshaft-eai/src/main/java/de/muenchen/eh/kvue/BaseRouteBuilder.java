@@ -22,7 +22,7 @@ public class BaseRouteBuilder extends RouteBuilder {
                 .log(LoggingLevel.ERROR, "${exception}")
                 .choice()
                     .when(simple(String.format("${header.%1$s} != null || ${header.%2$s} != null", Constants.CLAIM, Constants.CLAIM_IMPORT)))
-                     .bean("ehServiceError", "logError")
+                     .bean("logServiceError", "logError")
                 .end()
                 .to("{{xjustiz.interface.file.error}}");;
 
@@ -31,7 +31,7 @@ public class BaseRouteBuilder extends RouteBuilder {
                 .log(LoggingLevel.ERROR, "${exception}")
                 .choice()
                     .when(simple(String.format("${header.%s} != null", Constants.CLAIM)))
-                        .bean("ehServiceClaim", "logIllegalArgumentException")
+                        .bean("logServiceClaim", "logIllegalArgumentException")
                 .end()
                 .to("{{xjustiz.interface.file.error}}");
 

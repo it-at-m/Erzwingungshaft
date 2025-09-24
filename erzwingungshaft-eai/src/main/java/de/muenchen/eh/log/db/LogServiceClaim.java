@@ -28,7 +28,7 @@ import java.util.UUID;
 @Service
 @Log4j2
 @RequiredArgsConstructor
-public class EhServiceClaim {
+public class LogServiceClaim {
 
     @Value("${xjustiz.interface.file.consume}")
     private String dataSource;
@@ -89,9 +89,9 @@ public class EhServiceClaim {
         try {
             ClaimLog claimLog = (ClaimLog) ClaimFactory.configureEntity(new ClaimLog(), exchange);
             claimLog.setMessageTyp(MessageType.ERROR);
-            var message = EhServiceError.getMessage(exchange);
+            var message = LogServiceError.getMessage(exchange);
             claimLog.setMessage(BindyIllegalArgumentMessageEnricher.enrich(message, ImportClaimData.class));
-            var stack = EhServiceError.getStack(exchange);
+            var stack = LogServiceError.getStack(exchange);
             claimLog.setComment(stack.length > 0 ? Arrays.toString(stack) : "No stack trace available.");
             claimLogRepository.save(claimLog);
         } catch (Exception e) {

@@ -15,7 +15,7 @@ import java.util.Optional;
 @Service
 @Log4j2
 @RequiredArgsConstructor
-public class EhServiceError {
+public class LogServiceError {
 
     private final ClaimLogRepository claimLogRepository;
     private final ClaimImportLogRepository claimImportLogRepository;

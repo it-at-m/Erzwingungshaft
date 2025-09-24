@@ -21,7 +21,7 @@ import java.util.List;
 @Service
 @Log4j2
 @RequiredArgsConstructor
-public class EhServiceImport {
+public class LogServiceImport {
 
     @Value("${xjustiz.interface.file.consume}")
     private String dataSource;

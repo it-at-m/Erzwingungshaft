@@ -30,7 +30,6 @@ public class ClaimRouteBuilder extends BaseRouteBuilder {
                 
                 .split().body()
                 .process("claimDataUnmarshaller")
-                .to("log:de.muenchen.eh?level=DEBUG")
                 .process("claimContentDataEnricher")
                 .process("claimXJustizXmlEnricher")
                 .to("{{xjustiz.interface.eakte}}");
