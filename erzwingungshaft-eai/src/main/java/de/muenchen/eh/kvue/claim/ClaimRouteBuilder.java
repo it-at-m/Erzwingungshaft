@@ -1,11 +1,9 @@
 package de.muenchen.eh.kvue.claim;
 
 import de.muenchen.eh.kvue.BaseRouteBuilder;
-import de.muenchen.eh.log.db.repository.ClaimImportRepository;
 import de.muenchen.eh.log.db.service.ClaimService;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.model.dataformat.BindyType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,7 +14,6 @@ public class ClaimRouteBuilder extends BaseRouteBuilder {
     public static final String UNMARSHALL_EH_CLAIM_DATA = "direct:unmarshalEhClaimData";
     public static final String PROCESS_XJUSTIZ_DOCUMENT = "direct:processXjustizDocument";
 
-  // private final ClaimImportRepository claimImportRepository;
     private final ClaimService claimService;
 
     @Override
@@ -25,9 +22,8 @@ public class ClaimRouteBuilder extends BaseRouteBuilder {
         super.configure();
 
         from(PROCESS_CLAIMS)
-                .routeId("application-eh-process")
+                .routeId("claim-eh-process")
                 .setBody(method(claimService, "claimsForProcessing"))
-                
                 .split().body()
                 .process("claimDataUnmarshaller")
                 .process("claimContentDataEnricher")
