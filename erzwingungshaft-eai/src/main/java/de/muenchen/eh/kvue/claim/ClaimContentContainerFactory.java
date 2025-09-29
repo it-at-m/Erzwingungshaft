@@ -2,7 +2,6 @@ package de.muenchen.eh.kvue.claim;
 
 import de.muenchen.eh.common.ExtractEhIdentifier;
 import de.muenchen.eh.log.DocumentType;
-import de.muenchen.eh.log.PdfImportType;
 import de.muenchen.eh.log.db.entity.ClaimDocument;
 import de.muenchen.eh.log.db.entity.ClaimImport;
 import de.muenchen.eh.log.db.repository.ClaimDocumentRepository;
@@ -32,7 +31,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Getter
@@ -109,7 +107,7 @@ public class ClaimContentContainerFactory {
             Identifikation identifikationAntrag = new Identifikation(uuidIdentAntrag, BigInteger.valueOf(index));
             Datei file = new Datei(fileName, BigInteger.valueOf(1));
             antraege.add(file);
-            FachspezifischeDatenDokument fachspezifischeDatenDokumentAntrag = new FachspezifischeDatenDokument(document.getDocumentType().equals(PdfImportType.ANTRAG.getDescriptor()) ? XoevCodeGDSDokumentklasse.ANTRAG : XoevCodeGDSDokumentklasse.BESCHEID, uuidIdentAntrag.concat("_").concat(fileName), antraege);
+            FachspezifischeDatenDokument fachspezifischeDatenDokumentAntrag = new FachspezifischeDatenDokument(document.getDocumentType().equals(DocumentType.ANTRAG.getDescriptor()) ? XoevCodeGDSDokumentklasse.ANTRAG : XoevCodeGDSDokumentklasse.BESCHEID, uuidIdentAntrag.concat("_").concat(fileName), antraege);
             documents.add(new Dokument(identifikationAntrag, fachspezifischeDatenDokumentAntrag));
 
         });
@@ -124,7 +122,7 @@ public class ClaimContentContainerFactory {
         List<Akte> akten = new ArrayList<>();
 
         Identifikation identifikationAkte = new Identifikation(uuidIdentAkte, nummer);
-        FachspezifischeDatenAkte fachspezifischeDatenAkte = new FachspezifischeDatenAkte.Builder().choiceFreitext( "TODO : Freitext", false).build();
+        FachspezifischeDatenAkte fachspezifischeDatenAkte = FachspezifischeDatenAkte.builder().choiceFreitext( "TODO : Freitext", false).build();
 
         Akte akte = new Akte(identifikationAkte, null, null, fachspezifischeDatenAkte);
 

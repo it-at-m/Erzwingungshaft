@@ -16,6 +16,7 @@ import de.muenchen.xjustiz.xjustiz0500straf.content.ContentContainer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.camel.Exchange;
+import org.apache.camel.http.base.HttpOperationFailedException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.stereotype.Service;
@@ -98,7 +99,22 @@ public class LogServiceClaim {
             exchange.setException(e);
             log.error(e);
         }
+    }
 
+    public void logHttpOperationFailedException(final Exchange exchange) {
+
+        try {
+            ClaimLog claimLog = (ClaimLog) ClaimFactory.configureEntity(new ClaimLog(), exchange);
+            claimLog.setMessageTyp(MessageType.ERROR);
+            var responseBody = ((HttpOperationFailedException) exchange.getAllProperties().get(Exchange.EXCEPTION_CAUGHT)).getResponseBody();
+            claimLog.setMessage(LogServiceError.getMessage(exchange).concat(" (" + responseBody +")"));
+            var stack = LogServiceError.getStack(exchange);
+            claimLog.setComment(stack.length > 0 ? Arrays.toString(stack) : "No stack trace available.");
+            claimLogRepository.save(claimLog);
+        } catch (Exception e) {
+            exchange.setException(e);
+            log.error(e);
+        }
     }
 
     public void logContent(final Exchange exchange) {
@@ -150,7 +166,5 @@ public class LogServiceClaim {
             log.error(e);
         }
     }
-
-
 
 }

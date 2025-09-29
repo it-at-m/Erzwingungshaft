@@ -27,6 +27,21 @@ camel:
       override-endpoint: http://127.0.0.1:9000
       region: local
 
+eakte:
+  connection:
+    host:
+    scheme: https
+    port: 443
+    context-path:
+    username:
+    password:
+  object:
+    x-anwendung:
+    userlogin:
+    joboe:
+    jobposition:
+    objaddress:
+
 # Custom properties
 xjustiz:
   credentials:
@@ -43,16 +58,16 @@ xjustiz:
       common: accessKey=${xjustiz.credentials.s3.access-key}&secretKey=${xjustiz.credentials.s3.secret-key}&region=${camel.component.aws2-s3.region}&overrideEndpoint=true&uriEndpointOverride=${camel.component.aws2-s3.override-endpoint}
       consume: aws2-s3://eh-import-antrag?${xjustiz.interface.file.common}
       error: mock:error
-      file-output: aws2-s3://eh-import-progress?${xjustiz.interface.file.common}
+      file-output: aws2-s3://eh-backup?${xjustiz.interface.file.common}
     pdf:
       consume: aws2-s3://eh-import-pdf?${xjustiz.interface.file.common}
-      file-output: aws2-s3://eh-import-progress?${xjustiz.interface.file.common}
+      file-output: aws2-s3://eh-backup?${xjustiz.interface.file.common}
     eakte: mock:xjustizXml
   xjustiz0500straf:
     nachrichtenkopf:
       auswahl-absender-sonstige: Stadt München
-      auswahl-herstellerinformation-produkt: KVUweb
-      auswahl-herstellerinformation-produkt-name: LHM-itM-KM15
+      auswahl-herstellerinformation-produkt: LHM-itM-KM15
+      auswahl-herstellerinformation-produkt-name:  KVUweb
       auswahl-herstellerinformation-produkt-version: 1.0
     grunddaten:
       verfahrensdaten:

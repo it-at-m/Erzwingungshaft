@@ -5,7 +5,8 @@ import lombok.Getter;
 @Getter
 public enum DocumentType {
 
-    ANTRAG("Antrag document"), URSCHRIFT("Urschrift document");
+    ANTRAG("Antrag"),
+    BESCHEID("Urbescheid");
 
     private final String descriptor;
 

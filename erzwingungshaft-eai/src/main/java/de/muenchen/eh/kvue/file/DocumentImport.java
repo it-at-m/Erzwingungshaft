@@ -1,7 +1,7 @@
 package de.muenchen.eh.kvue.file;
 
 import de.muenchen.eh.log.Constants;
-import de.muenchen.eh.log.PdfImportType;
+import de.muenchen.eh.log.DocumentType;
 import de.muenchen.eh.log.StatusProcessingType;
 import de.muenchen.eh.log.db.LogServiceImport;
 import de.muenchen.eh.log.db.entity.ClaimDocument;
@@ -37,7 +37,7 @@ public class DocumentImport implements Processor {
         claimDocument.setUpdatedOn(exchange.getMessage().getHeader(AWS2S3Constants.LAST_MODIFIED, LocalDateTime.class));
         claimDocument.setAwsS3ETag(exchange.getMessage().getHeader(AWS2S3Constants.E_TAG, String.class));
 
-        claimDocument.setDocumentType(claimDocument.getFileName().toUpperCase().endsWith(Constants.ANTRAG_EXTENSION) ? PdfImportType.ANTRAG.getDescriptor() : PdfImportType.BESCHEID.getDescriptor());
+        claimDocument.setDocumentType(claimDocument.getFileName().toUpperCase().endsWith(Constants.ANTRAG_EXTENSION) ? DocumentType.ANTRAG.getDescriptor() : DocumentType.BESCHEID.getDescriptor());
 
         ClaimImport claimImport = exchange.getIn().getHeader(Constants.CLAIM_IMPORT, ClaimImport.class);
         claimDocument.setClaimImportId(claimImport.getId());

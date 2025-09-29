@@ -66,5 +66,4 @@ public class LogServiceError {
         return exchange.getException() != null ? exchange.getException().getMessage() : ((Exception) exchange.getAllProperties().get(Exchange.EXCEPTION_CAUGHT)).getMessage();
     }
 
-
 }
