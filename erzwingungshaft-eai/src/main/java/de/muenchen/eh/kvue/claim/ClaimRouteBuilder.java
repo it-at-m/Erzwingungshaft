@@ -1,6 +1,7 @@
 package de.muenchen.eh.kvue.claim;
 
-import de.muenchen.eh.kvue.BaseRouteBuilder;
+import de.muenchen.eh.BaseRouteBuilder;
+import de.muenchen.eh.eakte.EakteRouteBuilder;
 import de.muenchen.eh.log.db.service.ClaimService;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.model.dataformat.BindyType;
@@ -28,6 +29,7 @@ public class ClaimRouteBuilder extends BaseRouteBuilder {
                 .process("claimDataUnmarshaller")
                 .process("claimContentDataEnricher")
                 .process("claimXJustizXmlEnricher")
+                .process("eakteAktenplanDocumentsPipeline")
                 .to("{{xjustiz.interface.eakte}}");
 
          from(UNMARSHALL_EH_CLAIM_DATA).routeId("unmarshal-eh-claimdata")

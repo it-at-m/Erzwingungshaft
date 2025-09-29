@@ -21,11 +21,11 @@ public class ClaimXJustizXmlEnricher implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        ClaimProcessingContentWrapper wrapper = exchange.getMessage().getBody(ClaimProcessingContentWrapper.class);
+        ClaimProcessingContentWrapper processingDataWrapper = exchange.getMessage().getBody(ClaimProcessingContentWrapper.class);
 
-        Exchange xjustizContent = ExchangeBuilder.anExchange(exchange.getContext()).withBody(wrapper.getContentContainer()).build();
+        Exchange xjustizContent = ExchangeBuilder.anExchange(exchange.getContext()).withBody(processingDataWrapper.getContentContainer()).build();
         Exchange xJustizXML = xjustizProducer.send(xjustizContent);
-        wrapper.setXjustizXml(xJustizXML.getMessage().getBody(String.class));
+        processingDataWrapper.setXjustizXml(xJustizXML.getMessage().getBody(String.class));
         exchange.setException(xJustizXML.getException());
 
         logServiceClaim.logXml(exchange);

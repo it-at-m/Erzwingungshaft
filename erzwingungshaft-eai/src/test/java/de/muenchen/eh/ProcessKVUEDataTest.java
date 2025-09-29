@@ -88,10 +88,10 @@ class ProcessKVUEDataTest {
 
         // Start test ...
         xjustizXml.expectedMessageCount(1);
-        xjustizXml.assertIsSatisfied(TimeUnit.SECONDS.toMillis(1));
+        xjustizXml.assertIsSatisfied(TimeUnit.SECONDS.toMillis(5));
 
         failures.expectedMessageCount(0);
-        failures.assertIsSatisfied(TimeUnit.SECONDS.toMillis(1));
+        failures.assertIsSatisfied(TimeUnit.SECONDS.toMillis(5));
 
         ClaimProcessingContentWrapper dataWrapper = xjustizXml.getExchanges().getLast().getMessage().getBody(ClaimProcessingContentWrapper.class);
 

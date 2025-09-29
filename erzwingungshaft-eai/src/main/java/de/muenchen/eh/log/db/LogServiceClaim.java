@@ -46,15 +46,20 @@ public class LogServiceClaim {
     public void logClaim(final Exchange exchange) {
 
         try {
+
+            ClaimProcessingContentWrapper processingDataWrapper = exchange.getMessage().getBody(ClaimProcessingContentWrapper.class);
+
             Claim claim = new Claim();
 
-            ClaimImport importedClaim = exchange.getMessage().getBody(ClaimProcessingContentWrapper.class).getClaimImport();
+            ClaimImport importedClaim = processingDataWrapper.getClaimImport();
             claim.setClaimImportId(importedClaim.getId());
             claim.setSourceFileName(importedClaim.getSourceFileName());
             claim.setFileLineIndex(importedClaim.getFileLineIndex());
             claim.setStorageLocation(dataSource);
 
-            exchange.getMessage().setHeader(Constants.CLAIM, claimRepository.save(claim));
+            processingDataWrapper.setClaim(claimRepository.save(claim));
+
+            exchange.getMessage().setHeader(Constants.CLAIM, processingDataWrapper.getClaim());
 
             writeInfoClaimLogMessage(StatusProcessingType.DATA_READ, exchange);
 

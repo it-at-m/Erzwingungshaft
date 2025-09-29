@@ -1,4 +1,4 @@
-package de.muenchen.eh.kvue;
+package de.muenchen.eh;
 
 import de.muenchen.eh.log.Constants;
 import lombok.RequiredArgsConstructor;

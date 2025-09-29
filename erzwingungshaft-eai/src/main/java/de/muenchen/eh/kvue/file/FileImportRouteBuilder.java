@@ -1,6 +1,6 @@
 package de.muenchen.eh.kvue.file;
 
-import de.muenchen.eh.kvue.BaseRouteBuilder;
+import de.muenchen.eh.BaseRouteBuilder;
 import de.muenchen.eh.kvue.claim.ClaimRouteBuilder;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.LoggingLevel;

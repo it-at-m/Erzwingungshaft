@@ -1,8 +1,7 @@
 package de.muenchen.eh.eakte;
 
-import de.muenchen.eh.kvue.BaseRouteBuilder;
+import de.muenchen.eh.BaseRouteBuilder;
 import de.muenchen.eh.log.Constants;
-import de.muenchen.eh.log.db.entity.Claim;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.http.base.HttpOperationFailedException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +24,9 @@ public class EakteRouteBuilder extends BaseRouteBuilder {
                 .handled(true)
                 .log(LoggingLevel.ERROR, "${exception}")
                 .choice()
-                .when(simple(String.format("${header.%s} != null", Constants.CLAIM)))
-                .bean("logServiceClaim", "logHttpOperationFailedException")
+                        .when(exchangeProperty(Constants.CLAIM).isNotNull())
+                        .setHeader(Constants.CLAIM, exchangeProperty(Constants.CLAIM))
+                        .bean("logServiceClaim", "logHttpOperationFailedException")
                 .end()
                 .to("{{xjustiz.interface.file.error}}");
 
@@ -47,13 +47,9 @@ public class EakteRouteBuilder extends BaseRouteBuilder {
                 .port(properties.getPort())
                 .contextPath(properties.getContextPath());
 
-        // @TODO Remove static claim will be used in the meantime to develop the first serve of the OperationId call
-        Claim testClaim = new Claim();
-        testClaim.setId(1);
 
         from(DMS_CONNECTION).routeId("rest-openapi-eakte")
-            .setHeader(Constants.CLAIM, constant(testClaim))
-           .toD("rest-openapi:classpath:openapi/dmsresteai-openapi.json#${header.operationId}");
+                .toD("rest-openapi:classpath:openapi/dmsresteai-openapi.json#${header.operationId}");
 
     }
 }
