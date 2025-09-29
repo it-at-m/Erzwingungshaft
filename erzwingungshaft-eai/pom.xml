@@ -11,9 +11,8 @@
     </parent>
 
     <groupId>de.muenchen.erzwingungshaft</groupId>
-    <artifactId>erzwingungshaft-eai</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
-
+    <artifactId>erzwinungshaft-eai</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
     <name>erzwingungshaft-eai</name>
     <description>This is the default starting project for a EAI project based on the reference architecture of it@M</description>
     <url>https://github.com/it-at-m/erzwingungshaft</url>
@@ -47,7 +46,6 @@
 
         <!-- Core Frameworks -->
         <camel-spring-boot-dependencies.version>4.14.0</camel-spring-boot-dependencies.version>
-
         <!-- Logging -->
         <logstash-logback-encoder.version>8.1</logstash-logback-encoder.version>
 
