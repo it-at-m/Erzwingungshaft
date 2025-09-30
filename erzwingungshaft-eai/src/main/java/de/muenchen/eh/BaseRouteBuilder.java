@@ -3,6 +3,8 @@ package de.muenchen.eh;
 import de.muenchen.eh.log.Constants;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.LoggingLevel;
+import org.apache.camel.Predicate;
+import org.apache.camel.builder.PredicateBuilder;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -17,11 +19,13 @@ public class BaseRouteBuilder extends RouteBuilder {
     @Override
     public void configure() {
 
+        Predicate claimOrClaimImportExists = PredicateBuilder.or(exchangeProperty(Constants.CLAIM).isNotNull(), exchangeProperty(Constants.CLAIM_IMPORT).isNotNull());
+
         onException(Exception.class)
                 .handled(true)
                 .log(LoggingLevel.ERROR, "${exception}")
                 .choice()
-                    .when(simple(String.format("${header.%1$s} != null || ${header.%2$s} != null", Constants.CLAIM, Constants.CLAIM_IMPORT)))
+                .when(claimOrClaimImportExists)
                      .bean("logServiceError", "logError")
                 .end()
                 .to("{{xjustiz.interface.file.error}}");;
@@ -30,7 +34,7 @@ public class BaseRouteBuilder extends RouteBuilder {
                 .handled(true)
                 .log(LoggingLevel.ERROR, "${exception}")
                 .choice()
-                    .when(simple(String.format("${header.%s} != null", Constants.CLAIM)))
+                    .when(exchangeProperty(Constants.CLAIM).isNotNull())
                         .bean("logServiceClaim", "logIllegalArgumentException")
                 .end()
                 .to("{{xjustiz.interface.file.error}}");

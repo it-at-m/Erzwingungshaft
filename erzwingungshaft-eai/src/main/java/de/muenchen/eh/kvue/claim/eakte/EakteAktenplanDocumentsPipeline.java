@@ -1,4 +1,4 @@
-package de.muenchen.eh.eakte;
+package de.muenchen.eh.kvue.claim.eakte;
 
 import de.muenchen.eh.kvue.claim.ClaimProcessingContentWrapper;
 import de.muenchen.eh.log.Constants;
@@ -23,8 +23,7 @@ public class EakteAktenplanDocumentsPipeline implements Processor {
 
         ClaimProcessingContentWrapper proccessingDataWrapper = exchange.getMessage().getBody(ClaimProcessingContentWrapper.class);
 
-        Exchange readApentryRequest = eakteOperationIdFactory.createExchange(OperationId.READ_APENTRY);
-        readApentryRequest.setProperty(Constants.CLAIM, proccessingDataWrapper.getClaim());
+        Exchange readApentryRequest = eakteOperationIdFactory.createExchange(OperationId.READ_APENTRY, exchange.getProperty(Constants.CLAIM));
         Exchange eakteApentryResponse = eakteConnector.send(readApentryRequest);
 
         eakteApentryResponse.toString();

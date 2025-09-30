@@ -1,7 +1,6 @@
 package de.muenchen.eh.kvue.claim;
 
 import de.muenchen.eh.BaseRouteBuilder;
-import de.muenchen.eh.eakte.EakteRouteBuilder;
 import de.muenchen.eh.log.db.service.ClaimService;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.model.dataformat.BindyType;

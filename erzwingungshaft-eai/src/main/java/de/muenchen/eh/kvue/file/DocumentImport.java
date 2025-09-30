@@ -39,7 +39,7 @@ public class DocumentImport implements Processor {
 
         claimDocument.setDocumentType(claimDocument.getFileName().toUpperCase().endsWith(Constants.ANTRAG_EXTENSION) ? DocumentType.ANTRAG.getDescriptor() : DocumentType.BESCHEID.getDescriptor());
 
-        ClaimImport claimImport = exchange.getIn().getHeader(Constants.CLAIM_IMPORT, ClaimImport.class);
+        ClaimImport claimImport = exchange.getProperty(Constants.CLAIM_IMPORT, ClaimImport.class);
         claimDocument.setClaimImportId(claimImport.getId());
 
         claimDocument.setDocument(exchange.getIn().getBody(byte[].class));

@@ -1,4 +1,4 @@
-package de.muenchen.eh.eakte;
+package de.muenchen.eh.kvue.claim.eakte;
 
 import de.muenchen.eh.BaseRouteBuilder;
 import de.muenchen.eh.log.Constants;
@@ -25,8 +25,7 @@ public class EakteRouteBuilder extends BaseRouteBuilder {
                 .log(LoggingLevel.ERROR, "${exception}")
                 .choice()
                         .when(exchangeProperty(Constants.CLAIM).isNotNull())
-                        .setHeader(Constants.CLAIM, exchangeProperty(Constants.CLAIM))
-                        .bean("logServiceClaim", "logHttpOperationFailedException")
+                            .bean("logServiceClaim", "logHttpOperationFailedException")
                 .end()
                 .to("{{xjustiz.interface.file.error}}");
 

@@ -23,7 +23,7 @@ public class LogServiceError {
     public void logError(final Exchange exchange) {
 
         try {
-            Optional<ClaimImport> importEntity = Optional.ofNullable(exchange.getIn().getHeader(Constants.CLAIM_IMPORT, ClaimImport.class));
+            Optional<ClaimImport> importEntity = Optional.ofNullable(exchange.getProperty(Constants.CLAIM_IMPORT, ClaimImport.class));
             importEntity.ifPresentOrElse( ie -> {
                 ClaimImportLog claimImportLog = new ClaimImportLog();
                 claimImportLog.setClaimImportId(ie.getId());
@@ -34,7 +34,7 @@ public class LogServiceError {
                 claimImportLogRepository.save(claimImportLog);
                 log.error(claimImportLog.toString());
 
-                if(exchange.getMessage().getHeader(Constants.CLAIM) != null) {
+                if(exchange.getProperty(Constants.CLAIM) != null) {
                     createClaimLogError(exchange);
                 }
 

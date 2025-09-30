@@ -1,4 +1,4 @@
-package de.muenchen.eh.eakte;
+package de.muenchen.eh.kvue.claim.eakte;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

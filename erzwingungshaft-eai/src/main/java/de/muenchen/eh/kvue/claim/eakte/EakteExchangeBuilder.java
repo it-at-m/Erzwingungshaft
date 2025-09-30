@@ -1,4 +1,4 @@
-package de.muenchen.eh.eakte;
+package de.muenchen.eh.kvue.claim.eakte;
 
 import org.apache.camel.Exchange;
 import java.util.Base64;

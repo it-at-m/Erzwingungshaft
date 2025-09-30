@@ -1,6 +1,10 @@
 package de.muenchen.eh;
 
-import de.muenchen.eh.eakte.*;
+import de.muenchen.eh.kvue.claim.eakte.EakteOperationIdFactory;
+import de.muenchen.eh.kvue.claim.eakte.EakteRouteBuilder;
+import de.muenchen.eh.kvue.claim.eakte.OperationId;
+import de.muenchen.eh.log.Constants;
+import de.muenchen.eh.log.db.entity.Claim;
 import org.apache.camel.*;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
@@ -27,13 +31,7 @@ public class EakteTest {
     private ProducerTemplate eakteConnector;
 
     @Autowired
-    private EakteConnectionProperties connectionProperties;
-
-    @Autowired
     private EakteOperationIdFactory eakteOperationIdFactory;
-
-    @Autowired
-    private CamelContext camelContext;
 
     @EndpointInject("mock:error")
     private MockEndpoint failures;
@@ -43,7 +41,18 @@ public class EakteTest {
 
         failures.expectedMessageCount(0);
 
-        Exchange readApentryRequest = eakteOperationIdFactory.createExchange(OperationId.READ_APENTRY);
+        // Must be set manually in this test case.
+        Claim testClaim = new Claim();
+        testClaim.setId(1);
+
+        Exchange readApentryRequest = eakteOperationIdFactory.createExchange(OperationId.READ_APENTRY, testClaim);
+
+
+        /*
+            Mock eakte request ....
+         */
+
+
         Exchange eakteResponse = eakteConnector.send(readApentryRequest);
         assertNull(eakteResponse.getException());
 

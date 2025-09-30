@@ -59,7 +59,7 @@ public class LogServiceClaim {
 
             processingDataWrapper.setClaim(claimRepository.save(claim));
 
-            exchange.getMessage().setHeader(Constants.CLAIM, processingDataWrapper.getClaim());
+            exchange.setProperty(Constants.CLAIM, processingDataWrapper.getClaim());
 
             writeInfoClaimLogMessage(StatusProcessingType.DATA_READ, exchange);
 

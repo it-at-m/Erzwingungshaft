@@ -1,5 +1,7 @@
-package de.muenchen.eh.eakte;
+package de.muenchen.eh.kvue.claim.eakte;
 
+import de.muenchen.eh.log.Constants;
+import de.muenchen.eh.log.db.entity.Claim;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
@@ -22,7 +24,7 @@ public class EakteOperationIdFactory {
 
     private static final String EAKTE_FILE_PLAN = "eakte.object.";
 
-    public Exchange createExchange(OperationId operationId) {
+    public Exchange createExchange(OperationId operationId, Object relatedClaim) {
 
         Exchange exchange;
         switch (operationId) {
@@ -35,6 +37,7 @@ public class EakteOperationIdFactory {
                 break;
             }
         }
+        exchange.setProperty(Constants.CLAIM, relatedClaim);
         return EakteExchangeBuilder.create(exchange, operationId.getDescriptor()).withBasicAuth(connectionProperties.getUsername(), connectionProperties.getPassword()).withRequestValidation(true).build();
 
     }
