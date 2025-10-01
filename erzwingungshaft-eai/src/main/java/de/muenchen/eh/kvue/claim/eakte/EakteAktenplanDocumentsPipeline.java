@@ -3,6 +3,7 @@ package de.muenchen.eh.kvue.claim.eakte;
 import de.muenchen.eh.kvue.claim.ClaimProcessingContentWrapper;
 import de.muenchen.eh.log.Constants;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.Produce;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Log4j2
 public class EakteAktenplanDocumentsPipeline implements Processor {
 
     @Produce(value= EakteRouteBuilder.DMS_CONNECTION)
@@ -21,12 +23,12 @@ public class EakteAktenplanDocumentsPipeline implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        ClaimProcessingContentWrapper proccessingDataWrapper = exchange.getMessage().getBody(ClaimProcessingContentWrapper.class);
+        ClaimProcessingContentWrapper processingDataWrapper = exchange.getMessage().getBody(ClaimProcessingContentWrapper.class);
 
         Exchange readApentryRequest = eakteOperationIdFactory.createExchange(OperationId.READ_APENTRY, exchange.getProperty(Constants.CLAIM));
         Exchange eakteApentryResponse = eakteConnector.send(readApentryRequest);
 
-        eakteApentryResponse.toString();
+        log.debug("---->>> " + eakteApentryResponse.getMessage().getBody());
 
     }
 }

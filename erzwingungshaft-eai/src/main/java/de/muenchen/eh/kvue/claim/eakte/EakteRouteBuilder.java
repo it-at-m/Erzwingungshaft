@@ -48,7 +48,8 @@ public class EakteRouteBuilder extends BaseRouteBuilder {
 
 
         from(DMS_CONNECTION).routeId("rest-openapi-eakte")
-                .toD("rest-openapi:classpath:openapi/dmsresteai-openapi.json#${header.operationId}");
+                .toD("rest-openapi:classpath:openapi/dmsresteai-openapi.json#${header.operationId}")
+                .convertBodyTo(String.class);
 
     }
 }

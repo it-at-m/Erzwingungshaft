@@ -54,7 +54,7 @@ public class ClaimImport extends BaseEntity {
     private Boolean isBescheidImport;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id", referencedColumnName = "idClaimImport")
+    @JoinColumn(name = "id", referencedColumnName = "claimImportId")
     private Claim claim;
 
 }

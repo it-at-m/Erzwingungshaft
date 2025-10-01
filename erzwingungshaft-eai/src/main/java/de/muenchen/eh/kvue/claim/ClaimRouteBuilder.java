@@ -29,7 +29,7 @@ public class ClaimRouteBuilder extends BaseRouteBuilder {
                 .process("claimContentDataEnricher")
                 .process("claimXJustizXmlEnricher")
                 .process("eakteAktenplanDocumentsPipeline")
-                .to("{{xjustiz.interface.eakte}}");
+                .to("{{xjustiz.interface.bebpo}}");
 
          from(UNMARSHALL_EH_CLAIM_DATA).routeId("unmarshal-eh-claimdata")
               .unmarshal().bindy(BindyType.Fixed, ImportClaimData.class);
