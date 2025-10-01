@@ -21,18 +21,18 @@ public class ClaimDataUnmarshaller implements Processor {
     @Produce(value = ClaimRouteBuilder.UNMARSHALL_EH_CLAIM_DATA)
     private ProducerTemplate unmarshalProducer;
 
-    ClaimProcessingContentWrapper ehDataWrapper;
+    ClaimProcessingContentWrapper processingDataWrapper;
 
     public void process(Exchange exchange) {
 
-        ehDataWrapper = new ClaimProcessingContentWrapper();
+        processingDataWrapper = new ClaimProcessingContentWrapper();
 
-        ehDataWrapper.setClaimImport(exchange.getMessage().getBody(ClaimImport.class));
+        processingDataWrapper.setClaimImport(exchange.getMessage().getBody(ClaimImport.class));
 
         Exchange unmarshalledEhClaimData = unmarshallClaimData(exchange);
-        ehDataWrapper.setEhImportClaimData(unmarshalledEhClaimData.getMessage().getBody(ImportClaimData.class));
+        processingDataWrapper.setEhImportClaimData(unmarshalledEhClaimData.getMessage().getBody(ImportClaimData.class));
 
-        exchange.getMessage().setBody(ehDataWrapper);
+        exchange.getMessage().setBody(processingDataWrapper);
 
         logServiceClaim.logClaim(exchange);
         logServiceClaim.logUnmarshall(exchange);
@@ -40,7 +40,7 @@ public class ClaimDataUnmarshaller implements Processor {
     }
 
     private Exchange unmarshallClaimData(Exchange exchange) {
-        Exchange marshalContent = ExchangeBuilder.anExchange(exchange.getContext()).withBody(ehDataWrapper.getClaimImport().getContent()).build();
+        Exchange marshalContent = ExchangeBuilder.anExchange(exchange.getContext()).withBody(processingDataWrapper.getClaimImport().getContent()).build();
         return unmarshalProducer.send(marshalContent);
     }
 }
