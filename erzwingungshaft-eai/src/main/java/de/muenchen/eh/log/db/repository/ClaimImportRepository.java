@@ -10,7 +10,7 @@ import java.util.UUID;
 @Repository
 public interface ClaimImportRepository extends CrudRepository<ClaimImport, UUID> {
 
-    List<ClaimImport> findByIsDataImportTrueAndIsAntragImportTrueAndIsBescheidImportTrue();
+    List<ClaimImport> findByIsDataImportTrueAndIsAntragImportTrueAndIsBescheidImportTrueOrderByIdAsc();
     List<ClaimImport> findByOutputDirectoryAndIsAntragImportIsNullAndIsBescheidImportIsNull(String outputDirectory);
 
 }

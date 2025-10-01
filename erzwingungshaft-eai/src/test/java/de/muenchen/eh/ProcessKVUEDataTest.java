@@ -2,7 +2,11 @@ package de.muenchen.eh;
 
 import de.muenchen.eh.common.XmlUnmarshaller;
 import de.muenchen.eh.kvue.claim.ClaimProcessingContentWrapper;
+import de.muenchen.eh.log.db.entity.*;
+import de.muenchen.eh.log.db.repository.ClaimImportLogRepository;
+import de.muenchen.eh.log.db.repository.ClaimImportRepository;
 import de.muenchen.eh.log.db.repository.ClaimLogRepository;
+import de.muenchen.eh.log.db.repository.ClaimRepository;
 import de.muenchen.xjustiz.generated.NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.component.mock.MockEndpoint;
@@ -24,9 +28,12 @@ import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @CamelSpringBootTest
@@ -35,11 +42,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ActiveProfiles(TestConstants.SPRING_TEST_PROFILE)
 class ProcessKVUEDataTest {
 
-    @EndpointInject("mock:xjustizXml")
-    private MockEndpoint xjustizXml;
+    @EndpointInject("mock:xjustizMessage")
+    private MockEndpoint xjustizMsg;
 
     @EndpointInject("mock:error")
     private MockEndpoint failures;
+
+    @Autowired
+    private ClaimImportRepository claimImportRepository;
+
+    @Autowired
+    private ClaimImportLogRepository claimImportLogRepository;
+
+    @Autowired
+    private ClaimRepository claimRepository;
 
     @Autowired
     private ClaimLogRepository claimLogRepository;
@@ -87,14 +103,15 @@ class ProcessKVUEDataTest {
         uploadBucketTestFileConfiguration();
 
         // Start test ...
-        xjustizXml.expectedMessageCount(1);
-        xjustizXml.assertIsSatisfied(TimeUnit.SECONDS.toMillis(5));
+        xjustizMsg.expectedMessageCount(1);
+        xjustizMsg.assertIsSatisfied(TimeUnit.SECONDS.toMillis(5));
 
         failures.expectedMessageCount(0);
         failures.assertIsSatisfied(TimeUnit.SECONDS.toMillis(5));
 
-        ClaimProcessingContentWrapper dataWrapper = xjustizXml.getExchanges().getLast().getMessage().getBody(ClaimProcessingContentWrapper.class);
+        ClaimProcessingContentWrapper dataWrapper = xjustizMsg.getExchanges().getLast().getMessage().getBody(ClaimProcessingContentWrapper.class);
 
+        // XML message
         NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010 lastXJustizMessage = XmlUnmarshaller.unmarshalNachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010(dataWrapper.getXjustizXml());
 
         var betroffener = lastXJustizMessage.getGrunddaten().getVerfahrensdaten().getBeteiligungs().getFirst().getBeteiligter().getAuswahlBeteiligter().getNatuerlichePerson();
@@ -106,6 +123,23 @@ class ProcessKVUEDataTest {
         assertEquals("046", beteiligung.getRolles().getFirst().getRollenbezeichnung().getCode());
 
         assertEquals("Stadt München",lastXJustizMessage.getNachrichtenkopf().getAbsender().getInformationen().getAuswahlKommunikationspartner().getSonstige());
+
+        // DB logging
+        ClaimImport claimImport_1000809085_5793341761427  = claimImportRepository.findByIsDataImportTrueAndIsAntragImportTrueAndIsBescheidImportTrueOrderByIdAsc().getLast();
+        assertEquals("1000809085", claimImport_1000809085_5793341761427.getGeschaeftspartnerId());
+        assertEquals("5793341761427", claimImport_1000809085_5793341761427.getKassenzeichen());
+
+        List<ClaimImportLog> infoClaimImportLogs = claimImportLogRepository.findByClaimImportIdAndMessageTyp(claimImport_1000809085_5793341761427.getId(), MessageType.INFO);
+        assertEquals(5, infoClaimImportLogs.size());
+        assertEquals(0, claimImportLogRepository.findByClaimImportIdAndMessageTyp(claimImport_1000809085_5793341761427.getId(), MessageType.ERROR).size(), "No errors expected.");
+
+        Claim claim = claimRepository.findByClaimImportId(claimImport_1000809085_5793341761427.getId());
+        List<ClaimLog> infoClaimLogs = claimLogRepository.findByClaimIdAndMessageTyp(claim.getId(), MessageType.INFO);
+        assertEquals(6, infoClaimLogs.size());
+
+        assertNotNull(claim.getEhUuid(), "With the xml generation a uuid is created which is persisted in db.");
+        assertEquals(0, claimLogRepository.findByClaimIdAndMessageTyp(claim.getId(), MessageType.ERROR).size(), "No errors expected.");
+
 
     }
 
