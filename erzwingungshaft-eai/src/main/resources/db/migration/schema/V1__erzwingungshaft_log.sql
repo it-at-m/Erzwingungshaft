@@ -62,7 +62,7 @@ CREATE TABLE eh_log.claim
 (
 
     id                   SERIAL PRIMARY KEY, -- INT PK
-    claim_import_id      INTEGER      NOT NULL,
+    claim_import_id      INTEGER UNIQUE NOT NULL,
     eh_uuid              UUID,               -- Assigned during XML creation
     geschaeftspartner_id VARCHAR(10),
     kassenzeichen        VARCHAR(20),

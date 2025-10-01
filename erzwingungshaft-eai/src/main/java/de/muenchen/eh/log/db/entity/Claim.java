@@ -17,10 +17,6 @@ public class Claim extends BaseEntity {
     @Column(name = "eh_uuid")
     private UUID ehUuid;
 
-    @NotEmpty
-    @Column(name = "claim_import_id")
-    private Integer claimImportId;
-
     @Column(name = "geschaeftspartner_id")
     private String geschaeftspartnerId;
 
@@ -37,5 +33,9 @@ public class Claim extends BaseEntity {
 
     @Column(name = "file_line_index")
     private Integer fileLineIndex;
+
+    @OneToOne(optional = true)
+    @JoinColumn(name = "claim_import_id", unique = true)
+    private ClaimImport claimImport;
 
 }

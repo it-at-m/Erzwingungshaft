@@ -53,8 +53,7 @@ public class ClaimImport extends BaseEntity {
     @Column(name = "bescheid_import")
     private Boolean isBescheidImport;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id", referencedColumnName = "claimImportId")
+    @OneToOne(mappedBy = "claimImport", cascade = CascadeType.ALL, orphanRemoval = true)
     private Claim claim;
 
 }

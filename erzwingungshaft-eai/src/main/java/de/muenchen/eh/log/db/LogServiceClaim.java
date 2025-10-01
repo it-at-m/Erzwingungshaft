@@ -52,7 +52,7 @@ public class LogServiceClaim {
             Claim claim = new Claim();
 
             ClaimImport importedClaim = processingDataWrapper.getClaimImport();
-            claim.setClaimImportId(importedClaim.getId());
+            claim.setClaimImport(importedClaim);
             claim.setSourceFileName(importedClaim.getSourceFileName());
             claim.setFileLineIndex(importedClaim.getFileLineIndex());
             claim.setStorageLocation(dataSource);

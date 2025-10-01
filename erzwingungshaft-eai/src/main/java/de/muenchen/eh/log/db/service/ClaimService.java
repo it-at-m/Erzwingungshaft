@@ -23,21 +23,17 @@ public class ClaimService {
     public List<ClaimImport> claimsForProcessing() {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Object[]> query = cb.createQuery(Object[].class);
+        CriteriaQuery<ClaimImport> query = cb.createQuery(ClaimImport.class);
         Root<ClaimImport> claimImportRoot = query.from(ClaimImport.class);
 
         Join<ClaimImport, Claim> claimImportClaimJoin = claimImportRoot.join("claim", JoinType.LEFT);
 
-        query.where(cb.equal(claimImportRoot.get("isDataImport"), true),
-                    cb.equal(claimImportRoot.get("isAntragImport"), true),
-                    cb.equal(claimImportRoot.get("isBescheidImport"), true),
-                    cb.isNull(claimImportClaimJoin.get("ehUuid")));
+        query.where(cb.and(cb.equal(claimImportRoot.get("isDataImport"), true),
+                cb.equal(claimImportRoot.get("isAntragImport"), true),
+                cb.equal(claimImportRoot.get("isBescheidImport"), true),
+                cb.isNull(claimImportClaimJoin)));
 
-       List<Object[]> objects = entityManager.createQuery(query).getResultList();
-
-       List<ClaimImport> claims = Arrays.stream(objects.getFirst()).filter(obj -> obj instanceof ClaimImport).map(obj -> (ClaimImport)obj).toList();
-
-        return  claims;
+        return entityManager.createQuery(query).getResultList();
     }
 
 }
