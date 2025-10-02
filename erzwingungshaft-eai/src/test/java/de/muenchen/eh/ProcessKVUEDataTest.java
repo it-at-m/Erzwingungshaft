@@ -122,7 +122,7 @@ class ProcessKVUEDataTest {
         var beteiligung = lastXJustizMessage.getGrunddaten().getVerfahrensdaten().getBeteiligungs().getLast();
         assertEquals("046", beteiligung.getRolles().getFirst().getRollenbezeichnung().getCode());
 
-        assertEquals("Stadt München",lastXJustizMessage.getNachrichtenkopf().getAbsender().getInformationen().getAuswahlKommunikationspartner().getSonstige());
+        assertEquals("Stadt München",lastXJustizMessage.getNachrichtenkopf().getAuswahlAbsender().getAbsenderSonstige());
 
         // DB logging
         ClaimImport claimImport_1000809085_5793341761427  = claimImportRepository.findByIsDataImportTrueAndIsAntragImportTrueAndIsBescheidImportTrueOrderByIdAsc().getLast();

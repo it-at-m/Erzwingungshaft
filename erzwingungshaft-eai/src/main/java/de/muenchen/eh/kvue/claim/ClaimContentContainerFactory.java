@@ -5,10 +5,7 @@ import de.muenchen.eh.log.DocumentType;
 import de.muenchen.eh.log.db.entity.ClaimDocument;
 import de.muenchen.eh.log.db.entity.ClaimImport;
 import de.muenchen.eh.log.db.repository.ClaimDocumentRepository;
-import de.muenchen.xjustiz.xjustiz0500straf.content.ContentContainer;
-import de.muenchen.xjustiz.xjustiz0500straf.content.FachdatenContent;
-import de.muenchen.xjustiz.xjustiz0500straf.content.GrunddatenContent;
-import de.muenchen.xjustiz.xjustiz0500straf.content.SchriftgutContent;
+import de.muenchen.xjustiz.xjustiz0500straf.content.*;
 import de.muenchen.xjustiz.xjustiz0500straf.content.fachdaten.StrasseHausnummer;
 import de.muenchen.xjustiz.xjustiz0500straf.content.fachdaten.Tatort;
 import de.muenchen.xjustiz.xjustiz0500straf.content.grunddaten.verfahrensdaten.beteiligung.Anschrift;
@@ -44,7 +41,13 @@ public class ClaimContentContainerFactory {
 
     public ContentContainer supplyContentContainer() throws DatatypeConfigurationException {
 
-        return new ContentContainer(supplyFachdatenContent(), supplyGrunddatenContent(), supplySchriftgutContent());
+        return new ContentContainer(supplyNachrichtenKopfContent(), supplyFachdatenContent(), supplyGrunddatenContent(), supplySchriftgutContent());
+    }
+
+    private NachrichtenkopfContent supplyNachrichtenKopfContent()  {
+        NachrichtenkopfContent nachrichtenkopfContent = new NachrichtenkopfContent();
+        nachrichtenkopfContent.setAktenzeichen(getClaimImport().getKassenzeichen());
+        return nachrichtenkopfContent;
     }
 
     private FachdatenContent supplyFachdatenContent() {

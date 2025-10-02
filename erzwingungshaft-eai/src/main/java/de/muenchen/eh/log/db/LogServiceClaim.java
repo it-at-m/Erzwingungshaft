@@ -149,7 +149,7 @@ public class LogServiceClaim {
 
             var entryEntity = ClaimFactory.claimFacade(exchange);
             NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010 justiz0500010 = XmlUnmarshaller.unmarshalNachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010(xml);
-            entryEntity.setEhUuid(UUID.fromString(justiz0500010.getNachrichtenkopf().getAbsender().getEigeneNachrichtenID()));
+            entryEntity.setEhUuid(UUID.fromString(justiz0500010.getNachrichtenkopf().getEigeneNachrichtenID()));
             claimRepository.save(entryEntity);
             writeInfoClaimLogMessage(StatusProcessingType.EH_UUID_UPDATED, exchange);
 
