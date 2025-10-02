@@ -13,6 +13,7 @@ import de.muenchen.eh.log.db.entity.*;
 import de.muenchen.eh.log.db.repository.*;
 import de.muenchen.xjustiz.generated.NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010;
 import de.muenchen.xjustiz.xjustiz0500straf.content.ContentContainer;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.camel.Exchange;
@@ -33,6 +34,10 @@ public class LogServiceClaim {
 
     @Value("${xjustiz.interface.file.consume}")
     private String dataSource;
+
+    @Getter
+    @Value("${xjustiz.version}")
+    private String xjustizVersion;
 
     private final ClaimRepository claimRepository;
     private final ClaimContentRepository claimContentRepository;
@@ -143,6 +148,7 @@ public class LogServiceClaim {
         try {
             String xml = exchange.getMessage().getBody(ClaimProcessingContentWrapper.class).getXjustizXml()  ;
             ClaimXml claimXml = (ClaimXml) ClaimFactory.configureEntity(new ClaimXml(), exchange);
+            claimXml.setXjustizVersion(getXjustizVersion());
             claimXml.setContent(xml);
             claimXmlRepository.save(claimXml);
             writeInfoClaimLogMessage(StatusProcessingType.XJUSTIZ_MESSAGE_CREATED, exchange);

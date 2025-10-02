@@ -17,6 +17,9 @@ public class ClaimXml extends BaseEntity implements IClaimEntity {
     @Column(name = "claim_id")
     private Integer claimId ;
 
+    @Column(columnDefinition = "xjustiz_version")
+    private String xjustizVersion;
+
     @NotEmpty
     @Column(columnDefinition = "xml")
     private String content;

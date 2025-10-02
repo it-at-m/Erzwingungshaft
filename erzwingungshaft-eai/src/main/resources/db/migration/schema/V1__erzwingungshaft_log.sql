@@ -97,6 +97,7 @@ CREATE TABLE eh_log.claim_xml
 (
     id         SERIAL PRIMARY KEY, -- INT PK
     claim_id   INTEGER NOT NULL,
+    xjustiz_version TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     content    TEXT,
 
