@@ -74,7 +74,7 @@ camel:
 
 # Custom properties
 xjustiz:
-  version: 3.6.2
+  version: 3.5.1
   interface:
     document:
       processor: direct:xjustiz-document-processor

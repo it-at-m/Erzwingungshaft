@@ -35,7 +35,8 @@ eakte:
     context-path:
     username:
     password:
-  object:
+  einzelakten:
+    aktenplan-eintrag: 1234/Testakte
     x-anwendung:
     userlogin:
     joboe:
@@ -48,7 +49,6 @@ xjustiz:
     s3:
       access-key: minio
       secret-key: Test1234
-      version: 3.6.2
   interface:
     document:
       processor: direct:xjustiz-document-processor
@@ -62,7 +62,7 @@ xjustiz:
     pdf:
       consume: aws2-s3://eh-import-pdf?${xjustiz.interface.file.common}
       file-output: aws2-s3://eh-backup?${xjustiz.interface.file.common}
-    eakte: mock:xjustizXml
+    bebpo: mock:xjustizMessage
   xjustiz0500straf:
     nachrichtenkopf:
       auswahl-absender-sonstige: Stadt München
@@ -139,11 +139,10 @@ xjustiz:
           antrag-behoerde: '016'
           bescheid: '017'
     gds-bestandteiltyp:
-      #      current-version: 2.4  : org.xml.sax.SAXParseException: cvc-complex-type.3.1: Wert '2.4' des Attributs 'listVersionID' des Elements 'ns2:bestandteil' ist ungültig in Bezug auf die entsprechende Attributverwendung. Attribut 'listVersionID' hat den festen Wert '2.5'., Line : 165, Column : 58
-      current-version: 2.5
+      current-version: 2.4
       kennung: urn:xoev-de:xjustiz:codeliste:gds.bestandteiltyp
       codelist-versions:
-        gds-bestandteiltyp-2-5:
+        gds-bestandteiltyp-2-4:
           original: '001'
           repraesentant: '002'
     gds-aktentyp:

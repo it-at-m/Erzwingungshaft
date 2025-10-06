@@ -166,9 +166,14 @@ public class LogServiceClaim {
     }
 
     private void writeInfoClaimLogMessage(StatusProcessingType processingType, Exchange exchange) {
+        writeGenericClaimLogMessage(processingType, MessageType.INFO, exchange);
+    }
+
+
+    public void writeGenericClaimLogMessage(StatusProcessingType processingType, MessageType msgType, Exchange exchange) {
         try {
             ClaimLog claimLog = (ClaimLog) ClaimFactory.configureEntity(new ClaimLog(), exchange);
-            claimLog.setMessageTyp(MessageType.INFO);
+            claimLog.setMessageTyp(msgType);
             claimLog.setMessage(processingType.name());
             claimLog.setComment(processingType.getDescriptor());
             claimLogRepository.save(claimLog);

@@ -1,4 +1,4 @@
-package de.muenchen.eh.kvue.claim.eakte;
+package de.muenchen.eh.kvue.claim.eakte.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "eakte.connection")
-public class EakteConnectionProperties {
+public class ConnectionProperties {
 
     private String host;
     private int port;

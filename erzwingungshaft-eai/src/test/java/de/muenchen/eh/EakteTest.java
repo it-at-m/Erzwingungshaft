@@ -1,9 +1,8 @@
 package de.muenchen.eh;
 
-import de.muenchen.eh.kvue.claim.eakte.EakteOperationIdFactory;
+import de.muenchen.eh.kvue.claim.eakte.operation.OperationIdFactory;
 import de.muenchen.eh.kvue.claim.eakte.EakteRouteBuilder;
-import de.muenchen.eh.kvue.claim.eakte.OperationId;
-import de.muenchen.eh.log.Constants;
+import de.muenchen.eh.kvue.claim.eakte.operation.OperationId;
 import de.muenchen.eh.log.db.entity.Claim;
 import org.apache.camel.*;
 import org.apache.camel.component.mock.MockEndpoint;
@@ -31,7 +30,7 @@ public class EakteTest {
     private ProducerTemplate eakteConnector;
 
     @Autowired
-    private EakteOperationIdFactory eakteOperationIdFactory;
+    private OperationIdFactory operationIdFactory;
 
     @EndpointInject("mock:error")
     private MockEndpoint failures;
@@ -45,7 +44,7 @@ public class EakteTest {
         Claim testClaim = new Claim();
         testClaim.setId(1);
 
-        Exchange readApentryRequest = eakteOperationIdFactory.createExchange(OperationId.READ_APENTRY, testClaim);
+        Exchange readApentryRequest = operationIdFactory.createExchange(OperationId.READ_APENTRY, testClaim);
 
 
         /*

@@ -8,5 +8,7 @@ public class Constants {
     public static final String ANTRAG_EXTENSION = "EH.PDF";
     public static final String URBESCHEID_EXTENSION = "URB.PDF";
 
+    public static final String OPERATION_ID = "EH_OPERATION_ID";
+
 
 }

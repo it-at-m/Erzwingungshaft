@@ -1,4 +1,4 @@
-package de.muenchen.eh.kvue.claim.eakte;
+package de.muenchen.eh.kvue.claim.eakte.operation;
 
 import lombok.Getter;
 

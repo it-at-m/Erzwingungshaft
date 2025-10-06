@@ -1,7 +1,10 @@
-package de.muenchen.eh.kvue.claim.eakte;
+package de.muenchen.eh.kvue.claim.eakte.operation;
 
+import de.muenchen.eh.kvue.claim.eakte.ExchangeBuilder;
+import de.muenchen.eh.kvue.claim.eakte.OpenApiParameterExtractor;
+import de.muenchen.eh.kvue.claim.eakte.properties.AktenplanEinzelaktenProperties;
+import de.muenchen.eh.kvue.claim.eakte.properties.ConnectionProperties;
 import de.muenchen.eh.log.Constants;
-import de.muenchen.eh.log.db.entity.Claim;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
@@ -15,14 +18,14 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class EakteOperationIdFactory {
+public class OperationIdFactory {
 
     private final Environment environment;
     private final CamelContext camelContext;
-    private final EakteObjectProperties eakteObjectProperties;
-    private final EakteConnectionProperties connectionProperties;
+    private final AktenplanEinzelaktenProperties aktenplanEinzelaktenProperties;
+    private final ConnectionProperties connectionProperties;
 
-    private static final String EAKTE_FILE_PLAN = "eakte.object.";
+    private static final String EAKTE_FILE_PLAN = "eakte.einzelakten.";
 
     public Exchange createExchange(OperationId operationId, Object relatedClaim) {
 
@@ -37,8 +40,11 @@ public class EakteOperationIdFactory {
                 break;
             }
         }
+
+        exchange.getMessage().setHeader(Constants.OPERATION_ID, operationId);
         exchange.setProperty(Constants.CLAIM, relatedClaim);
-        return EakteExchangeBuilder.create(exchange, operationId.getDescriptor()).withBasicAuth(connectionProperties.getUsername(), connectionProperties.getPassword()).withRequestValidation(true).build();
+
+        return ExchangeBuilder.create(exchange, operationId.getDescriptor()).withBasicAuth(connectionProperties.getUsername(), connectionProperties.getPassword()).withRequestValidation(true).build();
 
     }
 
@@ -53,6 +59,7 @@ public class EakteOperationIdFactory {
 
         return exchange;
     }
+
 
     private Map<String, Object> enrichParameterValues(String operationId) {
         Map<String, Object> params = new HashMap<>();

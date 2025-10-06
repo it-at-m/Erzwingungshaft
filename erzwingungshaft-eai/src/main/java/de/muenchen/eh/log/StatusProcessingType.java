@@ -16,7 +16,8 @@ public enum StatusProcessingType {
     CONTENT_CREATED("Content created for xJustiz message generation."),
     XJUSTIZ_MESSAGE_CREATED("xJustiz xml message created."),
     EH_UUID_UPDATED("xJustiz message uuid updated in database."),
-    EH_KASSENZEICHEN_GESCHAEFTSPARTNERID_UPDATED("'Kassenzeichen' and 'GeschaeftsparterId' updated in database.");
+    EH_KASSENZEICHEN_GESCHAEFTSPARTNERID_UPDATED("'Kassenzeichen' and 'GeschaeftsparterId' updated in database."),
+    GESCHAEFTSPARTNERID_EINZELKAKTE_NOT_FOUND("'Einzelakte' for 'GeschaeftspartnerId' in eAKte not found.");
 
     private final String descriptor;
 
