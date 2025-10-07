@@ -3,7 +3,9 @@ package de.muenchen.eh.kvue.claim;
 import de.muenchen.eh.BaseRouteBuilder;
 import de.muenchen.eh.log.db.service.ClaimService;
 import lombok.RequiredArgsConstructor;
+import org.apache.camel.LoggingLevel;
 import org.apache.camel.model.dataformat.BindyType;
+import org.apache.camel.processor.aggregate.GroupedBodyAggregationStrategy;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -24,15 +26,19 @@ public class ClaimRouteBuilder extends BaseRouteBuilder {
         from(PROCESS_CLAIMS)
                 .routeId("claim-eh-process")
                 .setBody(method(claimService, "claimsForProcessing"))
-                .split().body()
-                .process("claimDataUnmarshaller")
-                .process("claimContentDataEnricher")
-                .process("claimXJustizXmlEnricher")
-                .process("aktenplanOperationExecutor")
-                .to("{{xjustiz.interface.bebpo}}");
+                .split().body().aggregationStrategy(new GroupedBodyAggregationStrategy())
+                    .process("claimDataUnmarshaller")
+                    .process("claimContentDataEnricher")
+                    .process("claimXJustizXmlEnricher")
+                    .process("aktenplanOperationExecutor")
+                    .to("{{xjustiz.interface.bebpo}}")
+                .end()
+                .bean("findCollection", "clearApentryCache");
+
 
          from(UNMARSHALL_EH_CLAIM_DATA).routeId("unmarshal-eh-claimdata")
-              .unmarshal().bindy(BindyType.Fixed, ImportClaimData.class);
+              .unmarshal().bindy(BindyType.Fixed, ImportClaimData.class)
+                 .log(LoggingLevel.DEBUG, "unmarshal-eh-claimdata : ${body}");
 
          from(PROCESS_XJUSTIZ_DOCUMENT).routeId("process-xjustiz-document")
               .to("{{xjustiz.interface.document.processor}}");

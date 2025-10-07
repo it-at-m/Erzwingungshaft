@@ -2,7 +2,7 @@ package de.muenchen.eh.kvue.claim.eakte.operation.document;
 
 import org.apache.camel.Exchange;
 
-abstract class EakteAssignTemplate {
+abstract class EakteAssignTemplate implements EakteOperation {
 
     public final void execute(Exchange exchange) {
         findCollection(exchange);

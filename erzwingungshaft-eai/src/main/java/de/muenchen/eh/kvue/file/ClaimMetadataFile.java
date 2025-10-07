@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
-public class CreateClaimMetadataFile implements Processor {
+public class ClaimMetadataFile implements Processor {
 
     @Produce(value = FileImportRouteBuilder.S3_UPLOAD)
     private ProducerTemplate s3Producer;

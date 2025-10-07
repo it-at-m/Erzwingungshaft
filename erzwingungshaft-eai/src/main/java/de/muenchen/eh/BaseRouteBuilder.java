@@ -27,8 +27,7 @@ public class BaseRouteBuilder extends RouteBuilder {
                 .choice()
                 .when(claimOrClaimImportExists)
                      .bean("logServiceError", "logError")
-                .end()
-                .to("{{xjustiz.interface.file.error}}");;
+                .end();
 
         onException(IllegalArgumentException.class)
                 .handled(true)
@@ -36,8 +35,7 @@ public class BaseRouteBuilder extends RouteBuilder {
                 .choice()
                     .when(exchangeProperty(Constants.CLAIM).isNotNull())
                         .bean("logServiceClaim", "logIllegalArgumentException")
-                .end()
-                .to("{{xjustiz.interface.file.error}}");
+                .end();
 
     }
 

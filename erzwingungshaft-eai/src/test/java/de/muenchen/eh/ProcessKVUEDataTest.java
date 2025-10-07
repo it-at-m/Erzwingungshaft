@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
@@ -29,6 +28,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @CamelSpringBootTest
 @EnableAutoConfiguration
 @DirtiesContext
-@ActiveProfiles(TestConstants.SPRING_TEST_PROFILE)
+//@ActiveProfiles(TestConstants.SPRING_TEST_PROFILE)
 class ProcessKVUEDataTest {
 
     @EndpointInject("mock:xjustizMessage")
@@ -64,8 +64,6 @@ class ProcessKVUEDataTest {
     private static final String EH_BUCKET_ANTRAG = "eh-import-antrag";
 
     private static final String METADATA = "D.KVU.EUDG0P0.20240807.EZH";
-    private static final String ANTRAG = "1000809085_5793341761427_20240807_EH.pdf";
-    private static final String URBESCHEID = "1000809085_5793341761427_20240807_URB.pdf";
 
     private static S3Client s3InitClient;
 
@@ -115,7 +113,7 @@ class ProcessKVUEDataTest {
 
         var betroffener = lastXJustizMessage.getGrunddaten().getVerfahrensdaten().getBeteiligungs().getFirst().getBeteiligter().getAuswahlBeteiligter().getNatuerlichePerson();
 
-        assertEquals("TESTT", betroffener.getVollerName().getNachname());
+        assertEquals("Test", betroffener.getVollerName().getNachname());
         assertEquals("EXXXX", betroffener.getVollerName().getVorname());
 
         var beteiligung = lastXJustizMessage.getGrunddaten().getVerfahrensdaten().getBeteiligungs().getLast();
@@ -123,8 +121,11 @@ class ProcessKVUEDataTest {
 
         assertEquals("Stadt München",lastXJustizMessage.getNachrichtenkopf().getAuswahlAbsender().getAbsenderSonstige());
 
-        // DB logging
-        ClaimImport claimImport_1000809085_5793341761427  = claimImportRepository.findByIsDataImportTrueAndIsAntragImportTrueAndIsBescheidImportTrueOrderByIdAsc().getLast();
+        List<ClaimImport> claimImports  = claimImportRepository.findByIsDataImportTrueAndIsAntragImportTrueAndIsBescheidImportTrueOrderByIdAsc();
+
+        // DB log 1000809085_5793341761427
+        Optional<ClaimImport> first_claimImport_1000809085_5793341761427 = claimImports.stream().filter(ci -> ci.getGeschaeftspartnerId().equals("1000809085")).findFirst();
+        var claimImport_1000809085_5793341761427 = first_claimImport_1000809085_5793341761427.orElseThrow();
         assertEquals("1000809085", claimImport_1000809085_5793341761427.getGeschaeftspartnerId());
         assertEquals("5793341761427", claimImport_1000809085_5793341761427.getKassenzeichen());
 
@@ -132,12 +133,22 @@ class ProcessKVUEDataTest {
         assertEquals(5, infoClaimImportLogs.size());
         assertEquals(0, claimImportLogRepository.findByClaimImportIdAndMessageTyp(claimImport_1000809085_5793341761427.getId(), MessageType.ERROR).size(), "No errors expected.");
 
-        Claim claim = claimRepository.findByClaimImportId(claimImport_1000809085_5793341761427.getId());
-        List<ClaimLog> infoClaimLogs = claimLogRepository.findByClaimIdAndMessageTyp(claim.getId(), MessageType.INFO);
+        Claim claim_1000809085_5793341761427 = claimRepository.findByClaimImportId(claimImport_1000809085_5793341761427.getId());
+        List<ClaimLog> infoClaimLogs = claimLogRepository.findByClaimIdAndMessageTyp(claim_1000809085_5793341761427.getId(), MessageType.INFO);
         assertEquals(6, infoClaimLogs.size());
 
-        assertNotNull(claim.getEhUuid(), "With the xml generation a uuid is created which is persisted in db.");
-        assertEquals(0, claimLogRepository.findByClaimIdAndMessageTyp(claim.getId(), MessageType.ERROR).size(), "No errors expected.");
+        assertNotNull(claim_1000809085_5793341761427.getEhUuid(), "With the xml generation a uuid is created which is persisted in db.");
+        var claimlog_errors_1000809085_5793341761427 =  claimLogRepository.findByClaimIdAndMessageTyp(claim_1000809085_5793341761427.getId(), MessageType.ERROR);
+        assertEquals(1, claimlog_errors_1000809085_5793341761427.size(), "One error expected.");
+        assertEquals("GESCHAEFTSPARTNERID_EINZELKAKTE_NOT_FOUND", claimlog_errors_1000809085_5793341761427.getFirst().getMessage());
+
+        // DB log 1000258309_5793402494421
+        Optional<ClaimImport> first_claimImport_1000258309_5793402494421 = claimImports.stream().filter(ci -> ci.getGeschaeftspartnerId().equals("1000258309")).findFirst();
+        var claimImport_1000258309_5793402494421 = first_claimImport_1000258309_5793402494421.orElseThrow();
+        Claim claim_1000258309_5793402494421 = claimRepository.findByClaimImportId(claimImport_1000258309_5793402494421.getId());
+        var claimlog_errors_1000258309_5793402494421 =  claimLogRepository.findByClaimIdAndMessageTyp(claim_1000258309_5793402494421.getId(), MessageType.ERROR);
+        assertEquals(1, claimlog_errors_1000258309_5793402494421.size(), "One error expected.");
+        assertEquals("The mandatory field defined at the position 31 (de.muenchen.eh.kvue.claim.ImportClaimData.ehtatstdb) is empty for the line: 1", claimlog_errors_1000258309_5793402494421.getFirst().getMessage());
 
 
     }
@@ -148,11 +159,27 @@ class ProcessKVUEDataTest {
         s3InitClient.putObject(PutObjectRequest.builder().bucket(EH_BUCKET_ANTRAG).key(METADATA).build(),
                 Path.of(new File("testdata/in/metadata/D.KVU.EUDG0P0.20240807.EZH").toURI()));
 
-        s3InitClient.putObject(PutObjectRequest.builder().bucket(EH_BUCKET_PDF).key(ANTRAG).build(),
+        // Not assignable to 'Einzelakte'
+        s3InitClient.putObject(PutObjectRequest.builder().bucket(EH_BUCKET_PDF).key("1000809085_5793341761427_20240807_EH.pdf").build(),
                 Path.of(new File("testdata/in/pdf/1000809085_5793341761427_20240807_EH.pdf").toURI()));
 
-        s3InitClient.putObject(PutObjectRequest.builder().bucket(EH_BUCKET_PDF).key(URBESCHEID).build(),
+        s3InitClient.putObject(PutObjectRequest.builder().bucket(EH_BUCKET_PDF).key("1000809085_5793341761427_20240807_URB.pdf").build(),
                 Path.of(new File("testdata/in/pdf/1000809085_5793341761427_20240807_URB.pdf").toURI()));
+
+        // Assignable to 'Einzelakte'
+        s3InitClient.putObject(PutObjectRequest.builder().bucket(EH_BUCKET_PDF).key("1000013749_5793303492524_20240807_EH.pdf").build(),
+                Path.of(new File("testdata/in/pdf/1000013749_5793303492524_20240807_EH.pdf").toURI()));
+
+        s3InitClient.putObject(PutObjectRequest.builder().bucket(EH_BUCKET_PDF).key("1000013749_5793303492524_20240807_URB.pdf").build(),
+                Path.of(new File("testdata/in/pdf/1000013749_5793303492524_20240807_URB.pdf").toURI()));
+
+        // IllegalArgumentException : The mandatory field defined at the position 31
+        s3InitClient.putObject(PutObjectRequest.builder().bucket(EH_BUCKET_PDF).key("1000258309_5793402494421_20240807_EH.pdf").build(),
+                Path.of(new File("testdata/in/pdf/1000258309_5793402494421_20240807_EH.pdf").toURI()));
+
+        s3InitClient.putObject(PutObjectRequest.builder().bucket(EH_BUCKET_PDF).key("1000258309_5793402494421_20240807_URB.pdf").build(),
+                Path.of(new File("testdata/in/pdf/1000258309_5793402494421_20240807_URB.pdf").toURI()));
+
     }
 
 }

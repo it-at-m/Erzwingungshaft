@@ -1,5 +1,6 @@
 package de.muenchen.eh.kvue.claim;
 
+import de.muenchen.eh.log.Constants;
 import de.muenchen.eh.log.db.LogServiceClaim;
 import de.muenchen.eh.log.db.entity.ClaimImport;
 import lombok.RequiredArgsConstructor;
@@ -26,21 +27,22 @@ public class ClaimDataUnmarshaller implements Processor {
     public void process(Exchange exchange) {
 
         processingDataWrapper = new ClaimProcessingContentWrapper();
-
         processingDataWrapper.setClaimImport(exchange.getMessage().getBody(ClaimImport.class));
+        exchange.getMessage().setBody(processingDataWrapper);
+        logServiceClaim.logClaim(exchange);
 
         Exchange unmarshalledEhClaimData = unmarshallClaimData(exchange);
+        if (unmarshalledEhClaimData.getAllProperties().get(Exchange.EXCEPTION_CAUGHT) != null) {
+            exchange.setRouteStop(true);
+            return;
+        }
         processingDataWrapper.setEhImportClaimData(unmarshalledEhClaimData.getMessage().getBody(ImportClaimData.class));
-
-        exchange.getMessage().setBody(processingDataWrapper);
-
-        logServiceClaim.logClaim(exchange);
         logServiceClaim.logUnmarshall(exchange);
 
     }
 
     private Exchange unmarshallClaimData(Exchange exchange) {
-        Exchange marshalContent = ExchangeBuilder.anExchange(exchange.getContext()).withBody(processingDataWrapper.getClaimImport().getContent()).build();
+        Exchange marshalContent = ExchangeBuilder.anExchange(exchange.getContext()).withBody(processingDataWrapper.getClaimImport().getContent()).withProperty(Constants.CLAIM, processingDataWrapper.getClaim()).build();
         return unmarshalProducer.send(marshalContent);
     }
 }

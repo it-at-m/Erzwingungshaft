@@ -29,7 +29,7 @@ public class FileImportRouteBuilder extends BaseRouteBuilder {
                 .convertBodyTo(String.class, StandardCharsets.ISO_8859_1.name())
                 .split(body().tokenize(lineBreak), new GroupedBodyAggregationStrategy())
                 .process("importDataEnricher")
-                .process("createClaimMetadataFile")
+                .process("claimMetadataFile")
                 .bean("logServiceImport", "logClaimImport")
                 .end()
                 .log(LoggingLevel.DEBUG, "de.muenchen.eh", "'${body.size}' claims imported.")

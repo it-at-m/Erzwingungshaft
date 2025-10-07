@@ -49,6 +49,8 @@ public class FindCollection implements EakteOperation {
             Exchange readApentryRequest = operationIdFactory.createExchange(OperationId.READ_APENTRY, exchange.getProperty(Constants.CLAIM));
             Exchange eakteApentryResponse = eakteConnector.send(readApentryRequest);
             apentryCache = Optional.ofNullable(eakteApentryResponse.getMessage().getBody(ReadApentryAntwortDTO.class));
+            if (log.isDebugEnabled())
+                apentryCache.ifPresent(a -> a.getGiobjecttype().forEach(o -> {log.debug(o.toString());}));
         }
 
         apentryCache.ifPresent(apentry -> {
@@ -56,7 +58,11 @@ public class FindCollection implements EakteOperation {
              if (einzelakten.isEmpty()) {
                     logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.GESCHAEFTSPARTNERID_EINZELKAKTE_NOT_FOUND, MessageType.ERROR, exchange);
                     exchange.setRouteStop(true);
+                    return;
              }
+
+            logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.GESCHAEFTSPARTNERID_EINZELKAKTE_FOUND, MessageType.INFO, exchange);
+
         });
 
 
@@ -86,5 +92,8 @@ public class FindCollection implements EakteOperation {
                 .collect(Collectors.toList());
     }
 
+    public void clearApentryCache() {
+        apentryCache = Optional.empty();
+    }
 
 }

@@ -32,8 +32,7 @@ public class EakteRouteBuilder extends BaseRouteBuilder {
                 .choice()
                         .when(exchangeProperty(Constants.CLAIM).isNotNull())
                             .bean("logServiceClaim", "logHttpOperationFailedException")
-                .end()
-                .to("{{xjustiz.interface.file.error}}");
+                .end();
 
         /*
              To enable overwriting at this point, the 'servers' entry must be removed from the openapi.json.
@@ -54,7 +53,6 @@ public class EakteRouteBuilder extends BaseRouteBuilder {
 
       from(DMS_CONNECTION).routeId("rest-openapi-eakte")
                 .toD("rest-openapi:classpath:openapi/dmsresteai-openapi.json#${header.operationId}")
-
                 .choice()
                    .when(header(Constants.OPERATION_ID).isEqualTo(OperationId.READ_APENTRY))
                     .unmarshal().json(JsonLibrary.Jackson, ReadApentryAntwortDTO.class)
