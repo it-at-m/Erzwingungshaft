@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
@@ -38,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @CamelSpringBootTest
 @EnableAutoConfiguration
 @DirtiesContext
-//@ActiveProfiles(TestConstants.SPRING_TEST_PROFILE)
+@ActiveProfiles(TestConstants.SPRING_TEST_PROFILE)
 class ProcessKVUEDataTest {
 
     @EndpointInject("mock:xjustizMessage")
@@ -106,7 +107,8 @@ class ProcessKVUEDataTest {
         failures.expectedMessageCount(0);
         failures.assertIsSatisfied(TimeUnit.SECONDS.toMillis(5));
 
-        ClaimProcessingContentWrapper dataWrapper = xjustizMsg.getExchanges().getLast().getMessage().getBody(ClaimProcessingContentWrapper.class);
+        assertEquals(1, xjustizMsg.getExchanges().size(), "One happy path implemented.");
+        ClaimProcessingContentWrapper dataWrapper = xjustizMsg.getExchanges().getFirst().getMessage().getBody(ClaimProcessingContentWrapper.class);
 
         // XML message
         NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010 lastXJustizMessage = XmlUnmarshaller.unmarshalNachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010(dataWrapper.getXjustizXml());

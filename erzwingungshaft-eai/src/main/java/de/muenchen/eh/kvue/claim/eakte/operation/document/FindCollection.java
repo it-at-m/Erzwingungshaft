@@ -42,7 +42,6 @@ public class FindCollection implements EakteOperation {
 
     private void findGeschaeftsparterIdEinzelaktenCollection(Exchange exchange) {
 
-
         ClaimProcessingContentWrapper processingDataWrapper = exchange.getMessage().getBody(ClaimProcessingContentWrapper.class);
 
         if (apentryCache.isEmpty()) {

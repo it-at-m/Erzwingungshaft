@@ -57,7 +57,6 @@ xjustiz:
     file:
       common: accessKey=${xjustiz.credentials.s3.access-key}&secretKey=${xjustiz.credentials.s3.secret-key}&region=${camel.component.aws2-s3.region}&overrideEndpoint=true&uriEndpointOverride=${camel.component.aws2-s3.override-endpoint}
       consume: aws2-s3://eh-import-antrag?${xjustiz.interface.file.common}
-      error: mock:error
       file-output: aws2-s3://eh-backup?${xjustiz.interface.file.common}
     pdf:
       consume: aws2-s3://eh-import-pdf?${xjustiz.interface.file.common}
