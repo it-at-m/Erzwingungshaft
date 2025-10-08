@@ -1,11 +1,12 @@
 package de.muenchen.eh;
 
-import de.muenchen.eh.kvue.claim.eakte.operation.OperationIdFactory;
-import de.muenchen.eh.kvue.claim.eakte.EakteRouteBuilder;
-import de.muenchen.eh.kvue.claim.eakte.operation.OperationId;
+import de.muenchen.eh.kvue.claim.efile.operation.OperationIdFactory;
+import de.muenchen.eh.kvue.claim.efile.EfileRouteBuilder;
+import de.muenchen.eh.kvue.claim.efile.operation.OperationId;
 import de.muenchen.eh.log.db.entity.Claim;
 import org.apache.camel.*;
 import org.apache.camel.component.mock.MockEndpoint;
+import org.apache.camel.support.DefaultExchange;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +27,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ActiveProfiles(TestConstants.SPRING_TEST_PROFILE)
 public class EakteTest {
 
-    @Produce(value= EakteRouteBuilder.DMS_CONNECTION)
+    @Produce(value= EfileRouteBuilder.DMS_CONNECTION)
     private ProducerTemplate eakteConnector;
 
     @Autowired
     private OperationIdFactory operationIdFactory;
+
+    @Autowired
+    private CamelContext camelContext;
 
     @EndpointInject("mock:error")
     private MockEndpoint failures;
@@ -44,7 +48,10 @@ public class EakteTest {
         Claim testClaim = new Claim();
         testClaim.setId(1);
 
-        Exchange readApentryRequest = operationIdFactory.createExchange(OperationId.READ_APENTRY, testClaim);
+        Exchange exchange = new DefaultExchange(camelContext);
+        exchange.getIn().setBody(testClaim);
+
+        Exchange readApentryRequest = operationIdFactory.createExchange(OperationId.READ_APENTRY_COLLECTION, exchange);
 
 
         /*

@@ -1,18 +1,22 @@
-package de.muenchen.eh.kvue.claim.eakte.operation.document;
+package de.muenchen.eh.kvue.claim.efile.operation.document;
 
 import org.apache.camel.Exchange;
 
-abstract class EakteAssignTemplate implements EakteOperation {
+abstract class EfileRecordTemplate {
 
     public final void execute(Exchange exchange) {
         findCollection(exchange);
-        addEinzelakte(exchange);
+        if (exchange.isRouteStop())
+            return;
+        checkCaseFiles(exchange);
+        addCaseFile(exchange);
         addBussgeldverfahren(exchange);
         addDocuments(exchange);
     }
 
     protected abstract void findCollection(Exchange exchange);
-    protected abstract void addEinzelakte(Exchange exchange);
+    protected abstract void checkCaseFiles(Exchange exchange);
+    protected abstract void addCaseFile(Exchange exchange);
     protected abstract void addBussgeldverfahren(Exchange exchange);
     protected abstract void addDocuments(Exchange exchange);
 

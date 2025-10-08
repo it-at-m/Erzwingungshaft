@@ -1,4 +1,4 @@
-package de.muenchen.eh.kvue.claim.eakte.properties;
+package de.muenchen.eh.kvue.claim.efile.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "eakte.einzelakten")
-public class AktenplanEinzelaktenProperties {
+public class AuthentificationProperties {
 
     private String xanwendung;
     private String aktenplanEintrag;

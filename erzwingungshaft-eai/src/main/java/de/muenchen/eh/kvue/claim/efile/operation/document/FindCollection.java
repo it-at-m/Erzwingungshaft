@@ -1,20 +1,15 @@
-package de.muenchen.eh.kvue.claim.eakte.operation.document;
+package de.muenchen.eh.kvue.claim.efile.operation.document;
 
 import de.muenchen.eakte.api.rest.model.Objektreferenz;
 import de.muenchen.eakte.api.rest.model.ReadApentryAntwortDTO;
 import de.muenchen.eh.kvue.claim.ClaimProcessingContentWrapper;
-import de.muenchen.eh.kvue.claim.eakte.EakteRouteBuilder;
-import de.muenchen.eh.kvue.claim.eakte.operation.OperationId;
-import de.muenchen.eh.kvue.claim.eakte.operation.OperationIdFactory;
-import de.muenchen.eh.log.Constants;
+import de.muenchen.eh.kvue.claim.efile.operation.OperationId;
+import de.muenchen.eh.kvue.claim.efile.operation.OperationIdFactory;
 import de.muenchen.eh.log.StatusProcessingType;
 import de.muenchen.eh.log.db.LogServiceClaim;
 import de.muenchen.eh.log.db.entity.MessageType;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.camel.Exchange;
-import org.apache.camel.Produce;
-import org.apache.camel.ProducerTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -22,18 +17,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
-@RequiredArgsConstructor
 @Log4j2
-public class FindCollection implements EakteOperation {
-
-    @Produce(value= EakteRouteBuilder.DMS_CONNECTION)
-    private ProducerTemplate eakteConnector;
-
-    private final OperationIdFactory operationIdFactory;
-
-    private final LogServiceClaim logServiceClaim;
+public class FindCollection extends EfileOperation {
 
     private Optional<ReadApentryAntwortDTO> apentryCache = Optional.empty();
+
+    public FindCollection(OperationIdFactory operationIdFactory, LogServiceClaim logServiceClaim) {
+        super(operationIdFactory, logServiceClaim);
+    }
 
     @Override
     public void execute(Exchange exchange) {
@@ -45,25 +36,30 @@ public class FindCollection implements EakteOperation {
         ClaimProcessingContentWrapper processingDataWrapper = exchange.getMessage().getBody(ClaimProcessingContentWrapper.class);
 
         if (apentryCache.isEmpty()) {
-            Exchange readApentryRequest = operationIdFactory.createExchange(OperationId.READ_APENTRY, exchange.getProperty(Constants.CLAIM));
+            Exchange readApentryRequest = operationIdFactory.createExchange(OperationId.READ_APENTRY_COLLECTION, exchange);
             Exchange eakteApentryResponse = eakteConnector.send(readApentryRequest);
+            if (eakteApentryResponse.isRouteStop()) {
+                exchange.setRouteStop(true);
+                return;
+            }
             apentryCache = Optional.ofNullable(eakteApentryResponse.getMessage().getBody(ReadApentryAntwortDTO.class));
             if (log.isDebugEnabled())
-                apentryCache.ifPresent(a -> a.getGiobjecttype().forEach(o -> {log.debug(o.toString());}));
+                apentryCache.ifPresent(a -> a.getGiobjecttype().forEach(o -> log.debug(o.toString())));
         }
 
         apentryCache.ifPresent(apentry -> {
              List<Objektreferenz> einzelakten = gpIdFilter(apentry.getGiobjecttype(), Long.valueOf(processingDataWrapper.getClaim().getGeschaeftspartnerId()));
              if (einzelakten.isEmpty()) {
-                    logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.GESCHAEFTSPARTNERID_EINZELKAKTE_NOT_FOUND, MessageType.ERROR, exchange);
-                    exchange.setRouteStop(true);
-                    return;
+                 logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.GESCHAEFTSPARTNERID_EINZELKAKTE_NOT_FOUND, MessageType.ERROR, exchange);
+                 exchange.setRouteStop(true);
+             } else if (einzelakten.size() > 1) {
+                 logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.GESCHAEFTSPARTNERID_EINZELKAKTE_AMBIGUOUS, MessageType.ERROR, exchange);
+                 exchange.setRouteStop(true);
+             } else {
+                 processingDataWrapper.getEakte().put(OperationId.READ_APENTRY_COLLECTION.name(), einzelakten.getFirst());
+                 logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.GESCHAEFTSPARTNERID_EINZELKAKTE_FOUND, MessageType.INFO, exchange);
              }
-
-            logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.GESCHAEFTSPARTNERID_EINZELKAKTE_FOUND, MessageType.INFO, exchange);
-
         });
-
 
     }
 

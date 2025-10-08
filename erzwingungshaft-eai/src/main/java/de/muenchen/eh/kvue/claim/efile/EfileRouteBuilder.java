@@ -1,10 +1,12 @@
-package de.muenchen.eh.kvue.claim.eakte;
+package de.muenchen.eh.kvue.claim.efile;
 
+import de.muenchen.eakte.api.rest.model.DmsObjektResponse;
 import de.muenchen.eakte.api.rest.model.ReadApentryAntwortDTO;
 import de.muenchen.eh.BaseRouteBuilder;
-import de.muenchen.eh.kvue.claim.eakte.operation.OperationId;
-import de.muenchen.eh.kvue.claim.eakte.properties.AktenplanEinzelaktenProperties;
-import de.muenchen.eh.kvue.claim.eakte.properties.ConnectionProperties;
+import de.muenchen.eh.StopExchange;
+import de.muenchen.eh.kvue.claim.efile.operation.OperationId;
+import de.muenchen.eh.kvue.claim.efile.properties.AuthentificationProperties;
+import de.muenchen.eh.kvue.claim.efile.properties.ConnectionProperties;
 import de.muenchen.eh.log.Constants;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.LoggingLevel;
@@ -12,12 +14,14 @@ import org.apache.camel.http.base.HttpOperationFailedException;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.stereotype.Component;
 
+import static org.apache.camel.support.builder.PredicateBuilder.or;
+
 @Component
 @RequiredArgsConstructor
-public class EakteRouteBuilder extends BaseRouteBuilder {
+public class EfileRouteBuilder extends BaseRouteBuilder {
 
     private final ConnectionProperties properties;
-    private final AktenplanEinzelaktenProperties einzelaktenProperties;
+    private final AuthentificationProperties authentificationProperties;
 
     public static final String DMS_CONNECTION = "direct:eakte-connection";
 
@@ -32,7 +36,8 @@ public class EakteRouteBuilder extends BaseRouteBuilder {
                 .choice()
                         .when(exchangeProperty(Constants.CLAIM).isNotNull())
                             .bean("logServiceClaim", "logHttpOperationFailedException")
-                .end();
+                .end()
+                .process(new StopExchange());
 
         /*
              To enable overwriting at this point, the 'servers' entry must be removed from the openapi.json.
@@ -54,10 +59,13 @@ public class EakteRouteBuilder extends BaseRouteBuilder {
       from(DMS_CONNECTION).routeId("rest-openapi-eakte")
                 .toD("rest-openapi:classpath:openapi/dmsresteai-openapi.json#${header.operationId}")
                 .choice()
-                   .when(header(Constants.OPERATION_ID).isEqualTo(OperationId.READ_APENTRY))
-                    .unmarshal().json(JsonLibrary.Jackson, ReadApentryAntwortDTO.class)
-                    .log(LoggingLevel.INFO, einzelaktenProperties.getAktenplanEintrag().concat("(").concat(einzelaktenProperties.getJoboe()).concat(") found with objektreferences count : ${body.getGiobjecttype().size()}"))
-                  .otherwise()
+                   .when(header(Constants.OPERATION_ID).isEqualTo("ReadApentry"))
+                        .unmarshal().json(JsonLibrary.Jackson, ReadApentryAntwortDTO.class)
+                        .log(LoggingLevel.INFO, "${header.objaddress} found with objektreferences count : ${body.getGiobjecttype().size()}")
+                   .when(header(Constants.OPERATION_ID).isEqualTo(OperationId.CREATE_FILE))
+                      .unmarshal().json(JsonLibrary.Jackson, DmsObjektResponse.class)
+                      .log(LoggingLevel.DEBUG, "${body.objid} created.")
+                 .otherwise()
                      .throwException(new IllegalArgumentException("Unkown message type."))
                 .end();
 

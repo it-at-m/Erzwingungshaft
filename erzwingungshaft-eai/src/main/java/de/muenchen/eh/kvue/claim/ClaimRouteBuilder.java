@@ -30,10 +30,10 @@ public class ClaimRouteBuilder extends BaseRouteBuilder {
                     .process("claimDataUnmarshaller")
                     .process("claimContentDataEnricher")
                     .process("claimXJustizXmlEnricher")
-                    .process("aktenplanOperationExecutor")
+                    .process("efilesOperationExecutor")
                     .to("{{xjustiz.interface.bebpo}}")
                 .end()
-                .bean("findCollection", "clearApentryCache");
+                .bean("cleanUp", "clearCache");
 
 
          from(UNMARSHALL_EH_CLAIM_DATA).routeId("unmarshal-eh-claimdata")

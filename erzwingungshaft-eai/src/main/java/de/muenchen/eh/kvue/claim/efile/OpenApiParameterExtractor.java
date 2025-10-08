@@ -1,4 +1,4 @@
-package de.muenchen.eh.kvue.claim.eakte;
+package de.muenchen.eh.kvue.claim.efile;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;

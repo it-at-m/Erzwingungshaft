@@ -2,8 +2,10 @@ package de.muenchen.eh;
 
 import de.muenchen.eh.log.Constants;
 import lombok.RequiredArgsConstructor;
+import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.Predicate;
+import org.apache.camel.Processor;
 import org.apache.camel.builder.PredicateBuilder;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +29,8 @@ public class BaseRouteBuilder extends RouteBuilder {
                 .choice()
                 .when(claimOrClaimImportExists)
                      .bean("logServiceError", "logError")
-                .end();
+                .end()
+                .process(new StopExchange());
 
         onException(IllegalArgumentException.class)
                 .handled(true)
@@ -35,8 +38,10 @@ public class BaseRouteBuilder extends RouteBuilder {
                 .choice()
                     .when(exchangeProperty(Constants.CLAIM).isNotNull())
                         .bean("logServiceClaim", "logIllegalArgumentException")
-                .end();
+                .end()
+                .process(new StopExchange());
 
     }
+
 
 }

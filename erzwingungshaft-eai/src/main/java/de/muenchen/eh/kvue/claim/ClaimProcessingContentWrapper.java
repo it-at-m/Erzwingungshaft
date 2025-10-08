@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,5 +20,6 @@ public class ClaimProcessingContentWrapper {
     private ImportClaimData ehImportClaimData;
     private ContentContainer contentContainer;
     private String xjustizXml;
+    private Map<String, Object> eakte = new HashMap<>();
 
 }
