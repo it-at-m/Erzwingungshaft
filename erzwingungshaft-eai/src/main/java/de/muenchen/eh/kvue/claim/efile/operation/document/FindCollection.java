@@ -37,7 +37,7 @@ public class FindCollection extends EfileOperation {
 
         if (apentryCache.isEmpty()) {
             Exchange readApentryRequest = operationIdFactory.createExchange(OperationId.READ_APENTRY_COLLECTION, exchange);
-            Exchange eakteApentryResponse = eakteConnector.send(readApentryRequest);
+            Exchange eakteApentryResponse = efileConnector.send(readApentryRequest);
             if (eakteApentryResponse.isRouteStop()) {
                 exchange.setRouteStop(true);
                 return;

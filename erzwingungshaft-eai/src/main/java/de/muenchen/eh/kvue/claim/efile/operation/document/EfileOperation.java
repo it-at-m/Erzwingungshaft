@@ -12,7 +12,7 @@ import org.apache.camel.ProducerTemplate;
 abstract class EfileOperation {
 
     @Produce(value= EfileRouteBuilder.DMS_CONNECTION)
-    protected ProducerTemplate eakteConnector;
+    protected ProducerTemplate efileConnector;
 
     protected final OperationIdFactory operationIdFactory;
 
