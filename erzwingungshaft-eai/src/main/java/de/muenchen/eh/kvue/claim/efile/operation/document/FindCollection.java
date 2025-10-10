@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Log4j2
 public class FindCollection extends EfileOperation {
 
-    private Optional<ReadApentryAntwortDTO> apentryCache = Optional.empty();
+    private Optional<ReadApentryAntwortDTO> collectionCache = Optional.empty();
 
     public FindCollection(OperationIdFactory operationIdFactory, LogServiceClaim logServiceClaim) {
         super(operationIdFactory, logServiceClaim);
@@ -28,36 +28,36 @@ public class FindCollection extends EfileOperation {
 
     @Override
     public void execute(Exchange exchange) {
-        findGeschaeftsparterIdEinzelaktenCollection(exchange);
+        findCollectionByGpId(exchange);
     }
 
-    private void findGeschaeftsparterIdEinzelaktenCollection(Exchange exchange) {
+    private void findCollectionByGpId(Exchange exchange) {
 
         ClaimProcessingContentWrapper processingDataWrapper = exchange.getMessage().getBody(ClaimProcessingContentWrapper.class);
 
-        if (apentryCache.isEmpty()) {
-            Exchange readApentryRequest = operationIdFactory.createExchange(OperationId.READ_APENTRY_COLLECTION, exchange);
-            Exchange eakteApentryResponse = efileConnector.send(readApentryRequest);
-            if (eakteApentryResponse.isRouteStop()) {
+        if (collectionCache.isEmpty()) {
+            Exchange readCollectionRequest = operationIdFactory.createExchange(OperationId.READ_CASE_FILE_COLLECTIONS, exchange);
+            Exchange efileCollectionResponse = efileConnector.send(readCollectionRequest);
+            if (efileCollectionResponse.isRouteStop()) {
                 exchange.setRouteStop(true);
                 return;
             }
-            apentryCache = Optional.ofNullable(eakteApentryResponse.getMessage().getBody(ReadApentryAntwortDTO.class));
+            collectionCache = Optional.ofNullable(efileCollectionResponse.getMessage().getBody(ReadApentryAntwortDTO.class));
             if (log.isDebugEnabled())
-                apentryCache.ifPresent(a -> a.getGiobjecttype().forEach(o -> log.debug(o.toString())));
+                collectionCache.ifPresent(a -> a.getGiobjecttype().forEach(o -> log.debug(o.toString())));
         }
 
-        apentryCache.ifPresent(apentry -> {
-             List<Objektreferenz> einzelakten = gpIdFilter(apentry.getGiobjecttype(), Long.valueOf(processingDataWrapper.getClaim().getGeschaeftspartnerId()));
-             if (einzelakten.isEmpty()) {
-                 logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.GESCHAEFTSPARTNERID_EINZELKAKTE_NOT_FOUND, MessageType.ERROR, exchange);
+        collectionCache.ifPresent(collection -> {
+             List<Objektreferenz> filteredCollections = gpIdFilter(collection.getGiobjecttype(), Long.valueOf(processingDataWrapper.getClaim().getGeschaeftspartnerId()));
+             if (filteredCollections.isEmpty()) {
+                 logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.GESCHAEFTSPARTNERID_COLLECTION_NOT_FOUND, MessageType.ERROR, exchange);
                  exchange.setRouteStop(true);
-             } else if (einzelakten.size() > 1) {
-                 logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.GESCHAEFTSPARTNERID_EINZELKAKTE_AMBIGUOUS, MessageType.ERROR, exchange);
+             } else if (filteredCollections.size() > 1) {
+                 logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.GESCHAEFTSPARTNERID_COLLECTION_AMBIGUOUS, MessageType.ERROR, exchange);
                  exchange.setRouteStop(true);
              } else {
-                 processingDataWrapper.getEakte().put(OperationId.READ_APENTRY_COLLECTION.name(), einzelakten.getFirst());
-                 logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.GESCHAEFTSPARTNERID_EINZELKAKTE_FOUND, MessageType.INFO, exchange);
+                 processingDataWrapper.getEfile().put(OperationId.READ_CASE_FILE_COLLECTIONS.name(), filteredCollections.getFirst());
+                 logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.GESCHAEFTSPARTNERID_COLLECTION_FOUND, MessageType.INFO, exchange);
              }
         });
 
@@ -87,8 +87,8 @@ public class FindCollection extends EfileOperation {
                 .collect(Collectors.toList());
     }
 
-    public void clearApentryCache() {
-        apentryCache = Optional.empty();
+    public void clearCollectionCache() {
+        collectionCache = Optional.empty();
     }
 
 }

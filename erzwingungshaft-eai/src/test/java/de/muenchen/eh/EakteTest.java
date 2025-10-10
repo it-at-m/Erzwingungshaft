@@ -51,7 +51,7 @@ public class EakteTest {
         Exchange exchange = new DefaultExchange(camelContext);
         exchange.getIn().setBody(testClaim);
 
-        Exchange readApentryRequest = operationIdFactory.createExchange(OperationId.READ_APENTRY_COLLECTION, exchange);
+        Exchange readApentryRequest = operationIdFactory.createExchange(OperationId.READ_CASE_FILE_COLLECTIONS, exchange);
 
 
         /*

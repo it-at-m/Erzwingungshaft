@@ -5,9 +5,11 @@ import lombok.Getter;
 @Getter
 public enum OperationId {
 
-    READ_APENTRY_COLLECTION("ReadApentry"),
-    READ_APENTRY_CASE_FILES("ReadApentry"),
-    CREATE_FILE("CreateFile");
+    READ_CASE_FILE_COLLECTIONS("ReadApentry"),
+    CREATE_FILE("CreateFile"),
+    CREATE_FINE("CreateProcedure"),
+    CREATE_OUTGOING("CreateOutgoing"),
+    CREATE_CONTENT_OBJECT("CreateContentObject"),;
 
     private final String descriptor;
 

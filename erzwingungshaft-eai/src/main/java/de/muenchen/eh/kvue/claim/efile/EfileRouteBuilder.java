@@ -1,5 +1,7 @@
 package de.muenchen.eh.kvue.claim.efile;
 
+import de.muenchen.eakte.api.rest.model.CreateContentObjectAntwortDTO;
+import de.muenchen.eakte.api.rest.model.CreateOutgoingAntwortDTO;
 import de.muenchen.eakte.api.rest.model.DmsObjektResponse;
 import de.muenchen.eakte.api.rest.model.ReadApentryAntwortDTO;
 import de.muenchen.eh.BaseRouteBuilder;
@@ -57,15 +59,22 @@ public class EfileRouteBuilder extends BaseRouteBuilder {
                 .contextPath(properties.getContextPath());
 
       from(DMS_CONNECTION).routeId("rest-openapi-eakte")
+                .marshal().json(JsonLibrary.Jackson)
                 .toD("rest-openapi:classpath:openapi/dmsresteai-openapi.json#${header.operationId}")
                 .choice()
-                   .when(header(Constants.OPERATION_ID).isEqualTo("ReadApentry"))
-                        .unmarshal().json(JsonLibrary.Jackson, ReadApentryAntwortDTO.class)
-                        .log(LoggingLevel.INFO, "${header.objaddress} found with objektreferences count : ${body.getGiobjecttype().size()}")
-                   .when(header(Constants.OPERATION_ID).isEqualTo(OperationId.CREATE_FILE))
+                   .when(header(Constants.OPERATION_ID).isEqualTo(OperationId.READ_CASE_FILE_COLLECTIONS))
+                       .unmarshal().json(JsonLibrary.Jackson, ReadApentryAntwortDTO.class)
+                       .log(LoggingLevel.INFO, "${header.objaddress} found with objektreferences count : ${body.getGiobjecttype().size()}")
+                   .when(or(header(Constants.OPERATION_ID).isEqualTo(OperationId.CREATE_FILE), header(Constants.OPERATION_ID).isEqualTo(OperationId.CREATE_FINE) ))
                       .unmarshal().json(JsonLibrary.Jackson, DmsObjektResponse.class)
                       .log(LoggingLevel.DEBUG, "${body.objid} created.")
-                 .otherwise()
+                  .when(header(Constants.OPERATION_ID).isEqualTo(OperationId.CREATE_OUTGOING))
+                      .unmarshal().json(JsonLibrary.Jackson, CreateOutgoingAntwortDTO.class)
+                      .log(LoggingLevel.DEBUG, "${body.objid} created.")
+                  .when(header(Constants.OPERATION_ID).isEqualTo(OperationId.CREATE_CONTENT_OBJECT))
+                      .unmarshal().json(JsonLibrary.Jackson, CreateContentObjectAntwortDTO.class)
+                      .log(LoggingLevel.DEBUG, "${body.objid} created.")
+                  .otherwise()
                      .throwException(new IllegalArgumentException("Unkown message type."))
                 .end();
 

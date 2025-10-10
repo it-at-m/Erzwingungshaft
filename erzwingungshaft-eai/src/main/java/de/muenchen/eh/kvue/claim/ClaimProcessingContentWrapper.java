@@ -20,6 +20,6 @@ public class ClaimProcessingContentWrapper {
     private ImportClaimData ehImportClaimData;
     private ContentContainer contentContainer;
     private String xjustizXml;
-    private Map<String, Object> eakte = new HashMap<>();
+    private Map<String, Object> efile = new HashMap<>();
 
 }

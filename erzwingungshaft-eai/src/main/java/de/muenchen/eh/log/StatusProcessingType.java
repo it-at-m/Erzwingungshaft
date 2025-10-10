@@ -17,9 +17,15 @@ public enum StatusProcessingType {
     XJUSTIZ_MESSAGE_CREATED("xJustiz xml message created."),
     EH_UUID_UPDATED("xJustiz message uuid updated in database."),
     EH_KASSENZEICHEN_GESCHAEFTSPARTNERID_UPDATED("'Kassenzeichen' and 'GeschaeftsparterId' updated in database."),
-    GESCHAEFTSPARTNERID_EINZELKAKTE_NOT_FOUND("'Einzelakte' for 'GeschaeftspartnerId' in eAKte not found."),
-    GESCHAEFTSPARTNERID_EINZELKAKTE_FOUND("'Einzelakte' for 'GeschaeftspartnerId' in eAKte found."),
-    GESCHAEFTSPARTNERID_EINZELKAKTE_AMBIGUOUS("More than one 'Einzelakten' for 'GeschaeftspartnerId' in eAKte found.");
+    GESCHAEFTSPARTNERID_COLLECTION_NOT_FOUND("Collection file for 'GeschaeftspartnerId' not found in efile."),
+    GESCHAEFTSPARTNERID_COLLECTION_FOUND("Collection file for 'GeschaeftspartnerId' found in efile."),
+    GESCHAEFTSPARTNERID_COLLECTION_AMBIGUOUS("More than one collection file for 'GeschaeftspartnerId' found in efile."),
+    FILE_ADDED_TO_COLLECTION("Case file added to efile collection."),
+    FINE_ADDED_TO_CASE_FILE("Fine file added to efile case file."),
+    OUTGOING_ADDED_TO_FINE("Outgoing file added to efile fine file."),
+    CONTENT_OBJECT_ANTRAG_ADDED_TO_OUTGOING("Content object 'Antrag' added to efile outgoing."),
+    CONTENT_OBJECT_URBESCHEID_ADDED_TO_OUTGOING("Content object 'URBESCHEID' added to efile outgoing."),
+    EFILE_OBJECTADDRESSES_SAVED("Collection, case file, fine and documents efile objectaddresses saved in database.");
 
     private final String descriptor;
 

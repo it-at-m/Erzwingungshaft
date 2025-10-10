@@ -472,6 +472,8 @@
                             <inputSpec>${project.basedir}/src/main/resources/openapi/dmsresteai-openapi.json</inputSpec>
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>
+                            <generateAliasAsModel>true</generateAliasAsModel>
+                            <verbose>false</verbose>
                             <configOptions>
                                 <sourceFolder>src/gen/java/main</sourceFolder>
                                 <modelPackage>de.muenchen.eakte.api.rest.model</modelPackage>
@@ -479,6 +481,9 @@
                                 <generateApiTests>false</generateApiTests>
                                 <generateSupportingFiles>false</generateSupportingFiles>
                             </configOptions>
+                            <globalProperties>
+                                <skipFormModel>false</skipFormModel>
+                            </globalProperties>
                         </configuration>
                     </execution>
                 </executions>
