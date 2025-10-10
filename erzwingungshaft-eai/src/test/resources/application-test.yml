@@ -27,7 +27,7 @@ camel:
       override-endpoint: http://127.0.0.1:9000
       region: local
 
-eakte:
+efile:
   connection:
     host:
     scheme: https
@@ -35,13 +35,16 @@ eakte:
     context-path:
     username:
     password:
-  einzelakten:
+  case-file:
     aktenplan-eintrag: 1234/Testakte
     x-anwendung:
     userlogin:
     joboe:
     jobposition:
     objaddress:
+  shortname:
+    fine:
+    eh-case:
 
 # Custom properties
 xjustiz:

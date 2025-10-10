@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "eakte.connection")
+@ConfigurationProperties(prefix = "efile.connection")
 public class ConnectionProperties {
 
     private String host;

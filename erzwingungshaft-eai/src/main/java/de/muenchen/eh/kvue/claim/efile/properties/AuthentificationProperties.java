@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "eakte.einzelakten")
+@ConfigurationProperties(prefix = "efile.case-file")
 public class AuthentificationProperties {
 
     private String xanwendung;
