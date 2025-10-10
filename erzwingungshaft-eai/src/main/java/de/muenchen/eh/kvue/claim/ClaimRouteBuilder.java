@@ -33,7 +33,7 @@ public class ClaimRouteBuilder extends BaseRouteBuilder {
                     .process("efilesOperationExecutor")
                     .to("{{xjustiz.interface.bebpo}}")
                 .end()
-                .bean("cleanUp", "clearCache");
+                .bean("findCollection", "clearCollectionCache");
 
 
          from(UNMARSHALL_EH_CLAIM_DATA).routeId("unmarshal-eh-claimdata")
