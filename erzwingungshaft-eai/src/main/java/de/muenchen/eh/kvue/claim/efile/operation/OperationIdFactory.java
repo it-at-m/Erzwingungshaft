@@ -1,14 +1,16 @@
 package de.muenchen.eh.kvue.claim.efile.operation;
 
-import de.muenchen.eakte.api.rest.model.CreateFileDTO;
-import de.muenchen.eakte.api.rest.model.Objektreferenz;
 import de.muenchen.eh.kvue.claim.ClaimProcessingContentWrapper;
-import de.muenchen.eh.kvue.claim.efile.EfileConstants;
 import de.muenchen.eh.kvue.claim.efile.ExchangeBuilder;
 import de.muenchen.eh.kvue.claim.efile.OpenApiParameterExtractor;
-import de.muenchen.eh.kvue.claim.efile.properties.AuthentificationProperties;
+import de.muenchen.eh.kvue.claim.efile.operation.document.FileDTOBuilder;
+import de.muenchen.eh.kvue.claim.efile.operation.document.OutgoingRequestBodyDTOBuilder;
+import de.muenchen.eh.kvue.claim.efile.operation.document.ProcedureDTOBuilder;
 import de.muenchen.eh.kvue.claim.efile.properties.ConnectionProperties;
+import de.muenchen.eh.kvue.claim.efile.properties.ShortnameProperties;
 import de.muenchen.eh.log.Constants;
+import de.muenchen.eh.log.db.entity.ClaimDocument;
+import de.muenchen.eh.log.db.repository.ClaimDocumentRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
@@ -17,6 +19,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -24,68 +27,74 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class OperationIdFactory {
 
+    private static final String EFILE_CASE_FILE_PROPERTIES = "efile.case-file.";
+
     private final Environment environment;
     private final CamelContext camelContext;
-    private final AuthentificationProperties authentificationProperties;
     private final ConnectionProperties connectionProperties;
+    private final ShortnameProperties shortnameProperties;
 
-    private static final String EAKTE_FILE_PLAN = "eakte.einzelakten.";
+    private final ClaimDocumentRepository claimDocumentRepository;
 
-    public Exchange createExchange(OperationId operationId, Exchange exchange) {
+     public Exchange createExchange(OperationId operationId, Exchange exchange) {
 
-        Exchange eakteExchange;
+        Exchange efileExchange;
         switch (operationId) {
-            case READ_APENTRY_COLLECTION -> {
-                eakteExchange = createExchangeApentryCollections();
-            }
-            case READ_APENTRY_CASE_FILES -> {
-                ClaimProcessingContentWrapper dataWrapper = exchange.getMessage().getBody(ClaimProcessingContentWrapper.class);
-                eakteExchange = createExchangeApentryCaseFiles(dataWrapper.getEakte());
+            case READ_CASE_FILE_COLLECTIONS -> {
+                efileExchange = createExchangeFileCollections();
             }
             case CREATE_FILE ->  {
-                ClaimProcessingContentWrapper dataWrapper = exchange.getMessage().getBody(ClaimProcessingContentWrapper.class);
-                Objektreferenz caseFilesCollection = (Objektreferenz) dataWrapper.getEakte().get(OperationId.READ_APENTRY_COLLECTION.name());
-                CreateFileDTO caseFile = (CreateFileDTO) dataWrapper.getEakte().get(EfileConstants.CASE_FILE_DTO);
-                eakteExchange = createExchangeCaseFile(caseFilesCollection, caseFile);
+                efileExchange = createExchangeCaseFile(exchange.getMessage().getBody(ClaimProcessingContentWrapper.class));
             }
+            case CREATE_FINE -> {
+                efileExchange = createExchangeFine(exchange.getMessage().getBody(ClaimProcessingContentWrapper.class));
+            }
+            case CREATE_OUTGOING -> {
+                efileExchange = createExchangeOutgoing(exchange.getMessage().getBody(ClaimProcessingContentWrapper.class));
+            }
+            case CREATE_CONTENT_OBJECT -> {
+                efileExchange = createExchangeContentObject();
+            }
+
             default -> {
-                eakteExchange = new DefaultExchange(camelContext);
+                efileExchange = new DefaultExchange(camelContext);
             }
         }
 
-        eakteExchange.getMessage().setHeader(Constants.OPERATION_ID, operationId.getDescriptor());
-        eakteExchange.setProperty(Constants.CLAIM, exchange.getProperty(Constants.CLAIM));
+        efileExchange.getMessage().setHeader(Constants.OPERATION_ID, operationId.getDescriptor());
+        efileExchange.setProperty(Constants.CLAIM, exchange.getProperty(Constants.CLAIM));
 
-        return ExchangeBuilder.create(eakteExchange, operationId.getDescriptor()).withBasicAuth(connectionProperties.getUsername(), connectionProperties.getPassword()).withRequestValidation(true).build();
-
+        return ExchangeBuilder.create(efileExchange, operationId.getDescriptor()).withBasicAuth(connectionProperties.getUsername(), connectionProperties.getPassword()).withRequestValidation(true).build();
     }
 
-       private Exchange createExchangeCaseFile(Objektreferenz apentryReference, CreateFileDTO createFileDTO) {
-
-        Map<String, Object> params = enrichParameterValues(OperationId.CREATE_FILE.getDescriptor());
-        Exchange exchange = new DefaultExchange(camelContext);
-
-        params.forEach((key, value) ->
-                exchange.getMessage().setHeader(key, value)
-        );
-
-        exchange.getMessage().setBody(createFileDTO);
+    private Exchange createExchangeContentObject() {
+        Exchange exchange = createExchange(OperationId.CREATE_CONTENT_OBJECT.getDescriptor());
+        exchange.getMessage().setBody(null);
         return exchange;
-
     }
 
-    private Exchange createExchangeApentryCollections() {
-
-         return createExchange(OperationId.READ_APENTRY_COLLECTION.getDescriptor());
-    }
-
-    private Exchange createExchangeApentryCaseFiles(Map<String, Object> eakte) {
-
-        Exchange exchange = createExchange(OperationId.READ_APENTRY_CASE_FILES.getDescriptor());
-        Objektreferenz apentryReference = (Objektreferenz) eakte.get(OperationId.READ_APENTRY_COLLECTION.name());
-        exchange.getMessage().setHeader("objaddress", apentryReference.getObjaddress());
-        exchange.getMessage().setBody(eakte.get(EfileConstants.CASE_FILE_DTO));
+    private Exchange createExchangeOutgoing(ClaimProcessingContentWrapper dataWrapper) {
+        Exchange exchange = createExchange(OperationId.CREATE_OUTGOING.getDescriptor());
+        Optional<List<ClaimDocument>> documents = Optional.ofNullable(claimDocumentRepository.findByClaimImportId(dataWrapper.getClaimImport().getId()));
+        exchange.getMessage().setBody(OutgoingRequestBodyDTOBuilder.create(shortnameProperties, dataWrapper, documents).build());
         return exchange;
+    }
+
+    private Exchange createExchangeFine(ClaimProcessingContentWrapper dataWrapper) {
+        Exchange exchange = createExchange(OperationId.CREATE_FINE.getDescriptor());
+        exchange.getMessage().setBody(ProcedureDTOBuilder.create(shortnameProperties, dataWrapper).build());
+        return exchange;
+    }
+
+    private Exchange createExchangeCaseFile(ClaimProcessingContentWrapper dataWrapper) {
+
+        Exchange exchange = createExchange(OperationId.CREATE_FILE.getDescriptor());
+        exchange.getMessage().setBody(FileDTOBuilder.create(dataWrapper).build());
+        return exchange;
+    }
+
+    private Exchange createExchangeFileCollections() {
+         return createExchange(OperationId.READ_CASE_FILE_COLLECTIONS.getDescriptor());
     }
 
     private Exchange createExchange(String operationId) {
@@ -102,11 +111,11 @@ public class OperationIdFactory {
     private Map<String, Object> enrichParameterValues(String operationId) {
         Map<String, Object> params = new HashMap<>();
 
-        OpenApiParameterExtractor extractor = new OpenApiParameterExtractor("openapi/dmsresteai-openapi.json");
+        OpenApiParameterExtractor extractor = new OpenApiParameterExtractor("openapi/eakte-api-v1.2.4.json");
         var readApentryParameters = extractor.getParameterNamesForOperation(operationId);
 
         readApentryParameters.forEach(param -> {
-            Optional<String> paramValue = Optional.ofNullable(environment.getProperty(EAKTE_FILE_PLAN.concat(param.replace("-",""))));
+            Optional<String> paramValue = Optional.ofNullable(environment.getProperty(EFILE_CASE_FILE_PROPERTIES.concat(param.replace("-",""))));
             paramValue.ifPresent(value -> params.put(param, value));
         });
         return params;

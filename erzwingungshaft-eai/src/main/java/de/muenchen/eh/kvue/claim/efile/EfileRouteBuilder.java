@@ -11,9 +11,11 @@ import de.muenchen.eh.kvue.claim.efile.properties.AuthentificationProperties;
 import de.muenchen.eh.kvue.claim.efile.properties.ConnectionProperties;
 import de.muenchen.eh.log.Constants;
 import lombok.RequiredArgsConstructor;
+import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.http.base.HttpOperationFailedException;
 import org.apache.camel.model.dataformat.JsonLibrary;
+import org.apache.camel.model.language.SimpleExpression;
 import org.springframework.stereotype.Component;
 
 import static org.apache.camel.support.builder.PredicateBuilder.or;
@@ -60,24 +62,24 @@ public class EfileRouteBuilder extends BaseRouteBuilder {
 
       from(DMS_CONNECTION).routeId("rest-openapi-eakte")
                 .marshal().json(JsonLibrary.Jackson)
-                .toD("rest-openapi:classpath:openapi/dmsresteai-openapi.json#${header.operationId}")
+                .toD("rest-openapi:classpath:openapi/eakte-api-v1.2.4.json#${header.operationId}")
                 .choice()
-                   .when(header(Constants.OPERATION_ID).isEqualTo(OperationId.READ_CASE_FILE_COLLECTIONS))
+                   .when(header(Constants.OPERATION_ID).isEqualTo(OperationId.READ_CASE_FILE_COLLECTIONS.getDescriptor()))
                        .unmarshal().json(JsonLibrary.Jackson, ReadApentryAntwortDTO.class)
                        .log(LoggingLevel.INFO, "${header.objaddress} found with objektreferences count : ${body.getGiobjecttype().size()}")
-                   .when(or(header(Constants.OPERATION_ID).isEqualTo(OperationId.CREATE_FILE), header(Constants.OPERATION_ID).isEqualTo(OperationId.CREATE_FINE) ))
+                   .when(or(header(Constants.OPERATION_ID).isEqualTo(OperationId.CREATE_FILE.getDescriptor()), header(Constants.OPERATION_ID).isEqualTo(OperationId.CREATE_FINE.getDescriptor()) ))
                       .unmarshal().json(JsonLibrary.Jackson, DmsObjektResponse.class)
                       .log(LoggingLevel.DEBUG, "${body.objid} created.")
-                  .when(header(Constants.OPERATION_ID).isEqualTo(OperationId.CREATE_OUTGOING))
+                  .when(header(Constants.OPERATION_ID).isEqualTo(OperationId.CREATE_OUTGOING.getDescriptor()))
                       .unmarshal().json(JsonLibrary.Jackson, CreateOutgoingAntwortDTO.class)
                       .log(LoggingLevel.DEBUG, "${body.objid} created.")
-                  .when(header(Constants.OPERATION_ID).isEqualTo(OperationId.CREATE_CONTENT_OBJECT))
+                  .when(header(Constants.OPERATION_ID).isEqualTo(OperationId.CREATE_CONTENT_OBJECT.getDescriptor()))
                       .unmarshal().json(JsonLibrary.Jackson, CreateContentObjectAntwortDTO.class)
                       .log(LoggingLevel.DEBUG, "${body.objid} created.")
                   .otherwise()
-                     .throwException(new IllegalArgumentException("Unkown message type."))
+                        .process(exchange -> {
+                            exchange.setException(new IllegalArgumentException("Unkown openapi.operationId : ".concat((String) exchange.getMessage().getHeader(Constants.OPERATION_ID))));})
                 .end();
-
 
     }
 }
