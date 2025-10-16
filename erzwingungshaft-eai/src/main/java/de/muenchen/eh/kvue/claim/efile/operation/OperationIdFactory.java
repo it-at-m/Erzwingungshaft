@@ -18,6 +18,7 @@ import org.apache.camel.support.DefaultExchange;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +41,7 @@ public class OperationIdFactory {
 
         Exchange efileExchange;
         switch (operationId) {
-            case READ_CASE_FILE_COLLECTIONS -> {
+            case READ_COLLECTIONS -> {
                 efileExchange = createExchangeFileCollections();
             }
             case CREATE_FILE ->  {
@@ -55,7 +56,6 @@ public class OperationIdFactory {
             case CREATE_CONTENT_OBJECT -> {
                 efileExchange = createExchangeContentObject();
             }
-
             default -> {
                 efileExchange = new DefaultExchange(camelContext);
             }
@@ -76,7 +76,11 @@ public class OperationIdFactory {
     private Exchange createExchangeOutgoing(ClaimProcessingContentWrapper dataWrapper) {
         Exchange exchange = createExchange(OperationId.CREATE_OUTGOING.getDescriptor());
         Optional<List<ClaimDocument>> documents = Optional.ofNullable(claimDocumentRepository.findByClaimImportId(dataWrapper.getClaimImport().getId()));
-        exchange.getMessage().setBody(OutgoingRequestBodyDTOBuilder.create(shortnameProperties, dataWrapper, documents).build());
+        try {
+            exchange.getMessage().setBody(OutgoingRequestBodyDTOBuilder.create(shortnameProperties, dataWrapper, documents).build());
+        } catch (IOException e) {
+           exchange.setException(e);
+        }
         return exchange;
     }
 
@@ -94,7 +98,7 @@ public class OperationIdFactory {
     }
 
     private Exchange createExchangeFileCollections() {
-         return createExchange(OperationId.READ_CASE_FILE_COLLECTIONS.getDescriptor());
+         return createExchange(OperationId.READ_COLLECTIONS.getDescriptor());
     }
 
     private Exchange createExchange(String operationId) {

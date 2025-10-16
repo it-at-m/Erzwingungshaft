@@ -1,9 +1,7 @@
 package de.muenchen.eh.kvue.claim.efile.operation.document;
 
 import de.muenchen.eakte.api.rest.model.CreateProcedureDTO;
-import de.muenchen.eakte.api.rest.model.DmsObjektResponse;
 import de.muenchen.eh.kvue.claim.ClaimProcessingContentWrapper;
-import de.muenchen.eh.kvue.claim.efile.EfileConstants;
 import de.muenchen.eh.kvue.claim.efile.properties.ShortnameProperties;
 import lombok.RequiredArgsConstructor;
 
@@ -24,11 +22,8 @@ public class ProcedureDTOBuilder {
 
     private CreateProcedureDTO createProcedureDTO() {
 
-        DmsObjektResponse caseFileReference = (DmsObjektResponse) contentWrapper.getEfile().get(EfileConstants.CASE_FILE);
-
         createProcedureDTO.setShortname(shortnameProperties.getFine());
-        assert caseFileReference.getObjid() != null;
-        createProcedureDTO.setReferrednumber(caseFileReference.getObjid());
+        createProcedureDTO.setReferrednumber(contentWrapper.getClaimEfile().getFile());
         createProcedureDTO.setFilesubj(contentWrapper.getClaim().getKassenzeichen());
 
         return createProcedureDTO;

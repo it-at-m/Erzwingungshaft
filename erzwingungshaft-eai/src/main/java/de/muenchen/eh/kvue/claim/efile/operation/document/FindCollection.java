@@ -7,7 +7,9 @@ import de.muenchen.eh.kvue.claim.efile.operation.OperationId;
 import de.muenchen.eh.kvue.claim.efile.operation.OperationIdFactory;
 import de.muenchen.eh.log.StatusProcessingType;
 import de.muenchen.eh.log.db.LogServiceClaim;
+import de.muenchen.eh.log.db.entity.ClaimEfile;
 import de.muenchen.eh.log.db.entity.MessageType;
+import de.muenchen.eh.log.db.repository.ClaimEfileRepository;
 import lombok.extern.log4j.Log4j2;
 import org.apache.camel.Exchange;
 import org.springframework.stereotype.Component;
@@ -22,8 +24,8 @@ public class FindCollection extends EfileOperation {
 
     private Optional<ReadApentryAntwortDTO> collectionCache = Optional.empty();
 
-    public FindCollection(OperationIdFactory operationIdFactory, LogServiceClaim logServiceClaim) {
-        super(operationIdFactory, logServiceClaim);
+    public FindCollection(OperationIdFactory operationIdFactory, LogServiceClaim logServiceClaim, ClaimEfileRepository claimEfileRepository) {
+        super(operationIdFactory, logServiceClaim, claimEfileRepository);
     }
 
     @Override
@@ -33,34 +35,39 @@ public class FindCollection extends EfileOperation {
 
     private void findCollectionByGpId(Exchange exchange) {
 
-        ClaimProcessingContentWrapper processingDataWrapper = exchange.getMessage().getBody(ClaimProcessingContentWrapper.class);
+       ClaimProcessingContentWrapper processingDataWrapper = exchange.getMessage().getBody(ClaimProcessingContentWrapper.class);
+       Optional<ClaimEfile> gpClaimEfile = claimEfileRepository.findByGeschaeftspartnerId(processingDataWrapper.getClaim().getGeschaeftspartnerId());
+       if (gpClaimEfile.isPresent()) {
+           processingDataWrapper.setClaimEfile(gpClaimEfile.get());
+           logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.GPID_COLLECTION_READ_FROM_DB, MessageType.INFO, exchange);
+       } else {
+           if (collectionCache.isEmpty()) {
+               Exchange readCollectionRequest = operationIdFactory.createExchange(OperationId.READ_COLLECTIONS, exchange);
+               Exchange efileCollectionResponse = efileConnector.send(readCollectionRequest);
+               if (efileCollectionResponse.isRouteStop()) {
+                   exchange.setRouteStop(true);
+                   return;
+               }
+               collectionCache = Optional.ofNullable(efileCollectionResponse.getMessage().getBody(ReadApentryAntwortDTO.class));
+               if (log.isDebugEnabled())
+                   collectionCache.ifPresent(a -> a.getGiobjecttype().forEach(o -> log.debug(o.toString())));
+           }
 
-        if (collectionCache.isEmpty()) {
-            Exchange readCollectionRequest = operationIdFactory.createExchange(OperationId.READ_CASE_FILE_COLLECTIONS, exchange);
-            Exchange efileCollectionResponse = efileConnector.send(readCollectionRequest);
-            if (efileCollectionResponse.isRouteStop()) {
-                exchange.setRouteStop(true);
-                return;
-            }
-            collectionCache = Optional.ofNullable(efileCollectionResponse.getMessage().getBody(ReadApentryAntwortDTO.class));
-            if (log.isDebugEnabled())
-                collectionCache.ifPresent(a -> a.getGiobjecttype().forEach(o -> log.debug(o.toString())));
-        }
-
-        collectionCache.ifPresent(collection -> {
-             List<Objektreferenz> filteredCollections = gpIdFilter(collection.getGiobjecttype(), Long.valueOf(processingDataWrapper.getClaim().getGeschaeftspartnerId()));
-             if (filteredCollections.isEmpty()) {
-                 logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.GESCHAEFTSPARTNERID_COLLECTION_NOT_FOUND, MessageType.ERROR, exchange);
-                 exchange.setRouteStop(true);
-             } else if (filteredCollections.size() > 1) {
-                 logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.GESCHAEFTSPARTNERID_COLLECTION_AMBIGUOUS, MessageType.ERROR, exchange);
-                 exchange.setRouteStop(true);
-             } else {
-                 processingDataWrapper.getEfile().put(OperationId.READ_CASE_FILE_COLLECTIONS.name(), filteredCollections.getFirst());
-                 logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.GESCHAEFTSPARTNERID_COLLECTION_FOUND, MessageType.INFO, exchange);
-             }
-        });
-
+           collectionCache.ifPresent(collection -> {
+               List<Objektreferenz> filteredCollections = gpIdFilter(collection.getGiobjecttype(), Long.valueOf(processingDataWrapper.getClaim().getGeschaeftspartnerId()));
+               if (filteredCollections.isEmpty()) {
+                   logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.GESCHAEFTSPARTNERID_COLLECTION_NOT_FOUND, MessageType.ERROR, exchange);
+                   exchange.setRouteStop(true);
+               } else if (filteredCollections.size() > 1) {
+                   logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.GESCHAEFTSPARTNERID_COLLECTION_AMBIGUOUS, MessageType.ERROR, exchange);
+                   exchange.setRouteStop(true);
+               } else {
+                   processingDataWrapper.getEfile().put(OperationId.READ_COLLECTIONS.name(), filteredCollections.getFirst());
+                   processingDataWrapper.setClaimEfile(createUpdateClaimEfile(exchange, OperationId.READ_COLLECTIONS));
+                   logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.GESCHAEFTSPARTNERID_COLLECTION_FOUND, MessageType.INFO, exchange);
+               }
+           });
+       }
     }
 
     private List<Objektreferenz> gpIdFilter(List<Objektreferenz> objektList, long gpid) {

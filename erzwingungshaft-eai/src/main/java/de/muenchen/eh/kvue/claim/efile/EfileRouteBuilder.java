@@ -11,11 +11,9 @@ import de.muenchen.eh.kvue.claim.efile.properties.AuthentificationProperties;
 import de.muenchen.eh.kvue.claim.efile.properties.ConnectionProperties;
 import de.muenchen.eh.log.Constants;
 import lombok.RequiredArgsConstructor;
-import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.http.base.HttpOperationFailedException;
 import org.apache.camel.model.dataformat.JsonLibrary;
-import org.apache.camel.model.language.SimpleExpression;
 import org.springframework.stereotype.Component;
 
 import static org.apache.camel.support.builder.PredicateBuilder.or;
@@ -61,10 +59,11 @@ public class EfileRouteBuilder extends BaseRouteBuilder {
                 .contextPath(properties.getContextPath());
 
       from(DMS_CONNECTION).routeId("rest-openapi-eakte")
-                .marshal().json(JsonLibrary.Jackson)
+              .marshal().json(JsonLibrary.Jackson)
+              .log(LoggingLevel.DEBUG, "${body}")
                 .toD("rest-openapi:classpath:openapi/eakte-api-v1.2.4.json#${header.operationId}")
                 .choice()
-                   .when(header(Constants.OPERATION_ID).isEqualTo(OperationId.READ_CASE_FILE_COLLECTIONS.getDescriptor()))
+                   .when(header(Constants.OPERATION_ID).isEqualTo(OperationId.READ_COLLECTIONS.getDescriptor()))
                        .unmarshal().json(JsonLibrary.Jackson, ReadApentryAntwortDTO.class)
                        .log(LoggingLevel.INFO, "${header.objaddress} found with objektreferences count : ${body.getGiobjecttype().size()}")
                    .when(or(header(Constants.OPERATION_ID).isEqualTo(OperationId.CREATE_FILE.getDescriptor()), header(Constants.OPERATION_ID).isEqualTo(OperationId.CREATE_FINE.getDescriptor()) ))
@@ -78,7 +77,7 @@ public class EfileRouteBuilder extends BaseRouteBuilder {
                       .log(LoggingLevel.DEBUG, "${body.objid} created.")
                   .otherwise()
                         .process(exchange -> {
-                            exchange.setException(new IllegalArgumentException("Unkown openapi.operationId : ".concat((String) exchange.getMessage().getHeader(Constants.OPERATION_ID))));})
+                            exchange.setException(new IllegalArgumentException("Unknown openapi.operationId : ".concat((String) exchange.getMessage().getHeader(Constants.OPERATION_ID))));})
                 .end();
 
     }

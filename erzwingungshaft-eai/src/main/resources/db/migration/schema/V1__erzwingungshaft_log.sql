@@ -328,18 +328,16 @@ CREATE INDEX idx_claim_data_claim_id ON eh_log.claim_data (claim_id);
 
 CREATE TABLE eh_log.claim_efile
 (
-    id               SERIAL PRIMARY KEY, -- INT PK
-    claim_id          INTEGER NOT NULL,
+    geschaeftspartner_id VARCHAR(10) PRIMARY KEY,
     created_at        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     collection          TEXT,
-    case_file           TEXT,
+    file                TEXT,
     fine                TEXT,
+    outgoing            TEXT,
     antrag_document     TEXT,
     bescheid_document   TEXT,
-    bebpo_receipt       TEXT,
-
-    CONSTRAINT fk_claim FOREIGN KEY (claim_id) REFERENCES eh_log.claim (id) ON DELETE CASCADE
+    bebpo_receipt       TEXT
 
 );
 
-CREATE INDEX idx_claim_efile_claim_id ON eh_log.claim_efile(claim_id);
+CREATE INDEX idx_efile ON eh_log.claim_efile(geschaeftspartner_id);

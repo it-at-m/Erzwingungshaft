@@ -1,29 +1,24 @@
 package de.muenchen.eh.log.db.entity;
 
-import de.muenchen.eh.log.db.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.persistence.*;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 @Table(name = "claim_efile", schema = "eh_log")
-public class ClaimEfile extends BaseEntity {
+public class ClaimEfile {
 
-    @NotEmpty
-    @Column(name = "claim_id")
-    private Integer claimId ;
+    @Id
+    @Column(name = "geschaeftspartner_id")
+    private String geschaeftspartnerId;
 
     private String collection ;
 
-    @Column(name = "case_file")
-    private String caseFile ;
+    private String file;
 
     private String fine;
+
+    private String outgoing;
 
     @Column(name = "antrag_document")
     private String antragDocument;

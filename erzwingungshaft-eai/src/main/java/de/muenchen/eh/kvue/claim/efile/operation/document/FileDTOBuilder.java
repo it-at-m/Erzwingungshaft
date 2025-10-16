@@ -4,6 +4,7 @@ import de.muenchen.eakte.api.rest.model.CreateFileDTO;
 import de.muenchen.eakte.api.rest.model.Objektreferenz;
 import de.muenchen.eh.kvue.claim.ClaimProcessingContentWrapper;
 import de.muenchen.eh.kvue.claim.efile.operation.OperationId;
+import de.muenchen.eh.log.db.entity.ClaimEfile;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
@@ -26,23 +27,13 @@ public class FileDTOBuilder {
 
     private CreateFileDTO createCaseFileDTO() {
 
-        Optional<Objektreferenz> collection = Optional.of((Objektreferenz) contentWrapper.getEfile().get(OperationId.READ_CASE_FILE_COLLECTIONS.name()));
-        collection.ifPresent(ac -> {
-            //       ReadApentryAntwortDTO apentryCaseFiles = (ReadApentryAntwortDTO) contentWrapper.getEakte().get(OperationId.READ_APENTRY_CASE_FILES.name());
-            //        var caseFileName = prefix(ac.getObjname()).concat("-").concat(contentWrapper.getClaimImport().getOutputDirectory());
-            //        var count = apentryCaseFiles.getGiobjecttype() != null ? apentryCaseFiles.getGiobjecttype().stream().filter(o -> o.getObjname().equals(caseFileName)).count() : 0;
-            //        createFileDTO.setShortname(contentWrapper.getClaimImport().getOutputDirectory().concat("-").concat(String.valueOf(++count)));
+        Optional<ClaimEfile> collection = Optional.ofNullable(contentWrapper.getClaimEfile());
+        collection.ifPresent(coll -> {
             createFileDTO.setShortname(contentWrapper.getClaimImport().getGeschaeftspartnerId());
-            createFileDTO.setApentry(ac.getObjaddress());
+            createFileDTO.setApentry(coll.getCollection());
         });
 
         return createFileDTO;
-
     }
-
-//    private String prefix(String value) {
-//        String[] parts = value.split("/");
-//        return parts[0];
-//    }
 
 }
