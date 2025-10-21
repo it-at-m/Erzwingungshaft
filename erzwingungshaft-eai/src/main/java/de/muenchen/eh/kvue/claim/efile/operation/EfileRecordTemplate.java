@@ -1,4 +1,4 @@
-package de.muenchen.eh.kvue.claim.efile.operation.document;
+package de.muenchen.eh.kvue.claim.efile.operation;
 
 import org.apache.camel.Exchange;
 
@@ -10,7 +10,7 @@ abstract class EfileRecordTemplate {
         if (exchange.isRouteStop())
             return;
 
-        addCaseFile(exchange);
+        addFile(exchange);
         if (exchange.isRouteStop())
             return;
 
@@ -23,7 +23,7 @@ abstract class EfileRecordTemplate {
     }
 
     protected abstract void findCollection(Exchange exchange);
-    protected abstract void addCaseFile(Exchange exchange);
+    protected abstract void addFile(Exchange exchange);
     protected abstract void addFine(Exchange exchange);
     protected abstract void addOutgoing(Exchange exchange);
 

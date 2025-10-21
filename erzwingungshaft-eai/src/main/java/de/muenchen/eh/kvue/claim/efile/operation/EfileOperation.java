@@ -1,16 +1,16 @@
-package de.muenchen.eh.kvue.claim.efile.operation.document;
+package de.muenchen.eh.kvue.claim.efile.operation;
 
 import de.muenchen.eakte.api.rest.model.CreateOutgoingAntwortDTO;
 import de.muenchen.eakte.api.rest.model.DmsObjektResponse;
 import de.muenchen.eakte.api.rest.model.Objektreferenz;
 import de.muenchen.eh.kvue.claim.ClaimProcessingContentWrapper;
+import de.muenchen.eh.kvue.claim.efile.DocumentName;
 import de.muenchen.eh.kvue.claim.efile.EfileRouteBuilder;
-import de.muenchen.eh.kvue.claim.efile.operation.OperationId;
-import de.muenchen.eh.kvue.claim.efile.operation.OperationIdFactory;
 import de.muenchen.eh.log.Constants;
 import de.muenchen.eh.log.db.LogServiceClaim;
 import de.muenchen.eh.log.db.entity.ClaimEfile;
 import de.muenchen.eh.log.db.repository.ClaimEfileRepository;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.Exchange;
 import org.apache.camel.Produce;
@@ -19,7 +19,7 @@ import org.apache.camel.ProducerTemplate;
 @RequiredArgsConstructor
 abstract class EfileOperation {
 
-    @Produce(value = EfileRouteBuilder.DMS_CONNECTION)
+    @Produce(value = EfileRouteBuilder.MARSHAL_JSON_DMS_CONNECTION)
     protected ProducerTemplate efileConnector;
 
     protected final OperationIdFactory operationIdFactory;
@@ -53,10 +53,10 @@ abstract class EfileOperation {
                 claimEfile.setFine(((DmsObjektResponse) dataWrapper.getEfile().get(operationId.name())).getObjid());
             }
             case CREATE_OUTGOING -> {
-                CreateOutgoingAntwortDTO outgoing = ((CreateOutgoingAntwortDTO) dataWrapper.getEfile().get(operationId.getDescriptor()));
+                CreateOutgoingAntwortDTO outgoing = ((CreateOutgoingAntwortDTO) dataWrapper.getEfile().get(operationId.name()));
                 claimEfile.setOutgoing(outgoing.getObjid());
                 outgoing.getGiobjecttype().forEach(doc -> {
-                    if (doc.getObjname().endsWith(Constants.ANTRAG_EXTENSION)) {
+                    if (doc.getObjname().equals(DocumentName.ANTRAG.getDescriptor())) {
                         claimEfile.setAntragDocument(doc.getObjaddress());
                     } else {
                         claimEfile.setBescheidDocument(doc.getObjaddress());
@@ -68,6 +68,13 @@ abstract class EfileOperation {
             }
         }
         return claimEfileRepository.save(claimEfile);
+    }
+
+    @PostConstruct
+    public void init() {
+        if (!efileConnector.getCamelContext().isStarted()) {
+            efileConnector.getCamelContext().start();
+        }
     }
 
 }

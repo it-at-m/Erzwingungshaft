@@ -4,8 +4,11 @@ import de.muenchen.eh.log.db.entity.ClaimData;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Repository
 public interface ClaimDataRepository extends CrudRepository<ClaimData, UUID> {
+
+    ClaimData findByClaimId(Integer claimId);
 }

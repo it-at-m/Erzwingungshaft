@@ -1,21 +1,25 @@
-package de.muenchen.eh.kvue.claim.efile.operation.document;
+package de.muenchen.eh.kvue.claim.efile.operation;
 
 import de.muenchen.eakte.api.rest.model.CreateOutgoingAntwortDTO;
 import de.muenchen.eh.kvue.claim.ClaimProcessingContentWrapper;
-import de.muenchen.eh.kvue.claim.efile.operation.OperationId;
-import de.muenchen.eh.kvue.claim.efile.operation.OperationIdFactory;
+import de.muenchen.eh.kvue.claim.efile.EfileRouteBuilder;
 import de.muenchen.eh.log.StatusProcessingType;
 import de.muenchen.eh.log.db.LogServiceClaim;
 import de.muenchen.eh.log.db.entity.ClaimEfile;
 import de.muenchen.eh.log.db.entity.MessageType;
 import de.muenchen.eh.log.db.repository.ClaimEfileRepository;
 import org.apache.camel.Exchange;
+import org.apache.camel.Produce;
+import org.apache.camel.ProducerTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 @Component
 public class AddOutgoing extends EfileOperation {
+
+   @Produce(value = EfileRouteBuilder.DMS_CONNECTION)
+   private ProducerTemplate efileConnector;
 
    public AddOutgoing(OperationIdFactory operationIdFactory, LogServiceClaim logServiceClaim, ClaimEfileRepository claimEfileRepository) {
         super(operationIdFactory, logServiceClaim, claimEfileRepository);

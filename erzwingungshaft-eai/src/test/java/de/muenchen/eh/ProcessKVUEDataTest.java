@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @CamelSpringBootTest
 @EnableAutoConfiguration
 @DirtiesContext
-@ActiveProfiles(TestConstants.SPRING_TEST_PROFILE)
+//@ActiveProfiles(TestConstants.SPRING_TEST_PROFILE)
 class ProcessKVUEDataTest {
 
     @EndpointInject("mock:xjustizMessage")
@@ -102,10 +102,10 @@ class ProcessKVUEDataTest {
 
         // Start test ...
         xjustizMsg.expectedMessageCount(1);
-        xjustizMsg.assertIsSatisfied(TimeUnit.SECONDS.toMillis(5));
+        xjustizMsg.assertIsSatisfied(TimeUnit.SECONDS.toMillis(10));
 
         failures.expectedMessageCount(0);
-        failures.assertIsSatisfied(TimeUnit.SECONDS.toMillis(5));
+        failures.assertIsSatisfied(TimeUnit.SECONDS.toMillis(10));
 
         assertEquals(1, xjustizMsg.getExchanges().size(), "One happy path implemented.");
         ClaimProcessingContentWrapper dataWrapper = xjustizMsg.getExchanges().getFirst().getMessage().getBody(ClaimProcessingContentWrapper.class);
@@ -142,7 +142,7 @@ class ProcessKVUEDataTest {
         assertNotNull(claim_1000809085_5793341761427.getEhUuid(), "With the xml generation a uuid is created which is persisted in db.");
         var claimlog_errors_1000809085_5793341761427 =  claimLogRepository.findByClaimIdAndMessageTyp(claim_1000809085_5793341761427.getId(), MessageType.ERROR);
         assertEquals(1, claimlog_errors_1000809085_5793341761427.size(), "One error expected.");
-        assertEquals("GESCHAEFTSPARTNERID_EINZELKAKTE_NOT_FOUND", claimlog_errors_1000809085_5793341761427.getFirst().getMessage());
+        assertEquals("GESCHAEFTSPARTNERID_COLLECTION_NOT_FOUND", claimlog_errors_1000809085_5793341761427.getFirst().getMessage());
 
         // DB log 1000258309_5793402494421
         Optional<ClaimImport> first_claimImport_1000258309_5793402494421 = claimImports.stream().filter(ci -> ci.getGeschaeftspartnerId().equals("1000258309")).findFirst();

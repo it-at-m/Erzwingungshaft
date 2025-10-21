@@ -1,10 +1,8 @@
-package de.muenchen.eh.kvue.claim.efile.operation.document;
+package de.muenchen.eh.kvue.claim.efile.operation;
 
 import de.muenchen.eakte.api.rest.model.Objektreferenz;
 import de.muenchen.eakte.api.rest.model.ReadApentryAntwortDTO;
 import de.muenchen.eh.kvue.claim.ClaimProcessingContentWrapper;
-import de.muenchen.eh.kvue.claim.efile.operation.OperationId;
-import de.muenchen.eh.kvue.claim.efile.operation.OperationIdFactory;
 import de.muenchen.eh.log.StatusProcessingType;
 import de.muenchen.eh.log.db.LogServiceClaim;
 import de.muenchen.eh.log.db.entity.ClaimEfile;

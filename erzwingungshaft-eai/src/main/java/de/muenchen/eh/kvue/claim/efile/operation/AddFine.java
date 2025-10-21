@@ -1,8 +1,9 @@
-package de.muenchen.eh.kvue.claim.efile.operation.document;
+package de.muenchen.eh.kvue.claim.efile.operation;
 
 import de.muenchen.eh.kvue.claim.ClaimProcessingContentWrapper;
-import de.muenchen.eh.kvue.claim.efile.operation.OperationId;
-import de.muenchen.eh.kvue.claim.efile.operation.OperationIdFactory;
+import de.muenchen.eh.kvue.claim.efile.operation.subjectdata.UpdateFileSubjectData;
+import de.muenchen.eh.kvue.claim.efile.operation.subjectdata.UpdateFineSubjectData;
+import de.muenchen.eh.kvue.claim.efile.properties.FineProperties;
 import de.muenchen.eh.log.StatusProcessingType;
 import de.muenchen.eh.log.db.LogServiceClaim;
 import de.muenchen.eh.log.db.entity.MessageType;
@@ -13,8 +14,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class AddFine extends EfileOperation {
 
-    public AddFine(OperationIdFactory operationIdFactory, LogServiceClaim logServiceClaim, ClaimEfileRepository claimEfileRepository) {
+    private final FineProperties fineProperties;
+
+    public AddFine(OperationIdFactory operationIdFactory, LogServiceClaim logServiceClaim, ClaimEfileRepository claimEfileRepository, FineProperties fineProperties) {
         super(operationIdFactory, logServiceClaim, claimEfileRepository);
+        this.fineProperties = fineProperties;
     }
 
     @Override
@@ -30,5 +34,13 @@ public class AddFine extends EfileOperation {
         processingDataWrapper.getEfile().put(OperationId.CREATE_FINE.name(), createCaseFileResponse.getMessage().getBody());
         createUpdateClaimEfile(exchange, OperationId.CREATE_FINE);
         logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.FINE_ADDED_TO_CASE_FILE, MessageType.INFO, exchange);
+
+        UpdateFineSubjectData updateSubjectData = new UpdateFineSubjectData(super.logServiceClaim, exchange, super.efileConnector, super.operationIdFactory, fineProperties);
+        Exchange responseSubjectUpdate = updateSubjectData.execute();
+
+        if (responseSubjectUpdate.isRouteStop()) {
+            exchange.setRouteStop(true);
+        }
+
     }
 }

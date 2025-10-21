@@ -1,4 +1,4 @@
-package de.muenchen.eh.kvue.claim.efile.operation.document;
+package de.muenchen.eh.kvue.claim.efile.operation;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.Exchange;
@@ -7,7 +7,7 @@ import org.apache.camel.Exchange;
 public class EfileRecord extends EfileRecordTemplate {
 
     private final FindCollection collectionFinder;
-    private final AddCaseFile addCaseFile;
+    private final AddFile addFile;
     private final AddFine addFine;
     private final AddOutgoing addOutgoing;
 
@@ -17,8 +17,8 @@ public class EfileRecord extends EfileRecordTemplate {
     }
 
     @Override
-    protected void addCaseFile(Exchange exchange) {
-        addCaseFile.execute(exchange);
+    protected void addFile(Exchange exchange) {
+        addFile.execute(exchange);
     }
 
     @Override

@@ -15,5 +15,6 @@ public class ConnectionProperties {
     private String contextPath;
     private String username;
     private String password;
+    private String eakteApiVersion;
 
 }

@@ -1,9 +1,7 @@
-package de.muenchen.eh.kvue.claim.efile.operation.document;
+package de.muenchen.eh.kvue.claim.efile.operation.contentbuilder;
 
 import de.muenchen.eakte.api.rest.model.CreateFileDTO;
-import de.muenchen.eakte.api.rest.model.Objektreferenz;
 import de.muenchen.eh.kvue.claim.ClaimProcessingContentWrapper;
-import de.muenchen.eh.kvue.claim.efile.operation.OperationId;
 import de.muenchen.eh.log.db.entity.ClaimEfile;
 import lombok.RequiredArgsConstructor;
 
@@ -21,7 +19,6 @@ public class FileDTOBuilder {
     }
 
     public CreateFileDTO build() {
-
         return createCaseFileDTO();
     }
 

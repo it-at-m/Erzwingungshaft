@@ -27,7 +27,10 @@ public enum StatusProcessingType {
     OUTGOING_ADDED_TO_FINE("Outgoing file added to efile fine file."),
     CONTENT_OBJECT_ANTRAG_ADDED_TO_OUTGOING("Content object 'Antrag' added to efile outgoing."),
     CONTENT_OBJECT_URBESCHEID_ADDED_TO_OUTGOING("Content object 'URBESCHEID' added to efile outgoing."),
-    EFILE_OBJECTADDRESSES_SAVED("Collection, case file, fine and documents efile objectaddresses saved in database.");
+    EFILE_OBJECTADDRESSES_SAVED("Collection, case file, fine and documents efile objectaddresses saved in database."),
+    SUBJECT_FILE_DATA_SAVED("GP-Name, GP-Firstname, GP-Birthdate updated in efile file."),
+    SUBJECT_OWI_DATA_SAVED("'Ordnungswidrigkeitnummer (OWI)' updated in efile fine."),
+    SUBJECT_DATA_SKIPPED("Subject data attributes (efile.case-file, efile.fine) not defined in properties.");
 
     private final String descriptor;
 

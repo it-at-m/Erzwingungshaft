@@ -4,10 +4,12 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Map;
+
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "efile.case-file")
-public class AuthentificationProperties {
+public class FileProperties {
 
     private String xanwendung;
     private String aktenplanEintrag;
@@ -15,5 +17,6 @@ public class AuthentificationProperties {
     private String joboe;
     private String jobposition;
     private String objaddress;
+    private Map<String, String> subjectDataValues;
 
 }

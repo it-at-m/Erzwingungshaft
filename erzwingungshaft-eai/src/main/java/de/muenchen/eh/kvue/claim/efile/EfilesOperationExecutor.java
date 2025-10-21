@@ -1,6 +1,6 @@
 package de.muenchen.eh.kvue.claim.efile;
 
-import de.muenchen.eh.kvue.claim.efile.operation.document.*;
+import de.muenchen.eh.kvue.claim.efile.operation.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.camel.Exchange;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class EfilesOperationExecutor implements Processor {
 
     private final FindCollection collectionFinder;
-    private final AddCaseFile addCaseFile;
+    private final AddFile addFile;
     private final AddFine addFine;
     private final AddOutgoing addOutgoing;
 
@@ -21,7 +21,7 @@ public class EfilesOperationExecutor implements Processor {
     public void process(Exchange exchange) throws Exception {
 
 
-        EfileRecord operation = new EfileRecord(collectionFinder, addCaseFile, addFine, addOutgoing);
+        EfileRecord operation = new EfileRecord(collectionFinder, addFile, addFine, addOutgoing);
         operation.execute(exchange);
 
     }

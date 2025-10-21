@@ -35,6 +35,7 @@ efile:
     context-path:
     username:
     password:
+    eakte-api-version:
   case-file:
     aktenplan-eintrag: 1234/Testakte
     x-anwendung:
@@ -42,9 +43,20 @@ efile:
     joboe:
     jobposition:
     objaddress:
-  shortname:
-    fine:
-    eh-case:
+  #    subject-data-values:
+  #      gp-name: 'Name-des-Geschaeftspartner'
+  #      gp-first-name: 'Vorname-des-Geschaeftspartner'
+  #      gp-birth-date: 'Geburtstag-des-Geschaeftspartner'
+  fine:
+    shortname: Bussgeldverfahren
+    filesubj: Bussgeldbescheid
+    accdef: 'Zugriffsdefinition für Schriftgutobjekte (allgemein lesbar)'
+    outgoing: Ausgang
+    doctemplate: 'LHM Schreiben Extern'
+    subfiletype: PDF-Dokument
+    incattachments: EH-Dokumente
+#    subject-data-values:
+#      owi-number: 'Ordnungswidrigkeiten-Nummer'
 
 # Custom properties
 xjustiz:

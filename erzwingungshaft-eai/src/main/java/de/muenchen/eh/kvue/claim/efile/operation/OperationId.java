@@ -7,6 +7,7 @@ public enum OperationId {
 
     READ_COLLECTIONS("ReadApentry"),
     CREATE_FILE("CreateFile"),
+    UPDATE_SUBJECT_DATA("UpdateBusinessDataValue"),
     CREATE_FINE("CreateProcedure"),
     CREATE_OUTGOING("CreateOutgoing"),
     CREATE_CONTENT_OBJECT("CreateContentObject");

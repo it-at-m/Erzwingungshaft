@@ -165,10 +165,6 @@
         <!-- Json -->
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jdk8</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
 
@@ -469,7 +465,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapi/dmsresteai-openapi.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/openapi/eakte-api-v1.2.4.json</inputSpec>
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>
                             <generateAliasAsModel>true</generateAliasAsModel>

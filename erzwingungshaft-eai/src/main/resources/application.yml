@@ -83,3 +83,13 @@ xjustiz:
       line-break: \n
       error:
     eakte:
+
+efile:
+  case-file:
+  #    subject-data-values:
+  #      gp-name: 'Name-des-Geschaeftspartner'
+  #      gp-first-name: 'Vorname-des-Geschaeftspartner'
+  #      gp-birth-date: 'Geburtstag-des-Geschaeftspartner'
+  fine:
+#    subject-data-values:
+#      owi-number: 'Ordnungswidrigkeiten-Nummer'
