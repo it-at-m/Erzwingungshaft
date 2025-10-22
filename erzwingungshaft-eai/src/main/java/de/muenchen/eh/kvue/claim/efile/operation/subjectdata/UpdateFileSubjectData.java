@@ -12,9 +12,9 @@ import de.muenchen.eh.log.db.repository.ClaimDataRepository;
 import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 
 public class UpdateFileSubjectData extends UpdateSubjectData {
@@ -25,7 +25,8 @@ public class UpdateFileSubjectData extends UpdateSubjectData {
 
     private final FileProperties properties;
     private final ClaimDataRepository claimDataRepository;
-    private Optional<Map<String, String>> subjectProperties = Optional.empty();
+    @Nullable
+    private Map<String, String> subjectProperties ;
 
     public UpdateFileSubjectData(LogServiceClaim logServiceClaim, Exchange exchange, ProducerTemplate efileConnector, OperationIdFactory operationIdFactory, FileProperties properties, ClaimDataRepository claimDataRepository) {
         super(logServiceClaim, exchange, efileConnector, operationIdFactory);
@@ -36,13 +37,13 @@ public class UpdateFileSubjectData extends UpdateSubjectData {
     @Override
     protected Map<String, String> subjectDataValuesBuilder() {
 
-        Map<String, String> subjectDataValues = new HashMap<String, String>();
+        Map<String, String> subjectDataValues = new HashMap<>();
 
         Claim claim = subjectExchange.getMessage().getBody(ClaimProcessingContentWrapper.class).getClaim();
         ClaimData claimData = claimDataRepository.findByClaimId(claim.getId());
-        subjectProperties = Optional.ofNullable(properties.getSubjectDataValues());
+        subjectProperties = properties.getSubjectDataValues();
 
-        if (subjectProperties.isPresent()) {
+        if (subjectProperties != null) {
             for (Map.Entry<String, String> entry : properties.getSubjectDataValues().entrySet()) {
 
                 if (entry.getValue().equals(NAME_GESCHAEFTSPARTNER)) {
@@ -52,14 +53,14 @@ public class UpdateFileSubjectData extends UpdateSubjectData {
                 } else if (entry.getValue().equals(BIRTHDATE_GESCHAEFTSPARTNER)) {
                     subjectDataValues.put(entry.getKey(), claimData.getEhp1gebdat());
                 }
-            };
+            }
         }
         return subjectDataValues;
     }
 
     @Override
     protected void logMessage() {
-        if (subjectProperties.isPresent())
+        if (subjectProperties != null)
             logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.SUBJECT_FILE_DATA_SAVED, MessageType.INFO, subjectExchange);
         else
             logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.SUBJECT_FILE_DATA_SAVED, MessageType.WARN, subjectExchange);

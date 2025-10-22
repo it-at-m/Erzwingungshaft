@@ -31,7 +31,7 @@ abstract class UpdateSubjectData {
         updateSubjectValues();
         return subjectExchange;
 
-    };
+    }
 
     protected abstract Map<String, String> subjectDataValuesBuilder() ;
     protected abstract void logMessage();
@@ -53,7 +53,7 @@ abstract class UpdateSubjectData {
                 subjectExchange.setRouteStop(true);
                 break;
             }
-        };
+        }
 
         if (!subjectExchange.isRouteStop())
             logMessage();
