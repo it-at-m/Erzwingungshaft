@@ -23,7 +23,6 @@ import static org.apache.camel.support.builder.PredicateBuilder.or;
 public class EfileRouteBuilder extends BaseRouteBuilder {
 
     private final ConnectionProperties properties;
-    private final FileProperties fileProperties;
 
     public static final String MARSHAL_JSON_DMS_CONNECTION = "direct:marshal-json-eakte-connection";
     public static final String DMS_CONNECTION = "direct:eakte-connection";

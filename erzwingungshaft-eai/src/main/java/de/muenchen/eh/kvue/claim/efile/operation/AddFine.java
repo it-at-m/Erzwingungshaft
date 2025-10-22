@@ -1,7 +1,6 @@
 package de.muenchen.eh.kvue.claim.efile.operation;
 
 import de.muenchen.eh.kvue.claim.ClaimProcessingContentWrapper;
-import de.muenchen.eh.kvue.claim.efile.operation.subjectdata.UpdateFileSubjectData;
 import de.muenchen.eh.kvue.claim.efile.operation.subjectdata.UpdateFineSubjectData;
 import de.muenchen.eh.kvue.claim.efile.properties.FineProperties;
 import de.muenchen.eh.log.StatusProcessingType;
