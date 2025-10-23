@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @CamelSpringBootTest
 @EnableAutoConfiguration
 @DirtiesContext
-//@ActiveProfiles(TestConstants.SPRING_TEST_PROFILE)
+@ActiveProfiles(profiles = {TestConstants.SPRING_TEST_PROFILE})
 class ProcessKVUEDataTest {
 
     @EndpointInject("mock:xjustizMessage")
@@ -142,7 +142,7 @@ class ProcessKVUEDataTest {
         assertNotNull(claim_1000809085_5793341761427.getEhUuid(), "With the xml generation a uuid is created which is persisted in db.");
         var claimlog_errors_1000809085_5793341761427 =  claimLogRepository.findByClaimIdAndMessageTyp(claim_1000809085_5793341761427.getId(), MessageType.ERROR);
         assertEquals(1, claimlog_errors_1000809085_5793341761427.size(), "One error expected.");
-        assertEquals("GESCHAEFTSPARTNERID_COLLECTION_NOT_FOUND", claimlog_errors_1000809085_5793341761427.getFirst().getMessage());
+        assertEquals("EFILE_GESCHAEFTSPARTNERID_COLLECTION_NOT_FOUND", claimlog_errors_1000809085_5793341761427.getFirst().getMessage());
 
         // DB log 1000258309_5793402494421
         Optional<ClaimImport> first_claimImport_1000258309_5793402494421 = claimImports.stream().filter(ci -> ci.getGeschaeftspartnerId().equals("1000258309")).findFirst();

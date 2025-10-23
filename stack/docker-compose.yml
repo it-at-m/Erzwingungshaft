@@ -73,6 +73,18 @@ services:
         - internal
       security_opt: *security_settings
 
+  wiremock:
+    image: wiremock/wiremock:3.3.1
+    container_name: wiremock
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./wiremock/mappings:/home/wiremock/mappings
+      - ./wiremock/openapi:/home/wiremock/openapi
+    command:
+      - "--global-response-templating"
+      - "--verbose"
+
 networks:
   keycloak:
   internal:

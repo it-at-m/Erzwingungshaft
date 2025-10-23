@@ -29,20 +29,20 @@ camel:
 
 efile:
   connection:
-    host:
-    scheme: https
-    port: 443
-    context-path:
+    host: localhost
+    scheme: http
+    port: 8080
+    context-path: api/
     username:
     password:
-    eakte-api-version:
+    eakte-api-version: openapi/eakte-api-v1.2.4.json
   case-file:
     aktenplan-eintrag: 1234/Testakte
-    x-anwendung:
-    userlogin:
-    joboe:
-    jobposition:
-    objaddress:
+    x-anwendung: EH
+    userlogin: test
+    joboe: COO.2150.9150.1.15756
+    jobposition: DocumentManager
+    objaddress: COO.2150.9169.1.1632
   #    subject-data-values:
   #      gp-name: 'Name-des-Geschaeftspartner'
   #      gp-first-name: 'Vorname-des-Geschaeftspartner'
