@@ -1,13 +1,9 @@
 package de.muenchen.erzwingungshaft.xta.dto;
 
-import genv3.de.xoev.schemata.basisdatentypen.x11.Code;
-import genv3.eu.osci.ws.x2014.x10.transport.KeyCodeType;
-import genv3.eu.osci.ws.x2014.x10.transport.QualifierType;
 import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.With;
 

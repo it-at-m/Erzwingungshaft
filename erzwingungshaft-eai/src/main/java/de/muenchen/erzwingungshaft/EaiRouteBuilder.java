@@ -1,6 +1,5 @@
 package de.muenchen.erzwingungshaft;
 
-import de.muenchen.erzwingungshaft.xta.XtaSendService;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 
-@Component
 @RequiredArgsConstructor
 public class EaiRouteBuilder extends RouteBuilder {
 
@@ -32,7 +30,6 @@ public class EaiRouteBuilder extends RouteBuilder {
         from(fileEndpoint)
                 .routeId(FILE_ROUTE_ID)
                 .validate(body().isNotNull())
-                .log(LoggingLevel.DEBUG, "${body}")
-                .bean(XtaSendService.XTA_SEND_SERVICE_BEAN_NAME);
+                .log(LoggingLevel.DEBUG, "${body}");
     }
 }

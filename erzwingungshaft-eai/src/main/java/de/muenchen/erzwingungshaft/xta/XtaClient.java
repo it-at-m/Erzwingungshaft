@@ -38,6 +38,21 @@ public class XtaClient {
         log.debug("XTAClient - sendMessage({})", message);
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
     public void fetchMessages() {
         log.debug("fetchMessages");
         Consumer<XtaMessage> processMessage = null;
@@ -131,6 +146,7 @@ public class XtaClient {
 
         return null;
     }
+*/
 
 
 
