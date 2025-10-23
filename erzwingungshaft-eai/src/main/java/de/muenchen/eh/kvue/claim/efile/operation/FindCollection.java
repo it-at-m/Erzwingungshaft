@@ -37,7 +37,7 @@ public class FindCollection extends EfileOperation {
        Optional<ClaimEfile> gpClaimEfile = claimEfileRepository.findByGeschaeftspartnerId(processingDataWrapper.getClaim().getGeschaeftspartnerId());
        if (gpClaimEfile.isPresent()) {
            processingDataWrapper.setClaimEfile(gpClaimEfile.get());
-           logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.GPID_COLLECTION_READ_FROM_DB, MessageType.INFO, exchange);
+           logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_GPID_COLLECTION_READ_FROM_DB, MessageType.INFO, exchange);
        } else {
            if (collectionCache.isEmpty()) {
                Exchange readCollectionRequest = operationIdFactory.createExchange(OperationId.READ_COLLECTIONS, exchange);
@@ -47,22 +47,20 @@ public class FindCollection extends EfileOperation {
                    return;
                }
                collectionCache = Optional.ofNullable(efileCollectionResponse.getMessage().getBody(ReadApentryAntwortDTO.class));
-               if (log.isDebugEnabled())
-                   collectionCache.ifPresent(a -> a.getGiobjecttype().forEach(o -> log.debug(o.toString())));
            }
 
            collectionCache.ifPresent(collection -> {
                List<Objektreferenz> filteredCollections = gpIdFilter(collection.getGiobjecttype(), Long.valueOf(processingDataWrapper.getClaim().getGeschaeftspartnerId()));
                if (filteredCollections.isEmpty()) {
-                   logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.GESCHAEFTSPARTNERID_COLLECTION_NOT_FOUND, MessageType.ERROR, exchange);
+                   logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_GESCHAEFTSPARTNERID_COLLECTION_NOT_FOUND, MessageType.ERROR, exchange);
                    exchange.setRouteStop(true);
                } else if (filteredCollections.size() > 1) {
-                   logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.GESCHAEFTSPARTNERID_COLLECTION_AMBIGUOUS, MessageType.ERROR, exchange);
+                   logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_GESCHAEFTSPARTNERID_COLLECTION_AMBIGUOUS, MessageType.ERROR, exchange);
                    exchange.setRouteStop(true);
                } else {
                    processingDataWrapper.getEfile().put(OperationId.READ_COLLECTIONS.name(), filteredCollections.getFirst());
                    processingDataWrapper.setClaimEfile(createUpdateClaimEfile(exchange, OperationId.READ_COLLECTIONS));
-                   logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.GESCHAEFTSPARTNERID_COLLECTION_FOUND, MessageType.INFO, exchange);
+                   logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_GESCHAEFTSPARTNERID_COLLECTION_FOUND, MessageType.INFO, exchange);
                }
            });
        }

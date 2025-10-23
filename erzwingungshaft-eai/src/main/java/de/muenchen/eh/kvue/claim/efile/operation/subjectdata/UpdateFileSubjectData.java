@@ -61,9 +61,9 @@ public class UpdateFileSubjectData extends UpdateSubjectData {
     @Override
     protected void logMessage() {
         if (subjectProperties != null)
-            logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.SUBJECT_FILE_DATA_SAVED, MessageType.INFO, subjectExchange);
+            logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_SUBJECT_FILE_DATA_SAVED, MessageType.INFO, subjectExchange);
         else
-            logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.SUBJECT_FILE_DATA_SAVED, MessageType.WARN, subjectExchange);
+            logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_SUBJECT_DATA_SKIPPED, MessageType.WARN, subjectExchange);
     }
 
 

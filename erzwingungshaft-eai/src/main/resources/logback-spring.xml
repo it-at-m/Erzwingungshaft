@@ -23,7 +23,13 @@
 
         <!-- Logger -->
         <logger name="de.muenchen.eh"
-                level="debug"
+                level="info"
+                additivity="false">
+            <appender-ref ref="STDOUT" />
+        </logger>
+
+        <logger name="org.apache.camel"
+                level="error"
                 additivity="false">
             <appender-ref ref="STDOUT" />
         </logger>
@@ -70,6 +76,5 @@
         </root>
 
     </springProfile>
-
 
 </configuration>

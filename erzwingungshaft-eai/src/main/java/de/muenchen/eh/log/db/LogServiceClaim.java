@@ -66,7 +66,7 @@ public class LogServiceClaim {
 
             exchange.setProperty(Constants.CLAIM, processingDataWrapper.getClaim());
 
-            writeInfoClaimLogMessage(StatusProcessingType.DATA_READ, exchange);
+            writeInfoClaimLogMessage(StatusProcessingType.CLAIM_RAW_DATA_READ, exchange);
 
         } catch (Exception e) {
             exchange.setException(e);
@@ -81,13 +81,13 @@ public class LogServiceClaim {
 
             claimData.setClaimId(ClaimFactory.claimFacade(exchange).getId());
             claimDataRepository.save(claimData);
-            writeInfoClaimLogMessage(StatusProcessingType.DATA_UNMARSHALLED, exchange);
+            writeInfoClaimLogMessage(StatusProcessingType.CLAIM_RAW_DATA_UNMARSHALLED, exchange);
 
             var claim = ClaimFactory.claimFacade(exchange);
             claim.setKassenzeichen(claimData.getEhkassz());
             claim.setGeschaeftspartnerId(claimData.getEhgpid());
             claimRepository.save(claim);
-            writeInfoClaimLogMessage(StatusProcessingType.EH_KASSENZEICHEN_GESCHAEFTSPARTNERID_UPDATED, exchange);
+            writeInfoClaimLogMessage(StatusProcessingType.CLAIM_EH_KASSENZEICHEN_GESCHAEFTSPARTNERID_UPDATED, exchange);
 
         } catch (Exception e) {
             exchange.setException(e);
@@ -135,7 +135,7 @@ public class LogServiceClaim {
             ObjectMapper mapper = mapperBuilder.build();
             claimContent.setJson(mapper.writeValueAsString(contentContainer));
             claimContentRepository.save(claimContent);
-            writeInfoClaimLogMessage(StatusProcessingType.CONTENT_CREATED, exchange);
+            writeInfoClaimLogMessage(StatusProcessingType.CLAIM_CONTENT_DATA_CREATED, exchange);
 
         } catch (JsonProcessingException e) {
             exchange.setException(e);
@@ -151,13 +151,13 @@ public class LogServiceClaim {
             claimXml.setXjustizVersion(getXjustizVersion());
             claimXml.setContent(xml);
             claimXmlRepository.save(claimXml);
-            writeInfoClaimLogMessage(StatusProcessingType.XJUSTIZ_MESSAGE_CREATED, exchange);
+            writeInfoClaimLogMessage(StatusProcessingType.CLAIM_XJUSTIZ_MESSAGE_CREATED, exchange);
 
             var entryEntity = ClaimFactory.claimFacade(exchange);
             NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010 justiz0500010 = XmlUnmarshaller.unmarshalNachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010(xml);
             entryEntity.setEhUuid(UUID.fromString(justiz0500010.getNachrichtenkopf().getEigeneNachrichtenID()));
             claimRepository.save(entryEntity);
-            writeInfoClaimLogMessage(StatusProcessingType.EH_UUID_UPDATED, exchange);
+            writeInfoClaimLogMessage(StatusProcessingType.CLAIM_EH_UUID_UPDATED, exchange);
 
         } catch (Exception e) {
             exchange.setException(e);

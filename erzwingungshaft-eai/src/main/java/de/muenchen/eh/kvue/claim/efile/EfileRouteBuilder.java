@@ -63,29 +63,8 @@ public class EfileRouteBuilder extends BaseRouteBuilder {
                 .to(DMS_CONNECTION);
 
         from(DMS_CONNECTION).routeId("rest-openapi-eakte")
-                .log(LoggingLevel.DEBUG, "${body}")
                 .toD("rest-openapi:classpath:openapi/eakte-api-v1.2.4.json#${header.operationId}?componentName=http")
-                .choice()
-                    .when(header(Constants.OPERATION_ID).isEqualTo(OperationId.READ_COLLECTIONS.getDescriptor()))
-                        .unmarshal().json(JsonLibrary.Jackson, ReadApentryAntwortDTO.class)
-                        .log(LoggingLevel.INFO, "${header.objaddress} found with objektreferences count : ${body.getGiobjecttype().size()}")
-                     .when(or(header(Constants.OPERATION_ID).isEqualTo(OperationId.CREATE_FILE.getDescriptor()), header(Constants.OPERATION_ID).isEqualTo(OperationId.CREATE_FINE.getDescriptor())))
-                        .unmarshal().json(JsonLibrary.Jackson, DmsObjektResponse.class)
-                        .log(LoggingLevel.DEBUG, "${body.objid} created.")
-                    .when(header(Constants.OPERATION_ID).isEqualTo(OperationId.CREATE_OUTGOING.getDescriptor()))
-                        .unmarshal().json(JsonLibrary.Jackson, CreateOutgoingAntwortDTO.class)
-                        .log(LoggingLevel.DEBUG, "${body.objid} created.")
-                    .when(header(Constants.OPERATION_ID).isEqualTo(OperationId.UPDATE_SUBJECT_DATA.getDescriptor()))
-                        .unmarshal().json(JsonLibrary.Jackson)
-                        .log(LoggingLevel.DEBUG, "${body} created.")
-                    .when(header(Constants.OPERATION_ID).isEqualTo(OperationId.CREATE_CONTENT_OBJECT.getDescriptor()))
-                        .unmarshal().json(JsonLibrary.Jackson, CreateContentObjectAntwortDTO.class)
-                        .log(LoggingLevel.DEBUG, "${body.objid} created.")
-                    .otherwise()
-                        .process(exchange -> {
-                            exchange.setException(new IllegalArgumentException("Unknown openapi.operationId : ".concat((String) exchange.getMessage().getHeader(Constants.OPERATION_ID))));
-                        })
-                .end();
+                .process("efileResponseMapper");
 
     }
 }

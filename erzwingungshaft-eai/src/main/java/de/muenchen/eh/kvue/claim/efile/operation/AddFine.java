@@ -32,7 +32,7 @@ public class AddFine extends EfileOperation {
         ClaimProcessingContentWrapper processingDataWrapper = exchange.getMessage().getBody(ClaimProcessingContentWrapper.class);
         processingDataWrapper.getEfile().put(OperationId.CREATE_FINE.name(), createCaseFileResponse.getMessage().getBody());
         createUpdateClaimEfile(exchange, OperationId.CREATE_FINE);
-        logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.FINE_ADDED_TO_CASE_FILE, MessageType.INFO, exchange);
+        logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_FINE_ADDED_TO_CASE_FILE, MessageType.INFO, exchange);
 
         UpdateFineSubjectData updateSubjectData = new UpdateFineSubjectData(super.logServiceClaim, exchange, super.efileConnector, super.operationIdFactory, fineProperties);
         Exchange responseSubjectUpdate = updateSubjectData.execute();

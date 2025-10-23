@@ -45,7 +45,7 @@ public class DocumentImport implements Processor {
         claimDocument.setDocument(exchange.getIn().getBody(byte[].class));
         claimDocumentRepository.save(claimDocument);
 
-        logServiceImport.writeInfoImportLogMessage(claimDocument.getFileName().toUpperCase().endsWith(Constants.ANTRAG_EXTENSION) ? StatusProcessingType.ANTRAG_IMPORT_DB : StatusProcessingType.BESCHEID_IMPORT_DB, exchange);
+        logServiceImport.writeInfoImportLogMessage(claimDocument.getFileName().toUpperCase().endsWith(Constants.ANTRAG_EXTENSION) ? StatusProcessingType.IMPORT_ANTRAG_IMPORT_DB : StatusProcessingType.IMPORT_BESCHEID_IMPORT_DB, exchange);
 
     }
 }

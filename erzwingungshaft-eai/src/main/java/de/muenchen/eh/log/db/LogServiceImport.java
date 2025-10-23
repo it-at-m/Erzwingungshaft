@@ -53,7 +53,7 @@ public class LogServiceImport {
 
             exchange.setProperty(Constants.CLAIM_IMPORT, claimImportRepository.save(claimImport));
 
-            writeInfoImportLogMessage(StatusProcessingType.DATA_FILE_CREATED, exchange);
+            writeInfoImportLogMessage(StatusProcessingType.IMPORT_DATA_FILE_CREATED, exchange);
 
         } catch (Exception e) {
             exchange.setException(e);
@@ -75,7 +75,7 @@ public class LogServiceImport {
                         var updateClaimImport = claimImportRepository.save(claimImport);
                         claimImportCache.put(ehkasszEhgpidPrintDate, updateClaimImport);
                         exchange.setProperty(Constants.CLAIM_IMPORT, updateClaimImport);
-                        writeInfoImportLogMessage(fileName.toUpperCase().endsWith(Constants.ANTRAG_EXTENSION) ? StatusProcessingType.ANTRAG_IMPORT_DIRECTORY : StatusProcessingType.BESCHEID_IMPORT_DIRECTORY, exchange);
+                        writeInfoImportLogMessage(fileName.toUpperCase().endsWith(Constants.ANTRAG_EXTENSION) ? StatusProcessingType.IMPORT_ANTRAG_IMPORT_DIRECTORY : StatusProcessingType.IMPORT_BESCHEID_IMPORT_DIRECTORY, exchange);
                     }
             );
         } catch (Exception e) {

@@ -42,11 +42,11 @@ public class AddOutgoing extends EfileOperation {
         saved.ifPresent(claimEfile -> {
             logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_OBJECTADDRESSES_SAVED, MessageType.INFO, exchange);
             if (claimEfile.getOutgoing() != null)
-                logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.OUTGOING_ADDED_TO_FINE, MessageType.INFO, exchange);
+                logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_OUTGOING_ADDED_TO_FINE, MessageType.INFO, exchange);
             if(claimEfile.getAntragDocument() != null)
-                logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.CONTENT_OBJECT_ANTRAG_ADDED_TO_OUTGOING, MessageType.INFO, exchange);
+                logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_CONTENT_OBJECT_ANTRAG_ADDED_TO_OUTGOING, MessageType.INFO, exchange);
             if(claimEfile.getBescheidDocument() != null)
-                logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.CONTENT_OBJECT_URBESCHEID_ADDED_TO_OUTGOING, MessageType.INFO, exchange);
+                logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_CONTENT_OBJECT_URBESCHEID_ADDED_TO_OUTGOING, MessageType.INFO, exchange);
         });
 
     }

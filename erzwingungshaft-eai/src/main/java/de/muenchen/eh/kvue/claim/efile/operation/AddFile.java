@@ -34,7 +34,7 @@ public class AddFile extends EfileOperation {
 
        if (claimEfile.isPresent() && claimEfile.get().getFile() != null) {
            processingDataWrapper.setClaimEfile(claimEfile.get());
-           logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.FILE_ALREADY_EXISTS_IN_COLLECTION, MessageType.INFO, exchange);
+           logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_FILE_ALREADY_EXISTS_IN_COLLECTION, MessageType.INFO, exchange);
         } else {
            Exchange createFileRequest = operationIdFactory.createExchange(OperationId.CREATE_FILE, exchange);
            Exchange createFileResponse = efileConnector.send(createFileRequest);
@@ -45,7 +45,7 @@ public class AddFile extends EfileOperation {
            }
            processingDataWrapper.getEfile().put(OperationId.CREATE_FILE.name(), createFileResponse.getMessage().getBody());
            createUpdateClaimEfile(exchange, OperationId.CREATE_FILE);
-           logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.FILE_ADDED_TO_COLLECTION, MessageType.INFO, exchange);
+           logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_FILE_ADDED_TO_COLLECTION, MessageType.INFO, exchange);
 
            UpdateFileSubjectData updateSubjectData = new UpdateFileSubjectData(super.logServiceClaim, exchange, super.efileConnector, super.operationIdFactory, fileProperties, claimDataRepository);
            Exchange responseSubjectUpdate = updateSubjectData.execute();
