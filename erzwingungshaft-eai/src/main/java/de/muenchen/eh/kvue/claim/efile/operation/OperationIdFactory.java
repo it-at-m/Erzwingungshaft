@@ -13,6 +13,7 @@ import de.muenchen.eh.kvue.claim.efile.properties.FineProperties;
 import de.muenchen.eh.log.Constants;
 import de.muenchen.eh.log.db.entity.ClaimDocument;
 import de.muenchen.eh.log.db.repository.ClaimDocumentRepository;
+import jakarta.activation.DataHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
@@ -89,25 +90,18 @@ public class OperationIdFactory {
     private Exchange createExchangeOutgoing(ClaimProcessingContentWrapper dataWrapper) {
         Exchange exchange = createExchange(OperationId.CREATE_OUTGOING.getDescriptor());
         exchange.getMessage().setHeader(Exchange.CONTENT_TYPE, "multipart/form-data");
-        Optional<List<ClaimDocument>> documents = Optional.ofNullable(claimDocumentRepository.findByClaimImportId(dataWrapper.getClaimImport().getId()));
+        List<ClaimDocument> documents = claimDocumentRepository.findByClaimImportId(dataWrapper.getClaimImport().getId());
         log.debug("Process outgoing geschaeftspartnerId : {} ", dataWrapper.getClaim().getGeschaeftspartnerId());
 
         try {
-
             MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-
-            ObjectMapper objectMapper = new ObjectMapper();
             builder.addTextBody("params", OutgoingAnfrageDTOBuilder.create(fineProperties, dataWrapper).buildAsJson(), ContentType.APPLICATION_JSON);
 
             var docs = OutgoingRequestBodyDTOBuilder.create(documents).build();
-            docs.forEach(file -> {
-                builder.addBinaryBody("giattachmenttype", file, ContentType.APPLICATION_OCTET_STREAM, file.getName());
-            });
-
-            var entity = builder.build();
-            exchange.getMessage().setBody(entity.getContent());
-            exchange.getMessage().setHeader(Exchange.CONTENT_TYPE, entity.getContentType());
-
+            for (Map.Entry<String, DataHandler> entry : docs.entrySet()) {
+                builder.addBinaryBody("giattachmenttype", entry.getValue().getInputStream(), ContentType.APPLICATION_OCTET_STREAM, entry.getKey());
+            }
+            exchange.getMessage().setBody(builder.build());
 
         } catch (IOException e) {
             exchange.setException(e);

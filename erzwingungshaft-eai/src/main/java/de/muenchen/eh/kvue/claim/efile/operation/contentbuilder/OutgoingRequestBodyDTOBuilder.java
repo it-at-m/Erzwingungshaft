@@ -1,44 +1,40 @@
 package de.muenchen.eh.kvue.claim.efile.operation.contentbuilder;
 
+import com.sun.istack.ByteArrayDataSource;
 import de.muenchen.eh.kvue.claim.efile.DocumentName;
 import de.muenchen.eh.log.DocumentType;
 import de.muenchen.eh.log.db.entity.ClaimDocument;
+import jakarta.activation.DataHandler;
+import jakarta.activation.DataSource;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+import java.util.TreeMap;
 
 @RequiredArgsConstructor
 public class OutgoingRequestBodyDTOBuilder {
 
-    private final Optional<List<ClaimDocument>> documents;
+    private final List<ClaimDocument> documents;
 
-    public static OutgoingRequestBodyDTOBuilder create(Optional<List<ClaimDocument>> documents) {
+    public static OutgoingRequestBodyDTOBuilder create(List<ClaimDocument> documents) {
         return new OutgoingRequestBodyDTOBuilder(documents);
     }
 
 
-    public List<File> build() throws IOException {
+    public Map<String, DataHandler> build() throws IOException {
 
-        List<File> dataHandlers = new ArrayList<>();
+        Map<String, DataHandler> dataHandlers = new TreeMap<>();
 
-        if (documents.isPresent()) {
-            for (ClaimDocument document : documents.get()) {
+        if (documents != null) {
+            for (ClaimDocument document : documents) {
                 var prefix = document.getDocumentType().equals(DocumentType.ANTRAG.getDescriptor()) ? DocumentName.ANTRAG.getDescriptor() : DocumentName.BESCHEID.getDescriptor();
                 var suffix = FilenameUtils.getExtension(document.getFileName());
-                var newFilePath = Path.of(prefix.concat(".").concat(suffix));
 
-                Files.deleteIfExists(newFilePath);
-
-                Path tempFile = Files.createFile(newFilePath);
-                Files.write(tempFile, document.getDocument());
-                dataHandlers.add(new File(tempFile.toUri()));
+                DataSource dataSource = new ByteArrayDataSource(document.getDocument(), document.getDocument().length ,"application/octet-stream");
+                dataHandlers.put(prefix.concat(".").concat(suffix), new DataHandler(dataSource));
 
             }
         }
