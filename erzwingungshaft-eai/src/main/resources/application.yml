@@ -1,6 +1,8 @@
 spring:
   application:
     name: @project.artifactId@
+  main:
+    web-application-type: none
   datasource:
     url:
     username:
