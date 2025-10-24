@@ -6,6 +6,9 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.LastModifiedDate;
+
+import java.time.Instant;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -23,6 +26,10 @@ public class ClaimImport extends BaseEntity {
 
     @NotEmpty
     private String kassenzeichen;
+
+    @NotEmpty
+    @Column(name = "erstell_datum")
+    private String erstellDatum;
 
     @NotEmpty
     @Column(name = "storage_location")
@@ -53,7 +60,16 @@ public class ClaimImport extends BaseEntity {
     @Column(name = "bescheid_import")
     private Boolean isBescheidImport;
 
+    @LastModifiedDate
+    @Column(name = "updated_at", nullable = false)
+    private Instant lastUpdate;
+
     @OneToOne(mappedBy = "claimImport", cascade = CascadeType.ALL, orphanRemoval = true)
     private Claim claim;
+
+    @PrePersist
+    protected void onCreate() {
+        lastUpdate = Instant.now();  // Setzt updated_at beim ersten Speichern
+    }
 
 }

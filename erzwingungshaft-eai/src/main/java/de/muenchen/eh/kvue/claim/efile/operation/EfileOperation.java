@@ -37,7 +37,7 @@ abstract class EfileOperation {
         ClaimEfile claimEfile;
         if (dataWrapper.getClaimEfile() == null) {
             claimEfile = new ClaimEfile();
-            claimEfile.setGeschaeftspartnerId(dataWrapper.getClaim().getGeschaeftspartnerId());
+            claimEfile.setClaimId(dataWrapper.getClaim().getId());
         } else {
             claimEfile = dataWrapper.getClaimEfile();
         }

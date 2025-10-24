@@ -6,6 +6,7 @@ CREATE TABLE eh_log.claim_import
     id                   SERIAL PRIMARY KEY,    -- INT PK
     geschaeftspartner_id VARCHAR(10),
     kassenzeichen        VARCHAR(20),
+    erstell_datum        VARCHAR(8),
     storage_location     TEXT         NOT NULL,
     source_file_name     VARCHAR(100) NOT NULL,
     file_line_index      INTEGER,
@@ -15,7 +16,8 @@ CREATE TABLE eh_log.claim_import
     data_import          BOOLEAN DEFAULT FALSE, -- Data file is created in directory
     antrag_import        BOOLEAN DEFAULT FALSE, -- Antrag is imported and assigned to directory
     bescheid_import      BOOLEAN DEFAULT FALSE, -- Bescheid is imported and assigned to directory
-    created_at           TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at           TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at           TIMESTAMPTZ NOT NULL
 
 );
 
@@ -29,7 +31,7 @@ CREATE TABLE eh_log.claim_import_log
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     message_typ TEXT    NOT NULL,
     message     TEXT    NOT NULL,
-    comment     TEXT      DEFAULT '',
+    comment     TEXT    DEFAULT '',
 
     CONSTRAINT fk_claim_import FOREIGN KEY (claim_import_id) REFERENCES eh_log.claim_import (id) ON DELETE CASCADE
 
@@ -70,6 +72,7 @@ CREATE TABLE eh_log.claim
     source_file_name     VARCHAR(100) NOT NULL,
     file_line_index      INTEGER,
     created_at           TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at           TIMESTAMPTZ NOT NULL,
 
     CONSTRAINT fk_claim_import FOREIGN KEY (claim_import_id) REFERENCES eh_log.claim_import (id) ON DELETE CASCADE
 
@@ -328,16 +331,20 @@ CREATE INDEX idx_claim_data_claim_id ON eh_log.claim_data (claim_id);
 
 CREATE TABLE eh_log.claim_efile
 (
-    geschaeftspartner_id VARCHAR(10) PRIMARY KEY,
-    created_at        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    id                  SERIAL PRIMARY KEY, -- INT PK
+    claim_id            INTEGER NOT NULL,
+    created_at          TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at          TIMESTAMPTZ NOT NULL,
     collection          TEXT,
     file                TEXT,
     fine                TEXT,
     outgoing            TEXT,
     antrag_document     TEXT,
     bescheid_document   TEXT,
-    bebpo_receipt       TEXT
+    bebpo_receipt       TEXT,
+
+    CONSTRAINT fk_claim FOREIGN KEY (claim_id) REFERENCES eh_log.claim (id) ON DELETE CASCADE
 
 );
 
-CREATE INDEX idx_efile ON eh_log.claim_efile(geschaeftspartner_id);
+CREATE INDEX idx_claim_efile_claim_id ON eh_log.claim_efile (claim_id);

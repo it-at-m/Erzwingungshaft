@@ -1,6 +1,7 @@
 package de.muenchen.eh.log.db;
 
 import de.muenchen.eh.common.ExtractEhIdentifier;
+import de.muenchen.eh.kvue.file.ImportClaimIdentifierData;
 import de.muenchen.eh.kvue.file.ImportDataWrapper;
 import de.muenchen.eh.log.Constants;
 import de.muenchen.eh.log.StatusProcessingType;
@@ -44,9 +45,10 @@ public class LogServiceImport {
             claimImport.setStorageLocation(dataSource);
             claimImport.setContent(dataWrapper.getClaimRawData());
 
-            var caseImportEntity = dataWrapper.getImportClaimIdentifierData();
+            ImportClaimIdentifierData caseImportEntity = dataWrapper.getImportClaimIdentifierData();
             claimImport.setKassenzeichen(caseImportEntity.getEhkassz());
             claimImport.setGeschaeftspartnerId(caseImportEntity.getEhgpid());
+            claimImport.setErstellDatum(caseImportEntity.getPrintDate());
             claimImport.setOutputDirectory(caseImportEntity.getPathName());
             claimImport.setOutputFile(caseImportEntity.getFileName());
             claimImport.setIsDataImport(true);

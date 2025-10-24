@@ -1,16 +1,25 @@
 package de.muenchen.eh.log.db.entity;
 
+import de.muenchen.eh.log.db.BaseEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
+import org.springframework.data.annotation.LastModifiedDate;
+
+import java.time.Instant;
 
 @Data
 @Entity
 @Table(name = "claim_efile", schema = "eh_log")
-public class ClaimEfile {
+public class ClaimEfile extends BaseEntity {
 
-    @Id
-    @Column(name = "geschaeftspartner_id")
-    private String geschaeftspartnerId;
+    @NotEmpty
+    @Column(name = "claim_id")
+    private Integer claimId ;
+
+    @LastModifiedDate
+    @Column(name = "updated_at", nullable = false)
+    private Instant lastUpdate;
 
     private String collection ;
 
@@ -26,4 +35,8 @@ public class ClaimEfile {
     @Column(name = "bescheid_document")
     private String bescheidDocument;
 
+    @PrePersist
+    protected void onCreate() {
+        lastUpdate = Instant.now();
+    }
 }

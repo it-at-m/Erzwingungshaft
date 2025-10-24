@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.data.annotation.LastModifiedDate;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
@@ -34,8 +36,16 @@ public class Claim extends BaseEntity {
     @Column(name = "file_line_index")
     private Integer fileLineIndex;
 
+    @LastModifiedDate
+    @Column(name = "updated_at", nullable = false)
+    private Instant lastUpdate;
+
     @OneToOne(optional = true)
     @JoinColumn(name = "claim_import_id", unique = true)
     private ClaimImport claimImport;
 
+    @PrePersist
+    protected void onCreate() {
+        lastUpdate = Instant.now();
+    }
 }

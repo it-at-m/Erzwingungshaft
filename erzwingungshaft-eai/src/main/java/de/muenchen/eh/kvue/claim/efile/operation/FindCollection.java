@@ -34,7 +34,7 @@ public class FindCollection extends EfileOperation {
     private void findCollectionByGpId(Exchange exchange) {
 
        ClaimProcessingContentWrapper processingDataWrapper = exchange.getMessage().getBody(ClaimProcessingContentWrapper.class);
-       Optional<ClaimEfile> gpClaimEfile = claimEfileRepository.findByGeschaeftspartnerId(processingDataWrapper.getClaim().getGeschaeftspartnerId());
+       Optional<ClaimEfile> gpClaimEfile = claimEfileRepository.findByClaimId(processingDataWrapper.getClaim().getId());
        if (gpClaimEfile.isPresent()) {
            processingDataWrapper.setClaimEfile(gpClaimEfile.get());
            logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_GPID_COLLECTION_READ_FROM_DB, MessageType.INFO, exchange);
