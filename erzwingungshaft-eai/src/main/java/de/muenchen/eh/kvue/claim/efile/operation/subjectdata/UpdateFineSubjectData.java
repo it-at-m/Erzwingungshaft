@@ -7,13 +7,11 @@ import de.muenchen.eh.log.StatusProcessingType;
 import de.muenchen.eh.log.db.LogServiceClaim;
 import de.muenchen.eh.log.db.entity.Claim;
 import de.muenchen.eh.log.db.entity.MessageType;
-import org.apache.camel.Exchange;
-import org.apache.camel.ProducerTemplate;
-
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
-
+import javax.annotation.Nullable;
+import org.apache.camel.Exchange;
+import org.apache.camel.ProducerTemplate;
 
 public class UpdateFineSubjectData extends UpdateSubjectData {
 
@@ -21,10 +19,10 @@ public class UpdateFineSubjectData extends UpdateSubjectData {
 
     private final FineProperties properties;
 
-    @Nullable
-    private Map<String, String> subjectProperties;
+    @Nullable private Map<String, String> subjectProperties;
 
-    public UpdateFineSubjectData(LogServiceClaim logServiceClaim, Exchange exchange, ProducerTemplate efileConnector, OperationIdFactory operationIdFactory, FineProperties properties) {
+    public UpdateFineSubjectData(LogServiceClaim logServiceClaim, Exchange exchange, ProducerTemplate efileConnector, OperationIdFactory operationIdFactory,
+            FineProperties properties) {
         super(logServiceClaim, exchange, efileConnector, operationIdFactory);
         this.properties = properties;
     }
@@ -53,10 +51,9 @@ public class UpdateFineSubjectData extends UpdateSubjectData {
     @Override
     protected void logMessage() {
         if (subjectProperties != null)
-             logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_SUBJECT_OWI_DATA_SAVED, MessageType.INFO, subjectExchange);
+            logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_SUBJECT_OWI_DATA_SAVED, MessageType.INFO, subjectExchange);
         else
             logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_SUBJECT_DATA_SKIPPED, MessageType.WARN, subjectExchange);
     }
-
 
 }

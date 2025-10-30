@@ -1,27 +1,24 @@
 package de.muenchen.eh.log.db.entity;
 
 import de.muenchen.eh.log.db.BaseEntity;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import java.time.Instant;
 import lombok.Data;
 import org.springframework.data.annotation.LastModifiedDate;
-
-import java.time.Instant;
 
 @Data
 @Entity
 @Table(name = "claim_efile", schema = "eh_log")
 public class ClaimEfile extends BaseEntity {
 
-    @NotEmpty
-    @Column(name = "claim_id")
-    private Integer claimId ;
+    @NotEmpty @Column(name = "claim_id")
+    private Integer claimId;
 
     @LastModifiedDate
     @Column(name = "updated_at", nullable = false)
     private Instant lastUpdate;
 
-    private String collection ;
+    private String collection;
 
     private String file;
 

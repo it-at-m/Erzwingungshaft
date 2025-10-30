@@ -10,14 +10,13 @@ import de.muenchen.eh.log.db.entity.ClaimImportLog;
 import de.muenchen.eh.log.db.entity.MessageType;
 import de.muenchen.eh.log.db.repository.ClaimImportLogRepository;
 import de.muenchen.eh.log.db.repository.ClaimImportRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.aws2.s3.AWS2S3Constants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @Log4j2
@@ -31,7 +30,6 @@ public class LogServiceImport {
     private final ClaimImportLogRepository claimImportLogRepository;
 
     private final ImportEntityCache claimImportCache;
-
 
     public void logClaimImport(final Exchange exchange) {
 
@@ -69,17 +67,17 @@ public class LogServiceImport {
             var ehkasszEhgpidPrintDate = ExtractEhIdentifier.getIdentifier(fileName);
             List<ClaimImport> claimImports = claimImportCache.getImportEntities(ehkasszEhgpidPrintDate);
             claimImports.forEach(claimImport -> {
-                        if (fileName.toUpperCase().endsWith(Constants.ANTRAG_EXTENSION)) {
-                            claimImport.setIsAntragImport(true);
-                        } else {
-                            claimImport.setIsBescheidImport(true);
-                        }
-                        var updateClaimImport = claimImportRepository.save(claimImport);
-                        claimImportCache.put(ehkasszEhgpidPrintDate, updateClaimImport);
-                        exchange.setProperty(Constants.CLAIM_IMPORT, updateClaimImport);
-                        writeInfoImportLogMessage(fileName.toUpperCase().endsWith(Constants.ANTRAG_EXTENSION) ? StatusProcessingType.IMPORT_ANTRAG_IMPORT_DIRECTORY : StatusProcessingType.IMPORT_BESCHEID_IMPORT_DIRECTORY, exchange);
-                    }
-            );
+                if (fileName.toUpperCase().endsWith(Constants.ANTRAG_EXTENSION)) {
+                    claimImport.setIsAntragImport(true);
+                } else {
+                    claimImport.setIsBescheidImport(true);
+                }
+                var updateClaimImport = claimImportRepository.save(claimImport);
+                claimImportCache.put(ehkasszEhgpidPrintDate, updateClaimImport);
+                exchange.setProperty(Constants.CLAIM_IMPORT, updateClaimImport);
+                writeInfoImportLogMessage(fileName.toUpperCase().endsWith(Constants.ANTRAG_EXTENSION) ? StatusProcessingType.IMPORT_ANTRAG_IMPORT_DIRECTORY
+                        : StatusProcessingType.IMPORT_BESCHEID_IMPORT_DIRECTORY, exchange);
+            });
         } catch (Exception e) {
             exchange.setException(e);
         }
@@ -99,6 +97,5 @@ public class LogServiceImport {
             exchange.setException(e);
         }
     }
-
 
 }

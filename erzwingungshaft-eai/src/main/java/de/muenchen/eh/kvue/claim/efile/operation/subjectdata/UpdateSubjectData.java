@@ -4,9 +4,9 @@ import de.muenchen.eakte.api.rest.model.UpdateBusinessDataValueDTO;
 import de.muenchen.eh.kvue.claim.efile.operation.OperationId;
 import de.muenchen.eh.kvue.claim.efile.operation.OperationIdFactory;
 import de.muenchen.eh.log.db.LogServiceClaim;
+import java.util.Map;
 import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;
-import java.util.Map;
 
 abstract class UpdateSubjectData {
 
@@ -18,14 +18,14 @@ abstract class UpdateSubjectData {
 
     public UpdateSubjectData(LogServiceClaim logServiceClaim, Exchange exchange, ProducerTemplate efileConnector, OperationIdFactory operationIdFactory) {
 
-       this.logServiceClaim = logServiceClaim;
-       this.efileConnector = efileConnector;
-       this.operationIdFactory = operationIdFactory;
-       this.subjectExchange = exchange;
+        this.logServiceClaim = logServiceClaim;
+        this.efileConnector = efileConnector;
+        this.operationIdFactory = operationIdFactory;
+        this.subjectExchange = exchange;
 
     }
 
-    public Exchange execute(){
+    public Exchange execute() {
 
         this.subjectDataValues = subjectDataValuesBuilder();
         updateSubjectValues();
@@ -33,7 +33,8 @@ abstract class UpdateSubjectData {
 
     }
 
-    protected abstract Map<String, String> subjectDataValuesBuilder() ;
+    protected abstract Map<String, String> subjectDataValuesBuilder();
+
     protected abstract void logMessage();
 
     protected void updateSubjectValues() {
@@ -59,6 +60,5 @@ abstract class UpdateSubjectData {
             logMessage();
 
     }
-
 
 }

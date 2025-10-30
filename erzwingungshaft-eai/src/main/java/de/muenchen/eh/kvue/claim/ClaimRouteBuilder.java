@@ -27,21 +27,20 @@ public class ClaimRouteBuilder extends BaseRouteBuilder {
                 .routeId("claim-eh-process")
                 .setBody(method(claimService, "claimsForProcessing"))
                 .split().body().aggregationStrategy(new GroupedBodyAggregationStrategy())
-                    .process("claimDataUnmarshaller")
-                    .process("claimContentDataEnricher")
-                    .process("claimXJustizXmlEnricher")
-                    .process("efilesOperationExecutor")
-                    .to("{{xjustiz.interface.bebpo}}")
+                .process("claimDataUnmarshaller")
+                .process("claimContentDataEnricher")
+                .process("claimXJustizXmlEnricher")
+                .process("efilesOperationExecutor")
+                .to("{{xjustiz.interface.bebpo}}")
                 .end()
                 .bean("findCollection", "clearCollectionCache");
 
+        from(UNMARSHALL_EH_CLAIM_DATA).routeId("unmarshal-eh-claimdata")
+                .unmarshal().bindy(BindyType.Fixed, ImportClaimData.class)
+                .log(LoggingLevel.DEBUG, "unmarshal-eh-claimdata : ${body}");
 
-         from(UNMARSHALL_EH_CLAIM_DATA).routeId("unmarshal-eh-claimdata")
-              .unmarshal().bindy(BindyType.Fixed, ImportClaimData.class)
-                 .log(LoggingLevel.DEBUG, "unmarshal-eh-claimdata : ${body}");
-
-         from(PROCESS_XJUSTIZ_DOCUMENT).routeId("process-xjustiz-document")
-              .to("{{xjustiz.interface.document.processor}}");
+        from(PROCESS_XJUSTIZ_DOCUMENT).routeId("process-xjustiz-document")
+                .to("{{xjustiz.interface.document.processor}}");
 
     }
 

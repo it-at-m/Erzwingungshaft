@@ -21,12 +21,12 @@ public class ClaimContentDataEnricher implements Processor {
         try {
 
             ClaimProcessingContentWrapper dataWrapper = exchange.getMessage().getBody(ClaimProcessingContentWrapper.class);
-            ClaimContentContainerFactory contentContainerFactory = new ClaimContentContainerFactory(dataWrapper.getEhImportClaimData(), dataWrapper.getClaimImport(), claimDocumentRepository);
+            ClaimContentContainerFactory contentContainerFactory = new ClaimContentContainerFactory(dataWrapper.getEhImportClaimData(),
+                    dataWrapper.getClaimImport(), claimDocumentRepository);
             dataWrapper.setContentContainer(contentContainerFactory.supplyContentContainer());
 
             logServiceClaim.logContent(exchange);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             exchange.setException(e);
             log.error(e.getMessage(), e);
         }

@@ -1,21 +1,17 @@
 package de.muenchen.eh.kvue.claim.efile;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.eakte.api.rest.model.CreateContentObjectAntwortDTO;
 import de.muenchen.eakte.api.rest.model.CreateOutgoingAntwortDTO;
 import de.muenchen.eakte.api.rest.model.DmsObjektResponse;
 import de.muenchen.eakte.api.rest.model.ReadApentryAntwortDTO;
 import de.muenchen.eh.log.Constants;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
-
-import static de.muenchen.eh.kvue.claim.efile.operation.OperationId.*;
 
 @Component
 @RequiredArgsConstructor
@@ -48,4 +44,3 @@ public class EfileResponseMapper implements Processor {
 
     }
 }
-

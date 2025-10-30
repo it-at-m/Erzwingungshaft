@@ -1,13 +1,7 @@
 package de.muenchen.eh.kvue.claim.efile;
 
-import de.muenchen.eakte.api.rest.model.CreateContentObjectAntwortDTO;
-import de.muenchen.eakte.api.rest.model.CreateOutgoingAntwortDTO;
-import de.muenchen.eakte.api.rest.model.DmsObjektResponse;
-import de.muenchen.eakte.api.rest.model.ReadApentryAntwortDTO;
 import de.muenchen.eh.BaseRouteBuilder;
 import de.muenchen.eh.StopExchange;
-import de.muenchen.eh.kvue.claim.efile.operation.OperationId;
-import de.muenchen.eh.kvue.claim.efile.properties.FileProperties;
 import de.muenchen.eh.kvue.claim.efile.properties.ConnectionProperties;
 import de.muenchen.eh.log.Constants;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +9,6 @@ import org.apache.camel.LoggingLevel;
 import org.apache.camel.http.base.HttpOperationFailedException;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.stereotype.Component;
-
-import static org.apache.camel.support.builder.PredicateBuilder.or;
 
 @Component
 @RequiredArgsConstructor
@@ -42,14 +34,14 @@ public class EfileRouteBuilder extends BaseRouteBuilder {
                 .process(new StopExchange());
 
         /*
-             To enable overwriting at this point, the 'servers' entry must be removed from the openapi.json.
-             ...
-            "servers": [
-                {
-                    "url": ""
-                }
-            ],
-            ...
+         * To enable overwriting at this point, the 'servers' entry must be removed from the openapi.json.
+         * ...
+         * "servers": [
+         * {
+         * "url": ""
+         * }
+         * ],
+         * ...
          */
         restConfiguration()
                 .component("http")

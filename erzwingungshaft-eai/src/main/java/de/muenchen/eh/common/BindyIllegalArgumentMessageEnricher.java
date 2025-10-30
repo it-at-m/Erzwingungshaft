@@ -8,14 +8,17 @@ import java.util.regex.Pattern;
 public class BindyIllegalArgumentMessageEnricher {
 
     /**
-     * Searches for the first integer in the message and inserts the bracketed field name directly after it:
+     * Searches for the first integer in the message and inserts the bracketed field name directly after
+     * it:
      *
      * For example : The mandatory field defined at the position 31 is empty for the line: 1
-     *        -->    The mandatory field defined at the position 31 (de.muenchen.eh.kvue.EhCase.ehtatstdb) is empty for the line: 1
+     * --> The mandatory field defined at the position 31 (de.muenchen.eh.kvue.EhCase.ehtatstdb) is
+     * empty for the line: 1
      *
      * Attention :
-     *    Camel Bindy index base is 1 (not 0).
-     *    In Java, the order is not guaranteed to be stable across compiler/VM versions, but usually corresponds to the declaration order in the code.
+     * Camel Bindy index base is 1 (not 0).
+     * In Java, the order is not guaranteed to be stable across compiler/VM versions, but usually
+     * corresponds to the declaration order in the code.
      *
      * @param message The original message
      * @param clazz Class with the searched field name
@@ -24,8 +27,12 @@ public class BindyIllegalArgumentMessageEnricher {
     public static String enrich(String message, Class clazz) {
 
         StringBuilder sb = new StringBuilder();
-        Optional<String> fieldName = getFieldNameAtIndex(clazz, extractFirstNumber(message) -1); // Camel Bindy index base is 1 (not 0)
-        fieldName.ifPresentOrElse(value -> {sb.append(insertAfterFirstNumber(message, clazz.getName().concat( ".").concat(value)));}, () ->{ sb.append(message);});
+        Optional<String> fieldName = getFieldNameAtIndex(clazz, extractFirstNumber(message) - 1); // Camel Bindy index base is 1 (not 0)
+        fieldName.ifPresentOrElse(value -> {
+            sb.append(insertAfterFirstNumber(message, clazz.getName().concat(".").concat(value)));
+        }, () -> {
+            sb.append(message);
+        });
         return sb.toString();
     }
 
@@ -44,7 +51,7 @@ public class BindyIllegalArgumentMessageEnricher {
             int end = matcher.end();
             return inputText.substring(0, end) + " (" + textToInsert + ")" + inputText.substring(end);
         }
-     return inputText;
+        return inputText;
     }
 
     /**
@@ -60,14 +67,15 @@ public class BindyIllegalArgumentMessageEnricher {
         if (index < 0 || index >= fields.length) {
             return Optional.empty();
         }
-        return Optional.of(fields[index ].getName());
+        return Optional.of(fields[index].getName());
     }
 
     /**
      * Returns the first number found in the text.
      *
      * @param text The input text.
-     * @return The first number as an Optional<Integer></Integer>, or Optional.empty() if no number is found.
+     * @return The first number as an Optional<Integer></Integer>, or Optional.empty() if no number is
+     *         found.
      */
     private static Integer extractFirstNumber(String text) {
 

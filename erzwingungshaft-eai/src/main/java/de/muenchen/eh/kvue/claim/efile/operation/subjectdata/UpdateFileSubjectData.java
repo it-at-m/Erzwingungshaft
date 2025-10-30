@@ -9,13 +9,11 @@ import de.muenchen.eh.log.db.entity.Claim;
 import de.muenchen.eh.log.db.entity.ClaimData;
 import de.muenchen.eh.log.db.entity.MessageType;
 import de.muenchen.eh.log.db.repository.ClaimDataRepository;
-import org.apache.camel.Exchange;
-import org.apache.camel.ProducerTemplate;
-
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
-
+import javax.annotation.Nullable;
+import org.apache.camel.Exchange;
+import org.apache.camel.ProducerTemplate;
 
 public class UpdateFileSubjectData extends UpdateSubjectData {
 
@@ -25,10 +23,10 @@ public class UpdateFileSubjectData extends UpdateSubjectData {
 
     private final FileProperties properties;
     private final ClaimDataRepository claimDataRepository;
-    @Nullable
-    private Map<String, String> subjectProperties ;
+    @Nullable private Map<String, String> subjectProperties;
 
-    public UpdateFileSubjectData(LogServiceClaim logServiceClaim, Exchange exchange, ProducerTemplate efileConnector, OperationIdFactory operationIdFactory, FileProperties properties, ClaimDataRepository claimDataRepository) {
+    public UpdateFileSubjectData(LogServiceClaim logServiceClaim, Exchange exchange, ProducerTemplate efileConnector, OperationIdFactory operationIdFactory,
+            FileProperties properties, ClaimDataRepository claimDataRepository) {
         super(logServiceClaim, exchange, efileConnector, operationIdFactory);
         this.properties = properties;
         this.claimDataRepository = claimDataRepository;
@@ -65,6 +63,5 @@ public class UpdateFileSubjectData extends UpdateSubjectData {
         else
             logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_SUBJECT_DATA_SKIPPED, MessageType.WARN, subjectExchange);
     }
-
 
 }

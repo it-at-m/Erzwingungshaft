@@ -42,7 +42,8 @@ public class ClaimDataUnmarshaller implements Processor {
     }
 
     private Exchange unmarshallClaimData(Exchange exchange) {
-        Exchange marshalContent = ExchangeBuilder.anExchange(exchange.getContext()).withBody(processingDataWrapper.getClaimImport().getContent()).withProperty(Constants.CLAIM, processingDataWrapper.getClaim()).build();
+        Exchange marshalContent = ExchangeBuilder.anExchange(exchange.getContext()).withBody(processingDataWrapper.getClaimImport().getContent())
+                .withProperty(Constants.CLAIM, processingDataWrapper.getClaim()).build();
         return unmarshalProducer.send(marshalContent);
     }
 }

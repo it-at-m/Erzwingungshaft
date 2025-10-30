@@ -5,30 +5,26 @@ import de.muenchen.eh.log.DocumentType;
 import de.muenchen.eh.log.db.entity.ClaimDocument;
 import de.muenchen.eh.log.db.entity.ClaimImport;
 import de.muenchen.eh.log.db.repository.ClaimDocumentRepository;
-import de.muenchen.xjustiz.xjustiz0500straf.content.*;
 import de.muenchen.xjustiz.xjustiz0500straf.content.fachdaten.StrasseHausnummer;
 import de.muenchen.xjustiz.xjustiz0500straf.content.fachdaten.Tatort;
 import de.muenchen.xjustiz.xjustiz0500straf.content.grunddaten.verfahrensdaten.beteiligung.Anschrift;
 import de.muenchen.xjustiz.xjustiz0500straf.content.grunddaten.verfahrensdaten.beteiligung.Beteiligung;
 import de.muenchen.xjustiz.xjustiz0500straf.content.grunddaten.verfahrensdaten.beteiligung.Rolle;
-import de.muenchen.xjustiz.xjustiz0500straf.content.schriftgutobjekte.*;
 import de.muenchen.xjustiz.xoev.codelisten.XoevCodeGDSDokumentklasse;
 import de.muenchen.xjustiz.xoev.codelisten.XoevCodeGDSRollenbezeichnungTyp3;
 import de.muenchen.xjustiz.xoev.codelisten.XoevCodeGDSStaatenTyp3;
 import de.muenchen.xjustiz.xoev.codelisten.XoevGeschlecht;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Getter
 @RequiredArgsConstructor
@@ -44,7 +40,7 @@ public class ClaimContentContainerFactory {
         return new ContentContainer(supplyNachrichtenKopfContent(), supplyFachdatenContent(), supplyGrunddatenContent(), supplySchriftgutContent());
     }
 
-    private NachrichtenkopfContent supplyNachrichtenKopfContent()  {
+    private NachrichtenkopfContent supplyNachrichtenKopfContent() {
         NachrichtenkopfContent nachrichtenkopfContent = new NachrichtenkopfContent();
         nachrichtenkopfContent.setAktenzeichen(getClaimImport().getKassenzeichen());
         return nachrichtenkopfContent;
@@ -55,9 +51,11 @@ public class ClaimContentContainerFactory {
         FachdatenContent fachdatenContent = new FachdatenContent();
 
         var startDate = getLocalDate(getImportClaimData().getEhtatdatv());
-        fachdatenContent.setAnfangsDatumUhrzeit(LocalDateTime.of(startDate.getYear(), startDate.getMonth(), startDate.getDayOfMonth(), Integer.parseInt(getImportClaimData().getEhtatstdv()), Integer.parseInt(getImportClaimData().getEhtatminv())));
+        fachdatenContent.setAnfangsDatumUhrzeit(LocalDateTime.of(startDate.getYear(), startDate.getMonth(), startDate.getDayOfMonth(),
+                Integer.parseInt(getImportClaimData().getEhtatstdv()), Integer.parseInt(getImportClaimData().getEhtatminv())));
         LocalDate endDate = getImportClaimData().getEhtatdatb().isBlank() ? startDate : getLocalDate(getImportClaimData().getEhtatdatb());
-        fachdatenContent.setEndeDatumUhrzeit(LocalDateTime.of(endDate.getYear(), endDate.getMonth(), endDate.getDayOfMonth(), Integer.parseInt(getImportClaimData().getEhtatstdb()), Integer.parseInt(getImportClaimData().getEhtatminb())));
+        fachdatenContent.setEndeDatumUhrzeit(LocalDateTime.of(endDate.getYear(), endDate.getMonth(), endDate.getDayOfMonth(),
+                Integer.parseInt(getImportClaimData().getEhtatstdb()), Integer.parseInt(getImportClaimData().getEhtatminb())));
 
         Tatort tatortContent = new Tatort();
         tatortContent.getStrasseHausnummer().add(new StrasseHausnummer(getImportClaimData().getEhtatstr1(), getImportClaimData().getEhtathnr1()));
@@ -110,7 +108,10 @@ public class ClaimContentContainerFactory {
             Identifikation identifikationAntrag = new Identifikation(uuidIdentAntrag, BigInteger.valueOf(index));
             Datei file = new Datei(fileName, BigInteger.valueOf(1));
             antraege.add(file);
-            FachspezifischeDatenDokument fachspezifischeDatenDokumentAntrag = new FachspezifischeDatenDokument(document.getDocumentType().equals(DocumentType.ANTRAG.getDescriptor()) ? XoevCodeGDSDokumentklasse.ANTRAG : XoevCodeGDSDokumentklasse.BESCHEID, uuidIdentAntrag.concat("_").concat(fileName), antraege);
+            FachspezifischeDatenDokument fachspezifischeDatenDokumentAntrag = new FachspezifischeDatenDokument(
+                    document.getDocumentType().equals(DocumentType.ANTRAG.getDescriptor()) ? XoevCodeGDSDokumentklasse.ANTRAG
+                            : XoevCodeGDSDokumentklasse.BESCHEID,
+                    uuidIdentAntrag.concat("_").concat(fileName), antraege);
             documents.add(new Dokument(identifikationAntrag, fachspezifischeDatenDokumentAntrag));
 
         });
@@ -125,7 +126,7 @@ public class ClaimContentContainerFactory {
         List<Akte> akten = new ArrayList<>();
 
         Identifikation identifikationAkte = new Identifikation(uuidIdentAkte, nummer);
-        FachspezifischeDatenAkte fachspezifischeDatenAkte = FachspezifischeDatenAkte.builder().choiceFreitext( "TODO : Freitext", false).build();
+        FachspezifischeDatenAkte fachspezifischeDatenAkte = FachspezifischeDatenAkte.builder().choiceFreitext("TODO : Freitext", false).build();
 
         Akte akte = new Akte(identifikationAkte, null, null, fachspezifischeDatenAkte);
 
@@ -173,12 +174,12 @@ public class ClaimContentContainerFactory {
 
         switch (ehp1geschl.trim().toUpperCase()) {
 
-            case "M":
-                return XoevGeschlecht.MAENNLICH;
-            case "W":
-                return XoevGeschlecht.WEIBLICH;
-            default:
-                return XoevGeschlecht.UNBEKANNT;
+        case "M":
+            return XoevGeschlecht.MAENNLICH;
+        case "W":
+            return XoevGeschlecht.WEIBLICH;
+        default:
+            return XoevGeschlecht.UNBEKANNT;
 
         }
     }

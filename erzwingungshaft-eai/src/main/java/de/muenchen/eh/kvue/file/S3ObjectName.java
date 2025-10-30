@@ -12,6 +12,6 @@ public class S3ObjectName implements Processor {
     public void process(Exchange exchange) throws Exception {
         var prefix = ExtractEhIdentifier.getIdentifier(exchange.getIn().getHeader(AWS2S3Constants.KEY, String.class));
         exchange.getIn().setHeader(AWS2S3Constants.KEY, prefix.concat("/").concat(exchange.getIn().getHeader(AWS2S3Constants.KEY, String.class)));
-        log.debug("Aws2S3.Key : {} " , exchange.getIn().getHeader(AWS2S3Constants.KEY, String.class));
+        log.debug("Aws2S3.Key : {} ", exchange.getIn().getHeader(AWS2S3Constants.KEY, String.class));
     }
 }

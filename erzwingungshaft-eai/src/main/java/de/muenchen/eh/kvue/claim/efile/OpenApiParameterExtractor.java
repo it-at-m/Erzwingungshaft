@@ -16,7 +16,9 @@ public class OpenApiParameterExtractor {
 
     /**
      * Initializes the extractor by parsing the OpenAPI specification from the given path.
-     * @param openApiJsonPath Path to the OpenAPI JSON file (e.g., "classpath:openapi/dmsresteai-openapi.json").
+     *
+     * @param openApiJsonPath Path to the OpenAPI JSON file (e.g.,
+     *            "classpath:openapi/dmsresteai-openapi.json").
      */
     public OpenApiParameterExtractor(String openApiJsonPath) {
         this.openAPI = new OpenAPIV3Parser().read(openApiJsonPath);
@@ -24,6 +26,7 @@ public class OpenApiParameterExtractor {
 
     /**
      * Retrieves all parameters for a given operationId.
+     *
      * @param operationId The operationId as defined in the OpenAPI specification.
      * @return List of Parameter objects, or an empty list if the operationId is not found.
      */
@@ -38,6 +41,7 @@ public class OpenApiParameterExtractor {
 
     /**
      * Retrieves the names of all parameters for a given operationId.
+     *
      * @param operationId The operationId as defined in the OpenAPI specification.
      * @return List of parameter names, or an empty list if the operationId is not found.
      */
@@ -47,4 +51,3 @@ public class OpenApiParameterExtractor {
                 .collect(Collectors.toList());
     }
 }
-

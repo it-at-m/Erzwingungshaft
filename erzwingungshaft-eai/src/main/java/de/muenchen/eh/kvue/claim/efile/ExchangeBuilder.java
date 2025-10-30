@@ -1,7 +1,7 @@
 package de.muenchen.eh.kvue.claim.efile;
 
-import org.apache.camel.Exchange;
 import java.util.Base64;
+import org.apache.camel.Exchange;
 
 public class ExchangeBuilder {
 
@@ -31,4 +31,3 @@ public class ExchangeBuilder {
         return exchange;
     }
 }
-

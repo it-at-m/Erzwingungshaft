@@ -1,10 +1,9 @@
 package de.muenchen.eh.kvue.claim.efile.properties;
 
+import java.util.Map;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.Map;
 
 @Data
 @Configuration

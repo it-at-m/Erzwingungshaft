@@ -22,7 +22,7 @@ public class ImportClaimIdentifierData {
 
     private String getIdentifier() {
         if (identifier == null) {
-            if (ehkassz != null && ! ehkassz.isBlank() && ehgpid != null && ! ehgpid.isBlank() && printDate != null && ! printDate.isBlank())
+            if (ehkassz != null && !ehkassz.isBlank() && ehgpid != null && !ehgpid.isBlank() && printDate != null && !printDate.isBlank())
                 identifier = getEhgpid().concat("_").concat(getEhkassz()).concat("_").concat(getPrintDate());
             else
                 throw new IllegalArgumentException("Identifier could not be generated. An attribute that makes up the Identifier is invalid.");

@@ -1,5 +1,6 @@
 package de.muenchen.eh;
 
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
@@ -11,8 +12,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Slf4j
 @Component
 @ConditionalOnProperty(prefix = "batch", name = "enabled", havingValue = "true", matchIfMissing = true)
@@ -21,7 +20,6 @@ public class ApplicationBatchRunner implements CommandLineRunner {
     private final ApplicationContext springContext;
     private final CamelContext camelContext;
     private final ConfigurableApplicationContext appContext;
-
 
     public ApplicationBatchRunner(ApplicationContext springContext, CamelContext camelContext, ConfigurableApplicationContext appContext) {
         this.springContext = springContext;

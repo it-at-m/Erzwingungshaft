@@ -1,14 +1,12 @@
 package de.muenchen.eh.log.db.entity;
 
 import de.muenchen.eh.log.db.BaseEntity;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import java.time.Instant;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.LastModifiedDate;
-
-import java.time.Instant;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -24,19 +22,15 @@ public class ClaimImport extends BaseEntity {
     @Column(name = "geschaeftspartner_id")
     private String geschaeftspartnerId;
 
-    @NotEmpty
-    private String kassenzeichen;
+    @NotEmpty private String kassenzeichen;
 
-    @NotEmpty
-    @Column(name = "erstell_datum")
+    @NotEmpty @Column(name = "erstell_datum")
     private String erstellDatum;
 
-    @NotEmpty
-    @Column(name = "storage_location")
+    @NotEmpty @Column(name = "storage_location")
     private String storageLocation;
 
-    @NotEmpty
-    @Column(name = "source_file_name")
+    @NotEmpty @Column(name = "source_file_name")
     private String sourceFileName;
 
     @Column(name = "file_line_index")
@@ -69,7 +63,7 @@ public class ClaimImport extends BaseEntity {
 
     @PrePersist
     protected void onCreate() {
-        lastUpdate = Instant.now();  // Setzt updated_at beim ersten Speichern
+        lastUpdate = Instant.now(); // Setzt updated_at beim ersten Speichern
     }
 
 }

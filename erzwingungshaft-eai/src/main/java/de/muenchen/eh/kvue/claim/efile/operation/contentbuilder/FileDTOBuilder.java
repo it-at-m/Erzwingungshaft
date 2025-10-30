@@ -3,9 +3,8 @@ package de.muenchen.eh.kvue.claim.efile.operation.contentbuilder;
 import de.muenchen.eakte.api.rest.model.CreateFileDTO;
 import de.muenchen.eh.kvue.claim.ClaimProcessingContentWrapper;
 import de.muenchen.eh.log.db.entity.ClaimEfile;
-import lombok.RequiredArgsConstructor;
-
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class FileDTOBuilder {

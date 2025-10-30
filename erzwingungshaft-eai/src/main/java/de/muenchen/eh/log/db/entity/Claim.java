@@ -1,14 +1,12 @@
 package de.muenchen.eh.log.db.entity;
 
 import de.muenchen.eh.log.db.BaseEntity;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import java.time.Instant;
+import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.LastModifiedDate;
-
-import java.time.Instant;
-import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -22,15 +20,12 @@ public class Claim extends BaseEntity {
     @Column(name = "geschaeftspartner_id")
     private String geschaeftspartnerId;
 
-    @NotEmpty
-    private String kassenzeichen;
+    @NotEmpty private String kassenzeichen;
 
-    @NotEmpty
-    @Column(name = "storage_location")
+    @NotEmpty @Column(name = "storage_location")
     private String storageLocation;
 
-    @NotEmpty
-    @Column(name = "source_file_name")
+    @NotEmpty @Column(name = "source_file_name")
     private String sourceFileName;
 
     @Column(name = "file_line_index")

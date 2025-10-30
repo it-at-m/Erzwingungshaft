@@ -1,6 +1,5 @@
 package de.muenchen.eh.kvue.claim.efile.operation;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.eh.kvue.claim.ClaimProcessingContentWrapper;
 import de.muenchen.eh.kvue.claim.efile.ExchangeBuilder;
 import de.muenchen.eh.kvue.claim.efile.OpenApiParameterExtractor;
@@ -14,6 +13,11 @@ import de.muenchen.eh.log.Constants;
 import de.muenchen.eh.log.db.entity.ClaimDocument;
 import de.muenchen.eh.log.db.repository.ClaimDocumentRepository;
 import jakarta.activation.DataHandler;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
@@ -24,12 +28,6 @@ import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.NotImplementedException;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 @Component
@@ -49,33 +47,34 @@ public class OperationIdFactory {
 
         Exchange efileExchange;
         switch (operationId) {
-            case READ_COLLECTIONS -> {
-                efileExchange = createExchange(OperationId.READ_COLLECTIONS.getDescriptor());
-            }
-            case CREATE_FILE -> {
-                efileExchange = createExchangeCaseFile(exchange.getMessage().getBody(ClaimProcessingContentWrapper.class));
-            }
-            case UPDATE_SUBJECT_DATA -> {
-                efileExchange = createExchange(OperationId.UPDATE_SUBJECT_DATA.getDescriptor());
-            }
-            case CREATE_FINE -> {
-                efileExchange = createExchangeFine(exchange.getMessage().getBody(ClaimProcessingContentWrapper.class));
-            }
-            case CREATE_OUTGOING -> {
-                efileExchange = createExchangeOutgoing(exchange.getMessage().getBody(ClaimProcessingContentWrapper.class));
-            }
-            case CREATE_CONTENT_OBJECT -> {
-                efileExchange = createExchangeContentObject();
-            }
-            default -> {
-                efileExchange = new DefaultExchange(camelContext);
-            }
+        case READ_COLLECTIONS -> {
+            efileExchange = createExchange(OperationId.READ_COLLECTIONS.getDescriptor());
+        }
+        case CREATE_FILE -> {
+            efileExchange = createExchangeCaseFile(exchange.getMessage().getBody(ClaimProcessingContentWrapper.class));
+        }
+        case UPDATE_SUBJECT_DATA -> {
+            efileExchange = createExchange(OperationId.UPDATE_SUBJECT_DATA.getDescriptor());
+        }
+        case CREATE_FINE -> {
+            efileExchange = createExchangeFine(exchange.getMessage().getBody(ClaimProcessingContentWrapper.class));
+        }
+        case CREATE_OUTGOING -> {
+            efileExchange = createExchangeOutgoing(exchange.getMessage().getBody(ClaimProcessingContentWrapper.class));
+        }
+        case CREATE_CONTENT_OBJECT -> {
+            efileExchange = createExchangeContentObject();
+        }
+        default -> {
+            efileExchange = new DefaultExchange(camelContext);
+        }
         }
 
         efileExchange.getMessage().setHeader(Constants.OPERATION_ID, operationId.getDescriptor());
         efileExchange.setProperty(Constants.CLAIM, exchange.getProperty(Constants.CLAIM));
 
-        return ExchangeBuilder.create(efileExchange, operationId.getDescriptor()).withBasicAuth(connectionProperties.getUsername(), connectionProperties.getPassword()).withRequestValidation(true).build();
+        return ExchangeBuilder.create(efileExchange, operationId.getDescriptor())
+                .withBasicAuth(connectionProperties.getUsername(), connectionProperties.getPassword()).withRequestValidation(true).build();
     }
 
     private Exchange createExchangeContentObject() {
@@ -128,9 +127,7 @@ public class OperationIdFactory {
         Map<String, Object> params = enrichParameterValues(operationId);
 
         Exchange exchange = new DefaultExchange(camelContext);
-        params.forEach((key, value) ->
-                exchange.getMessage().setHeader(key, value)
-        );
+        params.forEach((key, value) -> exchange.getMessage().setHeader(key, value));
         return exchange;
     }
 
