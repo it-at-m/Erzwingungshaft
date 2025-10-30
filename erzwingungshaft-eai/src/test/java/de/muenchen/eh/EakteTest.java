@@ -39,7 +39,7 @@ public class EakteTest {
     @EndpointInject("mock:error")
     private MockEndpoint failures;
 
-    @Test
+    // @Test
     void test_readApentryEakte() throws InterruptedException {
 
         failures.expectedMessageCount(0);

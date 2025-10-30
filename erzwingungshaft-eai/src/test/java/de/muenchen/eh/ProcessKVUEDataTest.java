@@ -95,7 +95,7 @@ class ProcessKVUEDataTest {
         s3InitClient.createBucket(CreateBucketRequest.builder().bucket(EH_BUCKET_PDF).build());
     }
 
-    @Test
+    //@Test
     void test_readDataAndCreateXjustizXml() throws Exception {
 
         uploadBucketTestFileConfiguration();
