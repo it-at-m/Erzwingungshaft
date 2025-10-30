@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import de.muenchen.eh.common.XmlUnmarshaller;
 import de.muenchen.eh.kvue.claim.ClaimProcessingContentWrapper;
+import de.muenchen.eh.log.db.entity.*;
 import de.muenchen.eh.log.db.repository.ClaimImportLogRepository;
 import de.muenchen.eh.log.db.repository.ClaimImportRepository;
 import de.muenchen.eh.log.db.repository.ClaimLogRepository;
@@ -30,6 +31,7 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.*;
 
 @SpringBootTest
 @CamelSpringBootTest

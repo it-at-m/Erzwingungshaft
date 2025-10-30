@@ -9,6 +9,8 @@ import de.muenchen.eh.kvue.claim.ImportClaimData;
 import de.muenchen.eh.log.Constants;
 import de.muenchen.eh.log.StatusProcessingType;
 import de.muenchen.eh.log.convert.DataEntityMapper;
+import de.muenchen.eh.log.db.entity.*;
+import de.muenchen.eh.log.db.repository.*;
 import de.muenchen.xjustiz.generated.NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010;
 import de.muenchen.xjustiz.xjustiz0500straf.content.ContentContainer;
 import java.util.Arrays;

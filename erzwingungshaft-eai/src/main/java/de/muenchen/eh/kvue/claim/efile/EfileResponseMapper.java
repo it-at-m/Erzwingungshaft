@@ -13,6 +13,8 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.springframework.stereotype.Component;
 
+import static de.muenchen.eh.kvue.claim.efile.operation.OperationId.*;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j

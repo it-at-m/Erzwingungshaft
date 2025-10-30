@@ -1,6 +1,7 @@
 package de.muenchen.eh.log.db.entity;
 
 import de.muenchen.eh.log.db.BaseEntity;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
