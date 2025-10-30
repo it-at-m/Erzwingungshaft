@@ -11,18 +11,20 @@ import de.muenchen.xjustiz.xjustiz0500straf.content.fachdaten.Tatort;
 import de.muenchen.xjustiz.xjustiz0500straf.content.grunddaten.verfahrensdaten.beteiligung.Anschrift;
 import de.muenchen.xjustiz.xjustiz0500straf.content.grunddaten.verfahrensdaten.beteiligung.Beteiligung;
 import de.muenchen.xjustiz.xjustiz0500straf.content.grunddaten.verfahrensdaten.beteiligung.Rolle;
+import de.muenchen.xjustiz.xjustiz0500straf.content.grunddaten.verfahrensdaten.instanzdaten.Aktenzeichen;
+import de.muenchen.xjustiz.xjustiz0500straf.content.grunddaten.verfahrensdaten.instanzdaten.Instanztype;
 import de.muenchen.xjustiz.xjustiz0500straf.content.schriftgutobjekte.*;
 import de.muenchen.xjustiz.xoev.codelisten.XoevCodeGDSDokumentklasse;
 import de.muenchen.xjustiz.xoev.codelisten.XoevCodeGDSRollenbezeichnungTyp3;
 import de.muenchen.xjustiz.xoev.codelisten.XoevCodeGDSStaatenTyp3;
 import de.muenchen.xjustiz.xoev.codelisten.XoevGeschlecht;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -31,16 +33,25 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Getter
-@RequiredArgsConstructor
 @Slf4j
 public class ClaimContentContainerFactory {
 
-    private final ImportClaimData importClaimData;
-    private final ClaimImport claimImport;
+
+    private final ClaimProcessingContentWrapper  claimProcessingContentWrapper;
     private final ClaimDocumentRepository claimDocumentRepository;
 
-    public ContentContainer supplyContentContainer() throws DatatypeConfigurationException {
+    private final ImportClaimData importClaimData;
+    private final ClaimImport claimImport;
 
+    public ClaimContentContainerFactory(ClaimProcessingContentWrapper claimProcessingContentWrapper, ClaimDocumentRepository claimDocumentRepository) {
+        this.claimProcessingContentWrapper = claimProcessingContentWrapper;
+        this.claimDocumentRepository = claimDocumentRepository;
+
+        this.claimImport = claimProcessingContentWrapper.getClaimImport();
+        this.importClaimData = claimProcessingContentWrapper.getEhImportClaimData();
+    }
+
+    public ContentContainer supplyContentContainer() throws DatatypeConfigurationException {
         return new ContentContainer(supplyNachrichtenKopfContent(), supplyFachdatenContent(), supplyGrunddatenContent(), supplySchriftgutContent());
     }
 
@@ -69,6 +80,21 @@ public class ClaimContentContainerFactory {
 
         fachdatenContent.getTatorte().add(tatortContent);
 
+        Optional<Double> fine = Optional.empty();
+        if (getClaimProcessingContentWrapper().getEhImportClaimData().getEhverwbetrag() != null && ! getClaimProcessingContentWrapper().getEhImportClaimData().getEhverwbetrag().isBlank())
+           fine = Optional.of(new BigDecimal(getClaimProcessingContentWrapper().getEhImportClaimData().getEhverwbetrag()).divide(new BigDecimal(100)).doubleValue());
+
+        Optional<Double> totalFine = Optional.empty();
+        if (getClaimProcessingContentWrapper().getEhImportClaimData().getEhgesbetr1() != null && ! getClaimProcessingContentWrapper().getEhImportClaimData().getEhgesbetr1().isBlank())
+           totalFine = Optional.of(new BigDecimal(getClaimProcessingContentWrapper().getEhImportClaimData().getEhgesbetr1()).divide(new BigDecimal(100)).doubleValue());
+
+        fine.ifPresent(fachdatenContent::setGeldbusse);
+
+        if (fine.isPresent()) {
+            final Double f = fine.get();
+            totalFine.ifPresent(t -> fachdatenContent.setAuslagen(t - f));
+        }
+
         return fachdatenContent;
     }
 
@@ -82,7 +108,11 @@ public class ClaimContentContainerFactory {
 
         setPersonalData(ehBetroffener);
 
-        return new GrunddatenContent(new ArrayList<>(List.of(ehBetroffener)));
+        Map<Instanztype, Aktenzeichen> auswahlInstanzbehoerden = new TreeMap<>();
+        auswahlInstanzbehoerden.put(Instanztype.GERICHT, new Aktenzeichen("neu"));
+        auswahlInstanzbehoerden.put(Instanztype.BETEILIGTER, new Aktenzeichen("KVU: ".concat(claimProcessingContentWrapper.getClaimImport().getOutputDirectory())));
+
+        return new GrunddatenContent(new ArrayList<>(List.of(ehBetroffener)), auswahlInstanzbehoerden);
     }
 
     private SchriftgutContent supplySchriftgutContent() throws DatatypeConfigurationException {
