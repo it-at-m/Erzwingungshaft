@@ -1,7 +1,12 @@
 package de.muenchen.eh.log.db.entity;
 
 import de.muenchen.eh.log.db.BaseEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import java.time.Instant;
 import java.util.UUID;

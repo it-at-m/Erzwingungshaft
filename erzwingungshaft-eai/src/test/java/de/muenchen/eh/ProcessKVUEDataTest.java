@@ -5,7 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import de.muenchen.eh.common.XmlUnmarshaller;
 import de.muenchen.eh.kvue.claim.ClaimProcessingContentWrapper;
-import de.muenchen.eh.log.db.entity.*;
+import de.muenchen.eh.log.db.entity.Claim;
+import de.muenchen.eh.log.db.entity.ClaimImport;
+import de.muenchen.eh.log.db.entity.ClaimImportLog;
+import de.muenchen.eh.log.db.entity.ClaimLog;
+import de.muenchen.eh.log.db.entity.MessageType;
 import de.muenchen.eh.log.db.repository.ClaimImportLogRepository;
 import de.muenchen.eh.log.db.repository.ClaimImportRepository;
 import de.muenchen.eh.log.db.repository.ClaimLogRepository;
@@ -31,7 +35,11 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.*;
+import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
+import software.amazon.awssdk.services.s3.model.DeleteBucketRequest;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @SpringBootTest
 @CamelSpringBootTest

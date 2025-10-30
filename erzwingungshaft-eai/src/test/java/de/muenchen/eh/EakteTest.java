@@ -8,8 +8,11 @@ import de.muenchen.eh.kvue.claim.efile.operation.OperationId;
 import de.muenchen.eh.kvue.claim.efile.operation.OperationIdFactory;
 import de.muenchen.eh.log.db.entity.Claim;
 import java.util.concurrent.TimeUnit;
-
-import org.apache.camel.*;
+import org.apache.camel.CamelContext;
+import org.apache.camel.EndpointInject;
+import org.apache.camel.Exchange;
+import org.apache.camel.Produce;
+import org.apache.camel.ProducerTemplate;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.support.DefaultExchange;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;

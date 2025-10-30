@@ -2,7 +2,11 @@ package de.muenchen.eh.log.db.entity;
 
 import de.muenchen.eh.log.db.BaseEntity;
 import de.muenchen.eh.log.db.IClaimEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

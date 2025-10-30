@@ -1,5 +1,12 @@
 package de.muenchen.eh.kvue.claim.efile;
 
+import static de.muenchen.eh.kvue.claim.efile.operation.OperationId.CREATE_CONTENT_OBJECT;
+import static de.muenchen.eh.kvue.claim.efile.operation.OperationId.CREATE_FILE;
+import static de.muenchen.eh.kvue.claim.efile.operation.OperationId.CREATE_FINE;
+import static de.muenchen.eh.kvue.claim.efile.operation.OperationId.CREATE_OUTGOING;
+import static de.muenchen.eh.kvue.claim.efile.operation.OperationId.READ_COLLECTIONS;
+import static de.muenchen.eh.kvue.claim.efile.operation.OperationId.UPDATE_SUBJECT_DATA;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.eakte.api.rest.model.CreateContentObjectAntwortDTO;
 import de.muenchen.eakte.api.rest.model.CreateOutgoingAntwortDTO;
@@ -12,8 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.springframework.stereotype.Component;
-
-import static de.muenchen.eh.kvue.claim.efile.operation.OperationId.*;
 
 @Component
 @RequiredArgsConstructor

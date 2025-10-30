@@ -1,7 +1,11 @@
 package de.muenchen.eh.log.db;
 
 import de.muenchen.eh.log.Constants;
-import de.muenchen.eh.log.db.entity.*;
+import de.muenchen.eh.log.db.entity.ClaimFactory;
+import de.muenchen.eh.log.db.entity.ClaimImport;
+import de.muenchen.eh.log.db.entity.ClaimImportLog;
+import de.muenchen.eh.log.db.entity.ClaimLog;
+import de.muenchen.eh.log.db.entity.MessageType;
 import de.muenchen.eh.log.db.repository.ClaimImportLogRepository;
 import de.muenchen.eh.log.db.repository.ClaimLogRepository;
 import java.util.Arrays;

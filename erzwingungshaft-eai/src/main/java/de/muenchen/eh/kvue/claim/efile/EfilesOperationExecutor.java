@@ -1,6 +1,10 @@
 package de.muenchen.eh.kvue.claim.efile;
 
-import de.muenchen.eh.kvue.claim.efile.operation.*;
+import de.muenchen.eh.kvue.claim.efile.operation.AddFile;
+import de.muenchen.eh.kvue.claim.efile.operation.AddFine;
+import de.muenchen.eh.kvue.claim.efile.operation.AddOutgoing;
+import de.muenchen.eh.kvue.claim.efile.operation.EfileRecord;
+import de.muenchen.eh.kvue.claim.efile.operation.FindCollection;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.camel.Exchange;
