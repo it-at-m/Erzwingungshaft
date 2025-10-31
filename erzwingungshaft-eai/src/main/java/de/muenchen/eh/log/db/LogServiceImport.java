@@ -91,7 +91,7 @@ public class LogServiceImport {
             ClaimImportLog claimImportLog = new ClaimImportLog();
             ClaimImport claimImport = exchange.getProperty(Constants.CLAIM_IMPORT, ClaimImport.class);
             claimImportLog.setClaimImportId(claimImport.getId());
-            claimImportLog.setMessageTyp(MessageType.INFO);
+            claimImportLog.setMessageType(MessageType.INFO);
             claimImportLog.setMessage(processingType.name());
             claimImportLog.setComment(processingType.getDescriptor());
             claimImportLogRepository.save(claimImportLog);

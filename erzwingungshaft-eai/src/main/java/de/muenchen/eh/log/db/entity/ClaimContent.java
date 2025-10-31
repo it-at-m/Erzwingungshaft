@@ -6,6 +6,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,8 +16,8 @@ import lombok.EqualsAndHashCode;
 @Table(name = "claim_content", schema = "eh_log")
 public class ClaimContent extends BaseEntity implements IClaimEntity {
 
-    @NotEmpty
-    @Column(name = "claim_id")
+    @NotNull
+    @Column(name = "claim_id", nullable = false)
     private Integer claimId ;
 
     @NotEmpty

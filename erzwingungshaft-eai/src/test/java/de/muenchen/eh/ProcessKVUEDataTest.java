@@ -131,9 +131,9 @@ class ProcessKVUEDataTest {
         assertEquals("1000809085", claimImport_1000809085_5793341761427.getGeschaeftspartnerId());
         assertEquals("5793341761427", claimImport_1000809085_5793341761427.getKassenzeichen());
 
-        List<ClaimImportLog> infoClaimImportLogs = claimImportLogRepository.findByClaimImportIdAndMessageTyp(claimImport_1000809085_5793341761427.getId(), MessageType.INFO);
+        List<ClaimImportLog> infoClaimImportLogs = claimImportLogRepository.findByClaimImportIdAndMessageType(claimImport_1000809085_5793341761427.getId(), MessageType.INFO);
         assertEquals(5, infoClaimImportLogs.size());
-        assertEquals(0, claimImportLogRepository.findByClaimImportIdAndMessageTyp(claimImport_1000809085_5793341761427.getId(), MessageType.ERROR).size(), "No errors expected.");
+        assertEquals(0, claimImportLogRepository.findByClaimImportIdAndMessageType(claimImport_1000809085_5793341761427.getId(), MessageType.ERROR).size(), "No errors expected.");
 
         Claim claim_1000809085_5793341761427 = claimRepository.findByClaimImportId(claimImport_1000809085_5793341761427.getId());
         List<ClaimLog> infoClaimLogs = claimLogRepository.findByClaimIdAndMessageTyp(claim_1000809085_5793341761427.getId(), MessageType.INFO);

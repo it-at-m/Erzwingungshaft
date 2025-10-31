@@ -26,7 +26,7 @@ public class AddOutgoing extends EfileOperation {
     }
 
     @Override
-    protected void execute(Exchange exchange) {
+    public void execute(Exchange exchange) {
 
         Exchange createOutgoingRequest = operationIdFactory.createExchange(OperationId.CREATE_OUTGOING, exchange);
         Exchange createOutgoingResponse = efileConnector.send(createOutgoingRequest);
@@ -35,7 +35,7 @@ public class AddOutgoing extends EfileOperation {
             return;
         }
         ClaimProcessingContentWrapper processingDataWrapper = exchange.getMessage().getBody(ClaimProcessingContentWrapper.class);
-        CreateOutgoingAntwortDTO outgoingResponse = (CreateOutgoingAntwortDTO) createOutgoingResponse.getMessage().getBody();
+        CreateOutgoingAntwortDTO outgoingResponse = createOutgoingResponse.getMessage().getBody(CreateOutgoingAntwortDTO.class);
         processingDataWrapper.getEfile().put(OperationId.CREATE_OUTGOING.name(), outgoingResponse);
         Optional<ClaimEfile> saved = Optional.ofNullable(createUpdateClaimEfile(exchange, OperationId.CREATE_OUTGOING));
 

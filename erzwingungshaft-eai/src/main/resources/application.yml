@@ -16,6 +16,9 @@ spring:
     baseline-on-migrate: false
     schemas: eh_log
 
+batch:
+  enabled: false
+
 logging:
   level:
     de.muenchen.eh: DEBUG

@@ -23,21 +23,21 @@ public class BaseRouteBuilder extends RouteBuilder {
 
         Predicate claimOrClaimImportExists = PredicateBuilder.or(exchangeProperty(Constants.CLAIM).isNotNull(), exchangeProperty(Constants.CLAIM_IMPORT).isNotNull());
 
+        onException(IllegalArgumentException.class)
+                .handled(true)
+                .log(LoggingLevel.ERROR, "${exception}")
+                .choice()
+                .when(exchangeProperty(Constants.CLAIM).isNotNull())
+                .bean("logServiceClaim", "logIllegalArgumentException")
+                .end()
+                .process(new StopExchange());
+
         onException(Exception.class)
                 .handled(true)
                 .log(LoggingLevel.ERROR, "${exception}")
                 .choice()
                 .when(claimOrClaimImportExists)
-                     .bean("logServiceError", "logError")
-                .end()
-                .process(new StopExchange());
-
-        onException(IllegalArgumentException.class)
-                .handled(true)
-                .log(LoggingLevel.ERROR, "${exception}")
-                .choice()
-                    .when(exchangeProperty(Constants.CLAIM).isNotNull())
-                        .bean("logServiceClaim", "logIllegalArgumentException")
+                .bean("logServiceError", "logError")
                 .end()
                 .process(new StopExchange());
 

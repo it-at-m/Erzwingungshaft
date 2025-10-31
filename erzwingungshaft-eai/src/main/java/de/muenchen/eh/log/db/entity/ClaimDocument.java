@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -20,8 +21,8 @@ import java.util.UUID;
 @Table(name = "claim_document", schema = "eh_log")
 public class ClaimDocument extends BaseEntity {
 
-    @NotEmpty
-    @Column(name = "claim_import_id")
+    @NotNull
+    @Column(name = "claim_import_id", nullable = false)
     private Integer claimImportId;
 
     @NotEmpty

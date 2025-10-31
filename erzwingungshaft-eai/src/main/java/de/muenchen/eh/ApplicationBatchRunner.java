@@ -48,16 +48,20 @@ public class ApplicationBatchRunner implements CommandLineRunner {
                     }
                 });
 
-        camelContext.start();
-        log.info("CamelContext started. Looking for files to import ...");
 
-        waitUntilIdle();
-
-        log.info("... all imported files are done.");
-        camelContext.stop();
-
-        log.info("Application terminates.");
-        appContext.close();
+        try {
+            camelContext.start();
+            log.info("CamelContext started. Looking for files to import ...");
+            waitUntilIdle();
+            log.info("... all imported files are done.");
+        } finally {
+            try {
+                camelContext.stop();
+            } finally {
+                log.info("Application terminates.");
+                appContext.close();
+            }
+        }
     }
 
     private void waitUntilIdle() throws InterruptedException {

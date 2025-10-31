@@ -21,7 +21,7 @@ public class AddFine extends EfileOperation {
     }
 
     @Override
-    protected void execute(Exchange exchange) {
+    public void execute(Exchange exchange) {
 
         Exchange createCaseFileRequest = operationIdFactory.createExchange(OperationId.CREATE_FINE, exchange);
         Exchange createCaseFileResponse = efileConnector.send(createCaseFileRequest);

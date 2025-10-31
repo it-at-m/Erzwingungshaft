@@ -207,9 +207,8 @@
             <version>${spotbugs-annotations.version}</version>
         </dependency>
         <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>javax.annotation-api</artifactId>
-            <version>1.3.2</version>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.openapitools</groupId>
@@ -476,6 +475,7 @@
                                 <generateApis>false</generateApis>
                                 <generateApiTests>false</generateApiTests>
                                 <generateSupportingFiles>false</generateSupportingFiles>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                             <globalProperties>
                                 <skipFormModel>false</skipFormModel>

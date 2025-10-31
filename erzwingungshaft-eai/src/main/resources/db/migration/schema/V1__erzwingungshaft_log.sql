@@ -29,7 +29,7 @@ CREATE TABLE eh_log.claim_import_log
     id          SERIAL PRIMARY KEY, -- INT PK
     claim_import_id   INTEGER NOT NULL,
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    message_typ TEXT    NOT NULL,
+    message_type TEXT    NOT NULL,
     message     TEXT    NOT NULL,
     comment     TEXT    DEFAULT '',
 

@@ -7,44 +7,49 @@ import java.util.regex.Pattern;
 
 public class BindyIllegalArgumentMessageEnricher {
 
+    private static final Pattern NUMBER_PATTERN = Pattern.compile("\\d+");
+
     /**
      * Searches for the first integer in the message and inserts the bracketed field name directly after it:
-     *
+     * <p>
      * For example : The mandatory field defined at the position 31 is empty for the line: 1
-     *        -->    The mandatory field defined at the position 31 (de.muenchen.eh.kvue.EhCase.ehtatstdb) is empty for the line: 1
-     *
+     * -->    The mandatory field defined at the position 31 (de.muenchen.eh.kvue.EhCase.ehtatstdb) is empty for the line: 1
+     * <p>
      * Attention :
-     *    Camel Bindy index base is 1 (not 0).
-     *    In Java, the order is not guaranteed to be stable across compiler/VM versions, but usually corresponds to the declaration order in the code.
+     * Camel Bindy index base is 1 (not 0).
+     * In Java, the order is not guaranteed to be stable across compiler/VM versions, but usually corresponds to the declaration order in the code.
      *
      * @param message The original message
-     * @param clazz Class with the searched field name
+     * @param clazz   Class with the searched field name
      * @return The modified message with the inserted field name in brackets
      */
-    public static String enrich(String message, Class clazz) {
+    public static String enrich(String message, Class<?> clazz) {
 
-        StringBuilder sb = new StringBuilder();
-        Optional<String> fieldName = getFieldNameAtIndex(clazz, extractFirstNumber(message) -1); // Camel Bindy index base is 1 (not 0)
-        fieldName.ifPresentOrElse(value -> {sb.append(insertAfterFirstNumber(message, clazz.getName().concat( ".").concat(value)));}, () ->{ sb.append(message);});
-        return sb.toString();
+        if (message == null || clazz == null) {
+            return message;
+        }
+        Optional<String> fieldName = getFieldNameAtIndex(clazz, extractFirstNumber(message) - 1); // Bindy is 1-based
+        return fieldName
+                .map(value -> insertAfterFirstNumber(message, clazz.getName() + "." + value))
+                .orElse(message);
     }
 
     /**
      * Searches for the first integer in the text and inserts the bracketed text directly after it.
      *
-     * @param inputText The original text
+     * @param inputText    The original text
      * @param textToInsert The text to be inserted in brackets (passed without brackets!)
      * @return The modified text with the inserted text in brackets
      */
     private static String insertAfterFirstNumber(String inputText, String textToInsert) {
-        Pattern pattern = Pattern.compile("\\d+");
-        Matcher matcher = pattern.matcher(inputText);
+
+        Matcher matcher = NUMBER_PATTERN.matcher(inputText);
 
         if (matcher.find()) {
             int end = matcher.end();
             return inputText.substring(0, end) + " (" + textToInsert + ")" + inputText.substring(end);
         }
-     return inputText;
+        return inputText;
     }
 
     /**
@@ -53,14 +58,17 @@ public class BindyIllegalArgumentMessageEnricher {
      * @param index Position (starts with 0).
      * @return The name of as Optional<String> the field or Optional.empty() if the index is invalid.
      */
-    private static Optional<String> getFieldNameAtIndex(Class clazz, int index) {
+    private static Optional<String> getFieldNameAtIndex(Class<?> clazz, int index) {
 
-        Field[] fields = clazz.getDeclaredFields();
+        Field[] fields = java.util.Arrays.stream(clazz.getDeclaredFields())
+                .filter(f -> !java.lang.reflect.Modifier.isStatic(f.getModifiers()))
+                .filter(f -> !f.isSynthetic())
+                .toArray(Field[]::new);
 
         if (index < 0 || index >= fields.length) {
             return Optional.empty();
         }
-        return Optional.of(fields[index ].getName());
+        return Optional.of(fields[index].getName());
     }
 
     /**
@@ -71,8 +79,7 @@ public class BindyIllegalArgumentMessageEnricher {
      */
     private static Integer extractFirstNumber(String text) {
 
-        Pattern pattern = Pattern.compile("\\d+");
-        Matcher matcher = pattern.matcher(text);
+        Matcher matcher = NUMBER_PATTERN.matcher(text);
 
         if (matcher.find()) {
             return Integer.parseInt(matcher.group());

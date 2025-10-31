@@ -3,19 +3,18 @@ package de.muenchen.eh.log.db.entity;
 import de.muenchen.eh.log.db.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.Instant;
 
 @Data
 @Entity
+@EqualsAndHashCode(callSuper=false)
 @Table(name = "claim_efile", schema = "eh_log")
 public class ClaimEfile extends BaseEntity {
-
-    @NotEmpty
-    @Column(name = "claim_id")
-    private Integer claimId ;
 
     @LastModifiedDate
     @Column(name = "updated_at", nullable = false)
@@ -39,4 +38,9 @@ public class ClaimEfile extends BaseEntity {
     protected void onCreate() {
         lastUpdate = Instant.now();
     }
+
+    @OneToOne(optional = true)
+    @JoinColumn(name = "claim_id", unique = true)
+    private Claim claim;
+
 }

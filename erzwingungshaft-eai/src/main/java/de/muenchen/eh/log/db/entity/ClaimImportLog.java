@@ -2,7 +2,9 @@ package de.muenchen.eh.log.db.entity;
 
 import de.muenchen.eh.log.db.BaseEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -12,16 +14,16 @@ import lombok.EqualsAndHashCode;
 @Table(name = "claim_import_log", schema = "eh_log")
 public class ClaimImportLog extends BaseEntity {
 
-    @NotEmpty
+    @NotNull
     @Column(name = "claim_import_id")
     private Integer claimImportId ;
 
-    @NotEmpty
-    @Column(name = "message_typ")
+    @NotNull
+    @Column(name = "message_type")
     @Enumerated(EnumType.STRING)
-    private MessageType messageTyp;
+    private MessageType messageType;
 
-    @NotEmpty
+    @NotBlank
     private String message;
 
     private String comment;

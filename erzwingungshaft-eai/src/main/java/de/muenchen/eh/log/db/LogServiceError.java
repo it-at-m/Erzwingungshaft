@@ -24,21 +24,21 @@ public class LogServiceError {
 
         try {
             Optional<ClaimImport> importEntity = Optional.ofNullable(exchange.getProperty(Constants.CLAIM_IMPORT, ClaimImport.class));
-            importEntity.ifPresentOrElse( ie -> {
+            importEntity.ifPresentOrElse(ie -> {
                 ClaimImportLog claimImportLog = new ClaimImportLog();
                 claimImportLog.setClaimImportId(ie.getId());
-                claimImportLog.setMessageTyp(MessageType.ERROR);
+                claimImportLog.setMessageType(MessageType.ERROR);
                 claimImportLog.setMessage(getMessage(exchange));
                 var stack = getStack(exchange);
                 claimImportLog.setComment(stack.length > 0 ? Arrays.toString(stack) : "No stack trace available.");
                 claimImportLogRepository.save(claimImportLog);
                 log.error(claimImportLog.toString());
 
-                if(exchange.getProperty(Constants.CLAIM) != null) {
+                if (exchange.getProperty(Constants.CLAIM) != null) {
                     createClaimLogError(exchange);
                 }
 
-            } , () -> {
+            }, () -> {
                 createClaimLogError(exchange);
             });
         } catch (Exception e) {
@@ -63,7 +63,13 @@ public class LogServiceError {
     }
 
     public static String getMessage(Exchange exchange) {
-        return exchange.getException() != null ? exchange.getException().getMessage() : ((Exception) exchange.getAllProperties().get(Exchange.EXCEPTION_CAUGHT)).getMessage();
+
+        Exception ex = exchange.getException();
+        if (ex == null) {
+            ex = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Exception.class);
+        }
+        var message = ex.getMessage() != null ? ex.getMessage() : ex.toString();
+        return String.valueOf(message);
     }
 
 }

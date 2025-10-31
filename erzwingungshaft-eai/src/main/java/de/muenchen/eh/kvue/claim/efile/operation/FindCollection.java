@@ -5,9 +5,11 @@ import de.muenchen.eakte.api.rest.model.ReadApentryAntwortDTO;
 import de.muenchen.eh.kvue.claim.ClaimProcessingContentWrapper;
 import de.muenchen.eh.log.StatusProcessingType;
 import de.muenchen.eh.log.db.LogServiceClaim;
+import de.muenchen.eh.log.db.entity.Claim;
 import de.muenchen.eh.log.db.entity.ClaimEfile;
 import de.muenchen.eh.log.db.entity.MessageType;
 import de.muenchen.eh.log.db.repository.ClaimEfileRepository;
+import de.muenchen.eh.log.db.service.ClaimService;
 import lombok.extern.log4j.Log4j2;
 import org.apache.camel.Exchange;
 import org.springframework.stereotype.Component;
@@ -22,8 +24,11 @@ public class FindCollection extends EfileOperation {
 
     private Optional<ReadApentryAntwortDTO> collectionCache = Optional.empty();
 
-    public FindCollection(OperationIdFactory operationIdFactory, LogServiceClaim logServiceClaim, ClaimEfileRepository claimEfileRepository) {
+    private final ClaimService claimService;
+
+    public FindCollection(OperationIdFactory operationIdFactory, LogServiceClaim logServiceClaim, ClaimEfileRepository claimEfileRepository, ClaimService claimService) {
         super(operationIdFactory, logServiceClaim, claimEfileRepository);
+        this.claimService = claimService;
     }
 
     @Override
@@ -34,9 +39,13 @@ public class FindCollection extends EfileOperation {
     private void findCollectionByGpId(Exchange exchange) {
 
        ClaimProcessingContentWrapper processingDataWrapper = exchange.getMessage().getBody(ClaimProcessingContentWrapper.class);
-       Optional<ClaimEfile> gpClaimEfile = claimEfileRepository.findByClaimId(processingDataWrapper.getClaim().getId());
-       if (gpClaimEfile.isPresent()) {
-           processingDataWrapper.setClaimEfile(gpClaimEfile.get());
+       List<Claim> gpClaimEfiles = claimService.claimEfilesWithCorrespondingGId(processingDataWrapper.getClaim().getGeschaeftspartnerId());
+       if (! gpClaimEfiles.isEmpty()) {
+           ClaimEfile claimEfile = new ClaimEfile();
+           claimEfile.setClaim(processingDataWrapper.getClaim());
+           claimEfile.setCollection(gpClaimEfiles.getLast().getClaimEfile().getCollection());
+           claimEfile.setFile(gpClaimEfiles.getLast().getClaimEfile().getFile());
+           processingDataWrapper.setClaimEfile(claimEfileRepository.save(claimEfile));
            logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_GPID_COLLECTION_READ_FROM_DB, MessageType.INFO, exchange);
        } else {
            if (collectionCache.isEmpty()) {

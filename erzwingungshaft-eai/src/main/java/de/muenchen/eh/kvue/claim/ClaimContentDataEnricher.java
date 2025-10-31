@@ -16,6 +16,7 @@ public class ClaimContentDataEnricher implements Processor {
     private final LogServiceClaim logServiceClaim;
     private final ClaimDocumentRepository claimDocumentRepository;
 
+    @Override
     public void process(Exchange exchange) {
 
         try {

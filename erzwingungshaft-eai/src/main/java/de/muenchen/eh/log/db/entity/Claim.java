@@ -48,4 +48,7 @@ public class Claim extends BaseEntity {
     protected void onCreate() {
         lastUpdate = Instant.now();
     }
+
+    @OneToOne(mappedBy = "claim", cascade = CascadeType.ALL, orphanRemoval = true)
+    private ClaimEfile claimEfile;
 }

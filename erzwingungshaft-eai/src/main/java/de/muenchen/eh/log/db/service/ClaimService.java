@@ -1,6 +1,7 @@
 package de.muenchen.eh.log.db.service;
 
 import de.muenchen.eh.log.db.entity.Claim;
+import de.muenchen.eh.log.db.entity.ClaimEfile;
 import de.muenchen.eh.log.db.entity.ClaimImport;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -8,7 +9,7 @@ import jakarta.persistence.criteria.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import java.util.Arrays;
+
 import java.util.List;
 
 @Service
@@ -19,7 +20,6 @@ public class ClaimService {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Transactional
     public List<ClaimImport> claimsForProcessing() {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -34,6 +34,18 @@ public class ClaimService {
                 cb.isNull(claimImportClaimJoin)));
 
         return entityManager.createQuery(query).getResultList();
+    }
+
+    public List<Claim> claimEfilesWithCorrespondingGId(String geschaeftspartnerId) {
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+
+        CriteriaQuery<Claim> query = cb.createQuery(Claim.class);
+        Root<Claim> claimRoot = query.from(Claim.class);
+        Join<Claim, ClaimEfile> claimImportClaimJoin = claimRoot.join("claimEfile", JoinType.INNER);
+        query.where(cb.equal(claimRoot.get("geschaeftspartnerId"), geschaeftspartnerId));
+        return entityManager.createQuery(query).getResultList();
+
     }
 
 }
