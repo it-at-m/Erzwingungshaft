@@ -61,9 +61,12 @@ public class ClaimContentContainerFactory {
         return nachrichtenkopfContent;
     }
 
-    private FachdatenContent supplyFachdatenContent() {
+    private FachdatenContent supplyFachdatenContent() throws DatatypeConfigurationException {
 
         FachdatenContent fachdatenContent = new FachdatenContent();
+
+        fachdatenContent.setErlassdatum(getLocalDate(claimProcessingContentWrapper.getEhImportClaimData().getEhbdat()));
+        fachdatenContent.setRechtskraftdatum(getXMLGregorianCalendar(dateFormatConverter(claimProcessingContentWrapper.getEhImportClaimData().getEhbrkdat(), "yyyy-MM-dd")));
 
         var startDate = getLocalDate(getImportClaimData().getEhtatdatv());
         fachdatenContent.setAnfangsDatumUhrzeit(LocalDateTime.of(startDate.getYear(), startDate.getMonth(), startDate.getDayOfMonth(), Integer.parseInt(getImportClaimData().getEhtatstdv()), Integer.parseInt(getImportClaimData().getEhtatminv())));
@@ -110,7 +113,7 @@ public class ClaimContentContainerFactory {
 
         Map<Instanztype, Aktenzeichen> auswahlInstanzbehoerden = new TreeMap<>();
         auswahlInstanzbehoerden.put(Instanztype.GERICHT, new Aktenzeichen("neu"));
-        auswahlInstanzbehoerden.put(Instanztype.BETEILIGTER, new Aktenzeichen("KVU: ".concat(claimProcessingContentWrapper.getClaimImport().getOutputDirectory())));
+        auswahlInstanzbehoerden.put(Instanztype.BETEILIGTER, new Aktenzeichen(claimProcessingContentWrapper.getClaimImport().getOutputDirectory()));
 
         return new GrunddatenContent(new ArrayList<>(List.of(ehBetroffener)), auswahlInstanzbehoerden);
     }
@@ -155,7 +158,7 @@ public class ClaimContentContainerFactory {
         List<Akte> akten = new ArrayList<>();
 
         Identifikation identifikationAkte = new Identifikation(uuidIdentAkte, nummer);
-        FachspezifischeDatenAkte fachspezifischeDatenAkte = FachspezifischeDatenAkte.builder().choiceFreitext( "TODO : Freitext", false).build();
+        FachspezifischeDatenAkte fachspezifischeDatenAkte = FachspezifischeDatenAkte.builder().choiceFreitext( claimProcessingContentWrapper.getClaimImport().getOutputDirectory(), false).build();
 
         Akte akte = new Akte(identifikationAkte, null, null, fachspezifischeDatenAkte);
 
