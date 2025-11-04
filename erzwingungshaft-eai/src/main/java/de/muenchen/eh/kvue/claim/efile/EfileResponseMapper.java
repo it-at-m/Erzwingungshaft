@@ -1,6 +1,5 @@
 package de.muenchen.eh.kvue.claim.efile;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.eh.kvue.claim.efile.operation.OperationId;
 import de.muenchen.eh.log.Constants;
@@ -41,4 +40,3 @@ public class EfileResponseMapper implements Processor {
 
     }
 }
-

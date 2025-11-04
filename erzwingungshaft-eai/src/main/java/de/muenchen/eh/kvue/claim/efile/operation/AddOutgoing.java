@@ -8,20 +8,19 @@ import de.muenchen.eh.log.db.LogServiceClaim;
 import de.muenchen.eh.log.db.entity.ClaimEfile;
 import de.muenchen.eh.log.db.entity.MessageType;
 import de.muenchen.eh.log.db.repository.ClaimEfileRepository;
+import java.util.Optional;
 import org.apache.camel.Exchange;
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 @Component
 public class AddOutgoing extends EfileOperation {
 
-   @Produce(value = EfileRouteBuilder.DMS_CONNECTION)
-   private ProducerTemplate efileConnector;
+    @Produce(value = EfileRouteBuilder.DMS_CONNECTION)
+    private ProducerTemplate efileConnector;
 
-   public AddOutgoing(OperationIdFactory operationIdFactory, LogServiceClaim logServiceClaim, ClaimEfileRepository claimEfileRepository) {
+    public AddOutgoing(OperationIdFactory operationIdFactory, LogServiceClaim logServiceClaim, ClaimEfileRepository claimEfileRepository) {
         super(operationIdFactory, logServiceClaim, claimEfileRepository);
     }
 
@@ -43,9 +42,9 @@ public class AddOutgoing extends EfileOperation {
             logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_OBJECTADDRESSES_SAVED, MessageType.INFO, exchange);
             if (claimEfile.getOutgoing() != null)
                 logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_OUTGOING_ADDED_TO_FINE, MessageType.INFO, exchange);
-            if(claimEfile.getAntragDocument() != null)
+            if (claimEfile.getAntragDocument() != null)
                 logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_CONTENT_OBJECT_ANTRAG_ADDED_TO_OUTGOING, MessageType.INFO, exchange);
-            if(claimEfile.getBescheidDocument() != null)
+            if (claimEfile.getBescheidDocument() != null)
                 logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_CONTENT_OBJECT_URBESCHEID_ADDED_TO_OUTGOING, MessageType.INFO, exchange);
         });
 

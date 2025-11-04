@@ -1,18 +1,20 @@
 package de.muenchen.eh.log.db.entity;
 
 import de.muenchen.eh.log.db.BaseEntity;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+import java.time.Instant;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import java.time.Instant;
-
 @Data
 @Entity
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @Table(name = "claim_efile", schema = "eh_log")
 public class ClaimEfile extends BaseEntity {
 
@@ -20,7 +22,7 @@ public class ClaimEfile extends BaseEntity {
     @Column(name = "updated_at", nullable = false)
     private Instant lastUpdate;
 
-    private String collection ;
+    private String collection;
 
     private String file;
 

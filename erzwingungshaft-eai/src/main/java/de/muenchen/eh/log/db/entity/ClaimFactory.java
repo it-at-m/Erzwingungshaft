@@ -1,11 +1,10 @@
 package de.muenchen.eh.log.db.entity;
 
-import de.muenchen.eh.log.db.IClaimEntity;
 import de.muenchen.eh.log.Constants;
-import org.apache.camel.Exchange;
-
+import de.muenchen.eh.log.db.IClaimEntity;
 import java.util.Objects;
 import java.util.Optional;
+import org.apache.camel.Exchange;
 
 public class ClaimFactory {
 
@@ -19,7 +18,7 @@ public class ClaimFactory {
 
     public static Claim claimFacade(Exchange exchange) {
         Optional<Claim> entryOptional = Optional.ofNullable(exchange.getProperty(Constants.CLAIM, Claim.class));
-        return entryOptional.orElseThrow(() ->
-                new IllegalStateException("No Claim found in Exchange properties (" + Constants.CLAIM + "). Ensure EhService.logEntry was executed first."));
+        return entryOptional.orElseThrow(() -> new IllegalStateException(
+                "No Claim found in Exchange properties (" + Constants.CLAIM + "). Ensure EhService.logEntry was executed first."));
     }
 }

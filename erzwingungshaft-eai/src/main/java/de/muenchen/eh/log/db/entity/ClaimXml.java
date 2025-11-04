@@ -2,7 +2,9 @@ package de.muenchen.eh.log.db.entity;
 
 import de.muenchen.eh.log.db.BaseEntity;
 import de.muenchen.eh.log.db.IClaimEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -14,15 +16,13 @@ import lombok.EqualsAndHashCode;
 @Table(name = "claim_xml", schema = "eh_log")
 public class ClaimXml extends BaseEntity implements IClaimEntity {
 
-    @NotNull
-    @Column(name = "claim_id", nullable = false)
-    private Integer claimId ;
+    @NotNull @Column(name = "claim_id", nullable = false)
+    private Integer claimId;
 
     @Column(columnDefinition = "xjustiz_version")
     private String xjustizVersion;
 
-    @NotEmpty
-    @Column(columnDefinition = "xml")
+    @NotEmpty @Column(columnDefinition = "xml")
     private String content;
 
 }

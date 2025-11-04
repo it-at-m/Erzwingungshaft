@@ -1,20 +1,20 @@
 package de.muenchen.eh.kvue.claim.efile;
 
-import org.apache.camel.Exchange;
-
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import org.apache.camel.Exchange;
 
 /**
  * Fluent builder for configuring Apache Camel Exchange objects with
  * common headers and authentication.
  * <p>
  * Usage example:
+ *
  * <pre>
  * Exchange configuredExchange = ExchangeBuilder.create(exchange, "op-123")
- *     .withBasicAuth("user", "pass")
- *     .withRequestValidation(true)
- *     .build();
+ *         .withBasicAuth("user", "pass")
+ *         .withRequestValidation(true)
+ *         .build();
  * </pre>
  */
 public class ExchangeBuilder {
@@ -29,7 +29,7 @@ public class ExchangeBuilder {
     /**
      * Creates a new ExchangeBuilder with the specified operation ID.
      *
-     * @param exchange    the Camel Exchange to configure
+     * @param exchange the Camel Exchange to configure
      * @param operationId the operation identifier to set as a header
      * @return a new ExchangeBuilder instance
      */
@@ -70,4 +70,3 @@ public class ExchangeBuilder {
         return exchange;
     }
 }
-

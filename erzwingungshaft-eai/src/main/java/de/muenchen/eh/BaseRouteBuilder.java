@@ -2,10 +2,8 @@ package de.muenchen.eh;
 
 import de.muenchen.eh.log.Constants;
 import lombok.RequiredArgsConstructor;
-import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.Predicate;
-import org.apache.camel.Processor;
 import org.apache.camel.builder.PredicateBuilder;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +19,8 @@ public class BaseRouteBuilder extends RouteBuilder {
     @Override
     public void configure() {
 
-        Predicate claimOrClaimImportExists = PredicateBuilder.or(exchangeProperty(Constants.CLAIM).isNotNull(), exchangeProperty(Constants.CLAIM_IMPORT).isNotNull());
+        Predicate claimOrClaimImportExists = PredicateBuilder.or(exchangeProperty(Constants.CLAIM).isNotNull(),
+                exchangeProperty(Constants.CLAIM_IMPORT).isNotNull());
 
         onException(IllegalArgumentException.class)
                 .handled(true)

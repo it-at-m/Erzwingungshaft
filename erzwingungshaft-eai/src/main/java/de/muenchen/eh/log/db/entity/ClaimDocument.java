@@ -7,13 +7,12 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -21,12 +20,10 @@ import java.util.UUID;
 @Table(name = "claim_document", schema = "eh_log")
 public class ClaimDocument extends BaseEntity {
 
-    @NotNull
-    @Column(name = "claim_import_id", nullable = false)
+    @NotNull @Column(name = "claim_import_id", nullable = false)
     private Integer claimImportId;
 
-    @NotEmpty
-    @Column(name = "document_reference")
+    @NotEmpty @Column(name = "document_reference")
     private UUID documentReference;
 
     @Column(name = "file_name", nullable = false)

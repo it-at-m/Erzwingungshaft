@@ -4,12 +4,11 @@ import de.muenchen.eh.log.db.entity.Claim;
 import de.muenchen.eh.log.db.entity.ClaimEfile;
 import de.muenchen.eh.log.db.entity.ClaimImport;
 import de.muenchen.xjustiz.xjustiz0500straf.content.ContentContainer;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Getter
 @Setter

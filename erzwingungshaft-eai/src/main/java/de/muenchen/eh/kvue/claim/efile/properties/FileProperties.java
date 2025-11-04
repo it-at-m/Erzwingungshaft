@@ -1,9 +1,8 @@
 package de.muenchen.eh.kvue.claim.efile.properties;
 
+import java.util.Map;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-
-import java.util.Map;
 
 @Data
 @ConfigurationProperties(prefix = "efile.case-file")

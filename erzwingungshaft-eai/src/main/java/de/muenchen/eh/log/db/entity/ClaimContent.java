@@ -16,11 +16,9 @@ import lombok.EqualsAndHashCode;
 @Table(name = "claim_content", schema = "eh_log")
 public class ClaimContent extends BaseEntity implements IClaimEntity {
 
-    @NotNull
-    @Column(name = "claim_id", nullable = false)
-    private Integer claimId ;
+    @NotNull @Column(name = "claim_id", nullable = false)
+    private Integer claimId;
 
-    @NotEmpty
-    private String json;
+    @NotEmpty private String json;
 
 }

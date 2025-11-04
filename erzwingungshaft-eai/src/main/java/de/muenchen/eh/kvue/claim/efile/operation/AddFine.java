@@ -15,7 +15,8 @@ public class AddFine extends EfileOperation {
 
     private final FineProperties fineProperties;
 
-    public AddFine(OperationIdFactory operationIdFactory, LogServiceClaim logServiceClaim, ClaimEfileRepository claimEfileRepository, FineProperties fineProperties) {
+    public AddFine(OperationIdFactory operationIdFactory, LogServiceClaim logServiceClaim, ClaimEfileRepository claimEfileRepository,
+            FineProperties fineProperties) {
         super(operationIdFactory, logServiceClaim, claimEfileRepository);
         this.fineProperties = fineProperties;
     }
@@ -34,7 +35,8 @@ public class AddFine extends EfileOperation {
         createUpdateClaimEfile(exchange, OperationId.CREATE_FINE);
         logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_FINE_ADDED_TO_CASE_FILE, MessageType.INFO, exchange);
 
-        UpdateFineSubjectData updateSubjectData = new UpdateFineSubjectData(super.logServiceClaim, exchange, super.efileConnector, super.operationIdFactory, fineProperties);
+        UpdateFineSubjectData updateSubjectData = new UpdateFineSubjectData(super.logServiceClaim, exchange, super.efileConnector, super.operationIdFactory,
+                fineProperties);
         Exchange responseSubjectUpdate = updateSubjectData.execute();
 
         if (responseSubjectUpdate.isRouteStop()) {

@@ -43,29 +43,30 @@ abstract class EfileOperation {
         }
 
         switch (operationId) {
-            case READ_COLLECTIONS -> {
-                claimEfile.setCollection(((Objektreferenz) dataWrapper.getEfile().get(operationId.name())).getObjaddress());
-            }
-            case CREATE_FILE -> {
-                claimEfile.setFile(((DmsObjektResponse) dataWrapper.getEfile().get(operationId.name())).getObjid());
-            }
-            case CREATE_FINE -> {
-                claimEfile.setFine(((DmsObjektResponse) dataWrapper.getEfile().get(operationId.name())).getObjid());
-            }
-            case CREATE_OUTGOING -> {
-                CreateOutgoingAntwortDTO outgoing = ((CreateOutgoingAntwortDTO) dataWrapper.getEfile().get(operationId.name()));
-                claimEfile.setOutgoing(outgoing.getObjid());
-                outgoing.getGiobjecttype().forEach(doc -> {
-                    if (doc.getObjname().equals(DocumentName.ANTRAG.getDescriptor())) {
-                        claimEfile.setAntragDocument(doc.getObjaddress());
-                    } else {
-                        claimEfile.setBescheidDocument(doc.getObjaddress());
-                    }
-                });
-            }
-            default -> {
-                exchange.setException(new IllegalArgumentException("Unknown openapi.operationId : ".concat((String) exchange.getMessage().getHeader(Constants.OPERATION_ID))));
-            }
+        case READ_COLLECTIONS -> {
+            claimEfile.setCollection(((Objektreferenz) dataWrapper.getEfile().get(operationId.name())).getObjaddress());
+        }
+        case CREATE_FILE -> {
+            claimEfile.setFile(((DmsObjektResponse) dataWrapper.getEfile().get(operationId.name())).getObjid());
+        }
+        case CREATE_FINE -> {
+            claimEfile.setFine(((DmsObjektResponse) dataWrapper.getEfile().get(operationId.name())).getObjid());
+        }
+        case CREATE_OUTGOING -> {
+            CreateOutgoingAntwortDTO outgoing = ((CreateOutgoingAntwortDTO) dataWrapper.getEfile().get(operationId.name()));
+            claimEfile.setOutgoing(outgoing.getObjid());
+            outgoing.getGiobjecttype().forEach(doc -> {
+                if (doc.getObjname().equals(DocumentName.ANTRAG.getDescriptor())) {
+                    claimEfile.setAntragDocument(doc.getObjaddress());
+                } else {
+                    claimEfile.setBescheidDocument(doc.getObjaddress());
+                }
+            });
+        }
+        default -> {
+            exchange.setException(
+                    new IllegalArgumentException("Unknown openapi.operationId : ".concat((String) exchange.getMessage().getHeader(Constants.OPERATION_ID))));
+        }
         }
         return claimEfileRepository.save(claimEfile);
     }

@@ -9,7 +9,6 @@ import org.apache.camel.builder.ExchangeBuilder;
 import org.apache.camel.component.aws2.s3.AWS2S3Constants;
 import org.springframework.stereotype.Component;
 
-
 @Component
 @RequiredArgsConstructor
 public class ImportDataEnricher implements Processor {

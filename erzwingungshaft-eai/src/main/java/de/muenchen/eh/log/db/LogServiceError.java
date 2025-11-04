@@ -1,16 +1,19 @@
 package de.muenchen.eh.log.db;
 
 import de.muenchen.eh.log.Constants;
-import de.muenchen.eh.log.db.entity.*;
-import de.muenchen.eh.log.db.repository.ClaimLogRepository;
+import de.muenchen.eh.log.db.entity.ClaimFactory;
+import de.muenchen.eh.log.db.entity.ClaimImport;
+import de.muenchen.eh.log.db.entity.ClaimImportLog;
+import de.muenchen.eh.log.db.entity.ClaimLog;
+import de.muenchen.eh.log.db.entity.MessageType;
 import de.muenchen.eh.log.db.repository.ClaimImportLogRepository;
+import de.muenchen.eh.log.db.repository.ClaimLogRepository;
+import java.util.Arrays;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.camel.Exchange;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
-import java.util.Optional;
 
 @Service
 @Log4j2
@@ -59,7 +62,8 @@ public class LogServiceError {
     }
 
     public static StackTraceElement[] getStack(Exchange exchange) {
-        return exchange.getException() != null ? exchange.getException().getStackTrace() : ((Exception) exchange.getAllProperties().get(Exchange.EXCEPTION_CAUGHT)).getStackTrace();
+        return exchange.getException() != null ? exchange.getException().getStackTrace()
+                : ((Exception) exchange.getAllProperties().get(Exchange.EXCEPTION_CAUGHT)).getStackTrace();
     }
 
     public static String getMessage(Exchange exchange) {

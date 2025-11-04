@@ -23,8 +23,11 @@ abstract class EfileRecordTemplate {
     }
 
     protected abstract void findCollection(Exchange exchange);
+
     protected abstract void addFile(Exchange exchange);
+
     protected abstract void addFine(Exchange exchange);
+
     protected abstract void addOutgoing(Exchange exchange);
 
 }

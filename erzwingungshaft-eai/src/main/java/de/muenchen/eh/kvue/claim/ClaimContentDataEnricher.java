@@ -26,8 +26,7 @@ public class ClaimContentDataEnricher implements Processor {
             dataWrapper.setContentContainer(contentContainerFactory.supplyContentContainer());
 
             logServiceClaim.logContent(exchange);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             exchange.setException(e);
             log.error(e.getMessage(), e);
         }

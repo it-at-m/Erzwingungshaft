@@ -2,7 +2,9 @@ package de.muenchen.eh.log.db.entity;
 
 import de.muenchen.eh.log.db.BaseEntity;
 import de.muenchen.eh.log.db.IClaimEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,9 +15,8 @@ import lombok.EqualsAndHashCode;
 @Table(name = "claim_data", schema = "eh_log")
 public class ClaimData extends BaseEntity implements IClaimEntity {
 
-    @NotNull
-    @Column(name = "claim_id", nullable = false)
-    private Integer claimId ;
+    @NotNull @Column(name = "claim_id", nullable = false)
+    private Integer claimId;
 
     private String ehsatzlaenge;
     private String ehowigb;
