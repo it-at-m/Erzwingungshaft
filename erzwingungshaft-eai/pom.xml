@@ -73,7 +73,7 @@
         <p2.mirror>download.eclipse.org</p2.mirror>
 
         <!-- xJustiz XML Generation -->
-        <xjustiz.converter>0.0.1-SNAPSHOT</xjustiz.converter>
+        <xjustiz.converter>0.0.7</xjustiz.converter>
 
         <!-- Flyway maven plugin configuration for local stack database -->
         <flyway.url>jdbc:postgresql://localhost:5432/postgres</flyway.url>
