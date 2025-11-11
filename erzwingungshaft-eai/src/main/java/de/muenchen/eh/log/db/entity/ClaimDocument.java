@@ -17,7 +17,7 @@ import org.hibernate.type.SqlTypes;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = "claim_document", schema = "eh_log")
+@Table(name = "claim_document", schema = "eh")
 public class ClaimDocument extends BaseEntity {
 
     @NotNull @Column(name = "claim_import_id", nullable = false)

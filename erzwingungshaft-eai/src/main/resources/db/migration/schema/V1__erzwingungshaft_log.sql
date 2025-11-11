@@ -1,6 +1,6 @@
-CREATE SCHEMA IF NOT EXISTS eh_log;
+CREATE SCHEMA IF NOT EXISTS eh;
 
-CREATE TABLE eh_log.claim_import
+CREATE TABLE eh.claim_import
 (
 
     id                   SERIAL PRIMARY KEY,    -- INT PK
@@ -21,9 +21,9 @@ CREATE TABLE eh_log.claim_import
 
 );
 
-CREATE INDEX idx_import_geschaeftspartner_kassenzeichen ON eh_log.claim_import (geschaeftspartner_id, kassenzeichen);
+CREATE INDEX idx_import_geschaeftspartner_kassenzeichen ON eh.claim_import (geschaeftspartner_id, kassenzeichen);
 
-CREATE TABLE eh_log.claim_import_log
+CREATE TABLE eh.claim_import_log
 (
 
     id          SERIAL PRIMARY KEY, -- INT PK
@@ -33,13 +33,13 @@ CREATE TABLE eh_log.claim_import_log
     message     TEXT    NOT NULL,
     comment     TEXT    DEFAULT '',
 
-    CONSTRAINT fk_claim_import FOREIGN KEY (claim_import_id) REFERENCES eh_log.claim_import (id) ON DELETE CASCADE
+    CONSTRAINT fk_claim_import FOREIGN KEY (claim_import_id) REFERENCES eh.claim_import (id) ON DELETE CASCADE
 
 );
 
-CREATE INDEX idx_import_log_claim_import_id ON eh_log.claim_import_log (claim_import_id);
+CREATE INDEX idx_import_log_claim_import_id ON eh.claim_import_log (claim_import_id);
 
-CREATE TABLE eh_log.claim_document
+CREATE TABLE eh.claim_document
 (
     id                 SERIAL PRIMARY KEY, -- INT PK
     claim_import_id    INTEGER      NOT NULL,
@@ -54,13 +54,13 @@ CREATE TABLE eh_log.claim_document
     metadata           TEXT,               -- claim entity as json
     awss3etag          TEXT,                -- The hex encoded 128-bit MD5 digest of the associated object according to RFC 1864. This data is used as an integrity check to verify that the data received by the caller is the same data that was sent by Amazon S3.
 
-    CONSTRAINT fk_claim_import FOREIGN KEY (claim_import_id) REFERENCES eh_log.claim_import (id) ON DELETE CASCADE
+    CONSTRAINT fk_claim_import FOREIGN KEY (claim_import_id) REFERENCES eh.claim_import (id) ON DELETE CASCADE
 
 );
-CREATE INDEX idx_claim_import_document_claim_id ON eh_log.claim_document (claim_import_id);
-CREATE INDEX idx_claim_import_document_document_reference ON eh_log.claim_document (document_reference);
+CREATE INDEX idx_claim_import_document_claim_id ON eh.claim_document (claim_import_id);
+CREATE INDEX idx_claim_import_document_document_reference ON eh.claim_document (document_reference);
 
-CREATE TABLE eh_log.claim
+CREATE TABLE eh.claim
 (
 
     id                   SERIAL PRIMARY KEY, -- INT PK
@@ -74,13 +74,13 @@ CREATE TABLE eh_log.claim
     created_at           TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at           TIMESTAMPTZ NOT NULL,
 
-    CONSTRAINT fk_claim_import FOREIGN KEY (claim_import_id) REFERENCES eh_log.claim_import (id) ON DELETE CASCADE
+    CONSTRAINT fk_claim_import FOREIGN KEY (claim_import_id) REFERENCES eh.claim_import (id) ON DELETE CASCADE
 
 );
-CREATE INDEX idx_claim_claim_import_id ON eh_log.claim (claim_import_id);
-CREATE INDEX idx_claim_geschaeftspartner_kassenzeichen ON eh_log.claim (geschaeftspartner_id, kassenzeichen);
+CREATE INDEX idx_claim_claim_import_id ON eh.claim (claim_import_id);
+CREATE INDEX idx_claim_geschaeftspartner_kassenzeichen ON eh.claim (geschaeftspartner_id, kassenzeichen);
 
-CREATE TABLE eh_log.claim_log
+CREATE TABLE eh.claim_log
 (
 
     id          SERIAL PRIMARY KEY, -- INT PK
@@ -90,13 +90,13 @@ CREATE TABLE eh_log.claim_log
     message     TEXT    NOT NULL,
     comment     TEXT      DEFAULT '',
 
-    CONSTRAINT fk_claim FOREIGN KEY (claim_id) REFERENCES eh_log.claim (id) ON DELETE CASCADE
+    CONSTRAINT fk_claim FOREIGN KEY (claim_id) REFERENCES eh.claim (id) ON DELETE CASCADE
 
 );
 
-CREATE INDEX idx_claim_log_claim_id ON eh_log.claim_log (claim_id);
+CREATE INDEX idx_claim_log_claim_id ON eh.claim_log (claim_id);
 
-CREATE TABLE eh_log.claim_xml
+CREATE TABLE eh.claim_xml
 (
     id         SERIAL PRIMARY KEY, -- INT PK
     claim_id   INTEGER NOT NULL,
@@ -104,26 +104,26 @@ CREATE TABLE eh_log.claim_xml
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     content    TEXT,
 
-    CONSTRAINT fk_claim FOREIGN KEY (claim_id) REFERENCES eh_log.claim (id) ON DELETE CASCADE
+    CONSTRAINT fk_claim FOREIGN KEY (claim_id) REFERENCES eh.claim (id) ON DELETE CASCADE
 
 );
 
-CREATE INDEX idx_claim_xml_claim_id ON eh_log.claim_xml (claim_id);
+CREATE INDEX idx_claim_xml_claim_id ON eh.claim_xml (claim_id);
 
-CREATE TABLE eh_log.claim_content
+CREATE TABLE eh.claim_content
 (
     id         SERIAL PRIMARY KEY, -- INT PK
     claim_id   INTEGER NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     json       TEXT,
 
-    CONSTRAINT fk_claim FOREIGN KEY (claim_id) REFERENCES eh_log.claim (id) ON DELETE CASCADE
+    CONSTRAINT fk_claim FOREIGN KEY (claim_id) REFERENCES eh.claim (id) ON DELETE CASCADE
 
 );
 
-CREATE INDEX idx_claim_content_claim_id ON eh_log.claim_content (claim_id);
+CREATE INDEX idx_claim_content_claim_id ON eh.claim_content (claim_id);
 
-CREATE TABLE eh_log.claim_data
+CREATE TABLE eh.claim_data
 (
 
     id              SERIAL PRIMARY KEY, -- INT PK
@@ -323,13 +323,13 @@ CREATE TABLE eh_log.claim_data
     ehlinefeed      VARCHAR(3),
     ehgpid          VARCHAR(10),
 
-    CONSTRAINT fk_claim FOREIGN KEY (claim_id) REFERENCES eh_log.claim (id) ON DELETE CASCADE
+    CONSTRAINT fk_claim FOREIGN KEY (claim_id) REFERENCES eh.claim (id) ON DELETE CASCADE
 
 );
 
-CREATE INDEX idx_claim_data_claim_id ON eh_log.claim_data (claim_id);
+CREATE INDEX idx_claim_data_claim_id ON eh.claim_data (claim_id);
 
-CREATE TABLE eh_log.claim_efile
+CREATE TABLE eh.claim_efile
 (
     id                  SERIAL PRIMARY KEY, -- INT PK
     claim_id            INTEGER NOT NULL,
@@ -343,8 +343,8 @@ CREATE TABLE eh_log.claim_efile
     bescheid_document   TEXT,
     bebpo_receipt       TEXT,
 
-    CONSTRAINT fk_claim FOREIGN KEY (claim_id) REFERENCES eh_log.claim (id) ON DELETE CASCADE
+    CONSTRAINT fk_claim FOREIGN KEY (claim_id) REFERENCES eh.claim (id) ON DELETE CASCADE
 
 );
 
-CREATE INDEX idx_claim_efile_claim_id ON eh_log.claim_efile (claim_id);
+CREATE INDEX idx_claim_efile_claim_id ON eh.claim_efile (claim_id);

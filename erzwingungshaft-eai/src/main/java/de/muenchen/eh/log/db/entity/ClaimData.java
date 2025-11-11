@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = "claim_data", schema = "eh_log")
+@Table(name = "claim_data", schema = "eh")
 public class ClaimData extends BaseEntity implements IClaimEntity {
 
     @NotNull @Column(name = "claim_id", nullable = false)

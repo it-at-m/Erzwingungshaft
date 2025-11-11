@@ -15,7 +15,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Data
 @Entity
 @EqualsAndHashCode(callSuper = false)
-@Table(name = "claim_efile", schema = "eh_log")
+@Table(name = "claim_efile", schema = "eh")
 public class ClaimEfile extends BaseEntity {
 
     @LastModifiedDate

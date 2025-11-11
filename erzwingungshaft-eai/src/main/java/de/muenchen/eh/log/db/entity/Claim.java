@@ -18,7 +18,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = "claim", schema = "eh_log")
+@Table(name = "claim", schema = "eh")
 public class Claim extends BaseEntity {
 
     @Column(name = "eh_uuid")

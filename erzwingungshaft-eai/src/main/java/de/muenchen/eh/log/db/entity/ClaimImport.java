@@ -17,7 +17,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = "claim_import", schema = "eh_log")
+@Table(name = "claim_import", schema = "eh")
 @NoArgsConstructor
 public class ClaimImport extends BaseEntity {
 

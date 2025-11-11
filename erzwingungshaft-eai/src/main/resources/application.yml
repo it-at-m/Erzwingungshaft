@@ -17,7 +17,7 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: false
-    schemas: eh_log
+    schemas: eh
 
 logging:
   level:
