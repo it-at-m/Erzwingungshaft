@@ -536,6 +536,7 @@
                 <configuration>
                     <effort>Max</effort>
                     <excludeFilterFile>spotbugs-exclude-rules.xml</excludeFilterFile>
+                    <onlyAnalyze>de.muenchen.erzwingungshaft.*</onlyAnalyze>
                     <spotbugsXmlOutputDirectory>${project.build.directory}/spotbugs-results</spotbugsXmlOutputDirectory> <!-- required to ensure only the artifact jar is on top level when building -->
                     <plugins>
                         <plugin>
