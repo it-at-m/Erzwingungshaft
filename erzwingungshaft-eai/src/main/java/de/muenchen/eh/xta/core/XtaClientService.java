@@ -1,12 +1,12 @@
-package de.muenchen.erzwingungshaft.xta.core;
+package de.muenchen.eh.xta.core;
 
-import de.muenchen.erzwingungshaft.xta.config.XtaClientConfig;
-import de.muenchen.erzwingungshaft.xta.dto.XtaIdentifier;
-import de.muenchen.erzwingungshaft.xta.dto.XtaMessage;
-import de.muenchen.erzwingungshaft.xta.dto.XtaMessageMetaData;
-import de.muenchen.erzwingungshaft.xta.dto.XtaStatusListing;
-import de.muenchen.erzwingungshaft.xta.exception.XtaClientRuntimeException;
-import de.muenchen.erzwingungshaft.xta.mapper.ResponseMapper;
+import de.muenchen.eh.xta.config.XtaClientConfig;
+import de.muenchen.eh.xta.dto.XtaIdentifier;
+import de.muenchen.eh.xta.dto.XtaMessage;
+import de.muenchen.eh.xta.dto.XtaMessageMetaData;
+import de.muenchen.eh.xta.dto.XtaStatusListing;
+import de.muenchen.eh.xta.exception.XtaClientRuntimeException;
+import de.muenchen.eh.xta.mapper.ResponseMapper;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

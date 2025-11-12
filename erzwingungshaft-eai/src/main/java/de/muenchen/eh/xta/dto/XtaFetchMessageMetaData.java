@@ -1,4 +1,4 @@
-package de.muenchen.erzwingungshaft.xta.dto;
+package de.muenchen.eh.xta.dto;
 
 import java.util.Set;
 import java.util.function.Consumer;

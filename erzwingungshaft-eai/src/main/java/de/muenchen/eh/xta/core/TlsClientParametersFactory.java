@@ -1,7 +1,7 @@
-package de.muenchen.erzwingungshaft.xta.core;
+package de.muenchen.eh.xta.core;
 
-import de.muenchen.erzwingungshaft.xta.config.XtaClientConfig;
-import de.muenchen.erzwingungshaft.xta.exception.XtaClientInitializationException;
+import de.muenchen.eh.xta.config.XtaClientConfig;
+import de.muenchen.eh.xta.exception.XtaClientInitializationException;
 import java.io.IOException;
 import java.security.cert.CertificateException;
 import javax.net.ssl.SSLContext;

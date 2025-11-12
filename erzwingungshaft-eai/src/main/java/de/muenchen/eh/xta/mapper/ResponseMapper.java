@@ -1,4 +1,4 @@
-package de.muenchen.erzwingungshaft.xta.mapper;
+package de.muenchen.eh.xta.mapper;
 
 import genv3.de.xoev.transport.xta.x211.GenericContentContainer;
 import genv3.de.xoev.transport.xta.x211.IsServiceAvailableValueType;

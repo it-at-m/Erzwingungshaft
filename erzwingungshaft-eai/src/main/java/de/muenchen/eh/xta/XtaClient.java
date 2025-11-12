@@ -1,8 +1,8 @@
-package de.muenchen.erzwingungshaft.xta;
+package de.muenchen.eh.xta;
 
-import de.muenchen.erzwingungshaft.xta.config.XtaClientConfig;
-import de.muenchen.erzwingungshaft.xta.core.XtaClientService;
-import de.muenchen.erzwingungshaft.xta.exception.XtaClientRuntimeException;
+import de.muenchen.eh.xta.config.XtaClientConfig;
+import de.muenchen.eh.xta.core.XtaClientService;
+import de.muenchen.eh.xta.exception.XtaClientRuntimeException;
 import java.util.function.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

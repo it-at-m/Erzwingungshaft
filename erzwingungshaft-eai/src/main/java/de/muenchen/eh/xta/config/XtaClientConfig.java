@@ -1,11 +1,11 @@
-package de.muenchen.erzwingungshaft.xta.config;
+package de.muenchen.eh.xta.config;
 
 import static java.util.Collections.emptyList;
 
-import de.muenchen.erzwingungshaft.xta.dto.XtaBusinessScenario;
-import de.muenchen.erzwingungshaft.xta.dto.XtaIdentifier;
-import de.muenchen.erzwingungshaft.xta.dto.XtaMessageMetaData;
-import de.muenchen.erzwingungshaft.xta.dto.XtaMessageType;
+import de.muenchen.eh.xta.dto.XtaBusinessScenario;
+import de.muenchen.eh.xta.dto.XtaIdentifier;
+import de.muenchen.eh.xta.dto.XtaMessageMetaData;
+import de.muenchen.eh.xta.dto.XtaMessageType;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;

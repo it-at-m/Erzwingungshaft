@@ -1,8 +1,8 @@
-package de.muenchen.erzwingungshaft.xta.config;
+package de.muenchen.eh.xta.config;
 
-import de.muenchen.erzwingungshaft.xta.core.XtaServicePorts;
-import de.muenchen.erzwingungshaft.xta.core.XtaServicePortsFactory;
-import de.muenchen.erzwingungshaft.xta.exception.XtaClientInitializationException;
+import de.muenchen.eh.xta.core.XtaServicePorts;
+import de.muenchen.eh.xta.core.XtaServicePortsFactory;
+import de.muenchen.eh.xta.exception.XtaClientInitializationException;
 import genv3.de.xoev.transport.xta.x211.XTAService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

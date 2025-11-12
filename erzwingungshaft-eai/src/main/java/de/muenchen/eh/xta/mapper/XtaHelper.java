@@ -1,7 +1,7 @@
-package de.muenchen.erzwingungshaft.xta.mapper;
+package de.muenchen.eh.xta.mapper;
 
-import de.muenchen.erzwingungshaft.xta.config.XtaClientConfig;
-import de.muenchen.erzwingungshaft.xta.dto.XtaMessageMetaData;
+import de.muenchen.eh.xta.config.XtaClientConfig;
+import de.muenchen.eh.xta.dto.XtaMessageMetaData;
 import genv3.de.xoev.transport.xta.x211.ContentType;
 import jakarta.activation.DataHandler;
 import java.math.BigInteger;

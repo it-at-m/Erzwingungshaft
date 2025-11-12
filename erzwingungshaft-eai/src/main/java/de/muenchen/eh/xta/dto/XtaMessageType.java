@@ -1,4 +1,4 @@
-package de.muenchen.erzwingungshaft.xta.dto;
+package de.muenchen.eh.xta.dto;
 
 import jakarta.validation.constraints.NotBlank;
 

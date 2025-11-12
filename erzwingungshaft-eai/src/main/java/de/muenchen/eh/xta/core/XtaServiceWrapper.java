@@ -1,10 +1,10 @@
-package de.muenchen.erzwingungshaft.xta.core;
+package de.muenchen.eh.xta.core;
 
-import de.muenchen.erzwingungshaft.xta.dto.XtaIdentifier;
-import de.muenchen.erzwingungshaft.xta.dto.XtaMessage;
-import de.muenchen.erzwingungshaft.xta.dto.XtaStatusListing;
-import de.muenchen.erzwingungshaft.xta.mapper.RequestMapper;
-import de.muenchen.erzwingungshaft.xta.mapper.ResponseMapper;
+import de.muenchen.eh.xta.dto.XtaIdentifier;
+import de.muenchen.eh.xta.dto.XtaMessage;
+import de.muenchen.eh.xta.dto.XtaStatusListing;
+import de.muenchen.eh.xta.mapper.RequestMapper;
+import de.muenchen.eh.xta.mapper.ResponseMapper;
 import genv3.eu.osci.ws.x2008.x05.transport.MsgBoxResponseType;
 import genv3.eu.osci.ws.x2008.x05.transport.MsgStatusListType;
 import genv3.eu.osci.ws.x2008.x05.transport.X509TokenContainerType;

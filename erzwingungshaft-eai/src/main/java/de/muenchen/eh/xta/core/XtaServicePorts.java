@@ -1,4 +1,4 @@
-package de.muenchen.erzwingungshaft.xta.core;
+package de.muenchen.eh.xta.core;
 
 import genv3.de.xoev.transport.xta.x211.ManagementPortType;
 import genv3.de.xoev.transport.xta.x211.MsgBoxPortType;

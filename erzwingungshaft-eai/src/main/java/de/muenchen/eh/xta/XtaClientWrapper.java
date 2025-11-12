@@ -1,9 +1,9 @@
-package de.muenchen.erzwingungshaft.xta;
+package de.muenchen.eh.xta;
 
-import de.muenchen.erzwingungshaft.xta.config.XtaClientConfig;
-import de.muenchen.erzwingungshaft.xta.dto.XtaMessage;
-import de.muenchen.erzwingungshaft.xta.dto.XtaMessageMetaData;
-import de.muenchen.erzwingungshaft.xta.mapper.XtaHelper;
+import de.muenchen.eh.xta.config.XtaClientConfig;
+import de.muenchen.eh.xta.dto.XtaMessage;
+import de.muenchen.eh.xta.dto.XtaMessageMetaData;
+import de.muenchen.eh.xta.mapper.XtaHelper;
 import genv3.de.xoev.transport.xta.x211.ContentType;
 import java.io.IOException;
 import java.util.List;

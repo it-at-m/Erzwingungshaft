@@ -1,4 +1,4 @@
-package de.muenchen.erzwingungshaft.xta.dto;
+package de.muenchen.eh.xta.dto;
 
 import genv3.de.xoev.transport.xta.x211.ContentType;
 import java.util.List;
