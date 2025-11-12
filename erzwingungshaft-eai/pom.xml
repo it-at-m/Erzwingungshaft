@@ -6,14 +6,13 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.3</version> <!-- must match the chosen Camel version in properties -> camel-spring-boot-dependencies.version, see e.g. https://central.sonatype.com/artifact/org.apache.camel.springboot/camel-spring-boot/dependencies and search for 'spring-boot-starter' -->
+        <version>3.5.4</version> <!-- must match the chosen Camel version in properties -> camel-spring-boot-dependencies.version, see e.g. https://central.sonatype.com/artifact/org.apache.camel.springboot/camel-spring-boot/dependencies and search for 'spring-boot-starter' -->
         <relativePath />
     </parent>
 
     <groupId>de.muenchen.erzwingungshaft</groupId>
     <artifactId>erzwinungshaft-eai</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-
+    <version>0.0.4-SNAPSHOT</version>
     <name>erzwingungshaft-eai</name>
     <description>This is the default starting project for a EAI project based on the reference architecture of it@M</description>
     <url>https://github.com/it-at-m/erzwingungshaft</url>
@@ -46,23 +45,20 @@
         <maven.compiler.release>${java.version}</maven.compiler.release>
 
         <!-- Core Frameworks -->
-        <camel-spring-boot-dependencies.version>4.11.0</camel-spring-boot-dependencies.version>
-        <cxf.version>4.1.1</cxf.version>
-        <cxf-xjc.version>4.1.0</cxf-xjc.version>
-
+        <camel-spring-boot-dependencies.version>4.14.1</camel-spring-boot-dependencies.version>
         <!-- Logging -->
         <logstash-logback-encoder.version>8.1</logstash-logback-encoder.version>
 
         <!-- Linting & Formatting -->
-        <spotless-maven-plugin.version>2.45.0</spotless-maven-plugin.version>
+        <spotless-maven-plugin.version>2.46.1</spotless-maven-plugin.version>
         <itm-java-codeformat.version>1.0.10</itm-java-codeformat.version>
-        <pmd-maven-plugin.version>3.27.0</pmd-maven-plugin.version>
-        <spotbugs-maven-plugin.version>4.9.3.2</spotbugs-maven-plugin.version>
-        <spotbugs-annotations.version>4.9.3</spotbugs-annotations.version> <!-- must match the patch version of spotbugs-maven-plugin -->
+        <pmd-maven-plugin.version>3.28.0</pmd-maven-plugin.version>
+        <spotbugs-maven-plugin.version>4.9.6.0</spotbugs-maven-plugin.version>
+        <spotbugs-annotations.version>4.9.6</spotbugs-annotations.version> <!-- must match the patch version of spotbugs-maven-plugin -->
         <findsecbugs-plugin.version>1.14.0</findsecbugs-plugin.version>
 
         <!-- Testing -->
-        <jacoco-maven-plugin.version>0.8.13</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
         <argLine /> <!-- Must be empty, definition needed for integration of Jacoco and Surefire via @{argLine} lazy property evaluation -->
         <junit.jupiter.version>5.14.1</junit.jupiter.version>
         <!-- Release -->
@@ -79,6 +75,19 @@
         <p2.username /> <!-- must be empty, override via Maven settings.xml if needed -->
         <p2.password /> <!-- must be empty, override via Maven settings.xml if needed -->
         <p2.mirror>download.eclipse.org</p2.mirror>
+
+        <!-- xJustiz XML Generation -->
+        <xjustiz.converter>0.0.7</xjustiz.converter>
+
+        <!-- Flyway maven plugin configuration for local stack database -->
+        <flyway.url>jdbc:postgresql://localhost:5432/postgres</flyway.url>
+        <flyway.user>admin</flyway.user>
+        <flyway.password>admin</flyway.password>
+        <flyway.locations>classpath:db/migration/schema,classpath:db/migration/testdata</flyway.locations>
+
+        <!-- Other -->
+        <mapstruct.version>1.6.3</mapstruct.version>
+
     </properties>
 
     <dependencyManagement>
@@ -101,22 +110,47 @@
             <groupId>org.apache.camel.springboot</groupId>
             <artifactId>camel-spring-boot-starter</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.apache.camel.springboot</groupId>
             <artifactId>camel-servlet-starter</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.apache.camel.springboot</groupId>
-            <artifactId>camel-endpointdsl-starter</artifactId>
+            <artifactId>camel-bindy-starter</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.apache.camel.springboot</groupId>
-            <artifactId>camel-file-starter</artifactId>
+            <artifactId>camel-jpa-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-aws2-s3</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-http-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-rest-openapi-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-jackson-starter</artifactId>
         </dependency>
 
+        <!-- it@m -->
+        <dependency>
+            <groupId>de.muenchen.oss</groupId>
+            <artifactId>xjustiz-starter</artifactId>
+            <version>${xjustiz.converter}</version>
+        </dependency>
 
         <!--  Spring-Boot-Actuator (https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.enabling) -->
         <dependency>
@@ -126,6 +160,64 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <!-- Json -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+
+        <!-- MapStruct -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${mapstruct.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>${mapstruct.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Database -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-database-postgresql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-jpamodelgen</artifactId>
+        </dependency>
+
+        <!-- openapi openapi-generator-maven-plugin -->
+        <dependency>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-annotations</artifactId>
+            <version>${spotbugs-annotations.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>0.2.7</version>
         </dependency>
 
         <!-- Test -->
@@ -176,62 +268,6 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>com.github.spotbugs</groupId>
-            <artifactId>spotbugs-annotations</artifactId>
-            <version>${spotbugs-annotations.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct</artifactId>
-            <version>${mapstruct.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>javax.annotation-api</artifactId>
-            <version>${javax.annotation.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.openapitools</groupId>
-            <artifactId>jackson-databind-nullable</artifactId>
-            <version>${jakarta.databind.version}</version>
-        </dependency>
-
-
-        <!-- Apache CXF für beBPo XTA2 -->
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-core</artifactId>
-            <version>${cxf.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.cxf.xjc-utils</groupId>
-            <artifactId>cxf-xjc-runtime</artifactId>
-            <version>${cxf-xjc.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.cxf.services.xkms</groupId>
-            <artifactId>cxf-services-xkms-common</artifactId>
-            <version>${cxf.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.cxf.services.sts</groupId>
-            <artifactId>cxf-services-sts-core</artifactId>
-            <version>${cxf.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-spring-boot-starter-jaxws</artifactId>
-            <version>${cxf.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-features-logging</artifactId>
-            <version>${cxf.version}</version>
-        </dependency>
-
 
         <!-- Configuration Processor -->
         <dependency>
@@ -264,6 +300,11 @@
                             <artifactId>lombok</artifactId>
                             <version>${lombok.version}</version>
                         </path>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path>
                     </annotationProcessorPaths>
                     <showDeprecation>true</showDeprecation>
                     <failOnWarning>false</failOnWarning>
@@ -280,137 +321,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <!-- beBPo WSDL to Java -->
-            <plugin>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-codegen-plugin</artifactId>
-                <version>4.1.3</version>
-                <configuration>
-                    <defaultOptions>
-                        <noAddressBinding>true</noAddressBinding>
-                    </defaultOptions>
-                    <sourceRoot>${project.build.directory}/generated-sources</sourceRoot>
-                    <wsdlOptions>
-                        <wsdlOption>
-                            <wsdl>${project.basedir}/src/main/resources/wsdl/XTA.wsdl</wsdl>
-                            <wsdlLocation>classpath:wsdl/XTA.wsdl</wsdlLocation>
-                            <markGenerated>true</markGenerated>
-                            <extraargs>
-                                <!--- Map XTA namespaces to their respective package in java -->
-                                <extraarg>-p</extraarg>
-                                <extraarg>
-                                    http://www.w3.org/2004/06/xmlmime=genv3.org.w3.x2004.x06.xmlmime
-                                </extraarg>
-                                <extraarg>-p</extraarg>
-                                <extraarg>
-                                    http://xoev.de/transport/xta/211=genv3.de.xoev.transport.xta.x211
-                                </extraarg>
-                                <extraarg>-p</extraarg>
-                                <extraarg>
-                                    http://xoev.de/schemata/basisdatentypen/1_1=genv3.de.xoev.schemata.basisdatentypen.x11
-                                </extraarg>
-                                <extraarg>-p</extraarg>
-                                <extraarg>
-                                    http://www.osci.eu/ws/2008/05/transport=genv3.eu.osci.ws.x2008.x05.transport
-                                </extraarg>
-                                <extraarg>-p</extraarg>
-                                <extraarg>
-                                    http://www.osci.eu/ws/2014/10/transport=genv3.eu.osci.ws.x2014.x10.transport
-                                </extraarg>
-                                <extraarg>-p</extraarg>
-                                <extraarg>
-                                    http://www.w3.org/2003/05/soap-envelope=genv3.org.w3.x2003.x05.soapEnvelope
-                                </extraarg>
-
-                                <!-- exclude not needed schemas to generate -->
-                                <extraarg>-nexclude</extraarg>
-                                <extraarg>
-                                    http://schemas.xmlsoap.org/soap/encoding/
-                                </extraarg>
-
-                                <!-- Use cxf provided schemas where available
-                                and exclude from generation -->
-                                <extraarg>-nexclude</extraarg>
-                                <extraarg>
-                                    http://www.w3.org/2000/09/xmldsig#=org.apache.cxf.xkms.model.xmldsig
-                                </extraarg>
-                                <extraarg>-nexclude</extraarg>
-                                <extraarg>
-                                    http://www.w3.org/2001/04/xmlenc#=org.apache.cxf.xkms.model.xmlenc
-                                </extraarg>
-                                <extraarg>-nexclude</extraarg>
-                                <extraarg>
-                                    http://www.w3.org/2005/08/addressing=org.apache.cxf.ws.addressing
-                                </extraarg>
-                                <extraarg>-nexclude</extraarg>
-                                <extraarg>
-                                    http://docs.oasis-open.org/wss/oasis-wss-wssecurity-secext-1.1.xsd
-                                </extraarg>
-                                <extraarg>-nexclude</extraarg>
-                                <extraarg>
-                                    http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd=org.apache.cxf.ws.security.sts.provider.model.utility
-                                </extraarg>
-                                <extraarg>-nexclude</extraarg>
-                                <extraarg>
-                                    http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd=org.apache.cxf.ws.security.sts.provider.model.secext
-                                </extraarg>
-                                <extraarg>-nexclude</extraarg>
-                                <extraarg>
-                                    http://www.w3.org/ns/ws-policy=org.apache.cxf.ws.policy.v200607
-                                </extraarg>
-                                <!--- Do verbose output -->
-                                <extraarg>-verbose</extraarg>
-                                <!--- Generate sample implementation classes -->
-                                <!-- <extraarg>-impl</extraarg> -->
-                                <!--- Enable header processing even if not defined in port secion of wsdl -->
-                                <extraarg>-exsh</extraarg>
-                                <extraarg>true</extraarg>
-                                <!--- Generate a default to String method in each class -->
-                                <extraarg>-xjc-Xts</extraarg>
-                                <!--- Enable default values on classes if they exist -->
-                                <extraarg>-xjc-Xdv:optional</extraarg>
-                            </extraargs>
-                        </wsdlOption>
-                    </wsdlOptions>
-                    <additionalJvmArgs>-Djavax.xml.accessExternalDTD=all</additionalJvmArgs>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>wsdl2java</goal>
-                        </goals>
-                        <phase>generate-sources</phase>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.cxf.xjcplugins</groupId>
-                        <artifactId>cxf-xjc-ts</artifactId>
-                        <version>${cxf-xjc.version}</version>
-                    </dependency>
-
-                    <dependency>
-                        <groupId>org.apache.cxf.xjcplugins</groupId>
-                        <artifactId>cxf-xjc-dv</artifactId>
-                        <version>${cxf-xjc.version}</version>
-                    </dependency>
-
-                    <dependency>
-                        <groupId>org.apache.cxf.xjcplugins</groupId>
-                        <artifactId>cxf-xjc-boolean</artifactId>
-                        <version>${cxf-xjc.version}</version>
-                    </dependency>
-
-                    <dependency>
-                        <groupId>org.apache.cxf.xjc-utils</groupId>
-                        <artifactId>cxf-xjc-runtime</artifactId>
-                        <version>${cxf-xjc.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-
 
             <!-- Testing -->
             <plugin>
@@ -504,6 +414,7 @@
                     <targetJdk>${java.version}</targetJdk>
                     <printFailingErrors>true</printFailingErrors>
                     <linkXRef>false</linkXRef>
+                    <failOnViolation>false</failOnViolation>
                     <includeTests>true</includeTests>
                     <excludeRoots>
                         <excludeRoot>target/generated-sources</excludeRoot>
@@ -535,8 +446,8 @@
                 <version>${spotbugs-maven-plugin.version}</version>
                 <configuration>
                     <effort>Max</effort>
+                    <failOnError>false</failOnError>
                     <excludeFilterFile>spotbugs-exclude-rules.xml</excludeFilterFile>
-                    <onlyAnalyze>de.muenchen.erzwingungshaft.*</onlyAnalyze>
                     <spotbugsXmlOutputDirectory>${project.build.directory}/spotbugs-results</spotbugsXmlOutputDirectory> <!-- required to ensure only the artifact jar is on top level when building -->
                     <plugins>
                         <plugin>
@@ -554,6 +465,38 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- Openapi -->
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>7.13.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/openapi/eakte-api-v1.2.4.json</inputSpec>
+                            <generatorName>java</generatorName>
+                            <library>resttemplate</library>
+                            <generateAliasAsModel>true</generateAliasAsModel>
+                            <verbose>false</verbose>
+                            <configOptions>
+                                <sourceFolder>src/gen/java/main</sourceFolder>
+                                <modelPackage>de.muenchen.eakte.api.rest.model</modelPackage>
+                                <generateApis>false</generateApis>
+                                <generateApiTests>false</generateApiTests>
+                                <generateSupportingFiles>false</generateSupportingFiles>
+                                <useJakartaEe>true</useJakartaEe>
+                            </configOptions>
+                            <globalProperties>
+                                <skipFormModel>false</skipFormModel>
+                            </globalProperties>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 </project>

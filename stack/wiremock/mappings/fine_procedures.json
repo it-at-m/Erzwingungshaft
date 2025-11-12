@@ -1,0 +1,16 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/api/procedures"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+		  "objid" : "COO.2150.9169.1.2119717",
+		  "objname" : "Bussgeldverfahren (9512.2-38-0005)"
+	}
+  }
+}

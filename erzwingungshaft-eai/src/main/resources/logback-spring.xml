@@ -8,7 +8,7 @@
     <springProperty scope="context" name="springAppName" source="spring.application.name"/>
 
 
-    <springProfile name="local | test">
+    <springProfile name="local | test | integration">
 
         <!-- Log appender -->
         <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
@@ -22,8 +22,14 @@
         </appender>
 
         <!-- Logger -->
-        <logger name="de.muenchen.erzwingungshaft"
-                level="debug"
+        <logger name="de.muenchen.eh"
+                level="info"
+                additivity="false">
+            <appender-ref ref="STDOUT" />
+        </logger>
+
+        <logger name="org.apache.camel"
+                level="error"
                 additivity="false">
             <appender-ref ref="STDOUT" />
         </logger>
@@ -70,6 +76,5 @@
         </root>
 
     </springProfile>
-
 
 </configuration>

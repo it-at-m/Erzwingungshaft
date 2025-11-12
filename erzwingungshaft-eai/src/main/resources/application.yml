@@ -1,6 +1,27 @@
+batch:
+  enabled: true
+
 spring:
   application:
     name: @project.artifactId@
+  main:
+    web-application-type: none
+  datasource:
+    url:
+    username:
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+  flyway:
+    enabled: true
+    baseline-on-migrate: false
+    schemas: eh
+
+logging:
+  level:
+    de.muenchen.eh: INFO
 
 server:
   error:
@@ -57,4 +78,23 @@ camel:
       context-path: /api/*
 
 # Custom properties
-output: direct:foo
+xjustiz:
+  version: 3.5.1
+  interface:
+    document:
+      processor: direct:xjustiz-document-processor
+    file:
+      consume:
+      line-break: \n
+      error:
+    eakte:
+
+efile:
+  case-file:
+  #    subject-data-values:
+  #      gp-name: 'Name-des-Geschaeftspartner'
+  #      gp-first-name: 'Vorname-des-Geschaeftspartner'
+  #      gp-birth-date: 'Geburtstag-des-Geschaeftspartner'
+  fine:
+#    subject-data-values:
+#      owi-number: 'Ordnungswidrigkeiten-Nummer'

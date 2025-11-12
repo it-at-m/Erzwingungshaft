@@ -1,0 +1,26 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/api/outgoings"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "objid": "COO.2150.9169.1.2119719",
+      "objname": "Ausgang (9512.2-38-0005-0001)",
+      "giobjecttype": [
+        {
+          "objname": "EH-Antrag",
+          "objaddress": "COO.2150.9169.1.2119720"
+        },
+        {
+          "objname": "EH-Bescheid",
+          "objaddress": "COO.2150.9169.1.2119721"
+        }
+      ]
+    }
+  }
+}
