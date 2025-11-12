@@ -1,11 +1,10 @@
 package de.muenchen.erzwingungshaft.xta.dto;
 
 import genv3.de.xoev.transport.xta.x211.ContentType;
+import java.util.List;
 import lombok.With;
 
-import java.util.List;
-
-public record XtaMessage (
+public record XtaMessage(
 
         // Holds adress
         @With XtaMessageMetaData metaData,
@@ -14,7 +13,6 @@ public record XtaMessage (
         ContentType messageFile,
 
         // optional attachments
-        List<ContentType> attachmentFiles
-){
+        List<ContentType> attachmentFiles) {
 
 }

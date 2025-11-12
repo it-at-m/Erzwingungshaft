@@ -5,11 +5,10 @@ import de.muenchen.erzwingungshaft.xta.dto.XtaMessage;
 import de.muenchen.erzwingungshaft.xta.dto.XtaMessageMetaData;
 import de.muenchen.erzwingungshaft.xta.mapper.XtaHelper;
 import genv3.de.xoev.transport.xta.x211.ContentType;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.io.IOException;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class XtaClientWrapper {

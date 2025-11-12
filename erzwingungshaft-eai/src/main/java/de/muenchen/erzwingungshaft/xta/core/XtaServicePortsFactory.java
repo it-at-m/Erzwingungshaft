@@ -1,10 +1,12 @@
 package de.muenchen.erzwingungshaft.xta.core;
 
 import de.muenchen.erzwingungshaft.xta.config.XtaClientConfig;
-import de.muenchen.erzwingungshaft.xta.dto.XtaMessageMetaData;
 import de.muenchen.erzwingungshaft.xta.exception.XtaClientInitializationException;
 import genv3.de.xoev.transport.xta.x211.XTAService;
 import jakarta.xml.ws.BindingProvider;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.cxf.endpoint.Client;
@@ -17,10 +19,6 @@ import org.apache.cxf.message.Message;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
 
 @Component
 @Slf4j
@@ -50,8 +48,7 @@ public class XtaServicePortsFactory {
     private void configureRequestContext(final String endpointUrl, Map<String, Object> requestContext) {
         requestContext.putAll(Map.of(
                 BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointUrl,
-                SCHEMA_VALIDATION_ENABLED_KEY, config.isSchemaValidation()
-        ));
+                SCHEMA_VALIDATION_ENABLED_KEY, config.isSchemaValidation()));
     }
 
     private void configureClient(Client client) throws XtaClientInitializationException {
@@ -67,7 +64,8 @@ public class XtaServicePortsFactory {
         log.debug("[configureClient] Initialized TransportSecurity + HTTP policy");
     }
 
-    private <T extends AbstractLoggingInterceptor> void addInterceptorPair(List<Interceptor<? extends Message>> normal, List<Interceptor<? extends Message>> fault, Supplier<T> interceptorFactory) {
+    private <T extends AbstractLoggingInterceptor> void addInterceptorPair(List<Interceptor<? extends Message>> normal,
+            List<Interceptor<? extends Message>> fault, Supplier<T> interceptorFactory) {
         normal.add(createConfiguredInterceptor(interceptorFactory.get()));
         fault.add(createConfiguredInterceptor(interceptorFactory.get()));
     }

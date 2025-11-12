@@ -6,6 +6,6 @@ public class XtaClientInitializationException extends XtaClientException {
     }
 
     public XtaClientInitializationException(String message, Throwable cause) {
-      super(message, cause);
+        super(message, cause);
     }
 }

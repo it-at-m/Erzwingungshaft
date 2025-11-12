@@ -6,9 +6,7 @@ import java.util.function.Consumer;
 public record XtaFetchMessageMetaData(
         XtaIdentifier xtaIdentifier,
         Consumer<XtaMessage> processMessage,
-        Set<String> viewedMessageIds
-) {
-
+        Set<String> viewedMessageIds) {
 
     public boolean isMessageViewed(XtaMessageMetaData xtaMessageMetaData) {
         return viewedMessageIds.contains(xtaMessageMetaData.messageId());

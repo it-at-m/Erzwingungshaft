@@ -7,13 +7,11 @@ import de.muenchen.erzwingungshaft.xta.dto.XtaMessageMetaData;
 import de.muenchen.erzwingungshaft.xta.dto.XtaStatusListing;
 import de.muenchen.erzwingungshaft.xta.exception.XtaClientRuntimeException;
 import de.muenchen.erzwingungshaft.xta.mapper.ResponseMapper;
-import genv3.de.xoev.transport.xta.x211.*;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -35,19 +33,19 @@ public class XtaClientService {
         }
     }
 
-    public boolean isAccountActive(XtaIdentifier xtaIdentifier)  {
+    public boolean isAccountActive(XtaIdentifier xtaIdentifier) {
         try {
             xtaServiceWrapper.checkAccountActive(xtaIdentifier);
             return true;
         } catch (XTAWSTechnicalProblemException e) {
             throw new XtaClientRuntimeException("Failed to check if account is active.", e);
-        } catch ( PermissionDeniedException e) {
+        } catch (PermissionDeniedException e) {
             log.warn("Permission denied - account not active.", e);
             return false;
         }
     }
 
-    public XtaStatusListing getStatusList(XtaIdentifier xtaIdentifier)  {
+    public XtaStatusListing getStatusList(XtaIdentifier xtaIdentifier) {
         try {
             return xtaServiceWrapper.getStatusList(xtaIdentifier, xtaClientConfig.getMaxListItems());
         } catch (XTAWSTechnicalProblemException | PermissionDeniedException e) {
@@ -66,7 +64,7 @@ public class XtaClientService {
         }
     }
 
-    public void sendMessage(XtaMessage xtaMessage)  {
+    public void sendMessage(XtaMessage xtaMessage) {
         if (xtaMessage.metaData().messageId() == null || xtaMessage.metaData().messageId().isEmpty()) {
             log.debug("No message Id present");
             xtaMessage = enrichXtaMessageWithID(xtaMessage);
@@ -74,22 +72,18 @@ public class XtaClientService {
 
         try {
             xtaServiceWrapper.sendMessage(xtaMessage, null);
-        } catch (SyncAsyncException | ParameterIsNotValidException | PermissionDeniedException | MessageSchemaViolationException | MessageVirusDetectionException | XTAWSTechnicalProblemException e) {
+        } catch (SyncAsyncException | ParameterIsNotValidException | PermissionDeniedException | MessageSchemaViolationException
+                | MessageVirusDetectionException | XTAWSTechnicalProblemException e) {
             throw new XtaClientRuntimeException("Failed to send message.", e);
         }
     }
 
-    public Optional<XtaMessage> getMessage(XtaMessageMetaData xtaMessageMetaData)  {
+    public Optional<XtaMessage> getMessage(XtaMessageMetaData xtaMessageMetaData) {
         try {
             return Optional.of(xtaServiceWrapper.getMessage(xtaMessageMetaData.messageId(), xtaMessageMetaData.readerIdentifier()));
         } catch (XTAWSTechnicalProblemException | PermissionDeniedException | InvalidMessageIDException e) {
             throw new XtaClientRuntimeException("Failed to fetch message.", e); // TODO add identifier and messageID
         }
     }
-
-
-
-
-
 
 }

@@ -1,7 +1,6 @@
 package de.muenchen.erzwingungshaft;
 
 import de.muenchen.erzwingungshaft.xta.config.XtaClientConfig;
-import lombok.Setter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

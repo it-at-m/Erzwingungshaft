@@ -1,6 +1,5 @@
 package de.muenchen.erzwingungshaft.xta.config;
 
-import de.muenchen.erzwingungshaft.xta.core.XtaClientService;
 import de.muenchen.erzwingungshaft.xta.core.XtaServicePorts;
 import de.muenchen.erzwingungshaft.xta.core.XtaServicePortsFactory;
 import de.muenchen.erzwingungshaft.xta.exception.XtaClientInitializationException;

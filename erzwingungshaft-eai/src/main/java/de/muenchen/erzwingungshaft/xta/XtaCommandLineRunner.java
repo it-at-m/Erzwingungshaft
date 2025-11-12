@@ -2,6 +2,13 @@ package de.muenchen.erzwingungshaft.xta;
 
 import genv3.de.xoev.transport.xta.x211.ContentType;
 import jakarta.activation.DataHandler;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.Scanner;
+import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.cxf.attachment.ByteDataSource;
 import org.springframework.boot.CommandLineRunner;
@@ -12,14 +19,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StreamUtils;
-
-import java.io.IOException;
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Scanner;
-import java.util.UUID;
 
 /**
  * Command Line Runner to Test Connection and sending of first packages.
@@ -82,38 +81,38 @@ public class XtaCommandLineRunner implements CommandLineRunner {
         String result = "Ergebnis";
         if (args.length == 0) return;
         switch (args[0]) {
-            case "isAccountActive" -> {
-                //var result = adapter.isAccountActive();
-                System.out.printf("isAccountActive(): %s%n", result);
+        case "isAccountActive" -> {
+            //var result = adapter.isAccountActive();
+            System.out.printf("isAccountActive(): %s%n", result);
+        }
+        case "createMessageId" -> {
+            //var result = adapter.createMessageId();
+            System.out.printf("createMessageId(): %s%n", result);
+        }
+        case "sendMessage" -> {
+            if (args.length >= 6) {
+                //var dto = new XtaAddressDto(args[1], args[2], args[3], args[4]);
+                //adapter.sendMessage(dto, args[5]);
+            } else if (args.length >= 5) {
+                //var dto = new XtaAddressDto(args[1], args[2], args[3], null);
+                //adapter.sendMessage(dto, args[4]);
+            } else {
+                System.out.println("Fehlende Parameter für sendMessage");
+                return;
             }
-            case "createMessageId" -> {
-                //var result = adapter.createMessageId();
-                System.out.printf("createMessageId(): %s%n", result);
+            System.out.println("sendMessage() erfolgreich ausgeführt.");
+        }
+        case "getTransportReport" -> {
+            if (args.length < 2) {
+                System.out.println("Parameter für getTransportReport fehlt.");
+                return;
             }
-            case "sendMessage" -> {
-                if (args.length >= 6) {
-                    //var dto = new XtaAddressDto(args[1], args[2], args[3], args[4]);
-                    //adapter.sendMessage(dto, args[5]);
-                } else if (args.length >= 5) {
-                    //var dto = new XtaAddressDto(args[1], args[2], args[3], null);
-                    //adapter.sendMessage(dto, args[4]);
-                } else {
-                    System.out.println("Fehlende Parameter für sendMessage");
-                    return;
-                }
-                System.out.println("sendMessage() erfolgreich ausgeführt.");
-            }
-            case "getTransportReport" -> {
-                if (args.length < 2) {
-                    System.out.println("Parameter für getTransportReport fehlt.");
-                    return;
-                }
-                //var result = adapter.getTransportReport(args[1]);
-                System.out.printf("getTransportReport(%s): %s%n", args[1], result);
-            }
-            default -> {
-                System.out.printf("Unbekannter Befehl: %s%n", args[0]);
-            }
+            //var result = adapter.getTransportReport(args[1]);
+            System.out.printf("getTransportReport(%s): %s%n", args[1], result);
+        }
+        default -> {
+            System.out.printf("Unbekannter Befehl: %s%n", args[0]);
+        }
         }
     }
 

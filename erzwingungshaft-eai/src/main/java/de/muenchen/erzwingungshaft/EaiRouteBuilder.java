@@ -5,8 +5,6 @@ import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.builder.endpoint.StaticEndpointBuilders;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 
 @RequiredArgsConstructor
 public class EaiRouteBuilder extends RouteBuilder {

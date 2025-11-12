@@ -1,13 +1,11 @@
 package de.muenchen.erzwingungshaft.xta.mapper;
 
-import de.muenchen.erzwingungshaft.xta.dto.*;
 import genv3.de.xoev.transport.xta.x211.GenericContentContainer;
 import genv3.de.xoev.transport.xta.x211.LookupServiceRequest;
 import genv3.de.xoev.transport.xta.x211.LookupServiceType;
 import genv3.eu.osci.ws.x2008.x05.transport.MsgBoxCloseRequestType;
 import genv3.eu.osci.ws.x2008.x05.transport.MsgBoxFetchRequest;
 import genv3.eu.osci.ws.x2008.x05.transport.MsgBoxStatusListRequestType;
-import genv3.eu.osci.ws.x2014.x10.transport.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -45,10 +43,10 @@ public interface RequestMapper {
     @Mapping(target = "businessScenario", source = "businessScenario", qualifiedByName = "mapBusinessScenario")
     QualifierType mapXtaMessageMetaDataToQualifierType(XtaMessageMetaData messageMetaData);
 
-    @Mapping(target = "code",          source = "messageType.code")
-    @Mapping(target = "name",          ignore = true)
+    @Mapping(target = "code", source = "messageType.code")
+    @Mapping(target = "name", ignore = true)
     @Mapping(target = "payloadSchema", source = "messageType.payloadSchema")
-    @Mapping(target = "listURI",       constant = MESSAGE_TYPE_LIST_URI)
+    @Mapping(target = "listURI", constant = MESSAGE_TYPE_LIST_URI)
     @Mapping(target = "listVersionID", constant = MESSAGE_TYPE_LIST_VERSION_ID)
     QualifierType.MessageType mapXtaMessageMetaDataToQualifierTypeMessageType(XtaMessageMetaData messageMetaData);
 
@@ -69,9 +67,9 @@ public interface RequestMapper {
     QualifierType.BusinessScenario mapDefinedBusinessScenario(XtaMessageMetaData messageMetaData);
 
     @Named("mapDefinedBusinessScenarioCode")
-    @Mapping(target = "code",          source = "code")
-    @Mapping(target = "name",          ignore = true)
-    @Mapping(target = "listURI",       source = "listUri")
+    @Mapping(target = "code", source = "code")
+    @Mapping(target = "name", ignore = true)
+    @Mapping(target = "listURI", source = "listUri")
     @Mapping(target = "listVersionID", source = "listVersionId")
     KeyCodeType mapDefinedBusinessScenarioCode(XtaBusinessScenario businessScenario);
 

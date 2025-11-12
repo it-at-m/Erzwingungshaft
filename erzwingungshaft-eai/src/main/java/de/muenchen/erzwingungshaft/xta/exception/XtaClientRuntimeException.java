@@ -2,7 +2,7 @@ package de.muenchen.erzwingungshaft.xta.exception;
 
 import java.io.Serial;
 
-public class XtaClientRuntimeException extends RuntimeException{
+public class XtaClientRuntimeException extends RuntimeException {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -18,7 +18,8 @@ public class XtaClientRuntimeException extends RuntimeException{
     /**
      * @see RuntimeException#RuntimeException(String, Throwable)
      * @param message – the detail message
-     * @param cause – the cause. (A null value is permitted, and indicates that the cause is nonexistent or unknown.)
+     * @param cause – the cause. (A null value is permitted, and indicates that the cause is nonexistent
+     *            or unknown.)
      */
     public XtaClientRuntimeException(String message, Throwable cause) {
         super(message, cause);

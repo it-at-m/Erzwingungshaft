@@ -1,16 +1,13 @@
 package de.muenchen.erzwingungshaft.xta.mapper;
 
-
 import de.muenchen.erzwingungshaft.xta.config.XtaClientConfig;
 import de.muenchen.erzwingungshaft.xta.dto.XtaMessageMetaData;
 import genv3.de.xoev.transport.xta.x211.ContentType;
 import jakarta.activation.DataHandler;
-import lombok.RequiredArgsConstructor;
-import org.apache.cxf.attachment.ByteDataSource;
-
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
+import org.apache.cxf.attachment.ByteDataSource;
 
 public class XtaHelper {
 
@@ -37,6 +34,5 @@ public class XtaHelper {
         contentType.setValue(dh);
         return contentType;
     }
-
 
 }

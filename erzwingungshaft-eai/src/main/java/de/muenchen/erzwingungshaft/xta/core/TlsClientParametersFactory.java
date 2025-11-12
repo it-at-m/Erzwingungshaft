@@ -1,8 +1,10 @@
 package de.muenchen.erzwingungshaft.xta.core;
 
-
 import de.muenchen.erzwingungshaft.xta.config.XtaClientConfig;
 import de.muenchen.erzwingungshaft.xta.exception.XtaClientInitializationException;
+import java.io.IOException;
+import java.security.cert.CertificateException;
+import javax.net.ssl.SSLContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
@@ -11,11 +13,6 @@ import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
 import org.apache.hc.client5.http.ssl.TrustAllStrategy;
 import org.apache.hc.core5.ssl.SSLContextBuilder;
 import org.springframework.stereotype.Service;
-
-import javax.net.ssl.SSLContext;
-import java.io.IOException;
-import java.security.*;
-import java.security.cert.CertificateException;
 
 @Service
 @RequiredArgsConstructor
@@ -55,8 +52,7 @@ public class TlsClientParametersFactory {
             if (config.isTrustAll()) {
                 sslContextBuilder.loadTrustMaterial(
                         config.getTrustStore().url(),
-                        config.getTrustStore().storePassword()
-                );
+                        config.getTrustStore().storePassword());
                 log.debug("Trust store loaded ({})", config.getTrustStore().toString());
             } else {
                 log.warn("Using trust-all-strategie! This is not recommended and will disable host name checking!");
@@ -73,14 +69,12 @@ public class TlsClientParametersFactory {
                             config.getClientCertKeystore().url(),
                             config.getClientCertKeystore().storePassword(),
                             config.getClientCertKeystore().effectiveKeyPassword(),
-                            (aliases, sslParameters) -> config.getClientCertKeystore().keyAlias()
-                    );
+                            (aliases, sslParameters) -> config.getClientCertKeystore().keyAlias());
                 } else {
                     sslContextBuilder.loadKeyMaterial(
                             config.getClientCertKeystore().url(),
                             config.getClientCertKeystore().storePassword(),
-                            config.getClientCertKeystore().effectiveKeyPassword()
-                    );
+                            config.getClientCertKeystore().effectiveKeyPassword());
                 }
 
                 log.debug("Client cert keystore loaded ({})", config.getClientCertKeystore().toString());

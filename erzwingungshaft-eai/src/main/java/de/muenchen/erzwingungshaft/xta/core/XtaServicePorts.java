@@ -19,6 +19,5 @@ public record XtaServicePorts(
         /*
          * used for: sendMessageSync, sendMessage
          */
-        SendPortType sendPortType
-){
+        SendPortType sendPortType) {
 }
