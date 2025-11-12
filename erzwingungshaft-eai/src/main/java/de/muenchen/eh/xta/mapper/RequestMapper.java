@@ -1,11 +1,20 @@
 package de.muenchen.eh.xta.mapper;
 
+import de.muenchen.eh.xta.dto.XtaBusinessScenario;
+import de.muenchen.eh.xta.dto.XtaIdentifier;
+import de.muenchen.eh.xta.dto.XtaMessage;
+import de.muenchen.eh.xta.dto.XtaMessageMetaData;
 import genv3.de.xoev.transport.xta.x211.GenericContentContainer;
 import genv3.de.xoev.transport.xta.x211.LookupServiceRequest;
 import genv3.de.xoev.transport.xta.x211.LookupServiceType;
 import genv3.eu.osci.ws.x2008.x05.transport.MsgBoxCloseRequestType;
 import genv3.eu.osci.ws.x2008.x05.transport.MsgBoxFetchRequest;
 import genv3.eu.osci.ws.x2008.x05.transport.MsgBoxStatusListRequestType;
+import genv3.eu.osci.ws.x2014.x10.transport.KeyCodeType;
+import genv3.eu.osci.ws.x2014.x10.transport.MessageMetaData;
+import genv3.eu.osci.ws.x2014.x10.transport.PartyIdentifierType;
+import genv3.eu.osci.ws.x2014.x10.transport.PartyType;
+import genv3.eu.osci.ws.x2014.x10.transport.QualifierType;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;

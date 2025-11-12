@@ -8,6 +8,14 @@ import de.muenchen.eh.xta.dto.XtaStatusListing;
 import de.muenchen.eh.xta.exception.XtaClientRuntimeException;
 import de.muenchen.eh.xta.mapper.ResponseMapper;
 import java.util.Optional;
+
+import genv3.de.xoev.transport.xta.x211.InvalidMessageIDException;
+import genv3.de.xoev.transport.xta.x211.MessageSchemaViolationException;
+import genv3.de.xoev.transport.xta.x211.MessageVirusDetectionException;
+import genv3.de.xoev.transport.xta.x211.ParameterIsNotValidException;
+import genv3.de.xoev.transport.xta.x211.PermissionDeniedException;
+import genv3.de.xoev.transport.xta.x211.SyncAsyncException;
+import genv3.de.xoev.transport.xta.x211.XTAWSTechnicalProblemException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +81,7 @@ public class XtaClientService {
         try {
             xtaServiceWrapper.sendMessage(xtaMessage, null);
         } catch (SyncAsyncException | ParameterIsNotValidException | PermissionDeniedException | MessageSchemaViolationException
-                | MessageVirusDetectionException | XTAWSTechnicalProblemException e) {
+                 | MessageVirusDetectionException | XTAWSTechnicalProblemException e) {
             throw new XtaClientRuntimeException("Failed to send message.", e);
         }
     }

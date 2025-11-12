@@ -1,5 +1,10 @@
 package de.muenchen.eh.xta.mapper;
 
+import de.muenchen.eh.xta.dto.XtaBusinessScenario;
+import de.muenchen.eh.xta.dto.XtaMessage;
+import de.muenchen.eh.xta.dto.XtaMessageMetaData;
+import de.muenchen.eh.xta.dto.XtaMessageType;
+import de.muenchen.eh.xta.dto.XtaStatusListing;
 import genv3.de.xoev.transport.xta.x211.GenericContentContainer;
 import genv3.de.xoev.transport.xta.x211.IsServiceAvailableValueType;
 import genv3.de.xoev.transport.xta.x211.LookupServiceResponse;

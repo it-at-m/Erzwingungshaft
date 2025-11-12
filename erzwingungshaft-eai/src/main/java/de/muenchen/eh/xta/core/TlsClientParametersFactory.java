@@ -3,6 +3,10 @@ package de.muenchen.eh.xta.core;
 import de.muenchen.eh.xta.config.XtaClientConfig;
 import de.muenchen.eh.xta.exception.XtaClientInitializationException;
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import javax.net.ssl.SSLContext;
 import lombok.RequiredArgsConstructor;
@@ -79,7 +83,8 @@ public class TlsClientParametersFactory {
 
                 log.debug("Client cert keystore loaded ({})", config.getClientCertKeystore().toString());
             }
-        } catch (NoSuchAlgorithmException | KeyStoreException | CertificateException | IOException | UnrecoverableKeyException e) {
+        } catch (NoSuchAlgorithmException | KeyStoreException | CertificateException | IOException |
+                 UnrecoverableKeyException e) {
             throw new XtaClientInitializationException("Failed to load SSL context.", e);
         }
 

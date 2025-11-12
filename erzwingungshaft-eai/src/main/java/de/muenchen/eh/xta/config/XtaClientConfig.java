@@ -14,6 +14,9 @@ import jakarta.validation.constraints.Positive;
 import java.net.URL;
 import java.util.List;
 import java.util.function.Predicate;
+
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 

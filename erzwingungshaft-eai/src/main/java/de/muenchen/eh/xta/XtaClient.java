@@ -2,6 +2,10 @@ package de.muenchen.eh.xta;
 
 import de.muenchen.eh.xta.config.XtaClientConfig;
 import de.muenchen.eh.xta.core.XtaClientService;
+import de.muenchen.eh.xta.dto.XtaFetchMessageMetaData;
+import de.muenchen.eh.xta.dto.XtaIdentifier;
+import de.muenchen.eh.xta.dto.XtaMessage;
+import de.muenchen.eh.xta.dto.XtaMessageMetaData;
 import de.muenchen.eh.xta.exception.XtaClientRuntimeException;
 import java.util.function.Predicate;
 import lombok.RequiredArgsConstructor;
