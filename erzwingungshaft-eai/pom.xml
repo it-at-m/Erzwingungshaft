@@ -279,29 +279,19 @@
         </dependency>
 
         <!-- Apache CXF für beBPo XTA2 -->
+
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-cxf-soap-starter</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-core</artifactId>
-            <version>${cxf.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.cxf.xjc-utils</groupId>
-            <artifactId>cxf-xjc-runtime</artifactId>
-            <version>${cxf-xjc.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.cxf.services.xkms</groupId>
-            <artifactId>cxf-services-xkms-common</artifactId>
-            <version>${cxf.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.cxf.services.sts</groupId>
-            <artifactId>cxf-services-sts-core</artifactId>
+            <artifactId>cxf-rt-transports-http</artifactId>
             <version>${cxf.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-spring-boot-starter-jaxws</artifactId>
+            <artifactId>cxf-rt-ws-security</artifactId>
             <version>${cxf.version}</version>
         </dependency>
         <dependency>
@@ -309,6 +299,37 @@
             <artifactId>cxf-rt-features-logging</artifactId>
             <version>${cxf.version}</version>
         </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>org.apache.cxf</groupId>-->
+<!--            <artifactId>cxf-core</artifactId>-->
+<!--            <version>${cxf.version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.cxf.xjc-utils</groupId>-->
+<!--            <artifactId>cxf-xjc-runtime</artifactId>-->
+<!--            <version>${cxf-xjc.version}</version>-->
+<!--        </dependency>-->
+        <dependency>
+            <groupId>org.apache.cxf.services.xkms</groupId>
+            <artifactId>cxf-services-xkms-common</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.apache.cxf.services.sts</groupId>-->
+<!--            <artifactId>cxf-services-sts-core</artifactId>-->
+<!--            <version>${cxf.version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.cxf</groupId>-->
+<!--            <artifactId>cxf-spring-boot-starter-jaxws</artifactId>-->
+<!--            <version>${cxf.version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.cxf</groupId>-->
+<!--            <artifactId>cxf-rt-features-logging</artifactId>-->
+<!--            <version>${cxf.version}</version>-->
+<!--        </dependency>-->
 
     </dependencies>
 
@@ -440,12 +461,12 @@
                                 <!--- Generate sample implementation classes -->
                                 <!-- <extraarg>-impl</extraarg> -->
                                 <!--- Enable header processing even if not defined in port secion of wsdl -->
-                                <extraarg>-exsh</extraarg>
-                                <extraarg>true</extraarg>
-                                <!--- Generate a default to String method in each class -->
-                                <extraarg>-xjc-Xts</extraarg>
-                                <!--- Enable default values on classes if they exist -->
-                                <extraarg>-xjc-Xdv:optional</extraarg>
+<!--                                <extraarg>-exsh</extraarg>-->
+<!--                                <extraarg>true</extraarg>-->
+<!--                                &lt;!&ndash;- Generate a default to String method in each class &ndash;&gt;-->
+<!--                                <extraarg>-xjc-Xts</extraarg>-->
+<!--                                &lt;!&ndash;- Enable default values on classes if they exist &ndash;&gt;-->
+<!--                                <extraarg>-xjc-Xdv:optional</extraarg>-->
                             </extraargs>
                         </wsdlOption>
                     </wsdlOptions>
@@ -460,31 +481,31 @@
                         <phase>generate-sources</phase>
                     </execution>
                 </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.cxf.xjcplugins</groupId>
-                        <artifactId>cxf-xjc-ts</artifactId>
-                        <version>${cxf-xjc.version}</version>
-                    </dependency>
+<!--                <dependencies>-->
+<!--                    <dependency>-->
+<!--                        <groupId>org.apache.cxf.xjcplugins</groupId>-->
+<!--                        <artifactId>cxf-xjc-ts</artifactId>-->
+<!--                        <version>${cxf-xjc.version}</version>-->
+<!--                    </dependency>-->
 
-                    <dependency>
-                        <groupId>org.apache.cxf.xjcplugins</groupId>
-                        <artifactId>cxf-xjc-dv</artifactId>
-                        <version>${cxf-xjc.version}</version>
-                    </dependency>
+<!--                    <dependency>-->
+<!--                        <groupId>org.apache.cxf.xjcplugins</groupId>-->
+<!--                        <artifactId>cxf-xjc-dv</artifactId>-->
+<!--                        <version>${cxf-xjc.version}</version>-->
+<!--                    </dependency>-->
 
-                    <dependency>
-                        <groupId>org.apache.cxf.xjcplugins</groupId>
-                        <artifactId>cxf-xjc-boolean</artifactId>
-                        <version>${cxf-xjc.version}</version>
-                    </dependency>
+<!--                    <dependency>-->
+<!--                        <groupId>org.apache.cxf.xjcplugins</groupId>-->
+<!--                        <artifactId>cxf-xjc-boolean</artifactId>-->
+<!--                        <version>${cxf-xjc.version}</version>-->
+<!--                    </dependency>-->
 
-                    <dependency>
-                        <groupId>org.apache.cxf.xjc-utils</groupId>
-                        <artifactId>cxf-xjc-runtime</artifactId>
-                        <version>${cxf-xjc.version}</version>
-                    </dependency>
-                </dependencies>
+<!--                    <dependency>-->
+<!--                        <groupId>org.apache.cxf.xjc-utils</groupId>-->
+<!--                        <artifactId>cxf-xjc-runtime</artifactId>-->
+<!--                        <version>${cxf-xjc.version}</version>-->
+<!--                    </dependency>-->
+<!--                </dependencies>-->
             </plugin>
 
             <!-- Testing -->
