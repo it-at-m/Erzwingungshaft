@@ -1,5 +1,8 @@
 package de.muenchen.eh.xta;
 
+import genv3.de.xoev.transport.xta.x211.ManagementPortType;
+import genv3.de.xoev.transport.xta.x211.MsgBoxPortType;
+import genv3.de.xoev.transport.xta.x211.SendPortType;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,6 +13,7 @@ import org.apache.camel.component.cxf.common.DataFormat;
 import org.apache.camel.component.cxf.jaxws.CxfEndpoint;
 import org.apache.cxf.annotations.SchemaValidation;
 import org.apache.cxf.bus.spring.SpringBus;
+import org.apache.cxf.ext.logging.LoggingFeature;
 import org.apache.cxf.feature.validation.DefaultSchemaValidationTypeProvider;
 import org.apache.cxf.feature.validation.SchemaValidationFeature;
 import org.apache.cxf.feature.validation.SchemaValidationTypeProvider;
@@ -19,14 +23,17 @@ import org.springframework.context.annotation.Bean;
 public class XtaContext {
 
     @Bean
-    public CxfEndpoint managementPort(XtaClientConfig xtaClientConfig) {
+    public CxfEndpoint managementPort(XtaClientConfig xtaClientConfig, WsClientConfigurer wsClientConfigurer) {
 
         CxfEndpoint mp = new CxfEndpoint();
         mp.setAddress(xtaClientConfig.getManagementPortUri());
 
- //       mp.setCxfConfigurer(new WsClientConfigurer());
+        mp.setCxfConfigurer(wsClientConfigurer);
 
-        mp.setServiceClass(genv3.de.xoev.transport.xta.x211.ManagementPortType.class);
+        mp.setServiceClass(ManagementPortType.class);
+
+        LoggingFeature logging = new LoggingFeature();
+        mp.getFeatures().add(logging);
 
         mp.setDataFormat(DataFormat.CXF_MESSAGE);
 
@@ -38,7 +45,7 @@ public class XtaContext {
 
         CxfEndpoint msgbp = new CxfEndpoint();
         msgbp.setAddress(xtaClientConfig.getMsgBoxportUri());
-        msgbp.setServiceClass(genv3.de.xoev.transport.xta.x211.MsgBoxPortType.class);
+        msgbp.setServiceClass(MsgBoxPortType.class);
         return msgbp;
     }
 
@@ -47,7 +54,7 @@ public class XtaContext {
 
         CxfEndpoint sendp = new CxfEndpoint();
         sendp.setAddress(xtaClientConfig.getSendPortUri());
-        sendp.setServiceClass(genv3.de.xoev.transport.xta.x211.SendPortType.class);
+        sendp.setServiceClass(SendPortType.class);
         return sendp;
     }
 

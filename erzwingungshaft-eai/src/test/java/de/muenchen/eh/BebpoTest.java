@@ -14,6 +14,9 @@ import de.muenchen.eh.log.db.repository.ClaimXmlRepository;
 import de.muenchen.eh.xta.XtaContext;
 import de.muenchen.eh.xta.XtaRouteBuilder;
 import genv3.de.xoev.transport.xta.x211.LookupServiceRequest;
+import genv3.de.xoev.transport.xta.x211.LookupServiceType;
+import genv3.eu.osci.ws.x2014.x10.transport.PartyIdentifierType;
+import genv3.eu.osci.ws.x2014.x10.transport.PartyType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import java.util.List;
@@ -46,7 +49,7 @@ import static org.mockito.Mockito.mock;
 @ExcludeRoutes({FileImportRouteBuilder.class, ClaimRouteBuilder.class})
 @ActiveProfiles(profiles = {TestConstants.SPRING_TEST_PROFILE})
 @TestPropertySource(properties = "spring.flyway.enabled=false")
-@TestPropertySource(properties =  "spring.sql.init.mode=never")
+@TestPropertySource(properties = "spring.sql.init.mode=never")
 @EnableAutoConfiguration(exclude = {HibernateJpaAutoConfiguration.class})
 public class BebpoTest {
 
@@ -84,12 +87,21 @@ public class BebpoTest {
                 .willReturn(mock(EntityManager.class));
 
 
-       LookupServiceRequest.LookupServiceRequestList list = new LookupServiceRequest.LookupServiceRequestList();
-       list.setLookupService(null);
+        LookupServiceRequest.LookupServiceRequestList list = new LookupServiceRequest.LookupServiceRequestList();
+        LookupServiceType lookupServiceType = new LookupServiceType();
+        lookupServiceType.setServiceType("Test");
+        PartyType partyType = new PartyType();
+        PartyIdentifierType partyIdentifierType = new  PartyIdentifierType();
+        partyIdentifierType.setValue("Test");
+        partyIdentifierType.setType("Test");
+        partyIdentifierType.setName("Test");
+        partyIdentifierType.setCategory("Test");
+        partyType.setIdentifier(partyIdentifierType);
+        lookupServiceType.setReader(partyType);
+        list.setLookupService(lookupServiceType);
 
-
-       genv3.de.xoev.transport.xta.x211.LookupServiceRequest lookupServiceRequest = new genv3.de.xoev.transport.xta.x211.LookupServiceRequest();
-       lookupServiceRequest.getLookupServiceRequestList().add(list);
+        LookupServiceRequest lookupServiceRequest = new LookupServiceRequest();
+        lookupServiceRequest.getLookupServiceRequestList().add(list);
 
         Exchange request = ExchangeBuilder.anExchange(camelContext).withBody(lookupServiceRequest).build();
 
