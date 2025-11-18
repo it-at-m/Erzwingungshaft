@@ -48,6 +48,8 @@
         <camel-spring-boot-dependencies.version>4.14.1</camel-spring-boot-dependencies.version>
         <!-- Logging -->
         <logstash-logback-encoder.version>8.1</logstash-logback-encoder.version>
+        <cxf-xjc.version>4.1.0</cxf-xjc.version>
+        <cxf.version>4.1.1</cxf.version>
 
         <!-- Linting & Formatting -->
         <spotless-maven-plugin.version>2.46.1</spotless-maven-plugin.version>
@@ -60,12 +62,16 @@
         <!-- Testing -->
         <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
         <argLine /> <!-- Must be empty, definition needed for integration of Jacoco and Surefire via @{argLine} lazy property evaluation -->
-
+        <junit.jupiter.version>5.14.1</junit.jupiter.version>
         <!-- Release -->
         <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
 
         <!-- Utility -->
         <refarch-tools.version>1.2.0</refarch-tools.version>
+        <mapstruct.version>1.6.3</mapstruct.version>
+        <commons-lang3.version>3.18.0</commons-lang3.version>
+        <javax.annotation.version>1.3.2</javax.annotation.version>
+        <jakarta.databind.version>0.2.8</jakarta.databind.version>
 
         <!-- Spotless P2 Mirror configuration (e.g. required when using company internal registry -->
         <p2.username /> <!-- must be empty, override via Maven settings.xml if needed -->
@@ -230,7 +236,13 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <scope>test</scope>
+            <version>${commons-lang3.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Logging -->
@@ -265,6 +277,59 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
+
+        <!-- Apache CXF für beBPo XTA2 -->
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-cxf-soap-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-transports-http</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-ws-security</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-features-logging</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-core</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>org.apache.cxf.xjc-utils</groupId>-->
+<!--            <artifactId>cxf-xjc-runtime</artifactId>-->
+<!--            <version>${cxf-xjc.version}</version>-->
+<!--        </dependency>-->
+        <dependency>
+            <groupId>org.apache.cxf.services.xkms</groupId>
+            <artifactId>cxf-services-xkms-common</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.apache.cxf.services.sts</groupId>-->
+<!--            <artifactId>cxf-services-sts-core</artifactId>-->
+<!--            <version>${cxf.version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.cxf</groupId>-->
+<!--            <artifactId>cxf-spring-boot-starter-jaxws</artifactId>-->
+<!--            <version>${cxf.version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.cxf</groupId>-->
+<!--            <artifactId>cxf-rt-features-logging</artifactId>-->
+<!--            <version>${cxf.version}</version>-->
+<!--        </dependency>-->
+
     </dependencies>
 
     <build>
@@ -310,6 +375,136 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <!-- beBPo WSDL to Java -->
+            <plugin>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-codegen-plugin</artifactId>
+                <version>4.1.3</version>
+                <configuration>
+                    <defaultOptions>
+                        <noAddressBinding>true</noAddressBinding>
+                    </defaultOptions>
+                    <sourceRoot>${project.build.directory}/generated-sources</sourceRoot>
+                    <wsdlOptions>
+                        <wsdlOption>
+                            <wsdl>${project.basedir}/src/main/resources/META-INF/schema/XTA.wsdl</wsdl>
+                            <wsdlLocation>classpath:wsdl/XTA.wsdl</wsdlLocation>
+                            <markGenerated>true</markGenerated>
+                            <extraargs>
+                                <!--- Map XTA namespaces to their respective package in java -->
+                                <extraarg>-p</extraarg>
+                                <extraarg>
+                                    http://www.w3.org/2004/06/xmlmime=genv3.org.w3.x2004.x06.xmlmime
+                                </extraarg>
+                                <extraarg>-p</extraarg>
+                                <extraarg>
+                                    http://xoev.de/transport/xta/211=genv3.de.xoev.transport.xta.x211
+                                </extraarg>
+                                <extraarg>-p</extraarg>
+                                <extraarg>
+                                    http://xoev.de/schemata/basisdatentypen/1_1=genv3.de.xoev.schemata.basisdatentypen.x11
+                                </extraarg>
+                                <extraarg>-p</extraarg>
+                                <extraarg>
+                                    http://www.osci.eu/ws/2008/05/transport=genv3.eu.osci.ws.x2008.x05.transport
+                                </extraarg>
+                                <extraarg>-p</extraarg>
+                                <extraarg>
+                                    http://www.osci.eu/ws/2014/10/transport=genv3.eu.osci.ws.x2014.x10.transport
+                                </extraarg>
+                                <extraarg>-p</extraarg>
+                                <extraarg>
+                                    http://www.w3.org/2003/05/soap-envelope=genv3.org.w3.x2003.x05.soapEnvelope
+                                </extraarg>
+
+                                <!-- exclude not needed schemas to generate -->
+                                <extraarg>-nexclude</extraarg>
+                                <extraarg>
+                                    http://schemas.xmlsoap.org/soap/encoding/
+                                </extraarg>
+
+                                <!-- Use cxf provided schemas where available
+                                and exclude from generation -->
+                                <extraarg>-nexclude</extraarg>
+                                <extraarg>
+                                    http://www.w3.org/2000/09/xmldsig#=org.apache.cxf.xkms.model.xmldsig
+                                </extraarg>
+                                <extraarg>-nexclude</extraarg>
+                                <extraarg>
+                                    http://www.w3.org/2001/04/xmlenc#=org.apache.cxf.xkms.model.xmlenc
+                                </extraarg>
+                                <extraarg>-nexclude</extraarg>
+                                <extraarg>
+                                    http://www.w3.org/2005/08/addressing=org.apache.cxf.ws.addressing
+                                </extraarg>
+                                <extraarg>-nexclude</extraarg>
+                                <extraarg>
+                                    http://docs.oasis-open.org/wss/oasis-wss-wssecurity-secext-1.1.xsd
+                                </extraarg>
+                                <extraarg>-nexclude</extraarg>
+                                <extraarg>
+                                    http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd=org.apache.cxf.ws.security.sts.provider.model.utility
+                                </extraarg>
+                                <extraarg>-nexclude</extraarg>
+                                <extraarg>
+                                    http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd=org.apache.cxf.ws.security.sts.provider.model.secext
+                                </extraarg>
+                                <extraarg>-nexclude</extraarg>
+                                <extraarg>
+                                    http://www.w3.org/ns/ws-policy=org.apache.cxf.ws.policy.v200607
+                                </extraarg>
+                                <!--- Do verbose output -->
+<!--                                <extraarg>-verbose</extraarg>-->
+                                <!--- Generate sample implementation classes -->
+                                <!-- <extraarg>-impl</extraarg> -->
+                                <!--- Enable header processing even if not defined in port secion of wsdl -->
+<!--                                <extraarg>-exsh</extraarg>-->
+<!--                                <extraarg>true</extraarg>-->
+<!--                                &lt;!&ndash;- Generate a default to String method in each class &ndash;&gt;-->
+<!--                                <extraarg>-xjc-Xts</extraarg>-->
+<!--                                &lt;!&ndash;- Enable default values on classes if they exist &ndash;&gt;-->
+<!--                                <extraarg>-xjc-Xdv:optional</extraarg>-->
+                            </extraargs>
+                        </wsdlOption>
+                    </wsdlOptions>
+                    <additionalJvmArgs>-Djavax.xml.accessExternalDTD=all</additionalJvmArgs>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>wsdl2java</goal>
+                        </goals>
+                        <phase>generate-sources</phase>
+                    </execution>
+                </executions>
+<!--                <dependencies>-->
+<!--                    <dependency>-->
+<!--                        <groupId>org.apache.cxf.xjcplugins</groupId>-->
+<!--                        <artifactId>cxf-xjc-ts</artifactId>-->
+<!--                        <version>${cxf-xjc.version}</version>-->
+<!--                    </dependency>-->
+
+<!--                    <dependency>-->
+<!--                        <groupId>org.apache.cxf.xjcplugins</groupId>-->
+<!--                        <artifactId>cxf-xjc-dv</artifactId>-->
+<!--                        <version>${cxf-xjc.version}</version>-->
+<!--                    </dependency>-->
+
+<!--                    <dependency>-->
+<!--                        <groupId>org.apache.cxf.xjcplugins</groupId>-->
+<!--                        <artifactId>cxf-xjc-boolean</artifactId>-->
+<!--                        <version>${cxf-xjc.version}</version>-->
+<!--                    </dependency>-->
+
+<!--                    <dependency>-->
+<!--                        <groupId>org.apache.cxf.xjc-utils</groupId>-->
+<!--                        <artifactId>cxf-xjc-runtime</artifactId>-->
+<!--                        <version>${cxf-xjc.version}</version>-->
+<!--                    </dependency>-->
+<!--                </dependencies>-->
             </plugin>
 
             <!-- Testing -->
