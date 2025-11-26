@@ -5,7 +5,7 @@ import de.muenchen.eh.kvue.claim.efile.operation.OperationIdFactory;
 import de.muenchen.eh.kvue.claim.efile.properties.FineProperties;
 import de.muenchen.eh.log.StatusProcessingType;
 import de.muenchen.eh.log.db.LogServiceClaim;
-import de.muenchen.eh.log.db.entity.Claim;
+import de.muenchen.eh.log.db.entity.ClaimImport;
 import de.muenchen.eh.log.db.entity.MessageType;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +32,7 @@ public class UpdateFineSubjectData extends UpdateSubjectData {
 
         Map<String, String> subjectDataValues = new HashMap<>();
 
-        Claim claim = subjectExchange.getMessage().getBody(ClaimProcessingContentWrapper.class).getClaim();
+        ClaimImport claim = subjectExchange.getMessage().getBody(ClaimProcessingContentWrapper.class).getClaimImport();
         subjectProperties = properties.getSubjectDataValues();
 
         if (subjectProperties != null) {

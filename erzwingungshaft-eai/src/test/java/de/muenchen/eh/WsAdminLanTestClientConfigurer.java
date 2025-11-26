@@ -1,7 +1,7 @@
-package de.muenchen.eh.xta;
+package de.muenchen.eh;
 
-import java.util.HashMap;
-import java.util.Map;
+import de.muenchen.eh.xta.tls.TlsClientParametersFactory;
+import de.muenchen.eh.xta.exception.XtaClientInitializationException;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.component.cxf.jaxws.CxfConfigurer;
 import org.apache.cxf.endpoint.Client;
@@ -10,26 +10,14 @@ import org.apache.cxf.frontend.AbstractWSDLBasedEndpointFactory;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.apache.cxf.transports.http.configuration.ProxyServerType;
-import org.springframework.stereotype.Component;
 
-@Component
 @RequiredArgsConstructor
-public class WsClientConfigurer implements CxfConfigurer {
+public class WsAdminLanTestClientConfigurer implements CxfConfigurer {
 
     private final TlsClientParametersFactory tlsClientParametersFactory;
 
     @Override
     public void configure(AbstractWSDLBasedEndpointFactory factoryBean) {
-
-//                Map<String, Object> properties = new HashMap<>();
-//        properties.put("http.proxyHost", "127.0.0.1");
-//        properties.put("http.proxyPort", "9999");
-//        properties.put("https.proxyHost", "10.158.0.85");
-//        properties.put("https.proxyPort", "80");
-
-
-//        factoryBean.getBus().setProperties(properties);
-
     }
 
     @Override
@@ -54,6 +42,5 @@ public class WsClientConfigurer implements CxfConfigurer {
 
     @Override
     public void configureServer(Server server) {
-
     }
 }

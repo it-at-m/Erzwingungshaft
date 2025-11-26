@@ -44,9 +44,11 @@ public class ClaimService {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 
         CriteriaQuery<Claim> query = cb.createQuery(Claim.class);
-        Root<Claim> claimRoot = query.from(Claim.class);
-        Join<Claim, ClaimEfile> claimImportClaimJoin = claimRoot.join("claimEfile", JoinType.INNER);
-        query.where(cb.equal(claimRoot.get("geschaeftspartnerId"), geschaeftspartnerId));
+        Root<ClaimImport> claimImportRoot = query.from(ClaimImport.class);
+        Join<ClaimImport, Claim> claimImportClaimJoin = claimImportRoot.join("claim", JoinType.INNER);
+        Join<Claim, ClaimEfile> claimClaimFileJoin = claimImportClaimJoin.join("claimEfile", JoinType.INNER);
+        query.select(claimImportClaimJoin);
+        query.where(cb.equal(claimImportRoot.get("geschaeftspartnerId"), geschaeftspartnerId));
         return entityManager.createQuery(query).getResultList();
 
     }

@@ -1,6 +1,9 @@
-package de.muenchen.eh.xta;
+package de.muenchen.eh.xta.transport.properties;
 
 import jakarta.annotation.PostConstruct;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -18,6 +21,7 @@ public class ProxyConfiguration {
     public static class Protocol {
         private String host;
         private int port;
+        private List<String> nonProxyHosts;
     }
 
     @PostConstruct
@@ -25,11 +29,20 @@ public class ProxyConfiguration {
         if (http != null) {
             System.setProperty("http.proxyHost", http.getHost());
             System.setProperty("http.proxyPort", String.valueOf(http.getPort()));
+            Optional.ofNullable(http.getNonProxyHosts()).ifPresent(hosts -> {
+                String join = hosts.stream().collect(Collectors.joining("|"));
+                System.setProperty("http.nonProxyHosts", join);
+            });
+
         }
 
         if (https != null) {
             System.setProperty("https.proxyHost", https.getHost());
             System.setProperty("https.proxyPort", String.valueOf(https.getPort()));
+            Optional.ofNullable(https.getNonProxyHosts()).ifPresent(hosts -> {
+                String join = hosts.stream().collect(Collectors.joining("|"));
+                System.setProperty("http.nonProxyHosts", join);
+            });
         }
     }
 

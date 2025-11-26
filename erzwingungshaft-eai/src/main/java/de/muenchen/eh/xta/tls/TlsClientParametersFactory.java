@@ -1,5 +1,7 @@
-package de.muenchen.eh.xta;
+package de.muenchen.eh.xta.tls;
 
+import de.muenchen.eh.xta.transport.properties.XtaClientConfiguration;
+import de.muenchen.eh.xta.exception.XtaClientInitializationException;
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
@@ -21,7 +23,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class TlsClientParametersFactory {
 
-    private final XtaClientConfig config;
+    private final XtaClientConfiguration clientConfiguration;
 
     public TLSClientParameters create() throws XtaClientInitializationException {
         log.debug("Creating TLS client parameters using config");
@@ -32,7 +34,7 @@ public class TlsClientParametersFactory {
             SSLContext sslContext = buildSSLContext();
             tlsClientParameters.setSSLSocketFactory(sslContext.getSocketFactory());
 
-            var hostnameVerifier = (config.isTrustAll())
+            var hostnameVerifier = (clientConfiguration.getTls().isTrustAll())
                     ? new DefaultHostnameVerifier()
                     : new NoopHostnameVerifier();
             tlsClientParameters.setHostnameVerifier(hostnameVerifier);
@@ -44,18 +46,18 @@ public class TlsClientParametersFactory {
     }
 
     private SSLContextBuilder createSSLContextBuilder() {
-        return SSLContextBuilder.create().setProtocol(config.getTlsProtocol());
+        return SSLContextBuilder.create().setProtocol(clientConfiguration.getTls().getTlsProtocol());
     }
 
     private SSLContext buildSSLContext() throws XtaClientInitializationException {
         SSLContextBuilder sslContextBuilder = createSSLContextBuilder();
 
         try {
-            if (config.isTrustAll()) {
+            if (clientConfiguration.getTls().isTrustAll()) {
                 sslContextBuilder.loadTrustMaterial(
-                        config.getTrustStore().url(),
-                        config.getTrustStore().storePassword());
-                log.debug("Trust store loaded ({})", config.getTrustStore().toString());
+                        clientConfiguration.getTls().getTrustStore().url(),
+                        clientConfiguration.getTls().getTrustStore().storePassword());
+                log.debug("Trust store loaded ({})", clientConfiguration.getTls().getTrustStore().toString());
             } else {
                 log.warn("Using trust-all-strategie! This is not recommended and will disable host name checking!");
                 sslContextBuilder.loadTrustMaterial(new TrustAllStrategy());
@@ -65,21 +67,21 @@ public class TlsClientParametersFactory {
         }
 
         try {
-            if (config.getClientCertKeystore() != null) {
-                if (config.getClientCertKeystore().keyAlias() != null) {
+            if (clientConfiguration.getTls().getClientCertKeystore() != null) {
+                if (clientConfiguration.getTls().getClientCertKeystore().keyAlias() != null) {
                     sslContextBuilder.loadKeyMaterial(
-                            config.getClientCertKeystore().url(),
-                            config.getClientCertKeystore().storePassword(),
-                            config.getClientCertKeystore().effectiveKeyPassword(),
-                            (aliases, sslParameters) -> config.getClientCertKeystore().keyAlias());
+                            clientConfiguration.getTls().getClientCertKeystore().url(),
+                            clientConfiguration.getTls().getClientCertKeystore().storePassword(),
+                            clientConfiguration.getTls().getClientCertKeystore().effectiveKeyPassword(),
+                            (aliases, sslParameters) -> clientConfiguration.getTls().getClientCertKeystore().keyAlias());
                 } else {
                     sslContextBuilder.loadKeyMaterial(
-                            config.getClientCertKeystore().url(),
-                            config.getClientCertKeystore().storePassword(),
-                            config.getClientCertKeystore().effectiveKeyPassword());
+                            clientConfiguration.getTls().getClientCertKeystore().url(),
+                            clientConfiguration.getTls().getClientCertKeystore().storePassword(),
+                            clientConfiguration.getTls().getClientCertKeystore().effectiveKeyPassword());
                 }
 
-                log.debug("Client cert keystore loaded ({})", config.getClientCertKeystore().toString());
+                log.debug("Client cert keystore loaded ({})", clientConfiguration.getTls().getClientCertKeystore().toString());
             }
         } catch (NoSuchAlgorithmException | KeyStoreException | CertificateException | IOException |
                  UnrecoverableKeyException e) {

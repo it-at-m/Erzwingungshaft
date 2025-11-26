@@ -24,11 +24,6 @@ public class Claim extends BaseEntity {
     @Column(name = "eh_uuid")
     private UUID ehUuid;
 
-    @Column(name = "geschaeftspartner_id")
-    private String geschaeftspartnerId;
-
-    @NotEmpty private String kassenzeichen;
-
     @NotEmpty @Column(name = "storage_location")
     private String storageLocation;
 

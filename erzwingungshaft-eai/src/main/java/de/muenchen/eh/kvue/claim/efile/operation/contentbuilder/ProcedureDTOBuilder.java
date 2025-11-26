@@ -24,7 +24,7 @@ public class ProcedureDTOBuilder {
 
         createProcedureDTO.setShortname(fineProperties.getShortname());
         createProcedureDTO.setReferrednumber(contentWrapper.getClaimEfile().getFile());
-        createProcedureDTO.setFilesubj(contentWrapper.getClaim().getKassenzeichen());
+        createProcedureDTO.setFilesubj(contentWrapper.getClaimImport().getKassenzeichen());
 
         return createProcedureDTO;
     }

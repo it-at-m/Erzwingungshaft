@@ -1,4 +1,4 @@
-package de.muenchen.eh.xta;
+package de.muenchen.eh.xta.exception;
 
 import java.io.Serial;
 

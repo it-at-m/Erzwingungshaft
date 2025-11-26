@@ -92,8 +92,7 @@ public class LogServiceClaim {
             writeInfoClaimLogMessage(StatusProcessingType.CLAIM_RAW_DATA_UNMARSHALLED, exchange);
 
             var claim = ClaimFactory.claimFacade(exchange);
-            claim.setKassenzeichen(claimData.getEhkassz());
-            claim.setGeschaeftspartnerId(claimData.getEhgpid());
+
             claimRepository.save(claim);
             writeInfoClaimLogMessage(StatusProcessingType.CLAIM_EH_KASSENZEICHEN_GESCHAEFTSPARTNERID_UPDATED, exchange);
 

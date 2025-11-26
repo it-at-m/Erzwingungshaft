@@ -1,6 +1,13 @@
 batch:
   enabled: true
 
+proxy:
+  http:
+    host:
+    port:
+    non-proxy-hosts:
+      -
+
 spring:
   application:
     name: @project.artifactId@
@@ -90,6 +97,7 @@ xjustiz:
     eakte:
 
 efile:
+  finish-message: log:de.muenchen.eh?level=INFO&message=Finish.
   case-file:
   #    subject-data-values:
   #      gp-name: 'Name-des-Geschaeftspartner'

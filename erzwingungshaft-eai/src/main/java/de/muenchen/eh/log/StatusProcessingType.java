@@ -30,7 +30,8 @@ public enum StatusProcessingType {
     EFILE_OBJECTADDRESSES_SAVED("Collection, case file, fine and documents efile objectaddresses saved in database."),
     EFILE_SUBJECT_FILE_DATA_SAVED("GP-Name, GP-Firstname, GP-Birthdate updated in efile file."),
     EFILE_SUBJECT_OWI_DATA_SAVED("'Ordnungswidrigkeitnummer (OWI)' updated in efile fine."),
-    EFILE_SUBJECT_DATA_SKIPPED("Subject data attributes (efile.case-file, efile.fine) not defined in properties.");
+    EFILE_SUBJECT_DATA_SKIPPED("Subject data attributes (efile.case-file, efile.fine) not defined in properties."),
+    XTA_MESSAGE_ID("XTA message id received.");
 
     private final String descriptor;
 

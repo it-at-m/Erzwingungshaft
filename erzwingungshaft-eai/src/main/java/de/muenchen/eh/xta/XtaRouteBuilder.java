@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 public class XtaRouteBuilder extends BaseRouteBuilder {
 
     public static final String BEPBO_MANAGEMENT_PORT = "direct:managementPort";
+    public static final String BEPBO_SEND_PORT = "direct:sendPort";
 
     @Override
     public void configure() {
@@ -18,7 +19,10 @@ public class XtaRouteBuilder extends BaseRouteBuilder {
 
         from("direct:managementPort").routeId("xta-management-port")
                 .to("cxf:bean:managementPort")
-                .process(exchange -> {exchange.toString();})
+                .log(LoggingLevel.DEBUG, "${body}");
+
+        from("direct:sendPort").routeId("xta-send-port")
+                .to("cxf:bean:sendPort")
                 .log(LoggingLevel.DEBUG, "${body}");
     }
 }

@@ -90,7 +90,7 @@ public class OperationIdFactory {
         Exchange exchange = createExchange(OperationId.CREATE_OUTGOING.getDescriptor());
         exchange.getMessage().setHeader(Exchange.CONTENT_TYPE, "multipart/form-data");
         List<ClaimDocument> documents = claimDocumentRepository.findByClaimImportId(dataWrapper.getClaimImport().getId());
-        log.debug("Process outgoing geschaeftspartnerId : {} ", dataWrapper.getClaim().getGeschaeftspartnerId());
+        log.debug("Process outgoing geschaeftspartnerId : {} ", dataWrapper.getClaimImport().getGeschaeftspartnerId());
 
         try {
             MultipartEntityBuilder builder = MultipartEntityBuilder.create();

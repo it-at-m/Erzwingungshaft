@@ -1,5 +1,6 @@
-package de.muenchen.eh.xta;
+package de.muenchen.eh;
 
+import de.muenchen.eh.xta.tls.TlsClientParametersFactory;
 import de.muenchen.eh.xta.transport.properties.XtaClientConfiguration;
 import genv3.de.xoev.transport.xta.x211.ManagementPortType;
 import genv3.de.xoev.transport.xta.x211.SendPortType;
@@ -9,16 +10,20 @@ import org.apache.camel.component.cxf.jaxws.CxfEndpoint;
 import org.apache.cxf.ext.logging.LoggingFeature;
 import org.apache.cxf.ws.addressing.WSAddressingFeature;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 
 @Configuration
-public class XtaContext {
+@Profile(TestConstants.SPRING_TEST_PROFILE)
+public class XtaTestContext {
 
     @Bean
-    public CxfEndpoint managementPort(XtaClientConfiguration xtaClientConfig) {
+    public CxfEndpoint managementPort(XtaClientConfiguration xtaClientConfig, WsAdminLanTestClientConfigurer wsAdminLanTestClientConfigurer) {
 
         CxfEndpoint mp = new CxfEndpoint();
         mp.setAddress(xtaClientConfig.getManagementPortUri());
         mp.setServiceClass(ManagementPortType.class);
+
+        mp.setCxfConfigurer(wsAdminLanTestClientConfigurer);
 
         mp.getFeatures().add(new LoggingFeature());
         mp.getFeatures().add(new WSAddressingFeature());
@@ -30,19 +35,26 @@ public class XtaContext {
     }
 
     @Bean
-    public CxfEndpoint sendPort(XtaClientConfiguration xtaClientConfig) {
+    public CxfEndpoint sendPort(XtaClientConfiguration xtaClientConfig, WsAdminLanTestClientConfigurer wsAdminLanTestClientConfigurer) {
 
         CxfEndpoint sendp = new CxfEndpoint();
         sendp.setAddress(xtaClientConfig.getSendPortUri());
         sendp.setServiceClass(SendPortType.class);
 
+        sendp.setCxfConfigurer(wsAdminLanTestClientConfigurer);
+
         sendp.getFeatures().add(new LoggingFeature());
         sendp.getFeatures().add(new WSAddressingFeature());
         sendp.setMtomEnabled(true);
 
-         sendp.setDataFormat(DataFormat.POJO);
+        sendp.setDataFormat(DataFormat.POJO);
 
         return sendp;
+    }
+
+    @Bean
+    public WsAdminLanTestClientConfigurer wsAdminLanTestClientConfigurer(TlsClientParametersFactory tlsClientParametersFactory) {
+        return new WsAdminLanTestClientConfigurer(tlsClientParametersFactory);
     }
 
 }

@@ -39,7 +39,7 @@ public class FindCollection extends EfileOperation {
     private void findCollectionByGpId(Exchange exchange) {
 
         ClaimProcessingContentWrapper processingDataWrapper = exchange.getMessage().getBody(ClaimProcessingContentWrapper.class);
-        List<Claim> gpClaimEfiles = claimService.claimEfilesWithCorrespondingGId(processingDataWrapper.getClaim().getGeschaeftspartnerId());
+        List<Claim> gpClaimEfiles = claimService.claimEfilesWithCorrespondingGId(processingDataWrapper.getClaimImport().getGeschaeftspartnerId());
         if (!gpClaimEfiles.isEmpty()) {
             ClaimEfile claimEfile = new ClaimEfile();
             claimEfile.setClaim(processingDataWrapper.getClaim());
@@ -60,7 +60,7 @@ public class FindCollection extends EfileOperation {
 
             collectionCache.ifPresent(collection -> {
                 List<Objektreferenz> filteredCollections = gpIdFilter(collection.getGiobjecttype(),
-                        Long.valueOf(processingDataWrapper.getClaim().getGeschaeftspartnerId()));
+                        Long.valueOf(processingDataWrapper.getClaimImport().getGeschaeftspartnerId()));
                 if (filteredCollections.isEmpty()) {
                     logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_GESCHAEFTSPARTNERID_COLLECTION_NOT_FOUND, MessageType.ERROR,
                             exchange);

@@ -27,13 +27,14 @@ public class ClaimRouteBuilder extends BaseRouteBuilder {
                 .routeId("claim-eh-process")
                 .setBody(method(claimService, "claimsForProcessing"))
                 .split().body().aggregationStrategy(new GroupedBodyAggregationStrategy())
-                .process("claimDataUnmarshaller")
-                .process("claimContentDataEnricher")
-                .process("claimXJustizXmlEnricher")
-                .process("efilesOperationExecutor")
-                .to("{{xjustiz.interface.bebpo}}")
+                    .process("claimDataUnmarshaller")
+                    .process("claimContentDataEnricher")
+                    .process("claimXJustizXmlEnricher")
+                    .process("efilesOperationExecutor")
+                    .process("{{xjustiz.interface.bebpo}}")
                 .end()
-                .bean("findCollection", "clearCollectionCache");
+                .bean("findCollection", "clearCollectionCache")
+                .to("{{efile.finish-message}}");
 
         from(UNMARSHALL_EH_CLAIM_DATA).routeId("unmarshal-eh-claimdata")
                 .unmarshal().bindy(BindyType.Fixed, ImportClaimData.class)

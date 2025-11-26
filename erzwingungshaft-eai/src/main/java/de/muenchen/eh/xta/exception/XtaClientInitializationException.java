@@ -1,4 +1,4 @@
-package de.muenchen.eh.xta;
+package de.muenchen.eh.xta.exception;
 
 public class XtaClientInitializationException extends XtaClientException {
     public XtaClientInitializationException(String message) {

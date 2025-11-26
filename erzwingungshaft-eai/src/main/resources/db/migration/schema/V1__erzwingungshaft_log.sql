@@ -60,14 +60,28 @@ CREATE TABLE eh.claim_document
 CREATE INDEX idx_claim_import_document_claim_id ON eh.claim_document (claim_import_id);
 CREATE INDEX idx_claim_import_document_document_reference ON eh.claim_document (document_reference);
 
+CREATE TABLE eh.xta
+(
+
+    id          SERIAL PRIMARY KEY, -- INT PK
+    claim_import_id   INTEGER NOT NULL,
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    message_id         VARCHAR,
+    send_http_response_code   INTEGER, -- HTTPResponseCode
+    transport_message_status  BIGINT,
+
+    CONSTRAINT fk_claim_import FOREIGN KEY (claim_import_id) REFERENCES eh.claim_import (id) ON DELETE CASCADE
+
+);
+
+CREATE INDEX idx_xta_claim_import_id ON eh.xta (claim_import_id);
+
 CREATE TABLE eh.claim
 (
 
     id                   SERIAL PRIMARY KEY, -- INT PK
     claim_import_id      INTEGER UNIQUE NOT NULL,
     eh_uuid              UUID,               -- Assigned during XML creation
-    geschaeftspartner_id VARCHAR(10),
-    kassenzeichen        VARCHAR(20),
     storage_location     TEXT         NOT NULL,
     source_file_name     VARCHAR(100) NOT NULL,
     file_line_index      INTEGER,
@@ -78,7 +92,7 @@ CREATE TABLE eh.claim
 
 );
 CREATE INDEX idx_claim_claim_import_id ON eh.claim (claim_import_id);
-CREATE INDEX idx_claim_geschaeftspartner_kassenzeichen ON eh.claim (geschaeftspartner_id, kassenzeichen);
+--CREATE INDEX idx_claim_geschaeftspartner_kassenzeichen ON eh.claim (geschaeftspartner_id, kassenzeichen);
 
 CREATE TABLE eh.claim_log
 (

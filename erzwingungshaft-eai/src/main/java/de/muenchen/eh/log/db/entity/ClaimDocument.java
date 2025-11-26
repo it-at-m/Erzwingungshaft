@@ -23,7 +23,7 @@ public class ClaimDocument extends BaseEntity {
     @NotNull @Column(name = "claim_import_id", nullable = false)
     private Integer claimImportId;
 
-    @NotEmpty @Column(name = "document_reference")
+    @NotNull @Column(name = "document_reference")
     private UUID documentReference;
 
     @Column(name = "file_name", nullable = false)

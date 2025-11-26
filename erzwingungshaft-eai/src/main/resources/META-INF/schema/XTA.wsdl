@@ -1,0 +1,589 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions targetNamespace="http://xoev.de/transport/xta/211" name="XTA-Webservice" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wspmtom="http://schemas.xmlsoap.org/ws/2004/09/policy/optimizedmimeserialization" xmlns:osci="http://www.osci.eu/ws/2008/05/transport" xmlns:wsp="http://www.w3.org/ns/ws-policy" xmlns:oscimeta="http://www.osci.eu/ws/2014/10/transport" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:sp="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702" xmlns:s12="http://www.w3.org/2003/05/soap-envelope" xmlns:xta="http://xoev.de/transport/xta/211">
+  <wsp:Policy wsu:Id="osciCommon">
+    <!--###### general osci policies ##########-->
+    <wsp:All>
+      <wsam:Addressing wsp:Optional="false">
+        <wsp:Policy>
+          <wsam:AnonymousResponses/>
+        </wsp:Policy>
+      </wsam:Addressing>
+      <wspmtom:OptimizedMimeSerialization/>
+      <sp:Wss11>
+        <wsp:Policy>
+          <sp:MustSupportRefKeyIdentifier/>
+          <sp:MustSupportRefIssuerSerial/>
+          <sp:MustSupportRefThumbprint/>
+          <sp:MustSupportRefEncryptedKey/>
+          <!-- <sp:RequireSignatureConfirmation/> -->
+        </wsp:Policy>
+      </sp:Wss11>
+      <sp:Trust13>
+        <wsp:Policy>
+          <sp:MustSupportIssuedTokens/>
+          <sp:RequireClientEntropy/>
+          <sp:RequireServerEntropy/>
+        </wsp:Policy>
+      </sp:Trust13>
+    </wsp:All>
+  </wsp:Policy>
+  <wsp:Policy wsu:Id="TransportBindingPolicy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <sp:TransportBinding>
+          <wsp:Policy>
+            <sp:TransportToken>
+              <wsp:Policy>
+                <sp:HttpsToken RequireClientCertificate="true"/>
+              </wsp:Policy>
+            </sp:TransportToken>
+            <sp:AlgorithmSuite>
+              <wsp:Policy>
+                <sp:Basic256/>
+              </wsp:Policy>
+            </sp:AlgorithmSuite>
+            <sp:Layout>
+              <wsp:Policy>
+                <sp:Lax/>
+              </wsp:Policy>
+            </sp:Layout>
+            <!--sp:IncludeTimestamp/-->
+          </wsp:Policy>
+        </sp:TransportBinding>
+        <!--sp:Wss10>
+					<wsp:Policy>
+						<sp:MustSupportRefKeyIdentifier/>
+					</wsp:Policy>
+				</sp:Wss10-->
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <!--Datenstrukturen-->
+  <types>
+    <xsd:schema targetNamespace="http://xoev.de/transport/xta/211">
+      <xsd:import namespace="http://www.osci.eu/ws/2014/10/transport" schemaLocation="OSCI_MessageMetaData_V2.02.xsd"/>
+      <xsd:import namespace="http://www.osci.eu/ws/2008/05/transport" schemaLocation="OSCI2_02.xsd"/>
+      <xsd:include schemaLocation="XTA-Webservice-Globale-Elemente.xsd"/>
+      <xsd:include schemaLocation="XTA-Webservice-Exceptions.xsd"/>
+    </xsd:schema>
+  </types>
+  <!--Nachrichten-->
+  <message name="EmptyBody"/>
+  <message name="XTAHeader">
+    <part name="AuthorIdentifier" element="oscimeta:Author"/>
+    <part name="MessageMetaData" element="oscimeta:MessageMetaData"/>
+  </message>
+  <message name="LookupServiceRequest">
+    <part name="LookupServiceRequest" element="xta:LookupServiceRequest"/>
+  </message>
+  <message name="LookupServiceResponse">
+    <part name="LookupServiceResponse" element="xta:LookupServiceResponse"/>
+  </message>
+  <message name="GetTransportReportResponse">
+    <part name="GetTransportReportResponse" element="xta:TransportReport"/>
+  </message>
+  <message name="GenericContainerBody">
+    <part name="GenericContainer" element="xta:GenericContentContainer"/>
+  </message>
+  <message name="MessageID">
+    <part name="MessageID" element="wsa:MessageID"/>
+  </message>
+  <message name="OptHeaders">
+    <part name="FetchResponseHeader" element="osci:MsgBoxResponse"/>
+    <part name="X509TokenContainer" element="osci:X509TokenContainer"/>
+  </message>
+  <message name="FetchMsgRequest">
+    <part name="FetchRequest" element="osci:MsgBoxFetchRequest"/>
+  </message>
+  <message name="GetNextRequest">
+    <part name="FetchRequest" element="osci:MsgBoxGetNextRequest"/>
+  </message>
+  <message name="CloseRequest">
+    <part name="FetchRequest" element="osci:MsgBoxCloseRequest"/>
+  </message>
+  <message name="FetchListRequest">
+    <part name="FetchRequest" element="osci:MsgBoxStatusListRequest"/>
+  </message>
+  <message name="FetchListResponse">
+    <part name="FetchResponse" element="osci:MsgStatusList"/>
+  </message>
+  <!--Nachrichten - SOAP-Exceptions-->
+  <message name="PermissionDeniedException">
+    <part name="permissionDeniedException" element="xta:PermissionDeniedException"/>
+  </message>
+  <message name="XTAWSTechnicalProblemException">
+    <part name="xtawsTechnicalProblem" element="xta:XTAWSTechnicalProblemException"/>
+  </message>
+  <message name="ParameterIsNotValidException">
+    <part name="parameterIsNotValidException" element="xta:ParameterIsNotValidException"/>
+  </message>
+  <message name="MessageSchemaViolationException">
+    <part name="messageSchemaViolationException" element="xta:MessageSchemaViolationException"/>
+  </message>
+  <message name="MessageVirusDetectionException">
+    <part name="messageVirusDetectionException" element="xta:MessageVirusDetectionException"/>
+  </message>
+  <message name="SyncAsyncException">
+    <part name="syncAsyncException" element="xta:SyncAsyncException"/>
+  </message>
+  <message name="InvalidMessageIDException">
+    <!--<part name="invalidMessageIDException" element="xta:InvalidMessageIdException"/>-->
+    <part name="invalidMessageIDException" element="xta:InvalidMessageIDException"/>
+  </message>
+  <message name="CancelDeniedException">
+    <part name="cancelDeniedException" element="xta:CancelDeniedException"/>
+  </message>
+  <!--Interfaces-->
+  <portType name="managementPortType">
+    <documentation>xta managementPort</documentation>
+    <operation name="checkAccountActive">
+      <input message="xta:EmptyBody" wsam:Action="http://www.xta.de/XTA/CheckAccountActive"/>
+      <output message="xta:EmptyBody" wsam:Action="http://www.xta.de/XTA/CheckAccountActive">
+        <documentation>only for exception handling</documentation>
+      </output>
+      <fault name="PermissionDeniedException" message="xta:PermissionDeniedException" wsam:Action="http://www.xta.de/XTA/CheckAccountActive"/>
+      <fault name="XTAWSTechnicalProblemException" message="xta:XTAWSTechnicalProblemException" wsam:Action="http://www.xta.de/XTA/CheckAccountActive"/>
+    </operation>
+    <operation name="lookupService">
+      <input message="xta:LookupServiceRequest" wsam:Action="http://www.xta.de/XTA/IsServiceAvailable"/>
+      <output message="xta:LookupServiceResponse" wsam:Action="http://www.xta.de/XTA/IsServiceAvailable"/>
+      <fault name="PermissionDeniedException" message="xta:PermissionDeniedException" wsam:Action="http://www.xta.de/XTA/IsServiceAvailable"/>
+      <fault name="ParameterIsNotValid" message="xta:ParameterIsNotValidException" wsam:Action="http://www.xta.de/XTA/IsServiceAvailable"/>
+      <fault name="XTAWSTechnicalProblemException" message="xta:XTAWSTechnicalProblemException" wsam:Action="http://www.xta.de/XTA/IsServiceAvailable"/>
+    </operation>
+    <operation name="getTransportReport">
+      <input message="xta:MessageID" wsam:Action="http://www.xta.de/XTA/GetTransportReport"/>
+      <output message="xta:GetTransportReportResponse" wsam:Action="http://www.xta.de/XTA/GetTransportReport"/>
+      <fault name="PermissionDeniedException" message="xta:PermissionDeniedException" wsam:Action="http://www.xta.de/XTA/GetTransportReport"/>
+      <fault name="XTAWSTechnicalProblemException" message="xta:XTAWSTechnicalProblemException" wsam:Action="http://www.xta.de/XTA/GetTransportReport"/>
+      <fault name="InvalidMessageIDException" message="xta:InvalidMessageIDException" wsam:Action="http://www.xta.de/XTA/GetTransportReport"/>
+    </operation>
+    <operation name="cancelMessage">
+      <input message="xta:MessageID" wsam:Action="http://www.xta.de/XTA/CancelMessage"/>
+      <output message="xta:EmptyBody" wsam:Action="http://www.xta.de/XTA/CancelMessage">
+        <documentation>only for exception handling</documentation>
+      </output>
+      <fault name="PermissionDeniedException" message="xta:PermissionDeniedException" wsam:Action="http://www.xta.de/XTA/CancelMessage"/>
+      <fault name="ParameterIsNotValidException" message="xta:ParameterIsNotValidException" wsam:Action="http://www.xta.de/XTA/CancelMessage"/>
+      <fault name="XTAWSTechnicalProblemException" message="xta:XTAWSTechnicalProblemException" wsam:Action="http://www.xta.de/XTA/CancelMessage"/>
+      <fault name="CancelDeniedException" message="xta:CancelDeniedException" wsam:Action="http://www.xta.de/XTA/CancelMessage"/>
+    </operation>
+    <operation name="createMessageId">
+      <input message="xta:EmptyBody" wsam:Action="http://www.xta.de/XTA/CreateMessageID"/>
+      <output message="xta:MessageID" wsam:Action="http://www.xta.de/XTA/CreateMessageID"/>
+      <fault name="PermissionDeniedException" message="xta:PermissionDeniedException" wsam:Action="http://www.xta.de/XTA/CreateMessageID"/>
+      <fault name="XTAWSTechnicalProblemException" message="xta:XTAWSTechnicalProblemException" wsam:Action="http://www.xta.de/XTA/CreateMessageID"/>
+    </operation>
+  </portType>
+  <portType name="sendPortType">
+    <documentation>sendPort</documentation>
+    <operation name="sendMessage">
+      <input message="xta:GenericContainerBody" wsam:Action="http://www.xta.de/XTA/SendMessage"/>
+      <output message="xta:EmptyBody" wsam:Action="http://www.xta.de/XTA/SendMessage"/>
+      <fault name="PermissionDeniedException" message="xta:PermissionDeniedException" wsam:Action="http://www.xta.de/XTA/SendMessage"/>
+      <fault name="ParameterIsNotValidException" message="xta:ParameterIsNotValidException" wsam:Action="http://www.xta.de/XTA/SendMessage"/>
+      <fault name="XTAWSTechnicalProblemException" message="xta:XTAWSTechnicalProblemException" wsam:Action="http://www.xta.de/XTA/SendMessage"/>
+      <fault name="MessageSchemaViolationException" message="xta:MessageSchemaViolationException" wsam:Action="http://www.xta.de/XTA/SendMessage"/>
+      <fault name="MessageVirusDetectionException" message="xta:MessageVirusDetectionException" wsam:Action="http://www.xta.de/XTA/SendMessage"/>
+      <fault name="SyncAsyncException" message="xta:SyncAsyncException" wsam:Action="http://www.xta.de/XTA/SendMessage"/>
+    </operation>
+    <operation name="sendMessageSync">
+      <input message="xta:GenericContainerBody" wsam:Action="http://www.xta.de/XTA/SendMessageSync"/>
+      <output message="xta:GenericContainerBody" wsam:Action="http://www.xta.de/XTA/SendMessageSync"/>
+      <fault name="PermissionDeniedException" message="xta:PermissionDeniedException" wsam:Action="http://www.xta.de/XTA/SendMessageSync"/>
+      <fault name="ParameterIsNotValidException" message="xta:ParameterIsNotValidException" wsam:Action="http://www.xta.de/XTA/SendMessageSync"/>
+      <fault name="XTAWSTechnicalProblemException" message="xta:XTAWSTechnicalProblemException" wsam:Action="http://www.xta.de/XTA/SendMessageSync"/>
+      <fault name="MessageSchemaViolationException" message="xta:MessageSchemaViolationException" wsam:Action="http://www.xta.de/XTA/SendMessageSync"/>
+      <fault name="MessageVirusDetectionException" message="xta:MessageVirusDetectionException" wsam:Action="http://www.xta.de/XTA/SendMessageSync"/>
+      <fault name="SyncAsyncException" message="xta:SyncAsyncException" wsam:Action="http://www.xta.de/XTA/SendMessageSync"/>
+    </operation>
+  </portType>
+  <portType name="msgBoxPortType">
+    <documentation>msgboxfetchPort</documentation>
+    <operation name="getMessage">
+      <input message="xta:FetchMsgRequest" wsam:Action="http://www.osci.eu/ws/2008/05/transport/urn/messageTypes/MsgBoxFetchRequest"/>
+      <output message="xta:GenericContainerBody" wsam:Action="http://www.osci.eu/ws/2008/05/transport/urn/messageTypes/MsgBoxFetchRequest"/>
+      <fault name="PermissionDeniedException" message="xta:PermissionDeniedException" wsam:Action="http://www.osci.eu/ws/2008/05/transport/urn/messageTypes/MsgBoxFetchRequest"/>
+      <fault name="XTAWSTechnicalProblemException" message="xta:XTAWSTechnicalProblemException" wsam:Action="http://www.osci.eu/ws/2008/05/transport/urn/messageTypes/MsgBoxFetchRequest"/>
+      <fault name="InvalidMessageIDException" message="xta:InvalidMessageIDException" wsam:Action="http://www.osci.eu/ws/2008/05/transport/urn/messageTypes/MsgBoxFetchRequest"/>
+    </operation>
+    <operation name="getStatusList">
+      <input message="xta:FetchListRequest" wsam:Action="http://www.osci.eu/ws/2008/05/transport/urn/messageTypes/MsgBoxStatusListRequest"/>
+      <output message="xta:FetchListResponse" wsam:Action="http://www.osci.eu/ws/2008/05/transport/urn/messageTypes/MsgBoxStatusListRequest"/>
+      <fault name="PermissionDeniedException" message="xta:PermissionDeniedException" wsam:Action="http://www.osci.eu/ws/2008/05/transport/urn/messageTypes/MsgBoxStatusListRequest"/>
+      <fault name="XTAWSTechnicalProblemException" message="xta:XTAWSTechnicalProblemException" wsam:Action="http://www.osci.eu/ws/2008/05/transport/urn/messageTypes/MsgBoxStatusListRequest"/>
+    </operation>
+    <operation name="getNextMessage">
+      <input message="xta:GetNextRequest" wsam:Action="http://www.osci.eu/ws/2008/05/transport/urn/messageTypes/MsgBoxGetNextMsgRequest"/>
+      <output message="xta:GenericContainerBody" wsam:Action="http://www.osci.eu/ws/2008/05/transport/urn/messageTypes/MsgBoxGetNextMsgRequest"/>
+      <!--Stand 13.05.2016 Vorgabe fehlt in Abschnitt B1.1.1, Annahme: Es werden
+                dieselben Exceptions benötigt, wie für getMessage-->
+      <fault name="PermissionDeniedException" message="xta:PermissionDeniedException" wsam:Action="http://www.osci.eu/ws/2008/05/transport/urn/messageTypes/MsgBoxGetNextMsgRequest"/>
+      <fault name="XTAWSTechnicalProblemException" message="xta:XTAWSTechnicalProblemException" wsam:Action="http://www.osci.eu/ws/2008/05/transport/urn/messageTypes/MsgBoxGetNextMsgRequest"/>
+      <fault name="InvalidMessageIDException" message="xta:InvalidMessageIDException" wsam:Action="http://www.osci.eu/ws/2008/05/transport/urn/messageTypes/MsgBoxGetNextMsgRequest"/>
+    </operation>
+    <operation name="getNextStatusList">
+      <input message="xta:GetNextRequest" wsam:Action="http://www.osci.eu/ws/2008/05/transport/urn/messageTypes/MsgBoxGetNextListRequest"/>
+      <output message="xta:FetchListResponse" wsam:Action="http://www.osci.eu/ws/2008/05/transport/urn/messageTypes/MsgBoxGetNextListRequest"/>
+      <fault name="PermissionDeniedException" message="xta:PermissionDeniedException" wsam:Action="http://www.osci.eu/ws/2008/05/transport/urn/messageTypes/MsgBoxGetNextListRequest"/>
+      <fault name="XTAWSTechnicalProblemException" message="xta:XTAWSTechnicalProblemException" wsam:Action="http://www.osci.eu/ws/2008/05/transport/urn/messageTypes/MsgBoxGetNextListRequest"/>
+    </operation>
+    <operation name="close">
+      <input message="xta:CloseRequest" wsam:Action="http://www.osci.eu/ws/2008/05/transport/urn/messageTypes/MsgBoxCloseRequest"/>
+      <output message="xta:EmptyBody" wsam:Action="http://www.osci.eu/ws/2008/05/transport/urn/messageTypes/MsgBoxCloseRequest">
+        <documentation>only for exception handling</documentation>
+      </output>
+      <fault name="PermissionDeniedException" message="xta:PermissionDeniedException" wsam:Action="http://www.osci.eu/ws/2008/05/transport/urn/messageTypes/MsgBoxCloseRequest"/>
+      <fault name="XTAWSTechnicalProblemException" message="xta:XTAWSTechnicalProblemException" wsam:Action="http://www.osci.eu/ws/2008/05/transport/urn/messageTypes/MsgBoxCloseRequest"/>
+      <fault name="InvalidMessageIDException" message="xta:InvalidMessageIDException" wsam:Action="http://www.osci.eu/ws/2008/05/transport/urn/messageTypes/MsgBoxCloseRequest"/>
+    </operation>
+  </portType>
+  <!--Bindung von Protokoll und Interface-->
+  <binding name="sendXTAHttpsBinding" type="xta:sendPortType">
+    <documentation>https binding for the sendPort</documentation>
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsp:PolicyReference URI="#TransportBindingPolicy"/>
+    <wsp:PolicyReference URI="#osciCommon"/>
+    <operation name="sendMessage">
+      <documentation>The sendMessage method delivers a content message to the sending
+				hub.</documentation>
+      <soap:operation soapAction="http://www.xta.de/XTA/SendMessage" soapActionRequired="true" style="document"/>
+      <input>
+        <documentation>Input Header: MessageMetaData header contains additional information
+					for the for the given payload. Body: The GenericContainerBody containins the
+					"xöv" message.</documentation>
+        <soap:body use="literal"/>
+        <soap:header message="xta:XTAHeader" part="MessageMetaData" use="literal"/>
+        <soap:header message="xta:OptHeaders" part="X509TokenContainer" use="literal"/>
+      </input>
+      <output>
+        <documentation>only for exception handling</documentation>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="PermissionDeniedException">
+        <soap:fault name="PermissionDeniedException" use="literal"/>
+      </fault>
+      <fault name="ParameterIsNotValidException">
+        <soap:fault name="ParameterIsNotValidException" use="literal"/>
+      </fault>
+      <fault name="XTAWSTechnicalProblemException">
+        <soap:fault name="XTAWSTechnicalProblemException" use="literal"/>
+      </fault>
+      <fault name="MessageSchemaViolationException">
+        <soap:fault name="MessageSchemaViolationException" use="literal"/>
+      </fault>
+      <fault name="MessageVirusDetectionException">
+        <soap:fault name="MessageVirusDetectionException" use="literal"/>
+      </fault>
+      <fault name="SyncAsyncException">
+        <soap:fault name="SyncAsyncException" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="sendMessageSync">
+      <documentation>The sendMessage method delivers a content message to the sending
+				hub.</documentation>
+      <soap:operation soapAction="http://www.xta.de/XTA/SendMessageSync" soapActionRequired="true" style="document"/>
+      <input>
+        <documentation>Input Header: MessageMetaData header contains additional information
+					for the for the given payload. Body: The GenericContainerBody contains the "xöv"
+					message.</documentation>
+        <soap:body use="literal"/>
+        <soap:header message="xta:XTAHeader" part="MessageMetaData" use="literal"/>
+        <soap:header message="xta:OptHeaders" part="X509TokenContainer" use="literal"/>
+      </input>
+      <output>
+        <documentation>Output body: A GenericContainerBody in the body, containing the
+					synchronous "xöv" message response.</documentation>
+        <soap:body use="literal"/>
+        <soap:header message="xta:XTAHeader" part="MessageMetaData" use="literal"/>
+        <soap:header message="xta:OptHeaders" part="X509TokenContainer" use="literal"/>
+      </output>
+      <fault name="PermissionDeniedException">
+        <soap:fault name="PermissionDeniedException" use="literal"/>
+      </fault>
+      <fault name="ParameterIsNotValidException">
+        <soap:fault name="ParameterIsNotValidException" use="literal"/>
+      </fault>
+      <fault name="XTAWSTechnicalProblemException">
+        <soap:fault name="XTAWSTechnicalProblemException" use="literal"/>
+      </fault>
+      <fault name="MessageSchemaViolationException">
+        <soap:fault name="MessageSchemaViolationException" use="literal"/>
+      </fault>
+      <fault name="MessageVirusDetectionException">
+        <soap:fault name="MessageVirusDetectionException" use="literal"/>
+      </fault>
+      <fault name="SyncAsyncException">
+        <soap:fault name="SyncAsyncException" use="literal"/>
+      </fault>
+    </operation>
+  </binding>
+  <binding name="managementHttpsBinding" type="xta:managementPortType">
+    <documentation>https binding for the managementPort</documentation>
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsp:PolicyReference URI="#TransportBindingPolicy"/>
+    <wsp:PolicyReference URI="#osciCommon"/>
+    <operation name="getTransportReport">
+      <documentation>Method to get the transport report for the given
+				MessageID</documentation>
+      <soap:operation soapAction="http://www.xta.de/XTA/GetTransportReport" soapActionRequired="true" style="document"/>
+      <input>
+        <documentation>Input: optional xta:AuthorIdentifier header and the MessageID in the
+					body part.</documentation>
+        <soap:body use="literal"/>
+        <soap:header message="xta:XTAHeader" part="AuthorIdentifier" use="literal"/>
+      </input>
+      <output>
+        <documentation>Output body: The Transport report containing the detailed information
+					for the related message.</documentation>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="PermissionDeniedException">
+        <soap:fault name="PermissionDeniedException" use="literal"/>
+      </fault>
+      <fault name="XTAWSTechnicalProblemException">
+        <soap:fault name="XTAWSTechnicalProblemException" use="literal"/>
+      </fault>
+      <fault name="InvalidMessageIDException">
+        <soap:fault name="InvalidMessageIDException" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="cancelMessage">
+      <documentation>Method to cancel disptach order (if not yet finalied
+				successfully)</documentation>
+      <soap:operation soapAction="http://www.xta.de/XTA/CancelMessage" soapActionRequired="true" style="document"/>
+      <input>
+        <documentation>Input: optional xta:AuthorIdentifier header and the MessageID in the
+					body part.</documentation>
+        <soap:body use="literal"/>
+        <soap:header message="xta:XTAHeader" part="AuthorIdentifier" use="literal"/>
+      </input>
+      <output>
+        <documentation>only for exception handling</documentation>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="CancelDeniedException">
+        <soap:fault name="CancelDeniedException" use="literal"/>
+      </fault>
+      <fault name="PermissionDeniedException">
+        <soap:fault name="PermissionDeniedException" use="literal"/>
+      </fault>
+      <fault name="ParameterIsNotValidException">
+        <soap:fault name="ParameterIsNotValidException" use="literal"/>
+      </fault>
+      <fault name="XTAWSTechnicalProblemException">
+        <soap:fault name="XTAWSTechnicalProblemException" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="lookupService">
+      <documentation>Method to get further information about the given address
+				information</documentation>
+      <soap:operation soapAction="http://www.xta.de/XTA/IsServiceAvailable" soapActionRequired="true" style="document"/>
+      <input>
+        <documentation>Input: optional xta:AuthorIdentifier header and a list of address
+					information in the body part</documentation>
+        <soap:body use="literal"/>
+        <soap:header message="xta:XTAHeader" part="AuthorIdentifier" use="literal"/>
+      </input>
+      <output>
+        <documentation>Output body: further information for the given address
+					list.</documentation>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="PermissionDeniedException">
+        <soap:fault name="PermissionDeniedException" use="literal"/>
+      </fault>
+      <fault name="ParameterIsNotValid">
+        <soap:fault name="ParameterIsNotValid" use="literal"/>
+      </fault>
+      <fault name="XTAWSTechnicalProblemException">
+        <soap:fault name="XTAWSTechnicalProblemException" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="checkAccountActive">
+      <documentation>Method to check whether the account is activ</documentation>
+      <soap:operation soapAction="http://www.xta.de/XTA/CheckAccountActive" soapActionRequired="true" style="document"/>
+      <input>
+        <documentation>Input: optional xta:AuthorIdentifier header.</documentation>
+        <soap:body use="literal"/>
+        <soap:header message="xta:XTAHeader" part="AuthorIdentifier" use="literal"/>
+      </input>
+      <output>
+        <documentation>only for exception handling</documentation>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="PermissionDeniedException">
+        <soap:fault name="PermissionDeniedException" use="literal"/>
+      </fault>
+      <fault name="XTAWSTechnicalProblemException">
+        <soap:fault name="XTAWSTechnicalProblemException" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="createMessageId">
+      <documentation>Method to obtain new created MesMessageID</documentation>
+      <soap:operation soapAction="http://www.xta.de/XTA/CreateMessageID" soapActionRequired="true" style="document"/>
+      <input>
+        <documentation>Input: optional xta:AuthorIdentifier header</documentation>
+        <soap:body use="literal"/>
+        <soap:header message="xta:XTAHeader" part="AuthorIdentifier" use="literal"/>
+      </input>
+      <output>
+        <documentation>Output body: The created MesMessageID</documentation>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="PermissionDeniedException">
+        <soap:fault name="PermissionDeniedException" use="literal"/>
+      </fault>
+      <fault name="XTAWSTechnicalProblemException">
+        <soap:fault name="XTAWSTechnicalProblemException" use="literal"/>
+      </fault>
+    </operation>
+  </binding>
+  <binding name="msgBoxHttpsBinding" type="xta:msgBoxPortType">
+    <documentation>https binding for the msgBox</documentation>
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsp:PolicyReference URI="#TransportBindingPolicy"/>
+    <wsp:PolicyReference URI="#osciCommon"/>
+    <operation name="getMessage">
+      <documentation>The getMethode method returns the first message relating to the given
+				parameter</documentation>
+      <soap:operation soapAction="http://www.osci.eu/ws/2008/05/transport/urn/messageTypes/MsgBoxFetchRequest" soapActionRequired="true"/>
+      <input>
+        <documentation>Input: optional xta:AuthorIdentifier header and OSCI 2
+					MsgBoxFetchRequest parameter in the body part</documentation>
+        <soap:body use="literal"/>
+        <soap:header message="xta:XTAHeader" part="AuthorIdentifier" use="literal"/>
+      </input>
+      <output>
+        <documentation>Output: Header: Optional xta:AuthorIdentifier header or OSCI2 Header
+					MsgBoxResponse with addional information and related GenericContentContainer in
+					the body part</documentation>
+        <soap:header message="xta:XTAHeader" part="MessageMetaData" use="literal"/>
+        <soap:header message="xta:OptHeaders" part="FetchResponseHeader" use="literal"/>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="PermissionDeniedException">
+        <soap:fault name="PermissionDeniedException" use="literal"/>
+      </fault>
+      <fault name="XTAWSTechnicalProblemException">
+        <soap:fault name="XTAWSTechnicalProblemException" use="literal"/>
+      </fault>
+      <fault name="InvalidMessageIDException">
+        <soap:fault name="InvalidMessageIDException" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getStatusList">
+      <documentation>getStatusList returns the list of related message
+				information</documentation>
+      <soap:operation soapAction="http://www.osci.eu/ws/2008/05/transport/urn/messageTypes/MsgBoxStatusListRequest" soapActionRequired="true"/>
+      <input>
+        <documentation>Input: optional xta:AuthorIdentifier header and OSCI 2
+					MsgStatusListRequest parameter in the body part</documentation>
+        <soap:body use="literal"/>
+        <soap:header message="xta:XTAHeader" part="AuthorIdentifier" use="literal"/>
+      </input>
+      <output>
+        <documentation>Output: Header: OSCI2 Header MsgBoxResponse with addional information
+					and related MsgStatusList in the body part</documentation>
+        <soap:header message="xta:OptHeaders" part="FetchResponseHeader" use="literal"/>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="PermissionDeniedException">
+        <soap:fault name="PermissionDeniedException" use="literal"/>
+      </fault>
+      <fault name="XTAWSTechnicalProblemException">
+        <soap:fault name="XTAWSTechnicalProblemException" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getNextMessage">
+      <documentation>getNextMessage returns next message relates to fetch
+				iterator</documentation>
+      <soap:operation soapAction="http://www.osci.eu/ws/2008/05/transport/urn/messageTypes/MsgBoxGetNextMsgRequest" soapActionRequired="true"/>
+      <input>
+        <documentation>Input: Optional xta:AuthorIdentifier header and in the body part the
+					MsgBoxNextRequest element conatining the fetch iterator</documentation>
+        <soap:body use="literal"/>
+        <soap:header message="xta:XTAHeader" part="AuthorIdentifier" use="literal"/>
+      </input>
+      <output>
+        <documentation>Output: Header: Optional xta:AuthorIdentifier header or OSCI2 Header
+					MsgBoxResponse with addional information and related MsgStatusList in the body
+					part</documentation>
+        <soap:header message="xta:XTAHeader" part="MessageMetaData" use="literal"/>
+        <soap:header message="xta:OptHeaders" part="FetchResponseHeader" use="literal"/>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="PermissionDeniedException">
+        <soap:fault name="PermissionDeniedException" use="literal"/>
+      </fault>
+      <fault name="XTAWSTechnicalProblemException">
+        <soap:fault name="XTAWSTechnicalProblemException" use="literal"/>
+      </fault>
+      <fault name="InvalidMessageIDException">
+        <soap:fault name="InvalidMessageIDException" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getNextStatusList">
+      <documentation>getNextStatusList returns the next list of related message information
+				related to the fetch iterator</documentation>
+      <soap:operation soapAction="http://www.osci.eu/ws/2008/05/transport/urn/messageTypes/MsgBoxGetNextListRequest" soapActionRequired="true"/>
+      <input>
+        <documentation>Input: optional xta:AuthorIdentifier header and in the body part the
+					MsgBoxNextRequest element conatining the fetch iterator</documentation>
+        <soap:body use="literal"/>
+        <soap:header message="xta:XTAHeader" part="AuthorIdentifier" use="literal"/>
+      </input>
+      <output>
+        <documentation>Output: Header: OSCI2 Header MsgBoxResponse with addional information
+					and next related MsgStatusList in the body part</documentation>
+        <soap:header message="xta:OptHeaders" part="FetchResponseHeader" use="literal"/>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="PermissionDeniedException">
+        <soap:fault name="PermissionDeniedException" use="literal"/>
+      </fault>
+      <fault name="XTAWSTechnicalProblemException">
+        <soap:fault name="XTAWSTechnicalProblemException" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="close">
+      <documentation>The close method returns close the fetch iterator</documentation>
+      <soap:operation soapAction="http://www.osci.eu/ws/2008/05/transport/urn/messageTypes/MsgBoxCloseRequest" soapActionRequired="true"/>
+      <input>
+        <documentation>Input: optional xta:AuthorIdentifier header and the
+					MsgBoxCloseRequest element conatining the fetch iterator in the body
+					part</documentation>
+        <soap:body use="literal"/>
+        <soap:header message="xta:XTAHeader" part="AuthorIdentifier" use="literal"/>
+      </input>
+      <output>
+        <documentation>only for exception handling</documentation>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="PermissionDeniedException">
+        <soap:fault name="PermissionDeniedException" use="literal"/>
+      </fault>
+      <fault name="XTAWSTechnicalProblemException">
+        <soap:fault name="XTAWSTechnicalProblemException" use="literal"/>
+      </fault>
+      <fault name="InvalidMessageIDException">
+        <soap:fault name="InvalidMessageIDException" use="literal"/>
+      </fault>
+    </operation>
+  </binding>
+  <!--Endpoints des Services-->
+  <service name="XTAService">
+    <port name="MsgBoxPort" binding="xta:msgBoxHttpsBinding">
+      <soap:address location="REPLACE_WITH_ACTUAL_URL"/>
+
+    </port>
+    <port name="SendXtaPort" binding="xta:sendXTAHttpsBinding">
+      <soap:address location="REPLACE_WITH_ACTUAL_URL"/>
+
+    </port>
+    <port name="ManagementPort" binding="xta:managementHttpsBinding">
+      <soap:address location="REPLACE_WITH_ACTUAL_URL"/>
+
+    </port>
+  </service>
+</definitions>

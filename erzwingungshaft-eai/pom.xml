@@ -72,6 +72,9 @@
         <commons-lang3.version>3.18.0</commons-lang3.version>
         <javax.annotation.version>1.3.2</javax.annotation.version>
         <jakarta.databind.version>0.2.8</jakarta.databind.version>
+        <jakarta.xml.soap>3.0.2</jakarta.xml.soap>
+        <messaging.saaj>3.0.2</messaging.saaj>
+
 
         <!-- Spotless P2 Mirror configuration (e.g. required when using company internal registry -->
         <p2.username /> <!-- must be empty, override via Maven settings.xml if needed -->
@@ -290,6 +293,16 @@
         </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-databinding-jaxb</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-ws-addr</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-ws-security</artifactId>
             <version>${cxf.version}</version>
         </dependency>
@@ -303,32 +316,27 @@
             <artifactId>cxf-core</artifactId>
             <version>${cxf.version}</version>
         </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>org.apache.cxf.xjc-utils</groupId>-->
-<!--            <artifactId>cxf-xjc-runtime</artifactId>-->
-<!--            <version>${cxf-xjc.version}</version>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>org.apache.cxf.services.xkms</groupId>
             <artifactId>cxf-services-xkms-common</artifactId>
             <version>${cxf.version}</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.apache.cxf.services.sts</groupId>-->
-<!--            <artifactId>cxf-services-sts-core</artifactId>-->
-<!--            <version>${cxf.version}</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.cxf</groupId>-->
-<!--            <artifactId>cxf-spring-boot-starter-jaxws</artifactId>-->
-<!--            <version>${cxf.version}</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.cxf</groupId>-->
-<!--            <artifactId>cxf-rt-features-logging</artifactId>-->
-<!--            <version>${cxf.version}</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-bindings-soap</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.xml.soap</groupId>
+            <artifactId>jakarta.xml.soap-api</artifactId>
+            <version>${jakarta.xml.soap}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.messaging.saaj</groupId>
+            <artifactId>saaj-impl</artifactId>
+            <version>${messaging.saaj}</version>
+            <scope>runtime</scope>
+        </dependency>
 
     </dependencies>
 
@@ -460,8 +468,8 @@
                                 <!--- Generate sample implementation classes -->
                                 <!-- <extraarg>-impl</extraarg> -->
                                 <!--- Enable header processing even if not defined in port secion of wsdl -->
-<!--                                <extraarg>-exsh</extraarg>-->
-<!--                                <extraarg>true</extraarg>-->
+                                <extraarg>-exsh</extraarg>
+                                <extraarg>true</extraarg>
 <!--                                &lt;!&ndash;- Generate a default to String method in each class &ndash;&gt;-->
 <!--                                <extraarg>-xjc-Xts</extraarg>-->
 <!--                                &lt;!&ndash;- Enable default values on classes if they exist &ndash;&gt;-->
@@ -480,31 +488,6 @@
                         <phase>generate-sources</phase>
                     </execution>
                 </executions>
-<!--                <dependencies>-->
-<!--                    <dependency>-->
-<!--                        <groupId>org.apache.cxf.xjcplugins</groupId>-->
-<!--                        <artifactId>cxf-xjc-ts</artifactId>-->
-<!--                        <version>${cxf-xjc.version}</version>-->
-<!--                    </dependency>-->
-
-<!--                    <dependency>-->
-<!--                        <groupId>org.apache.cxf.xjcplugins</groupId>-->
-<!--                        <artifactId>cxf-xjc-dv</artifactId>-->
-<!--                        <version>${cxf-xjc.version}</version>-->
-<!--                    </dependency>-->
-
-<!--                    <dependency>-->
-<!--                        <groupId>org.apache.cxf.xjcplugins</groupId>-->
-<!--                        <artifactId>cxf-xjc-boolean</artifactId>-->
-<!--                        <version>${cxf-xjc.version}</version>-->
-<!--                    </dependency>-->
-
-<!--                    <dependency>-->
-<!--                        <groupId>org.apache.cxf.xjc-utils</groupId>-->
-<!--                        <artifactId>cxf-xjc-runtime</artifactId>-->
-<!--                        <version>${cxf-xjc.version}</version>-->
-<!--                    </dependency>-->
-<!--                </dependencies>-->
             </plugin>
 
             <!-- Testing -->

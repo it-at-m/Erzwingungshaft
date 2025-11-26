@@ -26,6 +26,8 @@ import org.apache.camel.EndpointInject;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -41,18 +43,16 @@ import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
-@SpringBootTest
+@SpringBootTest(classes = {Application.class, XtaTestContext.class})
 @CamelSpringBootTest
 @EnableAutoConfiguration
 @DirtiesContext
 @ActiveProfiles(profiles = { TestConstants.SPRING_TEST_PROFILE })
+@Disabled("Only works with running stack/docker-compose.yml")
 class ProcessKVUEDataTest {
 
-    @EndpointInject("mock:xjustizMessage")
-    private MockEndpoint xjustizMsg;
-
-    @EndpointInject("mock:error")
-    private MockEndpoint failures;
+    @EndpointInject("mock:finish")
+    private MockEndpoint finish;
 
     @Autowired
     private ClaimImportRepository claimImportRepository;
@@ -101,20 +101,17 @@ class ProcessKVUEDataTest {
         s3InitClient.createBucket(CreateBucketRequest.builder().bucket(EH_BUCKET_PDF).build());
     }
 
-    //@Test
+    @Test
     void test_readDataAndCreateXjustizXml() throws Exception {
 
         uploadBucketTestFileConfiguration();
 
         // Start test ...
-        xjustizMsg.expectedMessageCount(1);
-        xjustizMsg.assertIsSatisfied(TimeUnit.SECONDS.toMillis(10));
+        finish.expectedMessageCount(1);
+        finish.assertIsSatisfied(TimeUnit.SECONDS.toMillis(100));
 
-        failures.expectedMessageCount(0);
-        failures.assertIsSatisfied(TimeUnit.SECONDS.toMillis(10));
-
-        assertEquals(1, xjustizMsg.getExchanges().size(), "One happy path implemented.");
-        ClaimProcessingContentWrapper dataWrapper = xjustizMsg.getExchanges().getFirst().getMessage().getBody(ClaimProcessingContentWrapper.class);
+        assertEquals(1, finish.getExchanges().size(), "One happy path implemented.");
+        ClaimProcessingContentWrapper dataWrapper = finish.getExchanges().getFirst().getMessage().getBody(ClaimProcessingContentWrapper.class);
 
         // XML message
         NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010 lastXJustizMessage = XmlUnmarshaller

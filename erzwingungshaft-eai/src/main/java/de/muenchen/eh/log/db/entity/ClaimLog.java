@@ -21,7 +21,7 @@ public class ClaimLog extends BaseEntity implements IClaimEntity {
     @NotNull @Column(name = "claim_id", nullable = false)
     private Integer claimId;
 
-    @NotEmpty @Column(name = "message_typ")
+    @NotNull @Column(name = "message_typ")
     @Enumerated(EnumType.STRING)
     private MessageType messageTyp;
 

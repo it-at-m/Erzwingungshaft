@@ -1,4 +1,4 @@
-package de.muenchen.eh.xta;
+package de.muenchen.eh.xta.exception;
 
 /**
  * A generic exception during xta client method execution.
