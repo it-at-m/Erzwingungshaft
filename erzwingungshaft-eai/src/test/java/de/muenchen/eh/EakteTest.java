@@ -3,9 +3,9 @@ package de.muenchen.eh;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import de.muenchen.eh.kvue.claim.efile.EfileRouteBuilder;
-import de.muenchen.eh.kvue.claim.efile.operation.OperationId;
-import de.muenchen.eh.kvue.claim.efile.operation.OperationIdFactory;
+import de.muenchen.eh.claim.efile.EfileRouteBuilder;
+import de.muenchen.eh.claim.efile.operation.OperationId;
+import de.muenchen.eh.claim.efile.operation.OperationIdFactory;
 import de.muenchen.eh.log.db.entity.Claim;
 import java.util.concurrent.TimeUnit;
 import org.apache.camel.CamelContext;
@@ -16,17 +16,20 @@ import org.apache.camel.ProducerTemplate;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.support.DefaultExchange;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest(classes = { Application.class }, properties = { "camel.main.java-routes-include-pattern=**/EakteRouteBuilder" })
+@SpringBootTest(classes = { Application.class }, properties = { "camel.main.java-routes-include-pattern=**/EfileRouteBuilder" })
 @CamelSpringBootTest
 @EnableAutoConfiguration
 @DirtiesContext
 @ActiveProfiles(TestConstants.SPRING_TEST_PROFILE)
+@Disabled("Only works with running stack/docker-compose.yml")
 public class EakteTest {
 
     @Produce(value = EfileRouteBuilder.DMS_CONNECTION)
@@ -41,7 +44,7 @@ public class EakteTest {
     @EndpointInject("mock:error")
     private MockEndpoint failures;
 
-    // @Test
+    @Test
     void test_readApentryEakte() throws InterruptedException {
 
         failures.expectedMessageCount(0);

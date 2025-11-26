@@ -3,8 +3,8 @@ package de.muenchen.eh;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import de.muenchen.eh.claim.ClaimContentWrapper;
 import de.muenchen.eh.common.XmlUnmarshaller;
-import de.muenchen.eh.kvue.claim.ClaimProcessingContentWrapper;
 import de.muenchen.eh.log.db.entity.Claim;
 import de.muenchen.eh.log.db.entity.ClaimImport;
 import de.muenchen.eh.log.db.entity.ClaimImportLog;
@@ -111,7 +111,7 @@ class ProcessKVUEDataTest {
         finish.assertIsSatisfied(TimeUnit.SECONDS.toMillis(100));
 
         assertEquals(1, finish.getExchanges().size(), "One happy path implemented.");
-        ClaimProcessingContentWrapper dataWrapper = finish.getExchanges().getFirst().getMessage().getBody(ClaimProcessingContentWrapper.class);
+        ClaimContentWrapper dataWrapper = finish.getExchanges().getFirst().getMessage().getBody(ClaimContentWrapper.class);
 
         // XML message
         NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010 lastXJustizMessage = XmlUnmarshaller

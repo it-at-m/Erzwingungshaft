@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.eh.common.BindyIllegalArgumentMessageEnricher;
 import de.muenchen.eh.common.XmlUnmarshaller;
-import de.muenchen.eh.kvue.claim.ClaimProcessingContentWrapper;
-import de.muenchen.eh.kvue.claim.ImportClaimData;
+import de.muenchen.eh.claim.ClaimContentWrapper;
+import de.muenchen.eh.claim.ImportClaimData;
 import de.muenchen.eh.log.Constants;
 import de.muenchen.eh.log.StatusProcessingType;
 import de.muenchen.eh.log.convert.DataEntityMapper;
@@ -59,7 +59,7 @@ public class LogServiceClaim {
 
         try {
 
-            ClaimProcessingContentWrapper processingDataWrapper = exchange.getMessage().getBody(ClaimProcessingContentWrapper.class);
+            ClaimContentWrapper processingDataWrapper = exchange.getMessage().getBody(ClaimContentWrapper.class);
 
             Claim claim = new Claim();
 
@@ -85,7 +85,7 @@ public class LogServiceClaim {
 
         try {
             ClaimData claimData = DataEntityMapper.INSTANCE
-                    .toClaimDataEntity(exchange.getMessage().getBody(ClaimProcessingContentWrapper.class).getEhImportClaimData());
+                    .toClaimDataEntity(exchange.getMessage().getBody(ClaimContentWrapper.class).getEhImportClaimData());
 
             claimData.setClaimId(ClaimFactory.claimFacade(exchange).getId());
             claimDataRepository.save(claimData);
@@ -137,7 +137,7 @@ public class LogServiceClaim {
     public void logContent(final Exchange exchange) {
 
         try {
-            ContentContainer contentContainer = exchange.getMessage().getBody(ClaimProcessingContentWrapper.class).getContentContainer();
+            ContentContainer contentContainer = exchange.getMessage().getBody(ClaimContentWrapper.class).getContentContainer();
             ClaimContent claimContent = (ClaimContent) ClaimFactory.configureEntity(new ClaimContent(), exchange);
             ObjectMapper mapper = mapperBuilder.build();
             claimContent.setJson(mapper.writeValueAsString(contentContainer));
@@ -153,7 +153,7 @@ public class LogServiceClaim {
     public void logXml(final Exchange exchange) {
 
         try {
-            String xml = exchange.getMessage().getBody(ClaimProcessingContentWrapper.class).getXjustizXml();
+            String xml = exchange.getMessage().getBody(ClaimContentWrapper.class).getXjustizXml();
             ClaimXml claimXml = (ClaimXml) ClaimFactory.configureEntity(new ClaimXml(), exchange);
             claimXml.setXjustizVersion(getXjustizVersion());
             claimXml.setContent(xml);

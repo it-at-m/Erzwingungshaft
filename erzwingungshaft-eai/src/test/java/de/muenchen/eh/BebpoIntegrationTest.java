@@ -1,7 +1,7 @@
 package de.muenchen.eh;
 
-import de.muenchen.eh.kvue.claim.ClaimRouteBuilder;
-import de.muenchen.eh.kvue.file.FileImportRouteBuilder;
+import de.muenchen.eh.claim.ClaimRouteBuilder;
+import de.muenchen.eh.file.FileImportRouteBuilder;
 import de.muenchen.eh.log.db.repository.ClaimContentRepository;
 import de.muenchen.eh.log.db.repository.ClaimDataRepository;
 import de.muenchen.eh.log.db.repository.ClaimDocumentRepository;
@@ -11,10 +11,10 @@ import de.muenchen.eh.log.db.repository.ClaimImportRepository;
 import de.muenchen.eh.log.db.repository.ClaimLogRepository;
 import de.muenchen.eh.log.db.repository.ClaimRepository;
 import de.muenchen.eh.log.db.repository.ClaimXmlRepository;
-import de.muenchen.eh.xta.transport.ByteArrayDataSource;
-import de.muenchen.eh.xta.transport.StringDataSource;
-import de.muenchen.eh.xta.transport.properties.XtaClientConfiguration;
-import de.muenchen.eh.xta.XtaRouteBuilder;
+import de.muenchen.eh.claim.xta.transport.ByteArrayDataSource;
+import de.muenchen.eh.claim.xta.transport.StringDataSource;
+import de.muenchen.eh.claim.xta.transport.properties.XtaClientConfiguration;
+import de.muenchen.eh.claim.xta.XtaRouteBuilder;
 import genv3.de.xoev.transport.xta.x211.ContentType;
 import genv3.de.xoev.transport.xta.x211.GenericContentContainer;
 import genv3.eu.osci.ws.x2008.x05.transport.X509TokenContainerType;

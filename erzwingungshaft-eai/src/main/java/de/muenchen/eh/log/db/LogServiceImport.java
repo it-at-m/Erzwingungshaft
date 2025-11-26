@@ -1,8 +1,8 @@
 package de.muenchen.eh.log.db;
 
 import de.muenchen.eh.common.ExtractEhIdentifier;
-import de.muenchen.eh.kvue.file.ImportClaimIdentifierData;
-import de.muenchen.eh.kvue.file.ImportDataWrapper;
+import de.muenchen.eh.file.ImportClaimIdentifierData;
+import de.muenchen.eh.file.ImportContentWrapper;
 import de.muenchen.eh.log.Constants;
 import de.muenchen.eh.log.StatusProcessingType;
 import de.muenchen.eh.log.db.entity.ClaimImport;
@@ -34,7 +34,7 @@ public class LogServiceImport {
     public void logClaimImport(final Exchange exchange) {
 
         try {
-            ImportDataWrapper dataWrapper = exchange.getMessage().getBody(ImportDataWrapper.class);
+            ImportContentWrapper dataWrapper = exchange.getMessage().getBody(ImportContentWrapper.class);
 
             ClaimImport claimImport = new ClaimImport();
 

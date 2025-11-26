@@ -1,6 +1,6 @@
 package de.muenchen.eh.log.convert;
 
-import de.muenchen.eh.kvue.claim.ImportClaimData;
+import de.muenchen.eh.claim.ImportClaimData;
 import de.muenchen.eh.log.db.entity.ClaimData;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
