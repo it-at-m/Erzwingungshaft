@@ -15,7 +15,9 @@ CREATE TABLE eh.claim_import
     output_file          TEXT         NOT NULL, -- File name created for each case imported.
     data_import          BOOLEAN DEFAULT FALSE, -- Data file is created in directory
     antrag_import        BOOLEAN DEFAULT FALSE, -- Antrag is imported and assigned to directory
-    bescheid_import      BOOLEAN DEFAULT FALSE, -- Bescheid is imported and assigned to directory
+    bussgeld_bescheid_import      BOOLEAN DEFAULT FALSE, -- Bescheid is imported and assigned to directory
+    kosten_bescheid_import  BOOLEAN DEFAULT FALSE, -- Kostenbescheid is imported and assigned to directory
+    verwerfung_bescheid_import  BOOLEAN DEFAULT FALSE, -- Verwerfungsbescheid is imported and assigned to directory
     created_at           TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at           TIMESTAMPTZ NOT NULL
 

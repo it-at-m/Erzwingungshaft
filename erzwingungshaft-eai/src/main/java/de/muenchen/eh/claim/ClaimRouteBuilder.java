@@ -31,7 +31,7 @@ public class ClaimRouteBuilder extends BaseRouteBuilder {
                     .process("claimContentDataEnricher")
                     .process("claimXJustizXmlEnricher")
                     .process("efilesOperationExecutor")
-                    .process("{{xjustiz.interface.bebpo}}")
+                    .process("{{xjustiz.interface.xta}}")
                 .end()
                 .bean("findCollection", "clearCollectionCache")
                 .to("{{efile.finish-message}}");

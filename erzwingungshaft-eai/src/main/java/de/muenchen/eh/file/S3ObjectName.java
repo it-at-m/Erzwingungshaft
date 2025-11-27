@@ -1,6 +1,6 @@
 package de.muenchen.eh.file;
 
-import de.muenchen.eh.common.ExtractEhIdentifier;
+import de.muenchen.eh.common.FileNameUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -17,7 +17,7 @@ public class S3ObjectName implements Processor {
         }
 
         try {
-            String prefix = ExtractEhIdentifier.getIdentifier(originalKey);
+            String prefix = FileNameUtils.getIdentifier(originalKey);
             String updatedKey = prefix + "/" + originalKey;
             exchange.getIn().setHeader(AWS2S3Constants.KEY, updatedKey);
             log.debug("Aws2S3.Key: {}", updatedKey);

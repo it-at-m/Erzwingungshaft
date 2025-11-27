@@ -1,16 +1,16 @@
 package de.muenchen.eh.claim.xta.transport;
 
 import de.muenchen.eh.claim.ClaimContentWrapper;
+import de.muenchen.eh.claim.xta.transport.container.XtaMessageContainer;
 import de.muenchen.eh.log.StatusProcessingType;
 import de.muenchen.eh.log.db.LogServiceClaim;
 import de.muenchen.eh.log.db.entity.MessageType;
 import de.muenchen.eh.log.db.entity.Xta;
 import de.muenchen.eh.log.db.repository.XtaRepository;
 import de.muenchen.eh.claim.xta.XtaRouteBuilder;
-import de.muenchen.eh.claim.xta.transport.container.RequestGenericContentContainerBuilder;
 import de.muenchen.eh.claim.xta.transport.metadata.PartyBuilder;
 import de.muenchen.eh.claim.xta.transport.metadata.PartyIdentifierBuilder;
-import de.muenchen.eh.claim.xta.transport.metadata.RequestMessageMetaDataBuilder;
+import de.muenchen.eh.claim.xta.transport.metadata.XtaMessageMetaData;
 import de.muenchen.eh.claim.xta.transport.properties.XtaClientConfiguration;
 import genv3.de.xoev.transport.xta.x211.GenericContentContainer;
 import genv3.de.xoev.transport.xta.x211.TransportReport;
@@ -33,8 +33,8 @@ import org.springframework.stereotype.Component;
 public class XtaMessage {
 
     private final CamelContext camelContext;
-    private final RequestGenericContentContainerBuilder requestGenericContentContainerBuilder;
-    private final RequestMessageMetaDataBuilder requestMessageMetaDataBuilder;
+    private final XtaMessageContainer xtaMessageContainer;
+    private final XtaMessageMetaData xtaMessageMetaData;
     private final XtaRepository xtaRepository;
     private final LogServiceClaim logServiceClaim;
     private final XtaClientConfiguration clientConfiguration;
@@ -72,11 +72,11 @@ public class XtaMessage {
         logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.XTA_MESSAGE_ID, MessageType.INFO, exchange);
 
         // Send message
-        GenericContentContainer contentContainer = requestGenericContentContainerBuilder.build(contentWrapper);
-        MessageMetaData messageMetaData = requestMessageMetaDataBuilder.build(attributedURIType);
+        GenericContentContainer messageContent = xtaMessageContainer.build(contentWrapper);
+        MessageMetaData messageMetaData = xtaMessageMetaData.build(attributedURIType);
 
         Exchange requestSend = ExchangeBuilder.anExchange(camelContext)
-                .withBody(List.of(contentContainer, messageMetaData, new X509TokenContainerType()))
+                .withBody(List.of(messageContent, messageMetaData, new X509TokenContainerType()))
                 .withHeader("MessageID", attributedURIType.getValue())
                 .build();
 

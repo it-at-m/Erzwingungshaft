@@ -57,8 +57,14 @@ public class ClaimImport extends BaseEntity {
     @Column(name = "antrag_import")
     private Boolean isAntragImport;
 
-    @Column(name = "bescheid_import")
+    @Column(name = "bussgeld_bescheid_import")
     private Boolean isBescheidImport;
+
+    @Column(name = "kosten_bescheid_import")
+    private Boolean isKostenBescheidImport;
+
+    @Column(name = "verwerfung_bescheid_import")
+    private Boolean isVerwerfungBescheidImport;
 
     @LastModifiedDate
     @Column(name = "updated_at", nullable = false)

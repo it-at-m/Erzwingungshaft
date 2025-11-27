@@ -1,5 +1,6 @@
 package de.muenchen.eh.file;
 
+import de.muenchen.eh.common.FileNameUtils;
 import de.muenchen.eh.log.Constants;
 import de.muenchen.eh.log.DocumentType;
 import de.muenchen.eh.log.StatusProcessingType;
@@ -36,8 +37,7 @@ public class DocumentImport implements Processor {
         claimDocument.setUpdatedOn(exchange.getMessage().getHeader(AWS2S3Constants.LAST_MODIFIED, LocalDateTime.class));
         claimDocument.setAwsS3ETag(exchange.getMessage().getHeader(AWS2S3Constants.E_TAG, String.class));
 
-        claimDocument.setDocumentType(claimDocument.getFileName().toUpperCase().endsWith(Constants.ANTRAG_EXTENSION) ? DocumentType.ANTRAG.getDescriptor()
-                : DocumentType.BESCHEID.getDescriptor());
+        claimDocument.setDocumentType(FileNameUtils.getDocumentType(claimDocument.getFileName()).getDescriptor());
 
         ClaimImport claimImport = exchange.getProperty(Constants.CLAIM_IMPORT, ClaimImport.class);
         claimDocument.setClaimImportId(claimImport.getId());
@@ -45,10 +45,7 @@ public class DocumentImport implements Processor {
         claimDocument.setDocument(exchange.getIn().getBody(byte[].class));
         claimDocumentRepository.save(claimDocument);
 
-        logServiceImport.writeInfoImportLogMessage(
-                claimDocument.getFileName().toUpperCase().endsWith(Constants.ANTRAG_EXTENSION) ? StatusProcessingType.IMPORT_ANTRAG_IMPORT_DB
-                        : StatusProcessingType.IMPORT_BESCHEID_IMPORT_DB,
-                exchange);
+        logServiceImport.writeInfoImportLogMessage(FileNameUtils.getProcessingType(claimDocument.getFileName()) , exchange);
 
     }
 }

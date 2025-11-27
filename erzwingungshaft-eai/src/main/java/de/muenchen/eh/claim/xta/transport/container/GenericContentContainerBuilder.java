@@ -12,7 +12,7 @@ public class GenericContentContainerBuilder {
 
     public GenericContentContainer buildContainer() {
 
-        var gcc = new GenericContentContainer();
+        GenericContentContainer gcc = new GenericContentContainer();
 
         if (contentContainer != null) {
             gcc.setContentContainer(contentContainer.build());

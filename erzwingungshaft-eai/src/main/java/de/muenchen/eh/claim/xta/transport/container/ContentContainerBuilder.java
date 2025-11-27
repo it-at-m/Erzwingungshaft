@@ -1,5 +1,6 @@
 package de.muenchen.eh.claim.xta.transport.container;
 
+import genv3.de.xoev.transport.xta.x211.ContentType;
 import genv3.de.xoev.transport.xta.x211.GenericContentContainer;
 import lombok.Builder;
 import lombok.Singular;
@@ -11,21 +12,20 @@ import java.util.List;
 @Builder
 public class ContentContainerBuilder {
 
-    private ContentTypeBuilder message;
-
+    private ContentType message;
     @Singular
-    private List<ContentTypeBuilder> attachments;
+    private List<ContentType> attachments;
 
     public GenericContentContainer.ContentContainer build() {
 
-        var cc = new GenericContentContainer.ContentContainer();
+        GenericContentContainer.ContentContainer cc = new GenericContentContainer.ContentContainer();
 
         if (message != null) {
-            cc.setMessage(message.build());
+            cc.setMessage(message);
         }
 
         if (attachments != null) {
-            attachments.forEach(a -> cc.getAttachment().add(a.build()));
+            attachments.forEach(a -> cc.getAttachment().add(a));
         }
 
         return cc;

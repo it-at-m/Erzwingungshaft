@@ -1,6 +1,6 @@
 package de.muenchen.eh.log.db;
 
-import de.muenchen.eh.common.ExtractEhIdentifier;
+import de.muenchen.eh.common.FileNameUtils;
 import de.muenchen.eh.file.ImportClaimIdentifierData;
 import de.muenchen.eh.file.ImportContentWrapper;
 import de.muenchen.eh.log.Constants;
@@ -11,6 +11,7 @@ import de.muenchen.eh.log.db.entity.MessageType;
 import de.muenchen.eh.log.db.repository.ClaimImportLogRepository;
 import de.muenchen.eh.log.db.repository.ClaimImportRepository;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.camel.Exchange;
@@ -63,20 +64,33 @@ public class LogServiceImport {
     public void logPdfImport(final Exchange exchange) {
 
         try {
-            var fileName = ExtractEhIdentifier.getFileName(exchange.getIn().getHeader(AWS2S3Constants.KEY, String.class));
-            var ehkasszEhgpidPrintDate = ExtractEhIdentifier.getIdentifier(fileName);
+            var fileName = FileNameUtils.getFileName(exchange.getIn().getHeader(AWS2S3Constants.KEY, String.class));
+            var ehkasszEhgpidPrintDate = FileNameUtils.getIdentifier(fileName);
             List<ClaimImport> claimImports = claimImportCache.getImportEntities(ehkasszEhgpidPrintDate);
+
+            AtomicReference<StatusProcessingType> type = new AtomicReference<>();
             claimImports.forEach(claimImport -> {
-                if (fileName.toUpperCase().endsWith(Constants.ANTRAG_EXTENSION)) {
+                if (FileNameUtils.isEHFile(fileName)) {
                     claimImport.setIsAntragImport(true);
-                } else {
+                    type.set(StatusProcessingType.IMPORT_ANTRAG_IMPORT_DIRECTORY);
+                } else if (FileNameUtils.isURBFile(fileName)) {
                     claimImport.setIsBescheidImport(true);
+                    type.set(StatusProcessingType.IMPORT_BESCHEID_IMPORT_DIRECTORY);
+                } else if  (FileNameUtils.isVWFile(fileName)) {
+                    claimImport.setIsVerwerfungBescheidImport(true);
+                    type.set(StatusProcessingType.IMPORT_VERWERFUNG_BESCHEID_IMPORT_DIRECTORY);
+                } else if (FileNameUtils.isURKFile(fileName)) {
+                    claimImport.setIsKostenBescheidImport(true);
+                    type.set(StatusProcessingType.IMPORT_KOSTEN_BESCHEID_IMPORT_DIRECTORY);
+                } else {
+                    exchange.setException(new Exception("Unkown File: " + fileName));
                 }
+
                 var updateClaimImport = claimImportRepository.save(claimImport);
                 claimImportCache.put(ehkasszEhgpidPrintDate, updateClaimImport);
                 exchange.setProperty(Constants.CLAIM_IMPORT, updateClaimImport);
-                writeInfoImportLogMessage(fileName.toUpperCase().endsWith(Constants.ANTRAG_EXTENSION) ? StatusProcessingType.IMPORT_ANTRAG_IMPORT_DIRECTORY
-                        : StatusProcessingType.IMPORT_BESCHEID_IMPORT_DIRECTORY, exchange);
+                writeInfoImportLogMessage(type.get(), exchange);
+
             });
         } catch (Exception e) {
             exchange.setException(e);

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class RequestMessageMetaDataBuilder {
+public class XtaMessageMetaData {
 
     private final XtaClientConfiguration clientConfiguration;
 
