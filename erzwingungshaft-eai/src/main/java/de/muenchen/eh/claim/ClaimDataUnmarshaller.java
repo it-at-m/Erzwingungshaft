@@ -1,8 +1,8 @@
 package de.muenchen.eh.claim;
 
 import de.muenchen.eh.log.Constants;
-import de.muenchen.eh.log.db.LogServiceClaim;
-import de.muenchen.eh.log.db.entity.ClaimImport;
+import de.muenchen.eh.log.LogServiceClaim;
+import de.muenchen.eh.db.entity.ClaimImport;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;

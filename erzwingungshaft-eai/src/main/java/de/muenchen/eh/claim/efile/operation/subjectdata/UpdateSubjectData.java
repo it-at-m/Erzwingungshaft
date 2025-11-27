@@ -3,7 +3,7 @@ package de.muenchen.eh.claim.efile.operation.subjectdata;
 import de.muenchen.eakte.api.rest.model.UpdateBusinessDataValueDTO;
 import de.muenchen.eh.claim.efile.operation.OperationId;
 import de.muenchen.eh.claim.efile.operation.OperationIdFactory;
-import de.muenchen.eh.log.db.LogServiceClaim;
+import de.muenchen.eh.log.LogServiceClaim;
 import java.util.Map;
 import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;

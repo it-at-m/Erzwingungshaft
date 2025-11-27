@@ -2,12 +2,10 @@ package de.muenchen.eh.file;
 
 import de.muenchen.eh.common.FileNameUtils;
 import de.muenchen.eh.log.Constants;
-import de.muenchen.eh.log.DocumentType;
-import de.muenchen.eh.log.StatusProcessingType;
-import de.muenchen.eh.log.db.LogServiceImport;
-import de.muenchen.eh.log.db.entity.ClaimDocument;
-import de.muenchen.eh.log.db.entity.ClaimImport;
-import de.muenchen.eh.log.db.repository.ClaimDocumentRepository;
+import de.muenchen.eh.log.LogServiceImport;
+import de.muenchen.eh.db.entity.ClaimDocument;
+import de.muenchen.eh.db.entity.ClaimImport;
+import de.muenchen.eh.db.repository.ClaimDocumentRepository;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;

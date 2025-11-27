@@ -2,7 +2,7 @@ package de.muenchen.eh.claim.efile.operation.contentbuilder;
 
 import de.muenchen.eakte.api.rest.model.CreateFileDTO;
 import de.muenchen.eh.claim.ClaimContentWrapper;
-import de.muenchen.eh.log.db.entity.ClaimEfile;
+import de.muenchen.eh.db.entity.ClaimEfile;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 

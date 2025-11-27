@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import de.muenchen.eh.claim.efile.EfileRouteBuilder;
 import de.muenchen.eh.claim.efile.operation.OperationId;
 import de.muenchen.eh.claim.efile.operation.OperationIdFactory;
-import de.muenchen.eh.log.db.entity.Claim;
+import de.muenchen.eh.db.entity.Claim;
 import java.util.concurrent.TimeUnit;
 import org.apache.camel.CamelContext;
 import org.apache.camel.EndpointInject;

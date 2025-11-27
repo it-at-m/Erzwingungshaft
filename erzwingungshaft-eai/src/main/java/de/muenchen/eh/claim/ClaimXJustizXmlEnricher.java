@@ -1,6 +1,6 @@
 package de.muenchen.eh.claim;
 
-import de.muenchen.eh.log.db.LogServiceClaim;
+import de.muenchen.eh.log.LogServiceClaim;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;

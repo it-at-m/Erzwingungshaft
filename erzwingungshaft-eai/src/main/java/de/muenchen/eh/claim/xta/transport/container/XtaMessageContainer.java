@@ -1,8 +1,8 @@
 package de.muenchen.eh.claim.xta.transport.container;
 
 import de.muenchen.eh.claim.ClaimContentWrapper;
-import de.muenchen.eh.log.db.entity.ClaimDocument;
-import de.muenchen.eh.log.db.repository.ClaimDocumentRepository;
+import de.muenchen.eh.db.entity.ClaimDocument;
+import de.muenchen.eh.db.repository.ClaimDocumentRepository;
 import de.muenchen.eh.claim.xta.transport.ByteArrayDataSource;
 import de.muenchen.eh.claim.xta.transport.StringDataSource;
 import genv3.de.xoev.transport.xta.x211.ContentType;

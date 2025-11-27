@@ -1,7 +1,7 @@
 package de.muenchen.eh.claim;
 
 import de.muenchen.eh.BaseRouteBuilder;
-import de.muenchen.eh.log.db.service.ClaimService;
+import de.muenchen.eh.db.service.ClaimService;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.model.dataformat.BindyType;
