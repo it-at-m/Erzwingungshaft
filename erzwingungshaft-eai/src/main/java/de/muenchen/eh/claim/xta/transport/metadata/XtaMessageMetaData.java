@@ -47,8 +47,7 @@ public class XtaMessageMetaData {
                                 .code(clientConfiguration.getMessageType().getCode())
                                 .listVersionID(clientConfiguration.getMessageType().getListVersion())
                                 .payloadSchema(clientConfiguration.getMessageType().getPayloadSchema())
-                                .build()
-                )
+                                .build())
                 .build();
     }
 
@@ -59,10 +58,8 @@ public class XtaMessageMetaData {
                                 .identifier(
                                         PartyIdentifierBuilder.builder()
                                                 .value(clientConfiguration.getPartyIdentifier().getDestination())
-                                                .build()
-                                )
-                                .build()
-                )
+                                                .build())
+                                .build())
                 .build();
     }
 
@@ -75,10 +72,8 @@ public class XtaMessageMetaData {
                                                 .name(clientConfiguration.getPartyIdentifier().getName())
                                                 .value(clientConfiguration.getPartyIdentifier().getOriginator())
                                                 .type(clientConfiguration.getPartyIdentifier().getType())
-                                                .build()
-                                )
-                                .build()
-                )
+                                                .build())
+                                .build())
                 .build();
     }
 

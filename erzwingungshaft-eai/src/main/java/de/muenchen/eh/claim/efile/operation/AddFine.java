@@ -3,10 +3,10 @@ package de.muenchen.eh.claim.efile.operation;
 import de.muenchen.eh.claim.ClaimContentWrapper;
 import de.muenchen.eh.claim.efile.operation.subjectdata.UpdateFineSubjectData;
 import de.muenchen.eh.claim.efile.properties.FineProperties;
-import de.muenchen.eh.log.StatusProcessingType;
-import de.muenchen.eh.log.LogServiceClaim;
 import de.muenchen.eh.db.entity.MessageType;
 import de.muenchen.eh.db.repository.ClaimEfileRepository;
+import de.muenchen.eh.log.LogServiceClaim;
+import de.muenchen.eh.log.StatusProcessingType;
 import org.apache.camel.Exchange;
 import org.springframework.stereotype.Component;
 

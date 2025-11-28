@@ -18,4 +18,3 @@ public class PartyBuilder {
         return pt;
     }
 }
-

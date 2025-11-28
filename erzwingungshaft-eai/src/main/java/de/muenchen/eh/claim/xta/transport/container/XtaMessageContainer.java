@@ -1,10 +1,10 @@
 package de.muenchen.eh.claim.xta.transport.container;
 
 import de.muenchen.eh.claim.ClaimContentWrapper;
-import de.muenchen.eh.db.entity.ClaimDocument;
-import de.muenchen.eh.db.repository.ClaimDocumentRepository;
 import de.muenchen.eh.claim.xta.transport.ByteArrayDataSource;
 import de.muenchen.eh.claim.xta.transport.StringDataSource;
+import de.muenchen.eh.db.entity.ClaimDocument;
+import de.muenchen.eh.db.repository.ClaimDocumentRepository;
 import genv3.de.xoev.transport.xta.x211.ContentType;
 import genv3.de.xoev.transport.xta.x211.GenericContentContainer;
 import jakarta.activation.DataHandler;
@@ -43,8 +43,7 @@ public class XtaMessageContainer {
         DataSource textMessage = new StringDataSource(
                 Base64.getEncoder().encodeToString(claimContentWrapper.getClaimImport().getOutputDirectory().getBytes()),
                 "text/plain",
-                "message"
-        );
+                "message");
 
         DataHandler textDataHandler = new DataHandler(textMessage);
 
@@ -67,8 +66,7 @@ public class XtaMessageContainer {
         DataSource justizMessage = new StringDataSource(
                 Base64.getEncoder().encodeToString(this.claimContentWrapper.getXjustizXml().getBytes(StandardCharsets.UTF_8)),
                 "application/xml",
-                xmlFileName
-        );
+                xmlFileName);
         DataHandler justizDataHandler = new DataHandler(justizMessage);
 
         return ContentTypeBuilder.builder()
@@ -88,8 +86,7 @@ public class XtaMessageContainer {
             DataSource message = new ByteArrayDataSource(
                     content.getDocument(),
                     "application/pdf",
-                    Paths.get(content.getFileName()).getFileName().toString()
-            );
+                    Paths.get(content.getFileName()).getFileName().toString());
 
             DataHandler handler = new DataHandler(message);
 
@@ -98,8 +95,7 @@ public class XtaMessageContainer {
                     .filename(handler.getName())
                     .contentDescription(content.getDocumentType().concat(".pdf for the submitted claim"))
                     .value(handler)
-                    .build().build()
-            );
+                    .build().build());
         });
 
         return documentBuilders;

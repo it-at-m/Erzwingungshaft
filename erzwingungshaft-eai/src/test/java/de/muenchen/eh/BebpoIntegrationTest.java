@@ -1,7 +1,16 @@
 package de.muenchen.eh;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
+
 import de.muenchen.eh.claim.ClaimRouteBuilder;
-import de.muenchen.eh.file.FileImportRouteBuilder;
+import de.muenchen.eh.claim.xta.XtaRouteBuilder;
+import de.muenchen.eh.claim.xta.transport.ByteArrayDataSource;
+import de.muenchen.eh.claim.xta.transport.StringDataSource;
+import de.muenchen.eh.claim.xta.transport.properties.XtaClientConfiguration;
 import de.muenchen.eh.db.repository.ClaimContentRepository;
 import de.muenchen.eh.db.repository.ClaimDataRepository;
 import de.muenchen.eh.db.repository.ClaimDocumentRepository;
@@ -11,10 +20,7 @@ import de.muenchen.eh.db.repository.ClaimImportRepository;
 import de.muenchen.eh.db.repository.ClaimLogRepository;
 import de.muenchen.eh.db.repository.ClaimRepository;
 import de.muenchen.eh.db.repository.ClaimXmlRepository;
-import de.muenchen.eh.claim.xta.transport.ByteArrayDataSource;
-import de.muenchen.eh.claim.xta.transport.StringDataSource;
-import de.muenchen.eh.claim.xta.transport.properties.XtaClientConfiguration;
-import de.muenchen.eh.claim.xta.XtaRouteBuilder;
+import de.muenchen.eh.file.FileImportRouteBuilder;
 import genv3.de.xoev.transport.xta.x211.ContentType;
 import genv3.de.xoev.transport.xta.x211.GenericContentContainer;
 import genv3.eu.osci.ws.x2008.x05.transport.X509TokenContainerType;
@@ -59,19 +65,13 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
-
 @CamelSpringBootTest
-@SpringBootTest(classes = {Application.class, XtaTestContext.class})
-@ExcludeRoutes({FileImportRouteBuilder.class, ClaimRouteBuilder.class})
-@ActiveProfiles(profiles = {TestConstants.SPRING_TEST_PROFILE})
+@SpringBootTest(classes = { Application.class, XtaTestContext.class })
+@ExcludeRoutes({ FileImportRouteBuilder.class, ClaimRouteBuilder.class })
+@ActiveProfiles(profiles = { TestConstants.SPRING_TEST_PROFILE })
 @TestPropertySource(properties = "spring.flyway.enabled=false")
 @TestPropertySource(properties = "spring.sql.init.mode=never")
-@EnableAutoConfiguration(exclude = {HibernateJpaAutoConfiguration.class})
+@EnableAutoConfiguration(exclude = { HibernateJpaAutoConfiguration.class })
 @Slf4j
 @Disabled("The tests are less junit tests and more bebpo integration tests to try something out.")
 public class BebpoIntegrationTest {
@@ -118,7 +118,7 @@ public class BebpoIntegrationTest {
                 .withBody(Collections.emptyList())
                 .withHeader(CxfConstants.OPERATION_NAME, "checkAccountActive")
                 .withHeader(CxfConstants.OPERATION_NAMESPACE, "http://xoev.de/transport/xta/211")
-                .withHeader("SOAPAction","http://www.xta.de/XTA/CheckAccountActive")
+                .withHeader("SOAPAction", "http://www.xta.de/XTA/CheckAccountActive")
                 .build();
 
         Exchange response = managementPort.send(request);
@@ -165,7 +165,7 @@ public class BebpoIntegrationTest {
 
         AttributedURIType attributedURIType = responseMessageId.getIn().getBody(AttributedURIType.class);
 
-        log.info("MessageId : "  + attributedURIType.getValue());
+        log.info("MessageId : " + attributedURIType.getValue());
 
         // Send message
         GenericContentContainer genericContentContainer = new GenericContentContainer();
@@ -184,7 +184,8 @@ public class BebpoIntegrationTest {
         justizMessageType.setEncoding("UTF-8");
         justizMessageType.setFilename("xjustiz.xml");
         justizMessageType.setContentDescription("Test Description");
-        DataSource justizMessage = new StringDataSource(Base64.getEncoder().encodeToString(Files.readAllBytes(Path.of("src/test/resources/xjustiz.xml"))), "application/xml", "xjustiz.xml");
+        DataSource justizMessage = new StringDataSource(Base64.getEncoder().encodeToString(Files.readAllBytes(Path.of("src/test/resources/xjustiz.xml"))),
+                "application/xml", "xjustiz.xml");
         DataHandler justizDataHandler = new DataHandler(justizMessage);
         justizMessageType.setValue(justizDataHandler);
         contentContainer.getAttachment().add(justizMessageType);
@@ -193,7 +194,8 @@ public class BebpoIntegrationTest {
         antragMessageType.setContentType("application/pdf");
         antragMessageType.setFilename("1000013749_5793303492524_20240807_EH.pdf");
         antragMessageType.setContentDescription("EH-Antrag");
-        DataSource antragMessage = new ByteArrayDataSource(Files.readAllBytes(Path.of("testdata/in/pdf/1000013749_5793303492524_20240807_EH.pdf")), "application/xml", "1000013749_5793303492524_20240807_EH.pdf");
+        DataSource antragMessage = new ByteArrayDataSource(Files.readAllBytes(Path.of("testdata/in/pdf/1000013749_5793303492524_20240807_EH.pdf")),
+                "application/xml", "1000013749_5793303492524_20240807_EH.pdf");
         DataHandler antragDataHandler = new DataHandler(antragMessage);
         antragMessageType.setValue(antragDataHandler);
         contentContainer.getAttachment().add(antragMessageType);
@@ -202,7 +204,8 @@ public class BebpoIntegrationTest {
         bescheidMessageType.setContentType("application/pdf");
         bescheidMessageType.setFilename("1000013749_5793303492524_20240807_URB.pdf");
         bescheidMessageType.setContentDescription("EH-Bescheid");
-        DataSource bescheidMessage = new ByteArrayDataSource(Files.readAllBytes(Path.of("testdata/in/pdf/1000013749_5793303492524_20240807_URB.pdf")), "application/xml", "1000013749_5793303492524_20240807_URB.pdf");
+        DataSource bescheidMessage = new ByteArrayDataSource(Files.readAllBytes(Path.of("testdata/in/pdf/1000013749_5793303492524_20240807_URB.pdf")),
+                "application/xml", "1000013749_5793303492524_20240807_URB.pdf");
         DataHandler bescheidDataHandler = new DataHandler(bescheidMessage);
         bescheidMessageType.setValue(bescheidDataHandler);
         contentContainer.getAttachment().add(bescheidMessageType);

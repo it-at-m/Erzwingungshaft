@@ -1,15 +1,15 @@
 package de.muenchen.eh;
 
-import de.muenchen.eh.common.FileNameUtils;
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import de.muenchen.eh.common.FileNameUtils;
+import org.junit.jupiter.api.Test;
 
 public class FileNameUtilsTest {
 
     @Test
-    public void test_EHFileNames(){
+    public void test_EHFileNames() {
 
         assertTrue(FileNameUtils.isEHFile("GPID_kassenzeichen_jjjjmmtt_EH-Antrag.pdf"));
         assertTrue(FileNameUtils.isEHFile("GPID_kassenzeichen_jjjjmmtt_eH-antrag.pDf"));
@@ -21,7 +21,7 @@ public class FileNameUtilsTest {
     }
 
     @Test
-    public void test_URBFileNames(){
+    public void test_URBFileNames() {
 
         assertTrue(FileNameUtils.isURBFile("GPID_kassenzeichen_jjjjmmtt_URB.pdf"));
         assertTrue(FileNameUtils.isURBFile("GPID_kassenzeichen_jjjjmmtt_urboW.pDf"));
@@ -32,7 +32,7 @@ public class FileNameUtilsTest {
     }
 
     @Test
-    public void test_URKFileNames(){
+    public void test_URKFileNames() {
 
         assertTrue(FileNameUtils.isURKFile("GPID_kassenzeichen_jjjjmmtt_URK.pdf"));
         assertTrue(FileNameUtils.isURKFile("GPID_kassenzeichen_jjjjmmtt_urkoW.pDf"));
@@ -43,7 +43,7 @@ public class FileNameUtilsTest {
     }
 
     @Test
-    public void test_VWFileNames(){
+    public void test_VWFileNames() {
 
         assertTrue(FileNameUtils.isVWFile("GPID_kassenzeichen_jjjjmmtt_VW.pdf"));
         assertTrue(FileNameUtils.isVWFile("GPID_kassenzeichen_jjjjmmtt_VW1.pdf"));
@@ -54,6 +54,5 @@ public class FileNameUtilsTest {
         assertFalse(FileNameUtils.isVWFile("GPID_kassenzeichen_jjjjmmtt_vw.txt"));
 
     }
-
 
 }

@@ -13,7 +13,6 @@ public class ByteArrayDataSource implements DataSource {
     private final String contentType;
     private final String name;
 
-
     @Override
     public InputStream getInputStream() throws IOException {
         return new ByteArrayInputStream(this.data);
@@ -34,4 +33,3 @@ public class ByteArrayDataSource implements DataSource {
         return this.name;
     }
 }
-

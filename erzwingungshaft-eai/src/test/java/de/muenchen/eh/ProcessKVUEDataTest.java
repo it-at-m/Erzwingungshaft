@@ -43,7 +43,7 @@ import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
-@SpringBootTest(classes = {Application.class, XtaTestContext.class})
+@SpringBootTest(classes = { Application.class, XtaTestContext.class })
 @CamelSpringBootTest
 @EnableAutoConfiguration
 @DirtiesContext

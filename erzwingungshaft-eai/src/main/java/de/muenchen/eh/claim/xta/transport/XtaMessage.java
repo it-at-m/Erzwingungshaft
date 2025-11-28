@@ -1,17 +1,17 @@
 package de.muenchen.eh.claim.xta.transport;
 
 import de.muenchen.eh.claim.ClaimContentWrapper;
-import de.muenchen.eh.claim.xta.transport.container.XtaMessageContainer;
-import de.muenchen.eh.log.StatusProcessingType;
-import de.muenchen.eh.log.LogServiceClaim;
-import de.muenchen.eh.db.entity.MessageType;
-import de.muenchen.eh.db.entity.Xta;
-import de.muenchen.eh.db.repository.XtaRepository;
 import de.muenchen.eh.claim.xta.XtaRouteBuilder;
+import de.muenchen.eh.claim.xta.transport.container.XtaMessageContainer;
 import de.muenchen.eh.claim.xta.transport.metadata.PartyBuilder;
 import de.muenchen.eh.claim.xta.transport.metadata.PartyIdentifierBuilder;
 import de.muenchen.eh.claim.xta.transport.metadata.XtaMessageMetaData;
 import de.muenchen.eh.claim.xta.transport.properties.XtaClientConfiguration;
+import de.muenchen.eh.db.entity.MessageType;
+import de.muenchen.eh.db.entity.Xta;
+import de.muenchen.eh.db.repository.XtaRepository;
+import de.muenchen.eh.log.LogServiceClaim;
+import de.muenchen.eh.log.StatusProcessingType;
 import genv3.de.xoev.transport.xta.x211.GenericContentContainer;
 import genv3.de.xoev.transport.xta.x211.TransportReport;
 import genv3.eu.osci.ws.x2008.x05.transport.X509TokenContainerType;

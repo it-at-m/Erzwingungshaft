@@ -1,10 +1,10 @@
 package de.muenchen.eh.claim;
 
 import de.muenchen.eh.common.FileNameUtils;
-import de.muenchen.eh.log.DocumentType;
 import de.muenchen.eh.db.entity.ClaimDocument;
 import de.muenchen.eh.db.entity.ClaimImport;
 import de.muenchen.eh.db.repository.ClaimDocumentRepository;
+import de.muenchen.eh.log.DocumentType;
 import de.muenchen.xjustiz.xjustiz0500straf.content.ContentContainer;
 import de.muenchen.xjustiz.xjustiz0500straf.content.FachdatenContent;
 import de.muenchen.xjustiz.xjustiz0500straf.content.GrunddatenContent;
@@ -161,7 +161,8 @@ public class ClaimContentContainerFactory {
             Identifikation identifikationAntrag = new Identifikation(uuidIdentAntrag, BigInteger.valueOf(index));
             Datei file = new Datei(fileName, BigInteger.valueOf(1));
             antraege.add(file);
-            FachspezifischeDatenDokument fachspezifischeDatenDokumentAntrag = new FachspezifischeDatenDokument(FileNameUtils.getGdsDokumentenklasse(DocumentType.fromDescriptor(document.getDocumentType())),
+            FachspezifischeDatenDokument fachspezifischeDatenDokumentAntrag = new FachspezifischeDatenDokument(
+                    FileNameUtils.getGdsDokumentenklasse(DocumentType.fromDescriptor(document.getDocumentType())),
                     uuidIdentAntrag.concat("_").concat(fileName), antraege);
             documents.add(new Dokument(identifikationAntrag, fachspezifischeDatenDokumentAntrag));
 

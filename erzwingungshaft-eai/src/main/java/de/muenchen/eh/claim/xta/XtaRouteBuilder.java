@@ -2,8 +2,6 @@ package de.muenchen.eh.claim.xta;
 
 import de.muenchen.eh.BaseRouteBuilder;
 import org.apache.camel.LoggingLevel;
-import org.apache.camel.Produce;
-import org.apache.camel.builder.RouteBuilder;
 import org.springframework.stereotype.Component;
 
 @Component

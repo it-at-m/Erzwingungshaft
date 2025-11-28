@@ -40,7 +40,7 @@ public class XtaContext {
         sendp.getFeatures().add(new WSAddressingFeature());
         sendp.setMtomEnabled(true);
 
-         sendp.setDataFormat(DataFormat.POJO);
+        sendp.setDataFormat(DataFormat.POJO);
 
         return sendp;
     }

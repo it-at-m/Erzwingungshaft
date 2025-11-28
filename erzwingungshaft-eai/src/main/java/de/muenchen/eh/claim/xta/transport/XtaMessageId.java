@@ -23,7 +23,7 @@ public class XtaMessageId {
 
     private Exchange buildRequest() {
 
-        return   ExchangeBuilder.anExchange(camelContext)
+        return ExchangeBuilder.anExchange(camelContext)
                 .withBody(Collections.emptyList())
                 .withHeader(CxfConstants.OPERATION_NAME, "createMessageId")
                 .withHeader(CxfConstants.OPERATION_NAMESPACE, "http://xoev.de/transport/xta/211")

@@ -26,7 +26,8 @@ public class ImportDataEnricher implements Processor {
         importContentWrapper.setClaimRawData(exchange.getMessage().getBody(String.class));
         Exchange unmarshalledData = unmarshallClaimImportData(exchange);
         importContentWrapper.setImportClaimIdentifierData(unmarshalledData.getMessage().getBody(ImportClaimIdentifierData.class));
-        importContentWrapper.getImportClaimIdentifierData().setPrintDate(DateExtractor.extractDate(exchange.getMessage().getHeader(AWS2S3Constants.KEY, String.class)));
+        importContentWrapper.getImportClaimIdentifierData()
+                .setPrintDate(DateExtractor.extractDate(exchange.getMessage().getHeader(AWS2S3Constants.KEY, String.class)));
         exchange.getMessage().setBody(importContentWrapper);
 
     }

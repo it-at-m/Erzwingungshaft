@@ -1,7 +1,7 @@
 package de.muenchen.eh.db.entity;
 
-import de.muenchen.eh.log.Constants;
 import de.muenchen.eh.db.IClaimEntity;
+import de.muenchen.eh.log.Constants;
 import java.util.Objects;
 import java.util.Optional;
 import org.apache.camel.Exchange;

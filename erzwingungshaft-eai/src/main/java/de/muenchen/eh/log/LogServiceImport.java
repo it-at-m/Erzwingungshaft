@@ -2,13 +2,13 @@ package de.muenchen.eh.log;
 
 import de.muenchen.eh.common.FileNameUtils;
 import de.muenchen.eh.db.ImportEntityCache;
-import de.muenchen.eh.file.ImportClaimIdentifierData;
-import de.muenchen.eh.file.ImportContentWrapper;
 import de.muenchen.eh.db.entity.ClaimImport;
 import de.muenchen.eh.db.entity.ClaimImportLog;
 import de.muenchen.eh.db.entity.MessageType;
 import de.muenchen.eh.db.repository.ClaimImportLogRepository;
 import de.muenchen.eh.db.repository.ClaimImportRepository;
+import de.muenchen.eh.file.ImportClaimIdentifierData;
+import de.muenchen.eh.file.ImportContentWrapper;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import lombok.RequiredArgsConstructor;
@@ -75,7 +75,7 @@ public class LogServiceImport {
                 } else if (FileNameUtils.isURBFile(fileName)) {
                     claimImport.setIsBescheidImport(true);
                     type.set(StatusProcessingType.IMPORT_BESCHEID_IMPORT_DIRECTORY);
-                } else if  (FileNameUtils.isVWFile(fileName)) {
+                } else if (FileNameUtils.isVWFile(fileName)) {
                     claimImport.setIsVerwerfungBescheidImport(true);
                     type.set(StatusProcessingType.IMPORT_VERWERFUNG_BESCHEID_IMPORT_DIRECTORY);
                 } else if (FileNameUtils.isURKFile(fileName)) {

@@ -14,8 +14,7 @@ import lombok.EqualsAndHashCode;
 @Table(name = "xta", schema = "eh")
 public class Xta extends BaseEntity {
 
-    @NotNull
-    @Column(name = "claim_import_id", nullable = false)
+    @NotNull @Column(name = "claim_import_id", nullable = false)
     private Integer claimImportId;
 
     @Column(name = "message_id")

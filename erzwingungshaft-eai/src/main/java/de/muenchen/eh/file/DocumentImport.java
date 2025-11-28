@@ -1,11 +1,11 @@
 package de.muenchen.eh.file;
 
 import de.muenchen.eh.common.FileNameUtils;
-import de.muenchen.eh.log.Constants;
-import de.muenchen.eh.log.LogServiceImport;
 import de.muenchen.eh.db.entity.ClaimDocument;
 import de.muenchen.eh.db.entity.ClaimImport;
 import de.muenchen.eh.db.repository.ClaimDocumentRepository;
+import de.muenchen.eh.log.Constants;
+import de.muenchen.eh.log.LogServiceImport;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +43,7 @@ public class DocumentImport implements Processor {
         claimDocument.setDocument(exchange.getIn().getBody(byte[].class));
         claimDocumentRepository.save(claimDocument);
 
-        logServiceImport.writeInfoImportLogMessage(FileNameUtils.getProcessingType(claimDocument.getFileName()) , exchange);
+        logServiceImport.writeInfoImportLogMessage(FileNameUtils.getProcessingType(claimDocument.getFileName()), exchange);
 
     }
 }

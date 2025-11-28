@@ -99,14 +99,14 @@ public class FileNameUtils {
     public static XoevCodeGDSDokumentklasse getGdsDokumentenklasse(DocumentType type) {
 
         switch (type) {
-            case ANTRAG:
-                return XoevCodeGDSDokumentklasse.ANTRAG;
-            case BESCHEID:
-                return XoevCodeGDSDokumentklasse.BESCHEID;
-//            case KOSTEN: return XoevCodeGDSDokumentklasse.KOSTEN;
-//            case VERWERFUNG: return XoevCodeGDSDokumentklasse.VERWERFUNG;
-            default:
-                throw new IllegalArgumentException("DocumentType not found: " + type);
+        case ANTRAG:
+            return XoevCodeGDSDokumentklasse.ANTRAG;
+        case BESCHEID:
+            return XoevCodeGDSDokumentklasse.BESCHEID;
+        //            case KOSTEN: return XoevCodeGDSDokumentklasse.KOSTEN;
+        //            case VERWERFUNG: return XoevCodeGDSDokumentklasse.VERWERFUNG;
+        default:
+            throw new IllegalArgumentException("DocumentType not found: " + type);
         }
 
     }

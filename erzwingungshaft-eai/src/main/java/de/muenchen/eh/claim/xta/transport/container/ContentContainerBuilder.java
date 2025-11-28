@@ -2,11 +2,10 @@ package de.muenchen.eh.claim.xta.transport.container;
 
 import genv3.de.xoev.transport.xta.x211.ContentType;
 import genv3.de.xoev.transport.xta.x211.GenericContentContainer;
-import lombok.Builder;
-import lombok.Singular;
-import lombok.Getter;
-
 import java.util.List;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Singular;
 
 @Getter
 @Builder
@@ -31,4 +30,3 @@ public class ContentContainerBuilder {
         return cc;
     }
 }
-

@@ -17,16 +17,14 @@ public class TlsClientConfiguration {
      * Keystore for client authentication.
      * Contains the private key and certificate chain trusted by the server.
      */
-    @Valid
-    private KeyStore clientCertKeystore;
+    @Valid private KeyStore clientCertKeystore;
 
     /**
      * Truststore for server authentication.
      * Contains the server's root certificate or certificate chain.
      * Can be null if the certificate is trusted by the JVM.
      */
-    @Valid
-    private KeyStore trustStore = null;
+    @Valid private KeyStore trustStore = null;
 
     public boolean isTrustAll() {
         return trustStore != null;

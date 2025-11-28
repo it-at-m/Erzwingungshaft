@@ -17,7 +17,7 @@ public class ContentTypeBuilder {
 
     public ContentType build() {
 
-        ContentType ct =  new ContentType();
+        ContentType ct = new ContentType();
 
         ct.setContentType(contentType);
         ct.setEncoding(encoding);
@@ -28,4 +28,3 @@ public class ContentTypeBuilder {
         return ct;
     }
 }
-

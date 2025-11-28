@@ -21,7 +21,8 @@ public class ClaimMetadataFile implements Processor {
 
         ImportContentWrapper importContentWrapper = exchange.getMessage().getBody(ImportContentWrapper.class);
 
-        var fileName = importContentWrapper.getImportClaimIdentifierData().getPathName().concat("/").concat(importContentWrapper.getImportClaimIdentifierData().getFileName());
+        var fileName = importContentWrapper.getImportClaimIdentifierData().getPathName().concat("/")
+                .concat(importContentWrapper.getImportClaimIdentifierData().getFileName());
         Exchange marshalContent = ExchangeBuilder.anExchange(exchange.getContext()).withBody(importContentWrapper.getClaimRawData())
                 .withHeader(AWS2S3Constants.KEY, fileName).build();
         s3Producer.send(marshalContent);

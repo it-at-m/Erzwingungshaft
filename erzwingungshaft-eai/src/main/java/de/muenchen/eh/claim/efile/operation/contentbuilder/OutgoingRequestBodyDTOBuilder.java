@@ -2,8 +2,8 @@ package de.muenchen.eh.claim.efile.operation.contentbuilder;
 
 import com.sun.istack.ByteArrayDataSource;
 import de.muenchen.eh.claim.efile.DocumentName;
-import de.muenchen.eh.log.DocumentType;
 import de.muenchen.eh.db.entity.ClaimDocument;
+import de.muenchen.eh.log.DocumentType;
 import jakarta.activation.DataHandler;
 import jakarta.activation.DataSource;
 import java.io.IOException;

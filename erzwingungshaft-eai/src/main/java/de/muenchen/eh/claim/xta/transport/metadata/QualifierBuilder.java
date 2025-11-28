@@ -40,4 +40,3 @@ public class QualifierBuilder {
         return q;
     }
 }
-

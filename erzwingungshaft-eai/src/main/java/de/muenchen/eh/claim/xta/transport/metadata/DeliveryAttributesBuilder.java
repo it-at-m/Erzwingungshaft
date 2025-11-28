@@ -1,10 +1,9 @@
 package de.muenchen.eh.claim.xta.transport.metadata;
 
 import genv3.eu.osci.ws.x2014.x10.transport.DeliveryAttributesType;
+import javax.xml.datatype.XMLGregorianCalendar;
 import lombok.Builder;
 import lombok.Getter;
-
-import javax.xml.datatype.XMLGregorianCalendar;
 
 @Getter
 @Builder
@@ -18,4 +17,3 @@ public class DeliveryAttributesBuilder {
         return da;
     }
 }
-
