@@ -3,12 +3,12 @@ package de.muenchen.eh.claim.xta;
 import de.muenchen.eh.claim.xta.transport.properties.XtaClientConfiguration;
 import genv3.de.xoev.transport.xta.x211.ManagementPortType;
 import genv3.de.xoev.transport.xta.x211.SendPortType;
-import org.apache.camel.Configuration;
 import org.apache.camel.component.cxf.common.DataFormat;
 import org.apache.camel.component.cxf.jaxws.CxfEndpoint;
 import org.apache.cxf.ext.logging.LoggingFeature;
 import org.apache.cxf.ws.addressing.WSAddressingFeature;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class XtaContext {

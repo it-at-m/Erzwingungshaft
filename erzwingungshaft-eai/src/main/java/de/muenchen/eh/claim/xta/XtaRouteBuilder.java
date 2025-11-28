@@ -15,11 +15,11 @@ public class XtaRouteBuilder extends BaseRouteBuilder {
 
         super.configure();
 
-        from("direct:managementPort").routeId("xta-management-port")
+        from(BEPBO_MANAGEMENT_PORT).routeId("xta-management-port")
                 .to("cxf:bean:managementPort")
                 .log(LoggingLevel.DEBUG, "${body}");
 
-        from("direct:sendPort").routeId("xta-send-port")
+        from(BEPBO_SEND_PORT).routeId("xta-send-port")
                 .to("cxf:bean:sendPort")
                 .log(LoggingLevel.DEBUG, "${body}");
     }

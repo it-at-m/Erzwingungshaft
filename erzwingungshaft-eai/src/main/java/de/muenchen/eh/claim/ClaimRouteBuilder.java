@@ -34,6 +34,7 @@ public class ClaimRouteBuilder extends BaseRouteBuilder {
                 .process("{{xjustiz.interface.xta}}")
                 .end()
                 .bean("findCollection", "clearCollectionCache")
+                .setBody(constant("Finish."))
                 .to("{{efile.finish-message}}");
 
         from(UNMARSHALL_EH_CLAIM_DATA).routeId("unmarshal-eh-claimdata")
