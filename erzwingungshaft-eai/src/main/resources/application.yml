@@ -97,7 +97,6 @@ xjustiz:
     eakte:
 
 efile:
-  finish-message: log:de.muenchen.eh?level=INFO&showBody=true
   case-file:
   #    subject-data-values:
   #      gp-name: 'Name-des-Geschaeftspartner'

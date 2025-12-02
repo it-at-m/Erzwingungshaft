@@ -1,6 +1,6 @@
 package de.muenchen.eh.claim.xta.transport.container;
 
-import genv3.de.xoev.transport.xta.x211.GenericContentContainer;
+import de.xoev.transport.xta._211.GenericContentContainer;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,7 +12,7 @@ public class GenericContentContainerBuilder {
 
     public GenericContentContainer buildContainer() {
 
-        GenericContentContainer gcc = new GenericContentContainer();
+        de.xoev.transport.xta._211.GenericContentContainer gcc = new de.xoev.transport.xta._211.GenericContentContainer();
 
         if (contentContainer != null) {
             gcc.setContentContainer(contentContainer.build());

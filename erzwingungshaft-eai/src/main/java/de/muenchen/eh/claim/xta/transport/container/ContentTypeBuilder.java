@@ -1,6 +1,5 @@
 package de.muenchen.eh.claim.xta.transport.container;
 
-import genv3.de.xoev.transport.xta.x211.ContentType;
 import jakarta.activation.DataHandler;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,9 +14,9 @@ public class ContentTypeBuilder {
     private String contentDescription;
     private DataHandler value;
 
-    public ContentType build() {
+    public de.xoev.transport.xta._211.ContentType build() {
 
-        ContentType ct = new ContentType();
+        de.xoev.transport.xta._211.ContentType ct = new de.xoev.transport.xta._211.ContentType();
 
         ct.setContentType(contentType);
         ct.setEncoding(encoding);

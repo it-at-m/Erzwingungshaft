@@ -1,7 +1,7 @@
 package de.muenchen.eh.claim.xta.transport.container;
 
-import genv3.de.xoev.transport.xta.x211.ContentType;
-import genv3.de.xoev.transport.xta.x211.GenericContentContainer;
+import de.xoev.transport.xta._211.ContentType;
+import de.xoev.transport.xta._211.GenericContentContainer;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;

@@ -2,8 +2,8 @@ package de.muenchen.eh;
 
 import de.muenchen.eh.claim.xta.tls.TlsClientParametersFactory;
 import de.muenchen.eh.claim.xta.transport.properties.XtaClientConfiguration;
-import genv3.de.xoev.transport.xta.x211.ManagementPortType;
-import genv3.de.xoev.transport.xta.x211.SendPortType;
+import de.xoev.transport.xta._211.ManagementPortType;
+import de.xoev.transport.xta._211.SendPortType;
 import org.apache.camel.Configuration;
 import org.apache.camel.component.cxf.common.DataFormat;
 import org.apache.camel.component.cxf.jaxws.CxfEndpoint;

@@ -1,7 +1,7 @@
 package de.muenchen.eh.claim.xta.transport.metadata;
 
 import de.muenchen.eh.claim.xta.transport.properties.XtaClientConfiguration;
-import genv3.eu.osci.ws.x2014.x10.transport.MessageMetaData;
+import eu.osci.ws._2014._10.transport.MessageMetaData;
 import java.util.GregorianCalendar;
 import javax.xml.datatype.DatatypeFactory;
 import lombok.RequiredArgsConstructor;
