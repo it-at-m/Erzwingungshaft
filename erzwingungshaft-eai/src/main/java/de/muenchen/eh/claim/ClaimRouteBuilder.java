@@ -31,11 +31,9 @@ public class ClaimRouteBuilder extends BaseRouteBuilder {
                 .process("claimContentDataEnricher")
                 .process("claimXJustizXmlEnricher")
                 .process("efilesOperationExecutor")
-                .process("{{xjustiz.interface.xta}}")
+                .process("{{xjustiz.interface.xta}}").id("bebpoService")
                 .end()
-                .bean("findCollection", "clearCollectionCache")
-                .setBody(constant("Finish."))
-                .to("{{efile.finish-message}}");
+                .bean("findCollection", "clearCollectionCache");
 
         from(UNMARSHALL_EH_CLAIM_DATA).routeId("unmarshal-eh-claimdata")
                 .unmarshal().bindy(BindyType.Fixed, ImportClaimData.class)

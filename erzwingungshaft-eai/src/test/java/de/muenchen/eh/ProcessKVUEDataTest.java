@@ -22,9 +22,12 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import org.apache.camel.CamelContext;
 import org.apache.camel.EndpointInject;
+import org.apache.camel.builder.AdviceWith;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
+import org.apache.camel.test.spring.junit5.UseAdviceWith;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -43,6 +46,7 @@ import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
+@UseAdviceWith
 @SpringBootTest(classes = { Application.class, XtaTestContext.class })
 @CamelSpringBootTest
 @EnableAutoConfiguration
@@ -65,6 +69,9 @@ class ProcessKVUEDataTest {
 
     @Autowired
     private ClaimLogRepository claimLogRepository;
+
+    @Autowired
+    CamelContext camelContext;
 
     private static final String EH_BUCKET_IMPORT = "eh-backup";
     private static final String EH_BUCKET_PDF = "eh-import-pdf";
@@ -104,11 +111,20 @@ class ProcessKVUEDataTest {
     @Test
     void test_readDataAndCreateXjustizXml() throws Exception {
 
-        uploadBucketTestFileConfiguration();
+        AdviceWith.adviceWith(camelContext, "claim-eh-process", a -> {
+            a.weaveById("bebpoService")
+                    .replace()
+                    .to("mock:finish");
+        });
+
+        camelContext.start();
 
         // Start test ...
         finish.expectedMessageCount(1);
-        finish.assertIsSatisfied(TimeUnit.SECONDS.toMillis(100));
+
+        uploadBucketTestFileConfiguration();
+
+        finish.assertIsSatisfied(TimeUnit.SECONDS.toSeconds(1));
 
         assertEquals(1, finish.getExchanges().size(), "One happy path implemented.");
         ClaimContentWrapper dataWrapper = finish.getExchanges().getFirst().getMessage().getBody(ClaimContentWrapper.class);
@@ -159,7 +175,7 @@ class ProcessKVUEDataTest {
         Claim claim_1000258309_5793402494421 = claimRepository.findByClaimImportId(claimImport_1000258309_5793402494421.getId());
         var claimlog_errors_1000258309_5793402494421 = claimLogRepository.findByClaimIdAndMessageTyp(claim_1000258309_5793402494421.getId(), MessageType.ERROR);
         assertEquals(1, claimlog_errors_1000258309_5793402494421.size(), "One error expected.");
-        assertEquals("The mandatory field defined at the position 31 (de.muenchen.eh.kvue.claim.ImportClaimData.ehtatstdb) is empty for the line: 1",
+        assertEquals("The mandatory field defined at the position 31 (de.muenchen.eh.claim.ImportClaimData.ehtatstdb) is empty for the line: 1",
                 claimlog_errors_1000258309_5793402494421.getFirst().getMessage());
 
     }

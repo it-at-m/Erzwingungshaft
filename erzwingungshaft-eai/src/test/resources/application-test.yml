@@ -1,6 +1,13 @@
 batch:
   enabled: false
 
+proxy:
+  http:
+    host: 1.1.1.1
+    port: 80
+    non-proxy-hosts:
+      - 127.0.0.1
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
@@ -21,6 +28,9 @@ logging:
     de.muenchen.eh: DEBUG
     org:
       springframework: INFO
+      apache:
+        cxf:
+          service: DEBUG
 
 camel:
   main:
@@ -79,7 +89,7 @@ xjustiz:
     pdf:
       consume: aws2-s3://eh-import-pdf?${xjustiz.interface.file.common}
       file-output: aws2-s3://eh-backup?${xjustiz.interface.file.common}
-    bebpo: mock:xjustizMessage
+    xta: bebpoService
   xjustiz0500straf:
     nachrichtenkopf:
       auswahl-absender-sonstige: Stadt München
@@ -155,6 +165,8 @@ xjustiz:
         gds-dokumentklasse-1-4:
           antrag-behoerde: '016'
           bescheid: '017'
+          kostendokument: '20'
+#         verwerfung: '??'
     gds-bestandteiltyp:
       current-version: 2.4
       kennung: urn:xoev-de:xjustiz:codeliste:gds.bestandteiltyp
@@ -180,3 +192,25 @@ xjustiz:
       codelist-versions:
         gds-registerzeichen-3-4:
           bussgeldverfahren: OWi
+
+bebpo:
+  xta:
+    management-port-uri: https://my-xta-server.de/GovGateway211/management211
+    msg-boxport-uri: https://my-xta-server.de/MB_XTA-WS/XTA210msgBoxPort.svc
+    send-port-uri: https://my-xta-server.de/GovGateway211/send211
+    tls:
+      client-cert-keystore:
+        url: classpath:test-dummy.p12
+        store-password: changeit
+        type: PKCS12
+
+    party-identifier:
+      destination: DE.ABC.9999.888
+      originator: abc000-1111-2222-3333-44444444
+      type: XTA_ID
+      name: 'KVUE EHaft'
+    message-type:
+      list-uri: urn:de:bos_bremen:gov:gateway:messageTypes
+      list-version: 1.0
+      payload-schema: http://xoev.de/transport/xta/21
+      code: XTA
