@@ -33,9 +33,7 @@ public class ClaimService {
 
         query.where(cb.and(cb.equal(claimImportRoot.get("isDataImport"), true),
                 cb.equal(claimImportRoot.get("isAntragImport"), true),
-                cb.or(
-                        cb.equal(claimImportRoot.get("isBescheidImport"), true),
-                        cb.equal(claimImportRoot.get("isKostenBescheidImport"), true)),
+                cb.equal(claimImportRoot.get("isBescheidImport"), true),
                 cb.isNull(claimImportClaimJoin)));
 
         return entityManager.createQuery(query).getResultList();
