@@ -13,27 +13,30 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Nullable;
 import org.apache.camel.Exchange;
-import org.apache.camel.ProducerTemplate;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UpdateFileSubjectData extends UpdateSubjectData {
 
-    private static final String NAME_GESCHAEFTSPARTNER = "Name-des-Geschaeftspartner";
-    private static final String FIRST_NAME_GESCHAEFTSPARTNER = "Vorname-des-Geschaeftspartner";
-    private static final String BIRTHDATE_GESCHAEFTSPARTNER = "Geburtstag-des-Geschaeftspartner";
+    private static final String NAME_GESCHAEFTSPARTNER = "BusinessDataGPSurname";
+    private static final String FIRST_NAME_GESCHAEFTSPARTNER = "BusinessDataGPFirstname";
+    private static final String BIRTHDATE_GESCHAEFTSPARTNER = "BusinessDataGPBirthDate";
 
     private final FileProperties properties;
     private final ClaimDataRepository claimDataRepository;
     @Nullable private Map<String, String> subjectProperties;
 
-    public UpdateFileSubjectData(LogServiceClaim logServiceClaim, Exchange exchange, ProducerTemplate efileConnector, OperationIdFactory operationIdFactory,
+    public UpdateFileSubjectData(LogServiceClaim logServiceClaim, OperationIdFactory operationIdFactory,
             FileProperties properties, ClaimDataRepository claimDataRepository) {
-        super(logServiceClaim, exchange, efileConnector, operationIdFactory);
+        super(logServiceClaim, operationIdFactory);
         this.properties = properties;
         this.claimDataRepository = claimDataRepository;
     }
 
     @Override
-    protected Map<String, String> subjectDataValuesBuilder() {
+    protected Map<String, String> subjectDataValuesBuilder(Exchange exchange) {
+
+        this.subjectExchange = exchange;
 
         Map<String, String> subjectDataValues = new HashMap<>();
 
@@ -45,11 +48,11 @@ public class UpdateFileSubjectData extends UpdateSubjectData {
             for (Map.Entry<String, String> entry : properties.getSubjectDataValues().entrySet()) {
 
                 if (entry.getValue().equals(NAME_GESCHAEFTSPARTNER)) {
-                    subjectDataValues.put(entry.getKey(), claimData.getEhp1name());
+                    subjectDataValues.put(entry.getValue(), claimData.getEhp1name());
                 } else if (entry.getValue().equals(FIRST_NAME_GESCHAEFTSPARTNER)) {
-                    subjectDataValues.put(entry.getKey(), claimData.getEhp1vorname());
+                    subjectDataValues.put(entry.getValue(), claimData.getEhp1vorname());
                 } else if (entry.getValue().equals(BIRTHDATE_GESCHAEFTSPARTNER)) {
-                    subjectDataValues.put(entry.getKey(), claimData.getEhp1gebdat());
+                    subjectDataValues.put(entry.getValue(), claimData.getEhp1gebdat());
                 }
             }
         }

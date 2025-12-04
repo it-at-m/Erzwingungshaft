@@ -11,8 +11,9 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Nullable;
 import org.apache.camel.Exchange;
-import org.apache.camel.ProducerTemplate;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UpdateFineSubjectData extends UpdateSubjectData {
 
     private static final String OWI_NUMBER = "Ordnungswidrigkeiten-Nummer";
@@ -21,14 +22,16 @@ public class UpdateFineSubjectData extends UpdateSubjectData {
 
     @Nullable private Map<String, String> subjectProperties;
 
-    public UpdateFineSubjectData(LogServiceClaim logServiceClaim, Exchange exchange, ProducerTemplate efileConnector, OperationIdFactory operationIdFactory,
+    public UpdateFineSubjectData(LogServiceClaim logServiceClaim, OperationIdFactory operationIdFactory,
             FineProperties properties) {
-        super(logServiceClaim, exchange, efileConnector, operationIdFactory);
+        super(logServiceClaim, operationIdFactory);
         this.properties = properties;
     }
 
     @Override
-    protected Map<String, String> subjectDataValuesBuilder() {
+    protected Map<String, String> subjectDataValuesBuilder(Exchange exchange) {
+
+        this.subjectExchange = exchange;
 
         Map<String, String> subjectDataValues = new HashMap<>();
 

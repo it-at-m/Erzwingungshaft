@@ -26,6 +26,11 @@ public class EfileResponseMapper implements Processor {
             exchange.setException(new IllegalArgumentException("Missing header: EH_OPERATION_ID"));
             return;
         }
+
+        if (operationId.equals(OperationId.UPDATE_SUBJECT_DATA_FILE.getDescriptor())
+                || operationId.equals(OperationId.UPDATE_SUBJECT_DATA_FINE.getDescriptor()))
+            return;
+
         if (json == null || json.isBlank()) {
             exchange.setException(new IllegalArgumentException("Empty response body for objectMapper operationId: " + operationId));
             return;

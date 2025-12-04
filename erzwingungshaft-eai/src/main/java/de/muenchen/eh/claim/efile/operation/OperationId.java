@@ -31,7 +31,13 @@ public enum OperationId {
             return mapper.readValue(json, DmsObjektResponse.class);
         }
     },
-    UPDATE_SUBJECT_DATA("UpdateBusinessDataValue") {
+    UPDATE_SUBJECT_DATA_FILE("UpdateBusinessDataValue") {
+        @Override
+        public Object parseResponse(String json, ObjectMapper mapper) throws IOException {
+            return mapper.readValue(json, Map.class);
+        }
+    },
+    UPDATE_SUBJECT_DATA_FINE("UpdateBusinessDataValue") {
         @Override
         public Object parseResponse(String json, ObjectMapper mapper) throws IOException {
             return mapper.readValue(json, Map.class);

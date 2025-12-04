@@ -53,8 +53,11 @@ public class OperationIdFactory {
         case CREATE_FILE -> {
             efileExchange = createExchangeCaseFile(exchange.getMessage().getBody(ClaimContentWrapper.class));
         }
-        case UPDATE_SUBJECT_DATA -> {
-            efileExchange = createExchange(OperationId.UPDATE_SUBJECT_DATA.getDescriptor());
+        case UPDATE_SUBJECT_DATA_FILE -> {
+            efileExchange = createExchangeSubject(exchange.getMessage().getBody(ClaimContentWrapper.class), OperationId.UPDATE_SUBJECT_DATA_FILE);
+        }
+        case UPDATE_SUBJECT_DATA_FINE -> {
+            efileExchange = createExchangeSubject(exchange.getMessage().getBody(ClaimContentWrapper.class), OperationId.UPDATE_SUBJECT_DATA_FINE);
         }
         case CREATE_FINE -> {
             efileExchange = createExchangeFine(exchange.getMessage().getBody(ClaimContentWrapper.class));
@@ -75,6 +78,14 @@ public class OperationIdFactory {
 
         return ExchangeBuilder.create(efileExchange, operationId.getDescriptor())
                 .withBasicAuth(connectionProperties.getUsername(), connectionProperties.getPassword()).withRequestValidation(true).build();
+    }
+
+    private Exchange createExchangeSubject(ClaimContentWrapper dataWrapper, OperationId operationId) {
+        Exchange exchange = createExchange(operationId.getDescriptor());
+        exchange.getMessage().setHeader("objaddress", operationId.compareTo(OperationId.UPDATE_SUBJECT_DATA_FILE) == 0 ? dataWrapper.getClaimEfile().getFile()
+                : dataWrapper.getClaimEfile().getFine());
+
+        return exchange;
     }
 
     private Exchange createExchangeContentObject() {

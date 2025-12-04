@@ -18,12 +18,15 @@ public class AddFile extends EfileOperation {
 
     private final ClaimDataRepository claimDataRepository;
     private final FileProperties fileProperties;
+    private final UpdateFileSubjectData updateFileSubjectData;
 
     public AddFile(OperationIdFactory operationIdFactory, LogServiceClaim logServiceClaim, ClaimEfileRepository claimEfileRepository,
-            ClaimDataRepository claimDataRepository, FileProperties fileProperties) {
+            ClaimDataRepository claimDataRepository, FileProperties fileProperties, UpdateFileSubjectData updateFileSubjectData) {
+
         super(operationIdFactory, logServiceClaim, claimEfileRepository);
         this.claimDataRepository = claimDataRepository;
         this.fileProperties = fileProperties;
+        this.updateFileSubjectData = updateFileSubjectData;
     }
 
     @Override
@@ -35,6 +38,13 @@ public class AddFile extends EfileOperation {
         if (claimEfile.isPresent() && claimEfile.get().getFile() != null) {
             processingDataWrapper.setClaimEfile(claimEfile.get());
             logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_FILE_ALREADY_EXISTS_IN_COLLECTION, MessageType.INFO, exchange);
+
+            Exchange responseSubjectUpdate = updateSubjectData(exchange);
+
+            if (responseSubjectUpdate.isRouteStop()) {
+                exchange.setRouteStop(true);
+            }
+
         } else {
             Exchange createFileRequest = operationIdFactory.createExchange(OperationId.CREATE_FILE, exchange);
             Exchange createFileResponse = efileConnector.send(createFileRequest);
@@ -47,14 +57,16 @@ public class AddFile extends EfileOperation {
             createUpdateClaimEfile(exchange, OperationId.CREATE_FILE);
             logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_FILE_ADDED_TO_COLLECTION, MessageType.INFO, exchange);
 
-            UpdateFileSubjectData updateSubjectData = new UpdateFileSubjectData(super.logServiceClaim, exchange, super.efileConnector, super.operationIdFactory,
-                    fileProperties, claimDataRepository);
-            Exchange responseSubjectUpdate = updateSubjectData.execute();
+            Exchange responseSubjectUpdate = updateSubjectData(exchange);
 
             if (responseSubjectUpdate.isRouteStop()) {
                 exchange.setRouteStop(true);
             }
 
         }
+    }
+
+    private Exchange updateSubjectData(Exchange exchange) {
+        return this.updateFileSubjectData.execute(exchange, OperationId.UPDATE_SUBJECT_DATA_FILE);
     }
 }

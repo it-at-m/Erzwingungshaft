@@ -13,12 +13,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class AddFine extends EfileOperation {
 
+    private final UpdateFineSubjectData updateFineSubjectData;
     private final FineProperties fineProperties;
 
     public AddFine(OperationIdFactory operationIdFactory, LogServiceClaim logServiceClaim, ClaimEfileRepository claimEfileRepository,
-            FineProperties fineProperties) {
+            FineProperties fineProperties, UpdateFineSubjectData updateFineSubjectData) {
+
         super(operationIdFactory, logServiceClaim, claimEfileRepository);
         this.fineProperties = fineProperties;
+        this.updateFineSubjectData = updateFineSubjectData;
     }
 
     @Override
@@ -35,9 +38,7 @@ public class AddFine extends EfileOperation {
         createUpdateClaimEfile(exchange, OperationId.CREATE_FINE);
         logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_FINE_ADDED_TO_CASE_FILE, MessageType.INFO, exchange);
 
-        UpdateFineSubjectData updateSubjectData = new UpdateFineSubjectData(super.logServiceClaim, exchange, super.efileConnector, super.operationIdFactory,
-                fineProperties);
-        Exchange responseSubjectUpdate = updateSubjectData.execute();
+        Exchange responseSubjectUpdate = updateFineSubjectData.execute(exchange, OperationId.UPDATE_SUBJECT_DATA_FINE);
 
         if (responseSubjectUpdate.isRouteStop()) {
             exchange.setRouteStop(true);

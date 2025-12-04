@@ -56,10 +56,10 @@ efile:
     joboe: COO.2150.9150.1.15756
     jobposition: DocumentManager
     objaddress: COO.2150.9169.1.1632
-  #    subject-data-values:
-  #      gp-name: 'Name-des-Geschaeftspartner'
-  #      gp-first-name: 'Vorname-des-Geschaeftspartner'
-  #      gp-birth-date: 'Geburtstag-des-Geschaeftspartner'
+    subject-data-values:
+      gp-name: BusinessDataGPSurname
+      gp-first-name: BusinessDataGPFirstname
+      gp-birth-date: BusinessDataGPBirthDate
   fine:
     shortname: Bussgeldverfahren
     filesubj: Bussgeldbescheid
