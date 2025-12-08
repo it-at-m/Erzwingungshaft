@@ -1,6 +1,7 @@
 package de.muenchen.eh;
 
 import java.util.List;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @ConditionalOnProperty(prefix = "batch", name = "enabled", havingValue = "true", matchIfMissing = true)
+@Log4j2
 public class ApplicationBatchRunner implements CommandLineRunner {
 
     private final ApplicationContext springContext;
@@ -67,15 +69,17 @@ public class ApplicationBatchRunner implements CommandLineRunner {
         int idleCount = 0;
         while (true) {
             int inflightCount = inflight.size();
+            log.info("Waiting for inflights {} ...", inflightCount);
             if (inflightCount == 0) {
                 idleCount++;
             } else {
                 idleCount = 0;
+                log.info("Reset idle count {}", idleCount);
             }
 
-            if (idleCount > 10) break;
-
-            Thread.sleep(10000);
+            if (idleCount > 5) break;
+            log.info("Idle count {}", idleCount);
+            Thread.sleep(3000);
         }
     }
 
