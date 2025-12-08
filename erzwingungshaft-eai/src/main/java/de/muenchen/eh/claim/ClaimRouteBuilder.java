@@ -25,6 +25,7 @@ public class ClaimRouteBuilder extends BaseRouteBuilder {
 
         from(PROCESS_CLAIMS)
                 .routeId("claim-eh-process")
+                .log(LoggingLevel.INFO, "Starting process eh-process ...")
                 .setBody(method(claimService, "claimsForProcessing"))
                 .split().body().aggregationStrategy(new GroupedBodyAggregationStrategy())
                 .process("claimDataUnmarshaller")

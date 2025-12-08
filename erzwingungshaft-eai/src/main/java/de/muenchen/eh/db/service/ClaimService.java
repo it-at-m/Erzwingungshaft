@@ -13,11 +13,13 @@ import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Log4j2
 public class ClaimService {
 
     @PersistenceContext
@@ -35,8 +37,9 @@ public class ClaimService {
                 cb.equal(claimImportRoot.get("isAntragImport"), true),
                 cb.equal(claimImportRoot.get("isBescheidImport"), true),
                 cb.isNull(claimImportClaimJoin)));
-
-        return entityManager.createQuery(query).getResultList();
+        List<ClaimImport> claimImports = entityManager.createQuery(query).getResultList();
+        log.info("Claims found for processing : {}" , claimImports.size());
+        return claimImports;
     }
 
     public List<Claim> claimEfilesWithCorrespondingGId(String geschaeftspartnerId) {
