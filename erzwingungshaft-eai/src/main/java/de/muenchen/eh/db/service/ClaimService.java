@@ -38,7 +38,7 @@ public class ClaimService {
                 cb.equal(claimImportRoot.get("isBescheidImport"), true),
                 cb.isNull(claimImportClaimJoin)));
         List<ClaimImport> claimImports = entityManager.createQuery(query).getResultList();
-        log.info("Claims found for processing : {}" , claimImports.size());
+        log.info("Claims found for processing : {}", claimImports.size());
         return claimImports;
     }
 
