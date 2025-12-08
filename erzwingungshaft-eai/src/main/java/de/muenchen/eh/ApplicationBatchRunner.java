@@ -73,9 +73,9 @@ public class ApplicationBatchRunner implements CommandLineRunner {
                 idleCount = 0;
             }
 
-            if (idleCount > 3) break;
+            if (idleCount > 5) break;
 
-            Thread.sleep(1000);
+            Thread.sleep(2000);
         }
     }
 
