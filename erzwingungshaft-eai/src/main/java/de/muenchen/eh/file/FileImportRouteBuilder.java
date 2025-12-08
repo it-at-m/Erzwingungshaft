@@ -55,7 +55,7 @@ public class FileImportRouteBuilder extends BaseRouteBuilder {
                 .completionSize(100)
                 .completionTimeout(2000)
                 .bean("importEntityCache", "clear")
-                .log(LoggingLevel.DEBUG, "de.muenchen.eh", "'${body.size}' pdf files imported.")
+                .log(LoggingLevel.INFO, "de.muenchen.eh", "'${body.size}' pdf files imported.")
                 .to(ClaimRouteBuilder.PROCESS_CLAIMS);
 
     }
