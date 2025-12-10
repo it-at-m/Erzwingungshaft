@@ -36,6 +36,10 @@ public class ClaimEfile extends BaseEntity {
     @Column(name = "bescheid_document")
     private String bescheidDocument;
 
+    private String kostendokument;
+
+    private String verwerfung;
+
     @PrePersist
     protected void onCreate() {
         lastUpdate = Instant.now();

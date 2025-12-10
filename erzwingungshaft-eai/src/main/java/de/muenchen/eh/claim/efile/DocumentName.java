@@ -6,7 +6,9 @@ import lombok.Getter;
 public enum DocumentName {
 
     ANTRAG("EH-Antrag"),
-    BESCHEID("EH-Bescheid");
+    BESCHEID("EH-Bescheid"),
+    KOSTEN("EH-Kostenbescheid"),
+    VERWERFUNG("EH-Verwerfungsbescheid");
 
     private final String descriptor;
 

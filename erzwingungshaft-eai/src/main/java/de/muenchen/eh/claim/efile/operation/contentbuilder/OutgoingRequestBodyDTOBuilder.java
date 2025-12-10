@@ -28,8 +28,18 @@ public class OutgoingRequestBodyDTOBuilder {
 
         if (documents != null) {
             for (ClaimDocument document : documents) {
-                var prefix = document.getDocumentType().equals(DocumentType.ANTRAG.getDescriptor()) ? DocumentName.ANTRAG.getDescriptor()
-                        : DocumentName.BESCHEID.getDescriptor();
+
+                String prefix = "unkown";
+
+                if (document.getDocumentType().equals(DocumentType.ANTRAG.getDescriptor()))
+                    prefix = DocumentName.ANTRAG.getDescriptor();
+                else if (document.getDocumentType().equals(DocumentType.BESCHEID.getDescriptor()))
+                    prefix = DocumentName.BESCHEID.getDescriptor();
+                else if (document.getDocumentType().equals(DocumentType.KOSTEN.getDescriptor()))
+                    prefix = DocumentType.KOSTEN.getDescriptor();
+                else if (document.getDocumentType().equals(DocumentType.VERWERFUNG.getDescriptor()))
+                    prefix = DocumentType.VERWERFUNG.getDescriptor();
+
                 var suffix = FilenameUtils.getExtension(document.getFileName());
 
                 DataSource dataSource = new ByteArrayDataSource(document.getDocument(), document.getDocument().length, "application/octet-stream");

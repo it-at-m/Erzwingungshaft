@@ -10,7 +10,6 @@ public class ProcedureDTOBuilder {
 
     private final FineProperties fineProperties;
     private final ClaimContentWrapper contentWrapper;
-    private final CreateProcedureDTO createProcedureDTO = new CreateProcedureDTO();
 
     public static ProcedureDTOBuilder create(FineProperties fineProperties, ClaimContentWrapper contentWrapper) {
         return new ProcedureDTOBuilder(fineProperties, contentWrapper);
@@ -21,6 +20,8 @@ public class ProcedureDTOBuilder {
     }
 
     private CreateProcedureDTO createProcedureDTO() {
+
+        CreateProcedureDTO createProcedureDTO = new CreateProcedureDTO();
 
         createProcedureDTO.setShortname(fineProperties.getShortname());
         createProcedureDTO.setReferrednumber(contentWrapper.getClaimEfile().getFile());

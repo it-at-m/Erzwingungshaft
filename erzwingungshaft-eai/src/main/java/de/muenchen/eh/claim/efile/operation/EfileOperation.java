@@ -11,6 +11,7 @@ import de.muenchen.eh.db.repository.ClaimEfileRepository;
 import de.muenchen.eh.log.Constants;
 import de.muenchen.eh.log.LogServiceClaim;
 import jakarta.annotation.PostConstruct;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.Exchange;
 import org.apache.camel.Produce;
@@ -46,6 +47,9 @@ abstract class EfileOperation {
         case READ_COLLECTIONS -> {
             claimEfile.setCollection(((Objektreferenz) dataWrapper.getEfile().get(operationId.name())).getObjaddress());
         }
+        case SEARCH_FILE -> {
+            claimEfile.setFile(((List<Objektreferenz>) dataWrapper.getEfile().get(operationId.name())).getLast().getObjaddress());
+        }
         case CREATE_FILE -> {
             claimEfile.setFile(((DmsObjektResponse) dataWrapper.getEfile().get(operationId.name())).getObjid());
         }
@@ -58,8 +62,12 @@ abstract class EfileOperation {
             outgoing.getGiobjecttype().forEach(doc -> {
                 if (doc.getObjname().equals(DocumentName.ANTRAG.getDescriptor())) {
                     claimEfile.setAntragDocument(doc.getObjaddress());
-                } else {
+                } else if (doc.getObjname().equals(DocumentName.BESCHEID.getDescriptor())) {
                     claimEfile.setBescheidDocument(doc.getObjaddress());
+                } else if (doc.getObjname().equals(DocumentName.KOSTEN.getDescriptor())) {
+                    claimEfile.setKostendokument(doc.getObjaddress());
+                } else if (doc.getObjname().equals(DocumentName.VERWERFUNG.getDescriptor())) {
+                    claimEfile.setVerwerfung(doc.getObjaddress());
                 }
             });
         }

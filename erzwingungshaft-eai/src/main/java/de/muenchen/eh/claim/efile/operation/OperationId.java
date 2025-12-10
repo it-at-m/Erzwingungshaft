@@ -5,6 +5,7 @@ import de.muenchen.eakte.api.rest.model.CreateContentObjectAntwortDTO;
 import de.muenchen.eakte.api.rest.model.CreateOutgoingAntwortDTO;
 import de.muenchen.eakte.api.rest.model.DmsObjektResponse;
 import de.muenchen.eakte.api.rest.model.ReadApentryAntwortDTO;
+import de.muenchen.eakte.api.rest.model.SearchFileResponseDTO;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
@@ -17,6 +18,12 @@ public enum OperationId {
         @Override
         public Object parseResponse(String json, ObjectMapper mapper) throws IOException {
             return mapper.readValue(json, ReadApentryAntwortDTO.class);
+        }
+    },
+    SEARCH_FILE("SearchFile") {
+        @Override
+        public Object parseResponse(String json, ObjectMapper mapper) throws IOException {
+            return mapper.readValue(json, SearchFileResponseDTO.class);
         }
     },
     CREATE_FILE("CreateFile") {

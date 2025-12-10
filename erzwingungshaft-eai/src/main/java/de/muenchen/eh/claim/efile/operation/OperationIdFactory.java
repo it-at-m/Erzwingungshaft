@@ -7,6 +7,7 @@ import de.muenchen.eh.claim.efile.operation.contentbuilder.FileDTOBuilder;
 import de.muenchen.eh.claim.efile.operation.contentbuilder.OutgoingAnfrageDTOBuilder;
 import de.muenchen.eh.claim.efile.operation.contentbuilder.OutgoingRequestBodyDTOBuilder;
 import de.muenchen.eh.claim.efile.operation.contentbuilder.ProcedureDTOBuilder;
+import de.muenchen.eh.claim.efile.operation.contentbuilder.SearchFileDTOBuilder;
 import de.muenchen.eh.claim.efile.properties.ConnectionProperties;
 import de.muenchen.eh.claim.efile.properties.FineProperties;
 import de.muenchen.eh.db.entity.ClaimDocument;
@@ -50,6 +51,9 @@ public class OperationIdFactory {
         case READ_COLLECTIONS -> {
             efileExchange = createExchange(OperationId.READ_COLLECTIONS.getDescriptor());
         }
+        case SEARCH_FILE -> {
+            efileExchange = createExchangeSearchFile(exchange.getMessage().getBody(ClaimContentWrapper.class));
+        }
         case CREATE_FILE -> {
             efileExchange = createExchangeCaseFile(exchange.getMessage().getBody(ClaimContentWrapper.class));
         }
@@ -78,6 +82,12 @@ public class OperationIdFactory {
 
         return ExchangeBuilder.create(efileExchange, operationId.getDescriptor())
                 .withBasicAuth(connectionProperties.getUsername(), connectionProperties.getPassword()).withRequestValidation(true).build();
+    }
+
+    private Exchange createExchangeSearchFile(ClaimContentWrapper dataWrapper) {
+        Exchange exchange = createExchange(OperationId.SEARCH_FILE.getDescriptor());
+        exchange.getMessage().setBody(SearchFileDTOBuilder.create(dataWrapper).build());
+        return exchange;
     }
 
     private Exchange createExchangeSubject(ClaimContentWrapper dataWrapper, OperationId operationId) {

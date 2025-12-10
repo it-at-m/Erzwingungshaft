@@ -165,8 +165,8 @@ xjustiz:
         gds-dokumentklasse-1-4:
           antrag-behoerde: '016'
           bescheid: '017'
-          kostendokument: '20'
-#         verwerfung: '??'
+          kostendokument: '017'
+          verwerfung: '017'
     gds-bestandteiltyp:
       current-version: 2.4
       kennung: urn:xoev-de:xjustiz:codeliste:gds.bestandteiltyp

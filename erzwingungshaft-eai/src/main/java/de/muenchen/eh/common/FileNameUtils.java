@@ -103,8 +103,10 @@ public class FileNameUtils {
             return XoevCodeGDSDokumentklasse.ANTRAG;
         case BESCHEID:
             return XoevCodeGDSDokumentklasse.BESCHEID;
-        //            case KOSTEN: return XoevCodeGDSDokumentklasse.KOSTEN;
-        //            case VERWERFUNG: return XoevCodeGDSDokumentklasse.VERWERFUNG;
+        case KOSTEN:
+            return XoevCodeGDSDokumentklasse.KOSTENDOKUMENT;
+        case VERWERFUNG:
+            return XoevCodeGDSDokumentklasse.VERWERFUNGSBESCHEID;
         default:
             throw new IllegalArgumentException("DocumentType not found: " + type);
         }
