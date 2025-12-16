@@ -39,6 +39,8 @@ public class TlsClientParametersFactory {
                     : new NoopHostnameVerifier();
             tlsClientParameters.setHostnameVerifier(hostnameVerifier);
 
+            log.info("Hostname verifier: {}", hostnameVerifier.getClass().getName());
+
             return tlsClientParameters;
         } catch (XtaClientInitializationException e) {
             throw new XtaClientInitializationException("TLS configuration failed: " + e.getMessage(), e);
