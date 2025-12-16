@@ -117,17 +117,17 @@ class ProcessKVUEDataTest {
                     .to("mock:finish");
         });
 
-
-/*        In case bebpo/xta connetion should not be mocked.
-          Comment out AdviceWith and add the mock in ClaimRouteBuilder.
-
-          ClaimRouteBuilder
-          ...
-            .process("{{xjustiz.interface.xta}}").id("bebpoService")
-                .to("mock:finish")
-                .end()
-            ...
-*/
+        /*
+         * In case bebpo/xta connetion should not be mocked.
+         * Comment out AdviceWith and add the mock in ClaimRouteBuilder.
+         *
+         * ClaimRouteBuilder
+         * ...
+         * .process("{{xjustiz.interface.xta}}").id("bebpoService")
+         * .to("mock:finish")
+         * .end()
+         * ...
+         */
 
         camelContext.start();
 
