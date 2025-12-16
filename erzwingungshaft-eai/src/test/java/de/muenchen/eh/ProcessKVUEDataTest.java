@@ -51,7 +51,7 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 @CamelSpringBootTest
 @EnableAutoConfiguration
 @DirtiesContext
-@ActiveProfiles(profiles = { TestConstants.SPRING_TEST_PROFILE })
+@ActiveProfiles(profiles = { TestConstants.SPRING_TEST_PROFILE, TestConstants.SPRING_INTEGRATION_PROFILE })
 @Disabled("Only works with running stack/docker-compose.yml")
 class ProcessKVUEDataTest {
 
@@ -117,6 +117,18 @@ class ProcessKVUEDataTest {
                     .to("mock:finish");
         });
 
+
+/*        In case bebpo/xta connetion should not be mocked.
+          Comment out AdviceWith and add the mock in ClaimRouteBuilder.
+
+          ClaimRouteBuilder
+          ...
+            .process("{{xjustiz.interface.xta}}").id("bebpoService")
+                .to("mock:finish")
+                .end()
+            ...
+*/
+
         camelContext.start();
 
         // Start test ...
@@ -124,7 +136,7 @@ class ProcessKVUEDataTest {
 
         uploadBucketTestFileConfiguration();
 
-        finish.assertIsSatisfied(TimeUnit.SECONDS.toSeconds(1));
+        finish.assertIsSatisfied(TimeUnit.SECONDS.toSeconds(10));
 
         assertEquals(1, finish.getExchanges().size(), "One happy path implemented.");
         ClaimContentWrapper dataWrapper = finish.getExchanges().getFirst().getMessage().getBody(ClaimContentWrapper.class);
@@ -133,14 +145,14 @@ class ProcessKVUEDataTest {
         NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010 lastXJustizMessage = XmlUnmarshaller
                 .unmarshalNachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010(dataWrapper.getXjustizXml());
 
-        var betroffener = lastXJustizMessage.getGrunddaten().getVerfahrensdaten().getBeteiligungs().getFirst().getBeteiligter().getAuswahlBeteiligter()
+        var betroffener = lastXJustizMessage.getGrunddaten().getVerfahrensdaten().getBeteiligung().getFirst().getBeteiligter().getAuswahlBeteiligter()
                 .getNatuerlichePerson();
 
         assertEquals("Test", betroffener.getVollerName().getNachname());
         assertEquals("EXXXX", betroffener.getVollerName().getVorname());
 
-        var beteiligung = lastXJustizMessage.getGrunddaten().getVerfahrensdaten().getBeteiligungs().getLast();
-        assertEquals("046", beteiligung.getRolles().getFirst().getRollenbezeichnung().getCode());
+        var beteiligung = lastXJustizMessage.getGrunddaten().getVerfahrensdaten().getBeteiligung().getLast();
+        assertEquals("046", beteiligung.getRolle().getFirst().getRollenbezeichnung().getCode());
 
         assertEquals("Stadt München", lastXJustizMessage.getNachrichtenkopf().getAuswahlAbsender().getAbsenderSonstige());
 
