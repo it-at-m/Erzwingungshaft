@@ -1,7 +1,6 @@
 package de.muenchen.eh;
 
 import java.util.List;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @ConditionalOnProperty(prefix = "batch", name = "enabled", havingValue = "true", matchIfMissing = true)
-@Log4j2
 public class ApplicationBatchRunner implements CommandLineRunner {
 
     private final ApplicationContext springContext;
