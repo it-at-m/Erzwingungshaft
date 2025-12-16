@@ -12,7 +12,6 @@ import javax.net.ssl.SSLContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
-import org.apache.cxf.transport.https.httpclient.DefaultHostnameVerifier;
 import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
 import org.apache.hc.client5.http.ssl.TrustAllStrategy;
 import org.apache.hc.core5.ssl.SSLContextBuilder;
@@ -34,9 +33,13 @@ public class TlsClientParametersFactory {
             SSLContext sslContext = buildSSLContext();
             tlsClientParameters.setSSLSocketFactory(sslContext.getSocketFactory());
 
-            var hostnameVerifier = (clientConfiguration.getTls().isTrustAll())
-                    ? new DefaultHostnameVerifier()
-                    : new NoopHostnameVerifier();
+            //            var hostnameVerifier = (clientConfiguration.getTls().isTrustAll())
+            //                    ? new DefaultHostnameVerifier()
+            //                    : new NoopHostnameVerifier();
+            //
+            //            tlsClientParameters.setHostnameVerifier(hostnameVerifier);
+
+            var hostnameVerifier = new NoopHostnameVerifier();
             tlsClientParameters.setHostnameVerifier(hostnameVerifier);
 
             log.info("Hostname verifier: {}", hostnameVerifier.getClass().getName());
@@ -55,16 +58,19 @@ public class TlsClientParametersFactory {
         SSLContextBuilder sslContextBuilder = createSSLContextBuilder();
 
         try {
-            if (clientConfiguration.getTls().isTrustAll()) {
-                sslContextBuilder.loadTrustMaterial(
-                        clientConfiguration.getTls().getTrustStore().url(),
-                        clientConfiguration.getTls().getTrustStore().storePassword());
-                log.debug("Trust store loaded ({})", clientConfiguration.getTls().getTrustStore().toString());
-            } else {
-                log.warn("Using trust-all-strategie! This is not recommended and will disable host name checking!");
-                sslContextBuilder.loadTrustMaterial(new TrustAllStrategy());
-            }
-        } catch (NoSuchAlgorithmException | KeyStoreException | CertificateException | IOException e) {
+
+            //            if (clientConfiguration.getTls().isTrustAll()) {
+            //                sslContextBuilder.loadTrustMaterial(
+            //                        clientConfiguration.getTls().getTrustStore().url(),
+            //                        clientConfiguration.getTls().getTrustStore().storePassword());
+            //                log.debug("Trust store loaded ({})", clientConfiguration.getTls().getTrustStore().toString());
+            //            } else {
+            log.warn("Using trust-all-strategie! This is not recommended and will disable host name checking!");
+            sslContextBuilder.loadTrustMaterial(new TrustAllStrategy());
+            //            }
+            //        } catch (NoSuchAlgorithmException | KeyStoreException | CertificateException | IOException e) {
+
+        } catch (NoSuchAlgorithmException | KeyStoreException e) {
             throw new XtaClientInitializationException("Failed to load Truststore material.", e);
         }
 
