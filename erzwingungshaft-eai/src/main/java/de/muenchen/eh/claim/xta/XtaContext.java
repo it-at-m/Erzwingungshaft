@@ -1,5 +1,6 @@
 package de.muenchen.eh.claim.xta;
 
+import de.muenchen.eh.claim.xta.tls.TlsClientParametersFactory;
 import de.muenchen.eh.claim.xta.transport.properties.XtaClientConfiguration;
 import org.apache.camel.component.cxf.common.DataFormat;
 import org.apache.camel.component.cxf.jaxws.CxfEndpoint;
@@ -14,7 +15,7 @@ import org.springframework.context.annotation.Profile;
 public class XtaContext {
 
     @Bean
-    public CxfEndpoint managementPort(XtaClientConfiguration xtaClientConfig) {
+    public CxfEndpoint managementPort(XtaClientConfiguration xtaClientConfig, XtaClientConfigurer xtaClientConfigurer) {
 
         CxfEndpoint mp = new CxfEndpoint();
         mp.setAddress(xtaClientConfig.getManagementPortUri());
@@ -24,13 +25,15 @@ public class XtaContext {
         mp.getFeatures().add(new WSAddressingFeature());
         mp.setMtomEnabled(true);
 
+        mp.setCxfConfigurer(xtaClientConfigurer);
+
         mp.setDataFormat(DataFormat.POJO);
 
         return mp;
     }
 
     @Bean
-    public CxfEndpoint sendPort(XtaClientConfiguration xtaClientConfig) {
+    public CxfEndpoint sendPort(XtaClientConfiguration xtaClientConfig, XtaClientConfigurer xtaClientConfigurer) {
 
         CxfEndpoint sendp = new CxfEndpoint();
         sendp.setAddress(xtaClientConfig.getSendPortUri());
@@ -40,9 +43,16 @@ public class XtaContext {
         sendp.getFeatures().add(new WSAddressingFeature());
         sendp.setMtomEnabled(true);
 
+        sendp.setCxfConfigurer(xtaClientConfigurer);
+
         sendp.setDataFormat(DataFormat.POJO);
 
         return sendp;
+    }
+
+    @Bean
+    public XtaClientConfigurer xtaClientConfigurer(TlsClientParametersFactory tlsClientParametersFactory) {
+        return new XtaClientConfigurer(tlsClientParametersFactory);
     }
 
 }
