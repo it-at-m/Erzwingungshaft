@@ -1,0 +1,335 @@
+package de.muenchen.eh;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.camel.CamelContext;
+import org.apache.camel.EndpointInject;
+import org.apache.camel.builder.AdviceWith;
+import org.apache.camel.component.mock.MockEndpoint;
+import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
+import org.apache.camel.test.spring.junit5.UseAdviceWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.MinIOContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
+
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+
+import de.muenchen.eh.claim.ClaimContentWrapper;
+import de.muenchen.eh.common.XmlUnmarshaller;
+import de.muenchen.eh.db.entity.Claim;
+import de.muenchen.eh.db.entity.ClaimEfile;
+import de.muenchen.eh.db.entity.ClaimImport;
+import de.muenchen.eh.db.entity.ClaimImportLog;
+import de.muenchen.eh.db.entity.ClaimLog;
+import de.muenchen.eh.db.entity.MessageType;
+import de.muenchen.eh.db.repository.ClaimContentRepository;
+import de.muenchen.eh.db.repository.ClaimDataRepository;
+import de.muenchen.eh.db.repository.ClaimDocumentRepository;
+import de.muenchen.eh.db.repository.ClaimEfileRepository;
+import de.muenchen.eh.db.repository.ClaimImportLogRepository;
+import de.muenchen.eh.db.repository.ClaimImportRepository;
+import de.muenchen.eh.db.repository.ClaimLogRepository;
+import de.muenchen.eh.db.repository.ClaimRepository;
+import de.muenchen.eh.db.repository.ClaimXmlRepository;
+import de.muenchen.eh.db.service.ClaimService;
+import de.muenchen.xjustiz.generated.NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
+import software.amazon.awssdk.services.s3.model.DeleteBucketRequest;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+
+@UseAdviceWith
+@SpringBootTest(classes = { Application.class, XtaTestContext.class })
+@CamelSpringBootTest
+@EnableAutoConfiguration
+@DirtiesContext
+@ActiveProfiles(profiles = { TestConstants.SPRING_TEST_PROFILE })
+@Testcontainers
+public class ReadCreateFilingTest {
+
+	@EndpointInject("mock:finish")
+	private MockEndpoint finish;
+
+	@Autowired
+	protected ClaimImportRepository claimImportRepository;
+	@Autowired
+	protected ClaimRepository claimRepository;
+	@Autowired
+	protected ClaimDocumentRepository claimDocumentRepository;
+	@Autowired
+	protected ClaimContentRepository claimContentRepository;
+	@Autowired
+	protected ClaimDataRepository claimDataRepository;
+	@Autowired
+	protected ClaimXmlRepository claimlXmlRepository;
+	@Autowired
+	protected ClaimEfileRepository claimEfileRepository;
+	@Autowired
+	protected ClaimImportLogRepository claimImportLogRepository;
+	@Autowired
+	protected ClaimLogRepository claimLogRepository;
+	
+	@Autowired
+	private ClaimService claimService;
+
+	@Autowired
+	protected CamelContext camelContext;
+
+	private static final String EH_BUCKET_IMPORT = "eh-backup";
+	private static final String EH_BUCKET_PDF = "eh-import-pdf";
+	private static final String EH_BUCKET_ANTRAG = "eh-import-antrag";
+
+	private static final String METADATA = "D.KVU.EUDG0P0.20240807.EZH";
+	
+	private WireMockServer wireMockContainer;
+	
+	@Container	
+	private static MinIOContainer minioContainer = new MinIOContainer(DockerImageName.parse("minio/minio:latest") )
+		        .withExposedPorts(9000); 
+	
+	static {
+        minioContainer.setPortBindings(List.of("9000:9000"));
+    }
+	
+	 @DynamicPropertySource
+	    static void overrideProperties(DynamicPropertyRegistry registry) {
+		 	// S3-Minio
+	        registry.add("spring.minio.url", minioContainer::getContainerIpAddress);
+	        registry.add("spring.minio.access-key", minioContainer::getUserName);
+	        registry.add("spring.minio.secret-key", minioContainer::getPassword);
+	        
+	        // WireMockServer
+	        registry.add("server.port", () -> 8081);
+	    }
+	
+	private static S3Client s3InitClient;
+	
+	@BeforeEach
+	public void setUp() throws URISyntaxException {
+		
+	//	System.setProperty("testcontainers.docker.socket.override", "//./pipe/docker_cli");
+		
+		wireMockContainer = new WireMockServer(
+				WireMockConfiguration.wireMockConfig().port(8081).withRootDirectory("../stack/wiremock"));
+		wireMockContainer.start();
+
+		// Test Setup
+		s3InitClient = S3Client.builder().endpointOverride(new URI("http://127.0.0.1:9000")).region(Region.of("local"))
+				.credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(minioContainer.getUserName(), minioContainer.getPassword())))
+				.build();
+
+		initializeS3Bucket(s3InitClient);
+		
+	}
+
+	@AfterEach
+	public void teardown() {
+		wireMockContainer.stop();
+		minioContainer.stop();
+	}
+
+	@Test
+	void test_5_claims() throws Exception {
+
+		AdviceWith.adviceWith(camelContext, "claim-eh-process", a -> {
+			a.weaveById("bebpoService").replace().to("mock:finish");
+		});
+
+		camelContext.start();
+
+		// Start test ...
+		finish.expectedMessageCount(1);
+
+		uploadBucketTestFileConfiguration(s3InitClient);
+
+		finish.assertIsSatisfied(TimeUnit.MINUTES.toMillis(3));
+
+		//assertDatabaseInserts();
+		
+		// Database
+		assertEquals(5, claimImportRepository.count(), "5 imports expected.");
+		assertEquals(3, claimRepository.count(), "3 claims expected (gp_id : 1000809085/5793341761427, 1000013749, 1000258309).");
+		assertEquals(6, claimDocumentRepository.count(), "6 claim documents expected. 2 (Antrag, Urbescheid) for each gp_id : 1000809085, 1000013749, 1000258309");
+		assertEquals(2, claimContentRepository.count(), "2 claim contents expected (gp_id : 1000809085/5793341761427, 1000013749).");
+		assertEquals(2, claimDataRepository.count(), "2 claim data expected (gp_id : 1000809085/5793341761427, 1000013749).");
+		assertEquals(2, claimlXmlRepository.count(), "2 claim xml expected (gp_id : 1000809085/5793341761427, 1000013749).");
+		assertEquals(1, claimEfileRepository.count(), "1 claim efile expected (gp_id : 1000013749).");
+    	assertEquals(17, claimImportLogRepository.count(), "17 claim import logs expected.");
+		assertEquals(5, claimImportLogRepository.findByMessage("IMPORT_DATA_FILE_CREATED").size(), "D.KVU.EUDG0P0.20240807.EZH contains 5 lines to import.");
+		assertEquals(3, claimImportLogRepository.findByMessage("IMPORT_ANTRAG_IMPORT_DIRECTORY").size(), "3 claims contains ANTRAG to import.");
+		assertEquals(3, claimImportLogRepository.findByMessage("IMPORT_BESCHEID_IMPORT_DIRECTORY").size(), "3 claims contains BESCHEID to import.");
+		assertEquals(3, claimImportLogRepository.findByMessage("IMPORT_ANTRAG_IMPORT_DB").size(), "3 claims contains ANTRAG to import in db.");
+		assertEquals(3, claimImportLogRepository.findByMessage("IMPORT_BESCHEID_IMPORT_DB").size(), "3 claims contains BESCHEID to import in db.");
+		assertEquals(24, claimLogRepository.count(), "24 claim logs expected.");
+		assertEquals(21, claimLogRepository.findByMessageTyp(MessageType.INFO).size(), "21 import INFO expected.");
+		assertEquals(1, claimLogRepository.findByMessageTyp(MessageType.WARN).size(), "1 import WARN expected.");
+		assertEquals(2, claimLogRepository.findByMessageTyp(MessageType.ERROR).size(), "2 import ERROR expected.");
+		
+		List<Claim> claims = claimService.claimEfilesWithCorrespondingGId("1000013749");
+		ClaimEfile claimEfile = claims.get(0).getClaimEfile();
+		assertEquals("COO.2150.9169.1.1605576", claimEfile.getCollection());
+		assertEquals("COO.2150.9169.1.1957003", claimEfile.getFile());
+		assertEquals("COO.2150.9169.1.2119717", claimEfile.getFine());
+		assertEquals("COO.2150.9169.1.2119719", claimEfile.getOutgoing());
+		assertEquals("COO.2150.9169.1.2119720", claimEfile.getAntragDocument());
+		assertEquals("COO.2150.9169.1.2119721", claimEfile.getBescheidDocument());
+		
+		assertEquals(1, finish.getExchanges().size(), "One happy path implemented.");
+		ClaimContentWrapper dataWrapper = finish.getExchanges().getFirst().getMessage()
+				.getBody(ClaimContentWrapper.class);
+		
+		// XML message
+		NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010 lastXJustizMessage = XmlUnmarshaller
+				.unmarshalNachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010(dataWrapper.getXjustizXml());
+
+		var betroffener = lastXJustizMessage.getGrunddaten().getVerfahrensdaten().getBeteiligung().getFirst()
+				.getBeteiligter().getAuswahlBeteiligter().getNatuerlichePerson();
+
+		assertEquals("Test", betroffener.getVollerName().getNachname());
+		assertEquals("EXXXX", betroffener.getVollerName().getVorname());
+
+		var beteiligung = lastXJustizMessage.getGrunddaten().getVerfahrensdaten().getBeteiligung().getLast();
+		assertEquals("046", beteiligung.getRolle().getFirst().getRollenbezeichnung().getCode());
+
+		assertEquals("Stadt München",
+				lastXJustizMessage.getNachrichtenkopf().getAuswahlAbsender().getAbsenderSonstige());
+
+		List<ClaimImport> claimImports = claimImportRepository
+				.findByIsDataImportTrueAndIsAntragImportTrueAndIsBescheidImportTrueOrderByIdAsc();
+		
+		// DB log 1000809085_5793341761427
+		Optional<ClaimImport> first_claimImport_1000809085_5793341761427 = claimImports.stream()
+				.filter(ci -> ci.getGeschaeftspartnerId().equals("1000809085")).findFirst();
+		var claimImport_1000809085_5793341761427 = first_claimImport_1000809085_5793341761427.orElseThrow();
+		assertEquals("1000809085", claimImport_1000809085_5793341761427.getGeschaeftspartnerId());
+		assertEquals("5793341761427", claimImport_1000809085_5793341761427.getKassenzeichen());
+
+		List<ClaimImportLog> infoClaimImportLogs = claimImportLogRepository
+				.findByClaimImportIdAndMessageType(claimImport_1000809085_5793341761427.getId(), MessageType.INFO);
+		assertEquals(5, infoClaimImportLogs.size());
+		assertEquals(0, claimImportLogRepository
+				.findByClaimImportIdAndMessageType(claimImport_1000809085_5793341761427.getId(), MessageType.ERROR)
+				.size(), "No errors expected.");
+
+		Claim claim_1000809085_5793341761427 = claimRepository
+				.findByClaimImportId(claimImport_1000809085_5793341761427.getId());
+		List<ClaimLog> infoClaimLogs = claimLogRepository
+				.findByClaimIdAndMessageTyp(claim_1000809085_5793341761427.getId(), MessageType.INFO);
+		assertEquals(6, infoClaimLogs.size());
+
+		assertNotNull(claim_1000809085_5793341761427.getEhUuid(),
+				"With the xml generation a uuid is created which is persisted in db.");
+		var claimlog_errors_1000809085_5793341761427 = claimLogRepository
+				.findByClaimIdAndMessageTyp(claim_1000809085_5793341761427.getId(), MessageType.ERROR);
+		assertEquals(1, claimlog_errors_1000809085_5793341761427.size(), "One error expected.");
+		assertEquals("EFILE_GESCHAEFTSPARTNERID_COLLECTION_NOT_FOUND",
+				claimlog_errors_1000809085_5793341761427.getFirst().getMessage());
+
+		// DB log 1000258309_5793402494421
+		Optional<ClaimImport> first_claimImport_1000258309_5793402494421 = claimImports.stream()
+				.filter(ci -> ci.getGeschaeftspartnerId().equals("1000258309")).findFirst();
+		var claimImport_1000258309_5793402494421 = first_claimImport_1000258309_5793402494421.orElseThrow();
+		Claim claim_1000258309_5793402494421 = claimRepository
+				.findByClaimImportId(claimImport_1000258309_5793402494421.getId());
+		var claimlog_errors_1000258309_5793402494421 = claimLogRepository
+				.findByClaimIdAndMessageTyp(claim_1000258309_5793402494421.getId(), MessageType.ERROR);
+		assertEquals(1, claimlog_errors_1000258309_5793402494421.size(), "One error expected.");
+		assertEquals(
+				"The mandatory field defined at the position 31 (de.muenchen.eh.claim.ImportClaimData.ehtatstdb) is empty for the line: 1",
+				claimlog_errors_1000258309_5793402494421.getFirst().getMessage());
+		
+
+	}
+
+
+	public static void initializeS3Bucket(S3Client s3InitClient) {
+		// Remove old test content
+		var bucketsInTest = s3InitClient.listBuckets();
+
+		// Remove bucket objects
+		bucketsInTest.buckets().forEach(b -> {
+			var content = s3InitClient.listObjects(ListObjectsRequest.builder().bucket(b.name()).build());
+			content.contents().forEach(o -> {
+				s3InitClient.deleteObject(DeleteObjectRequest.builder().bucket(b.name()).key(o.key()).build());
+			});
+		});
+		// Delete buckets
+		bucketsInTest.buckets().forEach(b -> {
+			s3InitClient.deleteBucket(DeleteBucketRequest.builder().bucket(b.name()).build());
+		});
+
+		// Create test bucket
+		s3InitClient.createBucket(CreateBucketRequest.builder().bucket(EH_BUCKET_ANTRAG).build());
+		s3InitClient.createBucket(CreateBucketRequest.builder().bucket(EH_BUCKET_IMPORT).build());
+		s3InitClient.createBucket(CreateBucketRequest.builder().bucket(EH_BUCKET_PDF).build());
+	}
+	
+	public static void uploadBucketTestFileConfiguration(S3Client s3InitClient) {
+
+		// Initialize S3
+		s3InitClient.putObject(PutObjectRequest.builder().bucket(EH_BUCKET_ANTRAG).key(METADATA).build(),
+				Path.of(new File("testdata/in/metadata/D.KVU.EUDG0P0.20240807.EZH").toURI()));
+
+		// Not assignable to 'Einzelakte'
+		s3InitClient.putObject(
+				PutObjectRequest.builder().bucket(EH_BUCKET_PDF).key("1000809085_5793341761427_20240807_EH.pdf")
+						.build(),
+				Path.of(new File("testdata/in/pdf/1000809085_5793341761427_20240807_EH.pdf").toURI()));
+
+		s3InitClient.putObject(
+				PutObjectRequest.builder().bucket(EH_BUCKET_PDF).key("1000809085_5793341761427_20240807_URB.pdf")
+						.build(),
+				Path.of(new File("testdata/in/pdf/1000809085_5793341761427_20240807_URB.pdf").toURI()));
+
+		// Assignable to 'Einzelakte'
+		s3InitClient.putObject(
+				PutObjectRequest.builder().bucket(EH_BUCKET_PDF).key("1000013749_5793303492524_20240807_EH.pdf")
+						.build(),
+				Path.of(new File("testdata/in/pdf/1000013749_5793303492524_20240807_EH.pdf").toURI()));
+
+		s3InitClient.putObject(
+				PutObjectRequest.builder().bucket(EH_BUCKET_PDF).key("1000013749_5793303492524_20240807_URB.pdf")
+						.build(),
+				Path.of(new File("testdata/in/pdf/1000013749_5793303492524_20240807_URB.pdf").toURI()));
+
+		// IllegalArgumentException : The mandatory field defined at the position 31
+		s3InitClient.putObject(
+				PutObjectRequest.builder().bucket(EH_BUCKET_PDF).key("1000258309_5793402494421_20240807_EH.pdf")
+						.build(),
+				Path.of(new File("testdata/in/pdf/1000258309_5793402494421_20240807_EH.pdf").toURI()));
+
+		s3InitClient.putObject(
+				PutObjectRequest.builder().bucket(EH_BUCKET_PDF).key("1000258309_5793402494421_20240807_URB.pdf")
+						.build(),
+				Path.of(new File("testdata/in/pdf/1000258309_5793402494421_20240807_URB.pdf").toURI()));
+
+	}
+
+}
+

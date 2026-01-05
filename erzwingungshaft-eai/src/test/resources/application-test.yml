@@ -1,16 +1,16 @@
 batch:
   enabled: false
 
-proxy:
-  http:
-    host: 1.1.1.1
-    port: 80
-    non-proxy-hosts:
-      - 127.0.0.1
+#proxy:
+#  http:
+#    host: 1.1.1.1
+#    port: 80
+#    non-proxy-hosts:
+#      - 127.0.0.1
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
+    url: jdbc:tc:postgresql:///testdb?TC_TMPFS=/testtmpfs:rw
     username: admin
     password: admin
   jpa:
@@ -44,7 +44,7 @@ efile:
   connection:
     host: localhost
     scheme: http
-    port: 8080
+    port: 8081
     context-path: api/
     username:
     password:
@@ -75,8 +75,8 @@ efile:
 xjustiz:
   credentials:
     s3:
-      access-key: minio
-      secret-key: Test1234
+      access-key: minioadmin
+      secret-key: minioadmin
   interface:
     document:
       processor: direct:xjustiz-document-processor

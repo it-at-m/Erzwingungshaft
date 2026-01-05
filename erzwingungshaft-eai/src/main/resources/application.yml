@@ -1,12 +1,12 @@
 batch:
   enabled: true
 
-proxy:
-  http:
-    host:
-    port:
-    non-proxy-hosts:
-      -
+#proxy:
+#  http:
+#    host:
+#    port:
+#    non-proxy-hosts:
+#      -
 
 spring:
   application:

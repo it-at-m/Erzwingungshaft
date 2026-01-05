@@ -1,4 +1,4 @@
-package de.muenchen.eh;
+package de.muenchen.eh.development;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -6,6 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
+import de.muenchen.eh.Application;
+import de.muenchen.eh.TestConstants;
+import de.muenchen.eh.XtaTestContext;
 import de.muenchen.eh.claim.ClaimRouteBuilder;
 import de.muenchen.eh.claim.xta.XtaRouteBuilder;
 import de.muenchen.eh.claim.xta.transport.ByteArrayDataSource;

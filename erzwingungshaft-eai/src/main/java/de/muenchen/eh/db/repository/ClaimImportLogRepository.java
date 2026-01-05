@@ -12,5 +12,6 @@ import org.springframework.stereotype.Repository;
 public interface ClaimImportLogRepository extends CrudRepository<ClaimImportLog, UUID> {
 
     List<ClaimImportLog> findByClaimImportIdAndMessageType(@NotNull Integer claimId, @NotNull MessageType messageTyp);
+    List<ClaimImportLog> findByMessage(@NotNull String message);
 
 }

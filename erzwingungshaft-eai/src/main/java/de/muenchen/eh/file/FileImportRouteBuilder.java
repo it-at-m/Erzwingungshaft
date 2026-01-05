@@ -32,7 +32,7 @@ public class FileImportRouteBuilder extends BaseRouteBuilder {
                 .process("claimMetadataFile")
                 .bean("logServiceImport", "logClaimImport")
                 .end()
-                .log(LoggingLevel.DEBUG, "de.muenchen.eh", "'${body.size}' claims imported.")
+                .log(LoggingLevel.INFO, "de.muenchen.eh", "'${body.size}' claims imported.")
                 .process(exchange -> {
                     exchange.getContext().getRouteController().startRoute("import-pdfs");
                 });
