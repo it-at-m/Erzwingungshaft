@@ -62,6 +62,7 @@ import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
 import software.amazon.awssdk.services.s3.model.DeleteBucketRequest;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
+import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @UseAdviceWith
@@ -101,7 +102,7 @@ public class ReadCreateFilingTest {
 	@Autowired
 	protected CamelContext camelContext;
 
-	private static final String EH_BUCKET_IMPORT = "eh-backup";
+	private static final String EH_BUCKET_BACKUP = "eh-backup";
 	private static final String EH_BUCKET_PDF = "eh-import-pdf";
 	private static final String EH_BUCKET_ANTRAG = "eh-import-antrag";
 
@@ -204,6 +205,12 @@ public class ReadCreateFilingTest {
 		ClaimContentWrapper dataWrapper = finish.getExchanges().getFirst().getMessage()
 				.getBody(ClaimContentWrapper.class);
 		
+		// S3 buckets
+	    assertEquals(0, s3BucketObjectCount(EH_BUCKET_ANTRAG), "Claim import bucket should be empty.");
+	    assertEquals(0, s3BucketObjectCount(EH_BUCKET_PDF), "Pdf import bucket should be empty.");
+	    assertEquals(11, s3BucketObjectCount(EH_BUCKET_BACKUP), "11 backup files expected.");
+		
+		
 		// XML message
 		NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010 lastXJustizMessage = XmlUnmarshaller
 				.unmarshalNachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010(dataWrapper.getXjustizXml());
@@ -267,6 +274,10 @@ public class ReadCreateFilingTest {
 
 	}
 
+	private int s3BucketObjectCount(String bucketName) {
+		return s3InitClient.listObjectsV2(ListObjectsV2Request.builder().bucket(bucketName).build()).contents().size();
+	}
+
 
 	public static void initializeS3Bucket(S3Client s3InitClient) {
 		// Remove old test content
@@ -286,7 +297,7 @@ public class ReadCreateFilingTest {
 
 		// Create test bucket
 		s3InitClient.createBucket(CreateBucketRequest.builder().bucket(EH_BUCKET_ANTRAG).build());
-		s3InitClient.createBucket(CreateBucketRequest.builder().bucket(EH_BUCKET_IMPORT).build());
+		s3InitClient.createBucket(CreateBucketRequest.builder().bucket(EH_BUCKET_BACKUP).build());
 		s3InitClient.createBucket(CreateBucketRequest.builder().bucket(EH_BUCKET_PDF).build());
 	}
 	
