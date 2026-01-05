@@ -32,7 +32,7 @@ import org.springframework.test.context.ActiveProfiles;
 @DirtiesContext
 @ActiveProfiles(TestConstants.SPRING_TEST_PROFILE)
 @Disabled("Only works with running stack/docker-compose.yml")
-public class EakteTest {
+class EakteTest {
 
     @Produce(value = EfileRouteBuilder.DMS_CONNECTION)
     private ProducerTemplate eakteConnector;

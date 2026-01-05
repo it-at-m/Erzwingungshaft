@@ -6,7 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -35,7 +37,6 @@ import org.testcontainers.utility.DockerImageName;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 
-import de.muenchen.eh.claim.ClaimContentWrapper;
 import de.muenchen.eh.common.XmlUnmarshaller;
 import de.muenchen.eh.db.entity.Claim;
 import de.muenchen.eh.db.entity.ClaimEfile;
@@ -134,8 +135,6 @@ public class ReadCreateFilingTest {
 	@BeforeEach
 	public void setUp() throws URISyntaxException {
 		
-	//	System.setProperty("testcontainers.docker.socket.override", "//./pipe/docker_cli");
-		
 		wireMockContainer = new WireMockServer(
 				WireMockConfiguration.wireMockConfig().port(8081).withRootDirectory("../stack/wiremock"));
 		wireMockContainer.start();
@@ -170,6 +169,7 @@ public class ReadCreateFilingTest {
 		uploadBucketTestFileConfiguration(s3InitClient);
 
 		finish.assertIsSatisfied(TimeUnit.MINUTES.toMillis(3));
+		assertEquals(1, finish.getExchanges().size(), "One happy path implemented.");
 
 		//assertDatabaseInserts();
 		
@@ -201,10 +201,6 @@ public class ReadCreateFilingTest {
 		assertEquals("COO.2150.9169.1.2119720", claimEfile.getAntragDocument());
 		assertEquals("COO.2150.9169.1.2119721", claimEfile.getBescheidDocument());
 		
-		assertEquals(1, finish.getExchanges().size(), "One happy path implemented.");
-		ClaimContentWrapper dataWrapper = finish.getExchanges().getFirst().getMessage()
-				.getBody(ClaimContentWrapper.class);
-		
 		// S3 buckets
 	    assertEquals(0, s3BucketObjectCount(EH_BUCKET_ANTRAG), "Claim import bucket should be empty.");
 	    assertEquals(0, s3BucketObjectCount(EH_BUCKET_PDF), "Pdf import bucket should be empty.");
@@ -212,9 +208,13 @@ public class ReadCreateFilingTest {
 		
 		
 		// XML message
+	    String xJustizXml = claimlXmlRepository.findByClaimId(claims.get(0).getId()).getFirst().getContent();
+	   
+	    assertEquals(Files.readString(Paths.get("src/test/resources/Compare_Reference_1000013749_5793303492524_20240807.txt")), ProcessXmlDocumentCompare.process(xJustizXml), "All elements with dynamic content have been removed. The content should be the same.");
+	   
 		NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010 lastXJustizMessage = XmlUnmarshaller
-				.unmarshalNachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010(dataWrapper.getXjustizXml());
-
+				.unmarshalNachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010(xJustizXml);
+		
 		var betroffener = lastXJustizMessage.getGrunddaten().getVerfahrensdaten().getBeteiligung().getFirst()
 				.getBeteiligter().getAuswahlBeteiligter().getNatuerlichePerson();
 

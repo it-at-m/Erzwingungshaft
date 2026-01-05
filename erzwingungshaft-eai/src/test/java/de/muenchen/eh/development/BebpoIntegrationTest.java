@@ -77,7 +77,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 @EnableAutoConfiguration(exclude = { HibernateJpaAutoConfiguration.class })
 @Slf4j
 @Disabled("The tests are less junit tests and more bebpo integration tests to try something out.")
-public class BebpoIntegrationTest {
+class BebpoIntegrationTest {
 
     @MockitoBean
     private ClaimContentRepository claimContentRepository;
