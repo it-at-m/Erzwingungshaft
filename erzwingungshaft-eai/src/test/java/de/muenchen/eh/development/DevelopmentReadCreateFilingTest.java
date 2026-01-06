@@ -2,25 +2,6 @@ package de.muenchen.eh.development;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.camel.CamelContext;
-import org.apache.camel.EndpointInject;
-import org.apache.camel.builder.AdviceWith;
-import org.apache.camel.component.mock.MockEndpoint;
-import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
-import org.apache.camel.test.spring.junit5.UseAdviceWith;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
-
 import de.muenchen.eh.Application;
 import de.muenchen.eh.ReadCreateFilingTest;
 import de.muenchen.eh.TestConstants;
@@ -35,6 +16,23 @@ import de.muenchen.eh.db.repository.ClaimImportRepository;
 import de.muenchen.eh.db.repository.ClaimLogRepository;
 import de.muenchen.eh.db.repository.ClaimRepository;
 import de.muenchen.eh.db.repository.ClaimXmlRepository;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.concurrent.TimeUnit;
+import org.apache.camel.CamelContext;
+import org.apache.camel.EndpointInject;
+import org.apache.camel.builder.AdviceWith;
+import org.apache.camel.component.mock.MockEndpoint;
+import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
+import org.apache.camel.test.spring.junit5.UseAdviceWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
@@ -51,37 +49,37 @@ import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
 @DirtiesContext
 @ActiveProfiles(profiles = { TestConstants.SPRING_TEST_PROFILE, TestConstants.SPRING_INTEGRATION_PROFILE, TestConstants.SPRING_DEVELOPMENT_PROFILE })
 @Disabled("The tests are less junit tests and more bebpo integration tests to try something out.")
-class DevelopmentReadCreateFilingTest {	
+class DevelopmentReadCreateFilingTest {
 
     @EndpointInject("mock:finish")
     private MockEndpoint finish;
 
     @Autowired
-	private ClaimImportRepository claimImportRepository;
-	@Autowired
-	private ClaimRepository claimRepository;
-	@Autowired
-	private ClaimDocumentRepository claimDocumentRepository;
-	@Autowired
-	private ClaimContentRepository claimContentRepository;
-	@Autowired
-	private ClaimDataRepository claimDataRepository;
-	@Autowired
-	private ClaimXmlRepository claimlXmlRepository;
-	@Autowired
-	private ClaimEfileRepository claimEfileRepository;
-	@Autowired
-	private ClaimImportLogRepository claimImportLogRepository;
-	@Autowired
-	private ClaimLogRepository claimLogRepository;
-	
+    private ClaimImportRepository claimImportRepository;
+    @Autowired
+    private ClaimRepository claimRepository;
+    @Autowired
+    private ClaimDocumentRepository claimDocumentRepository;
+    @Autowired
+    private ClaimContentRepository claimContentRepository;
+    @Autowired
+    private ClaimDataRepository claimDataRepository;
+    @Autowired
+    private ClaimXmlRepository claimlXmlRepository;
+    @Autowired
+    private ClaimEfileRepository claimEfileRepository;
+    @Autowired
+    private ClaimImportLogRepository claimImportLogRepository;
+    @Autowired
+    private ClaimLogRepository claimLogRepository;
+
     @Autowired
     CamelContext camelContext;
 
     private static final String EH_BUCKET_IMPORT = "eh-backup";
     private static final String EH_BUCKET_PDF = "eh-import-pdf";
     private static final String EH_BUCKET_ANTRAG = "eh-import-antrag";
-    
+
     private static S3Client s3InitClient;
 
     @BeforeEach
@@ -142,27 +140,27 @@ class DevelopmentReadCreateFilingTest {
         finish.assertIsSatisfied(TimeUnit.MINUTES.toMillis(2));
 
         assertEquals(1, finish.getExchanges().size(), "One happy path implemented.");
- 
+
         // Database
-   		assertEquals(5, claimImportRepository.count(), "5 imports expected.");
-     	assertEquals(3, claimRepository.count(), "3 claims expected (gp_id : 1000809085/5793341761427, 1000013749, 1000258309).");
-     	assertEquals(6, claimDocumentRepository.count(), "6 claim documents expected. 2 (Antrag, Urbescheid) for each gp_id : 1000809085, 1000013749, 1000258309");
-     	assertEquals(2, claimContentRepository.count(), "2 claim contents expected (gp_id : 1000809085/5793341761427, 1000013749).");
-     	assertEquals(2, claimDataRepository.count(), "2 claim data expected (gp_id : 1000809085/5793341761427, 1000013749).");
-     	assertEquals(2, claimlXmlRepository.count(), "2 claim xml expected (gp_id : 1000809085/5793341761427, 1000013749).");
-     	assertEquals(1, claimEfileRepository.count(), "1 claim efile expected (gp_id : 1000013749).");
-     	assertEquals(17, claimImportLogRepository.count(), "17 claim import logs expected.");
-     	assertEquals(5, claimImportLogRepository.findByMessage("IMPORT_DATA_FILE_CREATED").size(), "D.KVU.EUDG0P0.20240807.EZH contains 5 lines to import.");
-     	assertEquals(3, claimImportLogRepository.findByMessage("IMPORT_ANTRAG_IMPORT_DIRECTORY").size(), "3 claims contains ANTRAG to import.");
-     	assertEquals(3, claimImportLogRepository.findByMessage("IMPORT_BESCHEID_IMPORT_DIRECTORY").size(), "3 claims contains BESCHEID to import.");
-     	assertEquals(3, claimImportLogRepository.findByMessage("IMPORT_ANTRAG_IMPORT_DB").size(), "3 claims contains ANTRAG to import in db.");
-     	assertEquals(3, claimImportLogRepository.findByMessage("IMPORT_BESCHEID_IMPORT_DB").size(), "3 claims contains BESCHEID to import in db.");
-     	assertEquals(24, claimLogRepository.count(), "24 claim logs expected.");
-     	assertEquals(21, claimLogRepository.findByMessageTyp(MessageType.INFO).size(), "21 import INFO expected.");
-     	assertEquals(1, claimLogRepository.findByMessageTyp(MessageType.WARN).size(), "1 import WARN expected.");
-     	assertEquals(2, claimLogRepository.findByMessageTyp(MessageType.ERROR).size(), "2 import ERROR expected.");
-        
+        assertEquals(5, claimImportRepository.count(), "5 imports expected.");
+        assertEquals(3, claimRepository.count(), "3 claims expected (gp_id : 1000809085/5793341761427, 1000013749, 1000258309).");
+        assertEquals(6, claimDocumentRepository.count(),
+                "6 claim documents expected. 2 (Antrag, Urbescheid) for each gp_id : 1000809085, 1000013749, 1000258309");
+        assertEquals(2, claimContentRepository.count(), "2 claim contents expected (gp_id : 1000809085/5793341761427, 1000013749).");
+        assertEquals(2, claimDataRepository.count(), "2 claim data expected (gp_id : 1000809085/5793341761427, 1000013749).");
+        assertEquals(2, claimlXmlRepository.count(), "2 claim xml expected (gp_id : 1000809085/5793341761427, 1000013749).");
+        assertEquals(1, claimEfileRepository.count(), "1 claim efile expected (gp_id : 1000013749).");
+        assertEquals(17, claimImportLogRepository.count(), "17 claim import logs expected.");
+        assertEquals(5, claimImportLogRepository.findByMessage("IMPORT_DATA_FILE_CREATED").size(), "D.KVU.EUDG0P0.20240807.EZH contains 5 lines to import.");
+        assertEquals(3, claimImportLogRepository.findByMessage("IMPORT_ANTRAG_IMPORT_DIRECTORY").size(), "3 claims contains ANTRAG to import.");
+        assertEquals(3, claimImportLogRepository.findByMessage("IMPORT_BESCHEID_IMPORT_DIRECTORY").size(), "3 claims contains BESCHEID to import.");
+        assertEquals(3, claimImportLogRepository.findByMessage("IMPORT_ANTRAG_IMPORT_DB").size(), "3 claims contains ANTRAG to import in db.");
+        assertEquals(3, claimImportLogRepository.findByMessage("IMPORT_BESCHEID_IMPORT_DB").size(), "3 claims contains BESCHEID to import in db.");
+        assertEquals(24, claimLogRepository.count(), "24 claim logs expected.");
+        assertEquals(21, claimLogRepository.findByMessageTyp(MessageType.INFO).size(), "21 import INFO expected.");
+        assertEquals(1, claimLogRepository.findByMessageTyp(MessageType.WARN).size(), "1 import WARN expected.");
+        assertEquals(2, claimLogRepository.findByMessageTyp(MessageType.ERROR).size(), "2 import ERROR expected.");
+
     }
-    
 
 }
