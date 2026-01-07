@@ -13,4 +13,6 @@ public interface ClaimImportLogRepository extends CrudRepository<ClaimImportLog,
 
     List<ClaimImportLog> findByClaimImportIdAndMessageType(@NotNull Integer claimId, @NotNull MessageType messageTyp);
 
+    List<ClaimImportLog> findByMessage(@NotNull String message);
+
 }

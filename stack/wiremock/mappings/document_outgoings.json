@@ -19,6 +19,10 @@
         {
           "objname": "EH-Bescheid",
           "objaddress": "COO.2150.9169.1.2119721"
+        },
+        {
+          "objname": "EH-Verfahrensmitteilung",
+          "objaddress": "COO.2150.9169.1.2119722"
         }
       ]
     }

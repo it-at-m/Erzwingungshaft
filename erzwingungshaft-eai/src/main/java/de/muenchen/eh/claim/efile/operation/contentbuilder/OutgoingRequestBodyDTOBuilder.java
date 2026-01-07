@@ -18,6 +18,12 @@ public class OutgoingRequestBodyDTOBuilder {
 
     private final List<ClaimDocument> documents;
 
+    private static final Map<String, String> DOCUMENT_TYPE_TO_PREFIX = Map.of(
+            DocumentType.ANTRAG.getDescriptor(), DocumentName.ANTRAG.getDescriptor(),
+            DocumentType.BESCHEID.getDescriptor(), DocumentName.BESCHEID.getDescriptor(),
+            DocumentType.KOSTEN.getDescriptor(), DocumentType.KOSTEN.getDescriptor(),
+            DocumentType.VERWERFUNG.getDescriptor(), DocumentType.VERWERFUNG.getDescriptor());
+
     public static OutgoingRequestBodyDTOBuilder create(List<ClaimDocument> documents) {
         return new OutgoingRequestBodyDTOBuilder(documents);
     }
@@ -29,16 +35,7 @@ public class OutgoingRequestBodyDTOBuilder {
         if (documents != null) {
             for (ClaimDocument document : documents) {
 
-                String prefix = "unkown";
-
-                if (document.getDocumentType().equals(DocumentType.ANTRAG.getDescriptor()))
-                    prefix = DocumentName.ANTRAG.getDescriptor();
-                else if (document.getDocumentType().equals(DocumentType.BESCHEID.getDescriptor()))
-                    prefix = DocumentName.BESCHEID.getDescriptor();
-                else if (document.getDocumentType().equals(DocumentType.KOSTEN.getDescriptor()))
-                    prefix = DocumentName.KOSTEN.getDescriptor();
-                else if (document.getDocumentType().equals(DocumentType.VERWERFUNG.getDescriptor()))
-                    prefix = DocumentName.VERWERFUNG.getDescriptor();
+                String prefix = DOCUMENT_TYPE_TO_PREFIX.getOrDefault(document.getDocumentType(), "unknown");
 
                 var suffix = FilenameUtils.getExtension(document.getFileName());
 

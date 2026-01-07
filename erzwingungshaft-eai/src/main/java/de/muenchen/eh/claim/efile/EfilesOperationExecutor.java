@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class EfilesOperationExecutor implements Processor {
 
-    private final FindCollection collectionFinder;
+    private final FindCollection findCollection;
     private final AddFile addFile;
     private final AddFine addFine;
     private final AddOutgoing addOutgoing;
@@ -24,7 +24,7 @@ public class EfilesOperationExecutor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        EfileRecord operation = new EfileRecord(collectionFinder, addFile, addFine, addOutgoing);
+        EfileRecord operation = new EfileRecord(findCollection, addFile, addFine, addOutgoing);
         operation.execute(exchange);
 
     }

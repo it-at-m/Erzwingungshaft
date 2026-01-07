@@ -33,6 +33,7 @@ public class ClaimRouteBuilder extends BaseRouteBuilder {
                 .process("claimXJustizXmlEnricher")
                 .process("efilesOperationExecutor")
                 .process("{{xjustiz.interface.xta}}").id("bebpoService")
+                .log(LoggingLevel.DEBUG, "claim-eh-process completed gpid '${body}.claimImport.geschaeftspartnerId'.").id("claim-eh-process-gpid")
                 .end()
                 .bean("findCollection", "clearCollectionCache");
 
