@@ -36,9 +36,9 @@ public class OutgoingRequestBodyDTOBuilder {
                 else if (document.getDocumentType().equals(DocumentType.BESCHEID.getDescriptor()))
                     prefix = DocumentName.BESCHEID.getDescriptor();
                 else if (document.getDocumentType().equals(DocumentType.KOSTEN.getDescriptor()))
-                    prefix = DocumentType.KOSTEN.getDescriptor();
+                    prefix = DocumentName.KOSTEN.getDescriptor();
                 else if (document.getDocumentType().equals(DocumentType.VERWERFUNG.getDescriptor()))
-                    prefix = DocumentType.VERWERFUNG.getDescriptor();
+                    prefix = DocumentName.VERWERFUNG.getDescriptor();
 
                 var suffix = FilenameUtils.getExtension(document.getFileName());
 

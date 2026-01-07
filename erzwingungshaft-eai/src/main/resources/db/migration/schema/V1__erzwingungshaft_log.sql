@@ -359,6 +359,7 @@ CREATE TABLE eh.claim_efile
     bescheid_document   TEXT,
     kostendokument      TEXT,
     verwerfung          TEXT,
+    xml                 TEXT,
 
     CONSTRAINT fk_claim FOREIGN KEY (claim_id) REFERENCES eh.claim (id) ON DELETE CASCADE
 

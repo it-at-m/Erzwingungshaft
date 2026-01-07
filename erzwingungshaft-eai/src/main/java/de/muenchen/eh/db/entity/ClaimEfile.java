@@ -40,6 +40,8 @@ public class ClaimEfile extends BaseEntity {
 
     private String verwerfung;
 
+    private String xml;
+
     @PrePersist
     protected void onCreate() {
         lastUpdate = Instant.now();

@@ -8,7 +8,8 @@ public enum DocumentName {
     ANTRAG("EH-Antrag"),
     BESCHEID("EH-Bescheid"),
     KOSTEN("EH-Kostenbescheid"),
-    VERWERFUNG("EH-Verwerfungsbescheid");
+    VERWERFUNG("EH-Verwerfungsbescheid"),
+    VERFAHRENSMITTEILUNG("EH-Verfahrensmitteilung");
 
     private final String descriptor;
 

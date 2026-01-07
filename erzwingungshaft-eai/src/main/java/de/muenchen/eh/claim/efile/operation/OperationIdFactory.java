@@ -1,6 +1,7 @@
 package de.muenchen.eh.claim.efile.operation;
 
 import de.muenchen.eh.claim.ClaimContentWrapper;
+import de.muenchen.eh.claim.efile.DocumentName;
 import de.muenchen.eh.claim.efile.ExchangeBuilder;
 import de.muenchen.eh.claim.efile.OpenApiParameterExtractor;
 import de.muenchen.eh.claim.efile.operation.contentbuilder.FileDTOBuilder;
@@ -121,6 +122,10 @@ public class OperationIdFactory {
             for (Map.Entry<String, DataHandler> entry : docs.entrySet()) {
                 builder.addBinaryBody("giattachmenttype", entry.getValue().getInputStream(), ContentType.APPLICATION_OCTET_STREAM, entry.getKey());
             }
+
+             DataHandler xmlDataHandler = new DataHandler(dataWrapper.getXjustizXml(), ContentType.TEXT_XML.getMimeType());
+             builder.addBinaryBody("giattachmenttype", xmlDataHandler.getInputStream(), ContentType.TEXT_XML, DocumentName.VERFAHRENSMITTEILUNG.getDescriptor().concat(".xml"));
+
             exchange.getMessage().setBody(builder.build());
 
         } catch (IOException e) {

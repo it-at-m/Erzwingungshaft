@@ -68,6 +68,8 @@ abstract class EfileOperation {
                     claimEfile.setKostendokument(doc.getObjaddress());
                 } else if (doc.getObjname().equals(DocumentName.VERWERFUNG.getDescriptor())) {
                     claimEfile.setVerwerfung(doc.getObjaddress());
+                } else if (doc.getObjname().equals(DocumentName.VERFAHRENSMITTEILUNG.getDescriptor())) {
+                    claimEfile.setXml(doc.getObjaddress());
                 }
             });
         }

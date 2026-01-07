@@ -31,6 +31,7 @@ public enum StatusProcessingType {
     EFILE_OUTGOING_ADDED_TO_FINE("Outgoing file added to efile fine file."),
     EFILE_CONTENT_OBJECT_ANTRAG_ADDED_TO_OUTGOING("Content object 'Antrag' added to efile outgoing."),
     EFILE_CONTENT_OBJECT_URBESCHEID_ADDED_TO_OUTGOING("Content object 'URBESCHEID' added to efile outgoing."),
+    EFILE_CONTENT_OBJECT_XML_ADDED_TO_OUTGOING("Content object 'Verfahrensmitteilung.xml' added to efile outgoing."),
     EFILE_OBJECTADDRESSES_SAVED("Collection, case file, fine and documents efile objectaddresses saved in database."),
     EFILE_SUBJECT_FILE_DATA_SAVED("GP-Name, GP-Firstname, GP-Birthdate updated in efile file."),
     EFILE_SUBJECT_OWI_DATA_SAVED("'Ordnungswidrigkeitnummer (OWI)' updated in efile fine."),

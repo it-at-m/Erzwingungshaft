@@ -46,6 +46,8 @@ public class AddOutgoing extends EfileOperation {
                 logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_CONTENT_OBJECT_ANTRAG_ADDED_TO_OUTGOING, MessageType.INFO, exchange);
             if (claimEfile.getBescheidDocument() != null)
                 logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_CONTENT_OBJECT_URBESCHEID_ADDED_TO_OUTGOING, MessageType.INFO, exchange);
+            if (claimEfile.getXml() != null)
+                logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_CONTENT_OBJECT_XML_ADDED_TO_OUTGOING, MessageType.INFO, exchange);
         });
 
     }
