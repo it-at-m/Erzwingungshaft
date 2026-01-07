@@ -27,6 +27,7 @@ import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.UseAdviceWith;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -48,7 +49,7 @@ import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
 @EnableAutoConfiguration
 @DirtiesContext
 @ActiveProfiles(profiles = { TestConstants.SPRING_TEST_PROFILE, TestConstants.SPRING_INTEGRATION_PROFILE, TestConstants.SPRING_DEVELOPMENT_PROFILE })
-//@Disabled("The tests are less junit tests and more bebpo integration tests to try something out.")
+@Disabled("This is not a regular JUnit test. Rather, it can be used as a basis to flexibly configure the various endpoints (db, s3, efile, gmm) and to simulate a test run.")
 class DevelopmentReadCreateFilingTest {
 
     @EndpointInject("mock:test-end")
