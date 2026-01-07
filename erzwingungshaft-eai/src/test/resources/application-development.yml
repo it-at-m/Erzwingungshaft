@@ -7,8 +7,3 @@ xjustiz:
     s3:
       access-key: minio
       secret-key: Test1234
-
-efile:
-  connection:
-    port: 8080 
-        

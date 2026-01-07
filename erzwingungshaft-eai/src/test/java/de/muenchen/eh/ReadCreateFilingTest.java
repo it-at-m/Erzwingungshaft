@@ -183,7 +183,7 @@ public class ReadCreateFilingTest {
                     } else { // OperationName == getTransportReport
                         TransportReport transportReport = new TransportReport();
                         MessageStatusType messageStatusType = new MessageStatusType();
-                        messageStatusType.setStatus(BigInteger.valueOf(300));
+                        messageStatusType.setStatus(BigInteger.valueOf(1));
                         transportReport.setMessageStatus(messageStatusType);
                         exchange.getMessage().setBody(transportReport);
                     }
