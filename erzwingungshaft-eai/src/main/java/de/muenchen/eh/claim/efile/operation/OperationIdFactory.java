@@ -123,8 +123,9 @@ public class OperationIdFactory {
                 builder.addBinaryBody("giattachmenttype", entry.getValue().getInputStream(), ContentType.APPLICATION_OCTET_STREAM, entry.getKey());
             }
 
-             DataHandler xmlDataHandler = new DataHandler(dataWrapper.getXjustizXml(), ContentType.TEXT_XML.getMimeType());
-             builder.addBinaryBody("giattachmenttype", xmlDataHandler.getInputStream(), ContentType.TEXT_XML, DocumentName.VERFAHRENSMITTEILUNG.getDescriptor().concat(".xml"));
+            DataHandler xmlDataHandler = new DataHandler(dataWrapper.getXjustizXml(), ContentType.TEXT_XML.getMimeType());
+            builder.addBinaryBody("giattachmenttype", xmlDataHandler.getInputStream(), ContentType.TEXT_XML,
+                    DocumentName.VERFAHRENSMITTEILUNG.getDescriptor().concat(".xml"));
 
             exchange.getMessage().setBody(builder.build());
 
