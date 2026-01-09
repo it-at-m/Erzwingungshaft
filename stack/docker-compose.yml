@@ -56,7 +56,7 @@ services:
       - internal
     healthcheck:
       <<: *healthcheck
-      test: [ "CMD-SHELL",  "curl http://localhost:9000/minio/health/live" ]
+      test: ["CMD-SHELL",  "curl http://localhost:9000/minio/health/live"]
     security_opt: *security_settings
 
   init-minio:
@@ -65,8 +65,9 @@ services:
         - minio
       entrypoint: >
         /bin/sh -c "
+          until curl -fsS http://minio:9000/minio/health/ready; do sleep 2; done;
           mc config host add minio http://minio:9000 minio Test1234;
-          mc mb minio/test-bucket;
+          mc mb minio/test-bucket || true;
           exit 0;
         "
       networks:

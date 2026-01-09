@@ -1,13 +1,6 @@
 batch:
   enabled: true
 
-proxy:
-  http:
-    host:
-    port:
-    non-proxy-hosts:
-      -
-
 spring:
   application:
     name: @project.artifactId@
@@ -91,17 +84,4 @@ xjustiz:
     document:
       processor: direct:xjustiz-document-processor
     file:
-      consume:
       line-break: \n
-      error:
-    eakte:
-
-efile:
-  case-file:
-  #    subject-data-values:
-  #      gp-name: 'Name-des-Geschaeftspartner'
-  #      gp-first-name: 'Vorname-des-Geschaeftspartner'
-  #      gp-birth-date: 'Geburtstag-des-Geschaeftspartner'
-  fine:
-#    subject-data-values:
-#      owi-number: 'Ordnungswidrigkeiten-Nummer'

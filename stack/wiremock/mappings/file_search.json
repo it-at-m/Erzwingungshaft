@@ -9,8 +9,8 @@
       "Content-Type": "application/json"
     },
     "jsonBody": {
-		  "objid" : "COO.2150.9169.1.1957003",
-		  "objname" : "9512.2-1000013749-1"
+          "objid": "COO.2150.9169.1.1957003",
+          "objname": "9512.2-1000013749-1"
 	}
   }
 }

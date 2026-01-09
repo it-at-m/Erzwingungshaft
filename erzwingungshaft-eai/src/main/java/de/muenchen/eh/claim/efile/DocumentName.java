@@ -16,4 +16,13 @@ public enum DocumentName {
     DocumentName(String descriptor) {
         this.descriptor = descriptor;
     }
+
+    public static DocumentName fromDescriptor(String descriptor) {
+        for (DocumentName name : values()) {
+            if (name.descriptor.equals(descriptor)) {
+                return name;
+            }
+        }
+        throw new IllegalArgumentException("Unknown descriptor: " + descriptor);
+    }
 }
