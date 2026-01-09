@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 public class AddOutgoing extends EfileOperation {
 
     @Produce(value = EfileRouteBuilder.DMS_CONNECTION)
-    private ProducerTemplate efileConnector;
+    private ProducerTemplate efileOutgoingConnector;
 
     public AddOutgoing(OperationIdFactory operationIdFactory, LogServiceClaim logServiceClaim, ClaimEfileRepository claimEfileRepository) {
         super(operationIdFactory, logServiceClaim, claimEfileRepository);
@@ -28,7 +28,7 @@ public class AddOutgoing extends EfileOperation {
     public void execute(Exchange exchange) {
 
         Exchange createOutgoingRequest = operationIdFactory.createExchange(OperationId.CREATE_OUTGOING, exchange);
-        Exchange createOutgoingResponse = efileConnector.send(createOutgoingRequest);
+        Exchange createOutgoingResponse = efileOutgoingConnector.send(createOutgoingRequest);
         if (createOutgoingResponse.isRouteStop()) {
             exchange.setRouteStop(true);
             return;
