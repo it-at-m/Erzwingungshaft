@@ -198,7 +198,7 @@ class BebpoIntegrationTest {
         antragMessageType.setFilename("1000013749_5793303492524_20240807_EH.pdf");
         antragMessageType.setContentDescription("EH-Antrag");
         DataSource antragMessage = new ByteArrayDataSource(Files.readAllBytes(Path.of("testdata/in/pdf/1000013749_5793303492524_20240807_EH.pdf")),
-                "application/xml", "1000013749_5793303492524_20240807_EH.pdf");
+                "application/pdf", "1000013749_5793303492524_20240807_EH.pdf");
         DataHandler antragDataHandler = new DataHandler(antragMessage);
         antragMessageType.setValue(antragDataHandler);
         contentContainer.getAttachment().add(antragMessageType);
@@ -208,7 +208,7 @@ class BebpoIntegrationTest {
         bescheidMessageType.setFilename("1000013749_5793303492524_20240807_URB.pdf");
         bescheidMessageType.setContentDescription("EH-Bescheid");
         DataSource bescheidMessage = new ByteArrayDataSource(Files.readAllBytes(Path.of("testdata/in/pdf/1000013749_5793303492524_20240807_URB.pdf")),
-                "application/xml", "1000013749_5793303492524_20240807_URB.pdf");
+                "application/pdf", "1000013749_5793303492524_20240807_URB.pdf");
         DataHandler bescheidDataHandler = new DataHandler(bescheidMessage);
         bescheidMessageType.setValue(bescheidDataHandler);
         contentContainer.getAttachment().add(bescheidMessageType);
