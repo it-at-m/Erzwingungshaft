@@ -68,7 +68,7 @@ class DevelopmentReadCreateFilingTest {
     @Autowired
     private ClaimDataRepository claimDataRepository;
     @Autowired
-    private ClaimXmlRepository claimlXmlRepository;
+    private ClaimXmlRepository claimXmlRepository;
     @Autowired
     private ClaimEfileRepository claimEfileRepository;
     @Autowired
@@ -139,7 +139,7 @@ class DevelopmentReadCreateFilingTest {
                 "6 claim documents expected. 2 (Antrag, Urbescheid) for each gp_id : 1000809085, 1000013749, 1000258309");
         assertEquals(2, claimContentRepository.count(), "2 claim contents expected (gp_id : 1000809085/5793341761427, 1000013749).");
         assertEquals(2, claimDataRepository.count(), "2 claim data expected (gp_id : 1000809085/5793341761427, 1000013749).");
-        assertEquals(2, claimlXmlRepository.count(), "2 claim xml expected (gp_id : 1000809085/5793341761427, 1000013749).");
+        assertEquals(2, claimXmlRepository.count(), "2 claim xml expected (gp_id : 1000809085/5793341761427, 1000013749).");
         assertEquals(1, claimEfileRepository.count(), "1 claim efile expected (gp_id : 1000013749).");
         assertEquals(17, claimImportLogRepository.count(), "17 claim import logs expected.");
         assertEquals(5, claimImportLogRepository.findByMessage("IMPORT_DATA_FILE_CREATED").size(), "D.KVU.EUDG0P0.20240807.EZH contains 5 lines to import.");
