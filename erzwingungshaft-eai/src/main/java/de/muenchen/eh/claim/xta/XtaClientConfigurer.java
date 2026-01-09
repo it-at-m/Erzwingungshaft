@@ -21,12 +21,16 @@ public class XtaClientConfigurer implements CxfConfigurer {
     @Override
     public void configureClient(Client client) {
 
-        HTTPConduit conduit = (HTTPConduit) client.getConduit();
-
-        try {
-            conduit.setTlsClientParameters(tlsClientParametersFactory.create());
-        } catch (XtaClientInitializationException e) {
-            throw new RuntimeException(e);
+        if (client.getConduit() instanceof HTTPConduit conduit) {
+            try {
+                conduit.setTlsClientParameters(tlsClientParametersFactory.create());
+            } catch (XtaClientInitializationException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            throw new RuntimeException(
+                    "TLS configuration requires HTTP transport, but got: " + client.getConduit().getClass().getName()
+            );
         }
 
     }

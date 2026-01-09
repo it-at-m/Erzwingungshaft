@@ -37,8 +37,9 @@ camel:
     tracing: false
   component:
     aws2-s3:
-      override-endpoint: http://127.0.0.1:9000
+      override-endpoint: true
       region: local
+      uri-endpoint-override: http://127.0.0.1:9000
 
 efile:
   connection:
@@ -83,7 +84,7 @@ xjustiz:
     jpa:
       import: jpa
     file:
-      common: accessKey=${xjustiz.credentials.s3.access-key}&secretKey=${xjustiz.credentials.s3.secret-key}&region=${camel.component.aws2-s3.region}&overrideEndpoint=true&uriEndpointOverride=${camel.component.aws2-s3.override-endpoint}
+      common: accessKey=${xjustiz.credentials.s3.access-key}&secretKey=${xjustiz.credentials.s3.secret-key}&region=${camel.component.aws2-s3.region}&overrideEndpoint=${camel.component.aws2-s3.override-endpoint}&uriEndpointOverride=${camel.component.aws2-s3.uri-endpoint-override}
       consume: aws2-s3://eh-import-antrag?${xjustiz.interface.file.common}
       file-output: aws2-s3://eh-backup?${xjustiz.interface.file.common}
     pdf:

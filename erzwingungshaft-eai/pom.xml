@@ -84,14 +84,15 @@
         <!-- xJustiz XML Generation -->
         <xjustiz.converter>0.0.9</xjustiz.converter>
 
+        <!-- Openapi Generation-->
+        <openapi-maven-plugin.version>7.18.0</openapi-maven-plugin.version>
+        <build-helper-maven-plugin.version>3.6.1</build-helper-maven-plugin.version>
+
         <!-- Flyway maven plugin configuration for local stack database -->
         <flyway.url>jdbc:postgresql://localhost:5432/postgres</flyway.url>
         <flyway.user>admin</flyway.user>
         <flyway.password>admin</flyway.password>
         <flyway.locations>classpath:db/migration/schema,classpath:db/migration/testdata</flyway.locations>
-
-        <!-- Other -->
-        <mapstruct.version>1.6.3</mapstruct.version>
 
     </properties>
 
@@ -128,8 +129,8 @@
             <artifactId>camel-jpa-starter</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-aws2-s3</artifactId>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-aws2-s3-starter</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>commons-logging</groupId>
@@ -182,12 +183,6 @@
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>${mapstruct.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct-processor</artifactId>
-            <version>${mapstruct.version}</version>
-            <scope>provided</scope>
         </dependency>
 
         <!-- Database -->
@@ -623,7 +618,7 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>7.13.0</version>
+                <version>${openapi-maven-plugin.version}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -646,6 +641,25 @@
                             <globalProperties>
                                 <skipFormModel>false</skipFormModel>
                             </globalProperties>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- The plugin adds the directory src/gen/java/main to the list of compilable sources. -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>${build-helper-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.basedir}/src/gen/java/main</source>
+                            </sources>
                         </configuration>
                     </execution>
                 </executions>
