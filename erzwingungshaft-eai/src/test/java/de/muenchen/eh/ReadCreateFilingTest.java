@@ -205,14 +205,11 @@ public class ReadCreateFilingTest {
 
         // Start test ...
         mockTestEnd.expectedMessageCount(1);
-        // mockSendPort.returnReplyBody(null);
 
         uploadBucketTestFileConfiguration(s3InitClient);
 
         mockTestEnd.assertIsSatisfied(TimeUnit.MINUTES.toMillis(3));
         assertEquals(1, mockTestEnd.getExchanges().size(), "One happy path implemented.");
-
-        // assertDatabaseInserts();
 
         // Database
         assertEquals(5, claimImportRepository.count(), "5 imports expected.");
@@ -238,8 +235,8 @@ public class ReadCreateFilingTest {
                 "3 claims contains ANTRAG to import in db.");
         assertEquals(3, claimImportLogRepository.findByMessage("IMPORT_BESCHEID_IMPORT_DB").size(),
                 "3 claims contains BESCHEID to import in db.");
-        assertEquals(26, claimLogRepository.count(), "25 claim logs expected.");
-        assertEquals(23, claimLogRepository.findByMessageTyp(MessageType.INFO).size(), "22 import INFO expected.");
+        assertEquals(26, claimLogRepository.count(), "26 claim logs expected.");
+        assertEquals(23, claimLogRepository.findByMessageTyp(MessageType.INFO).size(), "23 import INFO expected.");
         assertEquals(1, claimLogRepository.findByMessageTyp(MessageType.WARN).size(), "1 import WARN expected.");
         assertEquals(2, claimLogRepository.findByMessageTyp(MessageType.ERROR).size(), "2 import ERROR expected.");
         assertEquals(1, xtaRepository.count(), "1 send message expected.");
@@ -289,7 +286,9 @@ public class ReadCreateFilingTest {
         // DB log 1000809085_5793341761427
         Optional<ClaimImport> first_claimImport_1000809085_5793341761427 = claimImports.stream()
                 .filter(ci -> ci.getGeschaeftspartnerId().equals("1000809085")).findFirst();
-        var claimImport_1000809085_5793341761427 = first_claimImport_1000809085_5793341761427.orElseThrow();
+        var claimImport_1000809085_5793341761427 = first_claimImport_1000809085_5793341761427
+                .orElseThrow(() -> new AssertionError("ClaimImport for geschaeftspartnerId 1000809085 not found"));
+
         assertEquals("1000809085", claimImport_1000809085_5793341761427.getGeschaeftspartnerId());
         assertEquals("5793341761427", claimImport_1000809085_5793341761427.getKassenzeichen());
 
@@ -317,7 +316,8 @@ public class ReadCreateFilingTest {
         // DB log 1000258309_5793402494421
         Optional<ClaimImport> first_claimImport_1000258309_5793402494421 = claimImports.stream()
                 .filter(ci -> ci.getGeschaeftspartnerId().equals("1000258309")).findFirst();
-        var claimImport_1000258309_5793402494421 = first_claimImport_1000258309_5793402494421.orElseThrow();
+        var claimImport_1000258309_5793402494421 = first_claimImport_1000258309_5793402494421.orElseThrow(() -> new AssertionError("ClaimImport for geschaeftspartnerId 1000258309 not found"));
+
         Claim claim_1000258309_5793402494421 = claimRepository
                 .findByClaimImportId(claimImport_1000258309_5793402494421.getId());
         var claimlog_errors_1000258309_5793402494421 = claimLogRepository
