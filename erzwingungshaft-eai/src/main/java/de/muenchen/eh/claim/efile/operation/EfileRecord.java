@@ -2,7 +2,9 @@ package de.muenchen.eh.claim.efile.operation;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.Exchange;
+import org.springframework.stereotype.Component;
 
+@Component
 @RequiredArgsConstructor
 public class EfileRecord extends EfileRecordTemplate {
 
