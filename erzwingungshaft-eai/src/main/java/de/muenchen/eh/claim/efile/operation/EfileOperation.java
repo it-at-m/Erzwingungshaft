@@ -7,9 +7,11 @@ import de.muenchen.eh.claim.ClaimContentWrapper;
 import de.muenchen.eh.claim.efile.DocumentName;
 import de.muenchen.eh.claim.efile.EfileRouteBuilder;
 import de.muenchen.eh.db.entity.ClaimEfile;
+import de.muenchen.eh.db.entity.MessageType;
 import de.muenchen.eh.db.repository.ClaimEfileRepository;
 import de.muenchen.eh.log.Constants;
 import de.muenchen.eh.log.LogServiceClaim;
+import de.muenchen.eh.log.StatusProcessingType;
 import jakarta.annotation.PostConstruct;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -44,39 +46,42 @@ abstract class EfileOperation {
         }
 
         switch (operationId) {
-        case READ_COLLECTIONS -> {
-            claimEfile.setCollection(((Objektreferenz) dataWrapper.getEfile().get(operationId.name())).getObjaddress());
-        }
-        case SEARCH_FILE -> {
-            claimEfile.setFile(((List<Objektreferenz>) dataWrapper.getEfile().get(operationId.name())).getLast().getObjaddress());
-        }
-        case CREATE_FILE -> {
-            claimEfile.setFile(((DmsObjektResponse) dataWrapper.getEfile().get(operationId.name())).getObjid());
-        }
-        case CREATE_FINE -> {
-            claimEfile.setFine(((DmsObjektResponse) dataWrapper.getEfile().get(operationId.name())).getObjid());
-        }
-        case CREATE_OUTGOING -> {
-            CreateOutgoingAntwortDTO outgoing = ((CreateOutgoingAntwortDTO) dataWrapper.getEfile().get(operationId.name()));
-            claimEfile.setOutgoing(outgoing.getObjid());
-            outgoing.getGiobjecttype().forEach(doc -> {
-                if (doc.getObjname().equals(DocumentName.ANTRAG.getDescriptor())) {
-                    claimEfile.setAntragDocument(doc.getObjaddress());
-                } else if (doc.getObjname().equals(DocumentName.BESCHEID.getDescriptor())) {
-                    claimEfile.setBescheidDocument(doc.getObjaddress());
-                } else if (doc.getObjname().equals(DocumentName.KOSTEN.getDescriptor())) {
-                    claimEfile.setKostendokument(doc.getObjaddress());
-                } else if (doc.getObjname().equals(DocumentName.VERWERFUNG.getDescriptor())) {
-                    claimEfile.setVerwerfung(doc.getObjaddress());
-                } else if (doc.getObjname().equals(DocumentName.VERFAHRENSMITTEILUNG.getDescriptor())) {
-                    claimEfile.setXml(doc.getObjaddress());
-                }
-            });
-        }
-        default -> {
-            exchange.setException(
-                    new IllegalArgumentException("Unknown openapi.operationId : ".concat((String) exchange.getMessage().getHeader(Constants.OPERATION_ID))));
-        }
+            case READ_COLLECTIONS -> {
+                claimEfile.setCollection(((Objektreferenz) dataWrapper.getEfile().get(operationId.name())).getObjaddress());
+            }
+            case SEARCH_FILE -> {
+                claimEfile.setFile(((List<Objektreferenz>) dataWrapper.getEfile().get(operationId.name())).getLast().getObjaddress());
+            }
+            case CREATE_FILE -> {
+                claimEfile.setFile(((DmsObjektResponse) dataWrapper.getEfile().get(operationId.name())).getObjid());
+            }
+            case CREATE_FINE -> {
+                claimEfile.setFine(((DmsObjektResponse) dataWrapper.getEfile().get(operationId.name())).getObjid());
+            }
+            case CREATE_OUTGOING -> {
+                CreateOutgoingAntwortDTO outgoing = ((CreateOutgoingAntwortDTO) dataWrapper.getEfile().get(operationId.name()));
+                claimEfile.setOutgoing(outgoing.getObjid());
+                outgoing.getGiobjecttype().forEach(doc -> {
+                    if (doc.getObjname().equals(DocumentName.ANTRAG.getDescriptor())) {
+                        claimEfile.setAntragDocument(doc.getObjaddress());
+                    } else if (doc.getObjname().equals(DocumentName.BESCHEID.getDescriptor())) {
+                        claimEfile.setBescheidDocument(doc.getObjaddress());
+                    } else if (doc.getObjname().equals(DocumentName.KOSTEN.getDescriptor())) {
+                        claimEfile.setKostendokument(doc.getObjaddress());
+                    } else if (doc.getObjname().equals(DocumentName.VERWERFUNG.getDescriptor())) {
+                        claimEfile.setVerwerfung(doc.getObjaddress());
+                    } else if (doc.getObjname().equals(DocumentName.VERFAHRENSMITTEILUNG.getDescriptor())) {
+                        claimEfile.setXml(doc.getObjaddress());
+                    } else {
+                        exchange.setException(
+                                new IllegalArgumentException("Unexpected document type: " + doc.getObjname()));
+                    }
+                });
+            }
+            default -> {
+                exchange.setException(
+                        new IllegalArgumentException("Unknown openapi.operationId : ".concat((String) exchange.getMessage().getHeader(Constants.OPERATION_ID))));
+            }
         }
         return claimEfileRepository.save(claimEfile);
     }
