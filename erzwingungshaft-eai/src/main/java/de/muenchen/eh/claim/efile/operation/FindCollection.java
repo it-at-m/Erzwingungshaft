@@ -17,16 +17,24 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.camel.Exchange;
 import org.springframework.stereotype.Component;
 
+/**
+ * collection.getGiobjecttype() provides an array list.
+ * The purpose of the collectionCache is to read the eFile collections for storing the fine proceedings files only once and not to execute them again for each proceeding.
+ * The list of efile collections is not changed after reading. Synchronized ensures that only one thread at a time has access to the collections list.
+ * If the claim-eh-process route is parallelized, this should not cause any problems.
+  */
+
 @Component
 @Log4j2
 public class FindCollection extends EfileOperation {
 
     private Optional<ReadApentryAntwortDTO> collectionCache = Optional.empty();
+    private final Object cacheLock = new Object();
 
     private final ClaimService claimService;
 
-    public FindCollection(OperationIdFactory operationIdFactory, LogServiceClaim logServiceClaim, ClaimEfileRepository claimEfileRepository,
-            ClaimService claimService) {
+    public FindCollection(OperationIdFactory operationIdFactory, LogServiceClaim logServiceClaim,
+                          ClaimEfileRepository claimEfileRepository, ClaimService claimService) {
         super(operationIdFactory, logServiceClaim, claimEfileRepository);
         this.claimService = claimService;
     }
@@ -37,9 +45,9 @@ public class FindCollection extends EfileOperation {
     }
 
     private void findCollectionByGpId(Exchange exchange) {
-
         ClaimContentWrapper processingDataWrapper = exchange.getMessage().getBody(ClaimContentWrapper.class);
         List<Claim> gpClaimEfiles = claimService.claimEfilesWithCorrespondingGId(processingDataWrapper.getClaimImport().getGeschaeftspartnerId());
+
         if (!gpClaimEfiles.isEmpty()) {
             ClaimEfile claimEfile = new ClaimEfile();
             claimEfile.setClaim(processingDataWrapper.getClaim());
@@ -48,33 +56,39 @@ public class FindCollection extends EfileOperation {
             processingDataWrapper.setClaimEfile(claimEfileRepository.save(claimEfile));
             logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_GPID_COLLECTION_READ_FROM_DB, MessageType.INFO, exchange);
         } else {
-            if (collectionCache.isEmpty()) {
-                Exchange readCollectionRequest = operationIdFactory.createExchange(OperationId.READ_COLLECTIONS, exchange);
-                Exchange efileCollectionResponse = efileConnector.send(readCollectionRequest);
-                if (efileCollectionResponse.isRouteStop()) {
-                    exchange.setRouteStop(true);
-                    return;
+
+            synchronized (cacheLock) {
+                if (collectionCache.isEmpty()) {
+                    Exchange readCollectionRequest = operationIdFactory.createExchange(OperationId.READ_COLLECTIONS, exchange);
+                    Exchange efileCollectionResponse = efileConnector.send(readCollectionRequest);
+                    if (efileCollectionResponse.isRouteStop()) {
+                        exchange.setRouteStop(true);
+                        return;
+                    }
+                    collectionCache = Optional.ofNullable(efileCollectionResponse.getMessage().getBody(ReadApentryAntwortDTO.class));
                 }
-                collectionCache = Optional.ofNullable(efileCollectionResponse.getMessage().getBody(ReadApentryAntwortDTO.class));
             }
 
-            collectionCache.ifPresent(collection -> {
-                List<Objektreferenz> filteredCollections = gpIdFilter(collection.getGiobjecttype(),
-                        Long.valueOf(processingDataWrapper.getClaimImport().getGeschaeftspartnerId()));
-                if (filteredCollections.isEmpty()) {
-                    logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_GESCHAEFTSPARTNERID_COLLECTION_NOT_FOUND, MessageType.ERROR,
-                            exchange);
-                    exchange.setRouteStop(true);
-                } else if (filteredCollections.size() > 1) {
-                    logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_GESCHAEFTSPARTNERID_COLLECTION_AMBIGUOUS, MessageType.ERROR,
-                            exchange);
-                    exchange.setRouteStop(true);
-                } else {
-                    processingDataWrapper.getEfile().put(OperationId.READ_COLLECTIONS.name(), filteredCollections.getFirst());
-                    processingDataWrapper.setClaimEfile(createUpdateClaimEfile(exchange, OperationId.READ_COLLECTIONS));
-                    logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_GESCHAEFTSPARTNERID_COLLECTION_FOUND, MessageType.INFO, exchange);
-                }
-            });
+            synchronized (cacheLock) {
+                collectionCache.ifPresent(collection -> {
+                    List<Objektreferenz> filteredCollections = gpIdFilter(collection.getGiobjecttype(),
+                            Long.valueOf(processingDataWrapper.getClaimImport().getGeschaeftspartnerId()));
+                    if (filteredCollections.isEmpty()) {
+                        logServiceClaim.writeGenericClaimLogMessage(
+                                StatusProcessingType.EFILE_GESCHAEFTSPARTNERID_COLLECTION_NOT_FOUND, MessageType.ERROR, exchange);
+                        exchange.setRouteStop(true);
+                    } else if (filteredCollections.size() > 1) {
+                        logServiceClaim.writeGenericClaimLogMessage(
+                                StatusProcessingType.EFILE_GESCHAEFTSPARTNERID_COLLECTION_AMBIGUOUS, MessageType.ERROR, exchange);
+                        exchange.setRouteStop(true);
+                    } else {
+                        processingDataWrapper.getEfile().put(OperationId.READ_COLLECTIONS.name(), filteredCollections.getFirst());
+                        processingDataWrapper.setClaimEfile(createUpdateClaimEfile(exchange, OperationId.READ_COLLECTIONS));
+                        logServiceClaim.writeGenericClaimLogMessage(
+                                StatusProcessingType.EFILE_GESCHAEFTSPARTNERID_COLLECTION_FOUND, MessageType.INFO, exchange);
+                    }
+                });
+            }
         }
     }
 
@@ -103,7 +117,9 @@ public class FindCollection extends EfileOperation {
     }
 
     public void clearCollectionCache() {
-        collectionCache = Optional.empty();
-    }
 
+        synchronized (cacheLock) {
+            collectionCache = Optional.empty();
+        }
+    }
 }
