@@ -19,10 +19,12 @@ import org.springframework.stereotype.Component;
 
 /**
  * collection.getGiobjecttype() provides an array list.
- * The purpose of the collectionCache is to read the eFile collections for storing the fine proceedings files only once and not to execute them again for each proceeding.
- * The list of efile collections is not changed after reading. Synchronized ensures that only one thread at a time has access to the collections list.
+ * The purpose of the collectionCache is to read the eFile collections for storing the fine
+ * proceedings files only once and not to execute them again for each proceeding.
+ * The list of efile collections is not changed after reading. Synchronized ensures that only one
+ * thread at a time has access to the collections list.
  * If the claim-eh-process route is parallelized, this should not cause any problems.
-  */
+ */
 
 @Component
 @Log4j2
@@ -34,7 +36,7 @@ public class FindCollection extends EfileOperation {
     private final ClaimService claimService;
 
     public FindCollection(OperationIdFactory operationIdFactory, LogServiceClaim logServiceClaim,
-                          ClaimEfileRepository claimEfileRepository, ClaimService claimService) {
+            ClaimEfileRepository claimEfileRepository, ClaimService claimService) {
         super(operationIdFactory, logServiceClaim, claimEfileRepository);
         this.claimService = claimService;
     }
@@ -58,6 +60,7 @@ public class FindCollection extends EfileOperation {
         } else {
 
             synchronized (cacheLock) {
+
                 if (collectionCache.isEmpty()) {
                     Exchange readCollectionRequest = operationIdFactory.createExchange(OperationId.READ_COLLECTIONS, exchange);
                     Exchange efileCollectionResponse = efileConnector.send(readCollectionRequest);
@@ -67,9 +70,7 @@ public class FindCollection extends EfileOperation {
                     }
                     collectionCache = Optional.ofNullable(efileCollectionResponse.getMessage().getBody(ReadApentryAntwortDTO.class));
                 }
-            }
 
-            synchronized (cacheLock) {
                 collectionCache.ifPresent(collection -> {
                     List<Objektreferenz> filteredCollections = gpIdFilter(collection.getGiobjecttype(),
                             Long.valueOf(processingDataWrapper.getClaimImport().getGeschaeftspartnerId()));
