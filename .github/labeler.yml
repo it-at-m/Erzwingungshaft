@@ -12,12 +12,6 @@
   - head-branch: [ '^dep', '-dependency-' ]
 "Type: Security":
   - head-branch: [ '^sec', '-security-' ]
-"Template: Backend":
-  - changed-files:
-    - any-glob-to-any-file: ['erzwingungshaft-backend/**']
 "Template: EAI":
   - changed-files:
       - any-glob-to-any-file: ['erzwingungshaft-eai/**']
-"Template: Frontend":
-  - changed-files:
-      - any-glob-to-any-file: ['erzwingungshaft-frontend/**']

@@ -19,9 +19,7 @@ body:
       multiple: true
       description: Affected documentation parts
       options:
-        - erzwingungshaft-frontend
-        - erzwingungshaft-backend
-        - erzwingungshaft-eai
+         - erzwingungshaft-eai
         - Other
     validations:
       required: true
