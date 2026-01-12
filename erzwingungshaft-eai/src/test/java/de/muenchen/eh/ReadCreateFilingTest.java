@@ -316,7 +316,8 @@ public class ReadCreateFilingTest {
         // DB log 1000258309_5793402494421
         Optional<ClaimImport> first_claimImport_1000258309_5793402494421 = claimImports.stream()
                 .filter(ci -> ci.getGeschaeftspartnerId().equals("1000258309")).findFirst();
-        var claimImport_1000258309_5793402494421 = first_claimImport_1000258309_5793402494421.orElseThrow(() -> new AssertionError("ClaimImport for geschaeftspartnerId 1000258309 not found"));
+        var claimImport_1000258309_5793402494421 = first_claimImport_1000258309_5793402494421
+                .orElseThrow(() -> new AssertionError("ClaimImport for geschaeftspartnerId 1000258309 not found"));
 
         Claim claim_1000258309_5793402494421 = claimRepository
                 .findByClaimImportId(claimImport_1000258309_5793402494421.getId());

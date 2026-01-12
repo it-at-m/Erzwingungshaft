@@ -460,6 +460,7 @@
                             </extraargs>
                         </wsdlOption>
                     </wsdlOptions>
+                    <!-- Required for CXF wsdl2java to process external schema DTDs -->
                     <additionalJvmArgs>-Djavax.xml.accessExternalDTD=all</additionalJvmArgs>
                     <encoding>UTF-8</encoding>
                 </configuration>

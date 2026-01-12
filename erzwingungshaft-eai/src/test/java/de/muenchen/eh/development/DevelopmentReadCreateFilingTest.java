@@ -81,7 +81,7 @@ class DevelopmentReadCreateFilingTest {
     @Autowired
     CamelContext camelContext;
 
-    private static final String EH_BUCKET_IMPORT = "eh-backup";
+    private static final String EH_BUCKET_BACKUP = "eh-backup";
     private static final String EH_BUCKET_PDF = "eh-import-pdf";
     private static final String EH_BUCKET_ANTRAG = "eh-import-antrag";
 
@@ -110,7 +110,7 @@ class DevelopmentReadCreateFilingTest {
 
         // Create test bucket
         s3InitClient.createBucket(CreateBucketRequest.builder().bucket(EH_BUCKET_ANTRAG).build());
-        s3InitClient.createBucket(CreateBucketRequest.builder().bucket(EH_BUCKET_IMPORT).build());
+        s3InitClient.createBucket(CreateBucketRequest.builder().bucket(EH_BUCKET_BACKUP).build());
         s3InitClient.createBucket(CreateBucketRequest.builder().bucket(EH_BUCKET_PDF).build());
     }
 

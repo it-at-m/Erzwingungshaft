@@ -29,8 +29,7 @@ public class XtaClientConfigurer implements CxfConfigurer {
             }
         } else {
             throw new RuntimeException(
-                    "TLS configuration requires HTTP transport, but got: " + client.getConduit().getClass().getName()
-            );
+                    "TLS configuration requires HTTP transport, but got: " + client.getConduit().getClass().getName());
         }
 
     }
