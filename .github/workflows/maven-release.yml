@@ -16,7 +16,6 @@ on:
         description: Service-Name
         required: true
         options:
-          # - erzwingungshaft-backend
           - erzwingungshaft-eai
 
 jobs:

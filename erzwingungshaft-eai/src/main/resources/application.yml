@@ -1,6 +1,27 @@
+batch:
+  enabled: true
+
 spring:
   application:
     name: @project.artifactId@
+  main:
+    web-application-type: none
+  datasource:
+    url:
+    username:
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+  flyway:
+    enabled: true
+    baseline-on-migrate: false
+    schemas: eh
+
+logging:
+  level:
+    de.muenchen.eh: INFO
 
 server:
   error:
@@ -57,4 +78,10 @@ camel:
       context-path: /api/*
 
 # Custom properties
-output: direct:foo
+xjustiz:
+  version: 3.5.1
+  interface:
+    document:
+      processor: direct:xjustiz-document-processor
+    file:
+      line-break: \n

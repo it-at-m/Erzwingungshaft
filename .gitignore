@@ -185,3 +185,4 @@ nbdist/
 *.njsproj
 *.sln
 *.sw?
+/stack/minio/*

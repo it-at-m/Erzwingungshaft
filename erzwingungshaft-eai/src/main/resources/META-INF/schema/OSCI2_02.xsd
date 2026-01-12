@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://www.osci.eu/ws/2008/05/transport" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:osci="http://www.osci.eu/ws/2008/05/transport" xmlns:oscimeta="http://www.osci.eu/ws/2014/10/transport" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:s12="http://www.w3.org/2003/05/soap-envelope" xmlns:wsp="http://www.w3.org/ns/ws-policy">
+  <!--OSCI Transport Version 2.02 schema - last edited 2015-01-23-->
+  <!--OSCI  Transport 2.02 schema extended by metadata header  for OSCI2.0, according modification for MsgBoxStatusList; MsgBoxFetchRequest attributed for reqeuesting whole envelope, headers of body of original message only-->
+  <!--xs:import namespace="http://www.osci.eu/ws/2014/10/transport" schemaLocation="http://www.osci.eu/ws/2014/10/transport/OSCI21_MessageMetaData_V2.02.xsd"/-->
+  <xs:import namespace="http://www.osci.eu/ws/2014/10/transport" schemaLocation="OSCI_MessageMetaData_V2.02.xsd"/>
+  <xs:import namespace="http://www.w3.org/ns/ws-policy" schemaLocation="ws-policy.xsd"/>
+  <xs:import namespace="http://www.w3.org/2005/08/addressing" schemaLocation="ws-addr.xsd"/>
+  <xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="xmldsig-core-schema.xsd"/>
+  <xs:import namespace="http://www.w3.org/2003/05/soap-envelope" schemaLocation=".xsd"/>
+  <xs:import namespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" schemaLocation="oasis-200401-wss-wssecurity-utility-1.0.xsd"/>
+  <!--WSA-Extension: BusinessScenarioType-->
+  <xs:complexType name="TypeOfBusinessScenarioType">
+    <xs:simpleContent>
+      <xs:extension base="xs:anyURI">
+        <xs:attribute ref="wsa:IsReferenceParameter" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:element name="TypeOfBusinessScenario" type="osci:TypeOfBusinessScenarioType"/>
+  <!--General header-part of OSCI messages: timestamps-->
+  <xs:complexType name="MsgTimeStampsType">
+    <xs:sequence>
+      <xs:element name="ObsoleteAfter" type="xs:date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date, when this message is obsolete; may be set by Initiator</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Delivery" type="xs:dateTime" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Time of entry in a Recipient MsgBox</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="InitialFetch" type="xs:dateTime" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Time of first comitted fetch from MsgBox by the Recipient</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Reception" type="xs:dateTime" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Reception Time set by the Recipient</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="MsgTimeStamps" type="osci:MsgTimeStampsType"/>
+  <!--Types and Elements for MsgBox request/responses-->
+  <xs:annotation>
+    <xs:documentation>Template for MsgBox-Requests</xs:documentation>
+  </xs:annotation>
+  <xs:complexType name="MsgBoxRequestType">
+    <xs:sequence>
+      <xs:element ref="osci:MsgSelector" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="MsgBoxReasonEnum">
+    <xs:restriction base="xs:anyURI">
+      <xs:enumeration value="http://www.osci.eu/ws/2008/05/transport/MsgBox/reasons/NoMatch"/>
+      <xs:enumeration value="http://www.osci.eu/ws/2008/05/transport/MsgBox/reasons/SearchArgsInvalid"/>
+      <xs:enumeration value="http://www.osci.eu/ws/2008/05/transport/MsgBox/reasons/RequestIdInvalid"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="MsgBoxReasonOpenEnum">
+    <xs:union memberTypes="osci:MsgBoxReasonEnum xs:anyURI"/>
+  </xs:simpleType>
+  <xs:complexType name="MsgBoxResponseType">
+    <xs:choice>
+      <xs:element name="NoMessageAvailable">
+        <xs:complexType>
+          <xs:attribute name="reason" type="osci:MsgBoxReasonOpenEnum" use="required"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ItemsPending" type="xs:nonNegativeInteger"/>
+    </xs:choice>
+    <xs:attribute name="MsgBoxRequestID" type="xs:anyURI" use="required"/>
+  </xs:complexType>
+  <xs:complexType name="MsgAttributeListType">
+    <xs:sequence>
+      <xs:element ref="wsa:MessageID"/>
+      <xs:element ref="wsa:RelatesTo" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="wsa:From" minOccurs="0"/>
+      <xs:element ref="osci:TypeOfBusinessScenario"/>
+      <xs:element name="MsgSize" type="xs:int"/>
+      <!--xs:element ref="osci:MsgTimeStamps"/-->
+      <xs:element name="ObsoleteAfterDate" type="xs:date" minOccurs="0"/>
+      <xs:element name="DeliveryTime" type="xs:dateTime"/>
+      <xs:element name="InitialFetchedTime" type="xs:dateTime" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:attribute name="MsgBoxRequestID" type="xs:anyURI"/>
+  <xs:element name="MsgSelector">
+    <xs:complexType>
+      <xs:sequence minOccurs="0">
+        <xs:element ref="wsa:MessageID" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element ref="wsa:RelatesTo" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element name="MsgBoxEntryTimeFrom" type="xs:dateTime" minOccurs="0"/>
+        <xs:element name="MsgBoxEntryTimeTo" type="xs:dateTime" minOccurs="0"/>
+        <xs:element name="Extension" type="xs:anyType" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="newEntry" type="xs:boolean"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="MsgStatusList" type="osci:MsgStatusListType"/>
+  <xs:complexType name="MsgStatusListType">
+    <xs:sequence>
+      <xs:element name="MsgAttributes" type="osci:MsgAttributeListType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="oscimeta:MessageMetaData" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="MsgBoxFetchRequest">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="osci:MsgBoxRequestType">
+          <xs:attribute name="MsgPart" default="Envelope">
+            <xs:simpleType>
+              <xs:restriction base="xs:NMTOKEN">
+                <xs:enumeration value="Envelope"/>
+                <xs:enumeration value="Header"/>
+                <xs:enumeration value="Body"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="MsgBoxStatusListRequest" type="osci:MsgBoxStatusListRequestType"/>
+  <xs:complexType name="MsgBoxStatusListRequestType">
+    <xs:complexContent>
+      <xs:extension base="osci:MsgBoxRequestType">
+        <xs:attribute name="maxListItems" type="xs:positiveInteger"/>
+        <xs:attribute name="ListForm">
+          <xs:simpleType>
+            <xs:restriction base="xs:NMTOKEN">
+              <xs:enumeration value="MsgAtrributes"/>
+              <xs:enumeration value="MessageMetaData"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MsgBoxResponse" type="osci:MsgBoxResponseType"/>
+  <xs:element name="MsgBoxGetNextRequest" type="osci:MsgBoxGetNextRequestType"/>
+  <xs:complexType name="MsgBoxGetNextRequestType">
+    <xs:sequence minOccurs="0">
+      <xs:element name="LastMsgReceived" type="wsa:AttributedURIType" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="MsgBoxRequestID" type="xs:anyURI" use="required"/>
+  </xs:complexType>
+  <xs:element name="MsgBoxCloseRequest" type="osci:MsgBoxCloseRequestType"/>
+  <xs:complexType name="MsgBoxCloseRequestType">
+    <xs:sequence minOccurs="0">
+      <xs:element name="LastMsgReceived" type="wsa:AttributedURIType" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="MsgBoxRequestID" type="xs:anyURI" use="required"/>
+  </xs:complexType>
+  <!--Types and Elements for Receipt- and Notification Handling-->
+  <xs:attribute name="qualTSPForReceipt" type="xs:boolean" default="false"/>
+  <xs:attribute name="echoRequest" type="xs:boolean" default="false"/>
+  <xs:complexType name="ReceiptDemandType">
+    <xs:sequence>
+      <xs:element ref="wsa:ReplyTo"/>
+    </xs:sequence>
+    <xs:attribute name="qualTSPForReceipt" type="xs:boolean" default="false"/>
+    <xs:attribute name="echoRequest" type="xs:boolean" default="false"/>
+  </xs:complexType>
+  <xs:element name="DeliveryReceiptDemand" type="osci:DeliveryReceiptDemandType"/>
+  <xs:element name="ReceptionReceiptDemand" type="osci:ReceptionReceiptDemandType"/>
+  <xs:element name="ReceiptInfo" type="osci:ReceiptInfoType"/>
+  <xs:complexType name="ReceiptInfoType">
+    <xs:sequence>
+      <xs:element ref="wsa:MessageID"/>
+      <xs:element ref="osci:MsgTimeStamps"/>
+      <xs:element ref="wsa:RelatesTo" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="To" type="wsa:EndpointReferenceType"/>
+      <xs:element ref="wsa:From" minOccurs="0"/>
+      <xs:element ref="wsa:ReplyTo"/>
+      <xs:element name="RequestEcho" type="xs:base64Binary" minOccurs="0"/>
+      <xs:element ref="oscimeta:MessageMetaData" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="Id" type="xs:ID" use="required"/>
+    <xs:attribute name="ReceiptIssuerRole" use="optional">
+      <xs:simpleType>
+        <xs:restriction base="xs:anyURI">
+          <xs:enumeration value="http://www.osci.eu/ws/2008/05/transport/role/MsgBox"/>
+          <xs:enumeration value="http://www.osci.eu/ws/2008/05/transport/role/Recipient"/>
+          <xs:enumeration value="http://www.osci.eu/ws/2008/05/transport/role/Sender "/>
+          <xs:enumeration value="http://www.osci.eu/ws/2008/05/transport/role/Relay "/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="DeliveryReceiptDemandType">
+    <xs:complexContent>
+      <xs:restriction base="osci:ReceiptDemandType">
+        <xs:sequence>
+          <xs:element ref="wsa:ReplyTo"/>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ReceptionReceiptDemandType">
+    <xs:complexContent>
+      <xs:restriction base="osci:ReceiptDemandType">
+        <xs:sequence>
+          <xs:element ref="wsa:ReplyTo"/>
+        </xs:sequence>
+      </xs:restriction>
+      <!--xs:attribute ref="s12:role" fixed="http://www.w3.org/2003/05/soap-envelope/role/ultimateReceiver"/-->
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DeliveryReceiptType">
+    <xs:sequence>
+      <xs:element ref="osci:ReceiptInfo"/>
+      <xs:element ref="ds:Signature"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DeliveryReceipt" type="osci:DeliveryReceiptType"/>
+  <xs:element name="SubmissionReceipt" type="osci:DeliveryReceiptType"/>
+  <xs:element name="RelayReceipt" type="osci:DeliveryReceiptType"/>
+  <xs:complexType name="ReceptionReceiptType">
+    <xs:sequence>
+      <xs:element ref="osci:ReceiptInfo"/>
+      <xs:element ref="ds:Signature"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ReceptionReceipt" type="osci:ReceptionReceiptType"/>
+  <xs:complexType name="FetchedNotificationDemandType">
+    <xs:sequence>
+      <xs:element ref="wsa:ReplyTo"/>
+    </xs:sequence>
+    <xs:attribute ref="s12:role" default="http://www.osci.eu/ws/2008/05/transport/role/MsgBox"/>
+  </xs:complexType>
+  <xs:element name="FetchedNotificationDemand" type="osci:FetchedNotificationDemandType"/>
+  <xs:complexType name="FetchedNotificationType">
+    <xs:sequence>
+      <xs:element name="FetchedTime" type="xs:dateTime"/>
+      <xs:element ref="wsa:MessageID"/>
+      <xs:element ref="wsa:To"/>
+      <xs:element ref="wsa:From"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="FetchedNotification" type="osci:FetchedNotificationType"/>
+  <!--Extentensions for Key usage context-->
+  <xs:complexType name="X509TokenContainerType">
+    <xs:sequence maxOccurs="unbounded">
+      <xs:element ref="osci:X509TokenInfo"/>
+    </xs:sequence>
+    <xs:attribute name="validateCompleted" type="xs:boolean" default="false"/>
+  </xs:complexType>
+  <xs:element name="X509TokenContainer" type="osci:X509TokenContainerType"/>
+  <xs:element name="X509TokenInfo">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="ds:X509Data"/>
+        <xs:element name="TokenApplication" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="TimeInstant" type="xs:dateTime"/>
+              <xs:element name="MsgItemRef" type="xs:IDREF" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="validateResultRef" type="xs:IDREF"/>
+            <xs:attribute name="ocspNoCache" type="xs:boolean"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="validated" type="xs:boolean" default="false"/>
+      <xs:attribute name="Id" type="xs:ID" use="required"/>
+      <!--RFC 3280 for KeyUsage with Extentensions Attribute Certificate and usage for Authentication-->
+    </xs:complexType>
+    <!--OSCI Policy Asserstions-->
+    <!--Policy qualified Timestamp Servcie available-->
+  </xs:element>
+  <!--Poliy Assertion carrying Endpoints X509Certificates-->
+  <xs:element name="X509CertificateAssertion">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="wsp:All"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <!--Policy, when qualified TSP service can be requested from this node-->
+  <xs:element name="QualTspAssertion">
+    <xs:complexType>
+      <xs:attribute name="PolicyRef" type="xs:anyURI"/>
+    </xs:complexType>
+  </xs:element>
+  <!--Policy if and how MsgTimeStamps:OsoleteAfter is handled-->
+  <xs:element name="ObsoleteAfterAssertion">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="MsgRetainDays" type="xs:positiveInteger"/>
+        <xs:element name="WarningBeforeMsgObsolete" type="xs:positiveInteger" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="PolicyRef" type="xs:anyURI"/>
+    </xs:complexType>
+  </xs:element>
+  <!--Poliy for MakeConnection: Response Retention Days-->
+  <xs:element name="MsgRetainDays" type="xs:positiveInteger"/>
+  <!--Enumeration for possible X509 Token Usages-->
+  <xs:attribute name="TokenUsage">
+    <xs:simpleType>
+      <xs:restriction base="xs:anyURI">
+        <xs:enumeration value="http://www.osci.eu/common/names/TokenUsage/e2eContentEncryption"/>
+        <xs:enumeration value="http://www.osci.eu/common/names/TokenUsage/TransportEncryption"/>
+        <xs:enumeration value="http://www.osci.eu/common/names/TokenUsage/ReceiptSigning"/>
+        <xs:enumeration value="http://www.osci.eu/common/names/TokenUsage/TSPSigning"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:attribute>
+  <!--Opaque Body Type - not used-->
+  <!--Policy maximum accepted Message size and Frequency per hour-->
+  <xs:element name="AcceptedMsgLimits">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="MaxSize" type="xs:positiveInteger"/>
+        <xs:element name="MaxPerHour" type="xs:positiveInteger"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="MessageBody">
+    <xs:sequence>
+      <xs:any namespace="##any" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

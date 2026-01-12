@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+
+xjustiz:
+  credentials:
+    s3:
+      access-key: minio
+      secret-key: Test1234

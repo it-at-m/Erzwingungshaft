@@ -41,95 +41,51 @@ services:
     user: root # see https://github.com/pgadmin-org/pgadmin4/issues/6257
     entrypoint: /bin/sh -c "chmod 600 /pgadmin4/pgpass; /entrypoint.sh;" # see https://www.postgresql.org/docs/current/libpq-pgpass.html#LIBPQ-PGPASS (last paragraph)
 
-  keycloak:
-    image: keycloak/keycloak:26.4.0@sha256:5f3fb534cde6bf006d79f5912473e5d2c828c707cdfc52e16972803aca9d43dd
+  minio:
+    image: minio/minio:RELEASE.2025-09-07T16-13-09Z-cpuv1@sha256:13582eff79c6605a2d315bdd0e70164142ea7e98fc8411e9e10d089502a6d883
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: Test1234
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - ./minio:/data
+    networks:
+      - internal
+    healthcheck:
+      <<: *healthcheck
+      test: ["CMD-SHELL",  "curl http://localhost:9000/minio/health/live"]
+    security_opt: *security_settings
+
+  init-minio:
+      image: minio/mc:RELEASE.2025-08-13T08-35-41Z-cpuv1@sha256:95b5f3f7969a5c5a9f3a700ba72d5c84172819e13385aaf916e237cf111ab868
+      depends_on:
+        - minio
+      entrypoint: >
+        /bin/sh -c "
+          until curl -fsS http://minio:9000/minio/health/ready; do sleep 2; done;
+          mc config host add minio http://minio:9000 minio Test1234;
+          mc mb minio/test-bucket || true;
+          exit 0;
+        "
+      networks:
+        - internal
+      security_opt: *security_settings
+
+  wiremock:
+    image: wiremock/wiremock:3.3.1
+    container_name: wiremock
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./wiremock/mappings:/home/wiremock/mappings
+      - ./wiremock/openapi:/home/wiremock/openapi
     command:
-      - start-dev
-    environment:
-      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
-      - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
-      - KC_HEALTH_ENABLED=true
-      - KC_HTTP_PORT=8100
-      - KC_HTTP_RELATIVE_PATH=/auth
-    ports:
-      - "8100:8100"
-    volumes:
-      - ./keycloak/plugins:/opt/keycloak/providers/
-    networks:
-      - keycloak
-    healthcheck:
-      <<: *healthcheck
-      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/9000;echo -e 'GET /health/ready HTTP/1.1\r\nhost: http://localhost\r\nConnection: close\r\n\r\n' >&3;if [ $? -eq 0 ]; then exit 0;else exit 1;fi;"]
-    security_opt: *security_settings
-
-  init-keycloak:
-    image: klg71/keycloakmigration:0.2.111@sha256:6fd84fd15813062bf2a9bb9492cb0f71d6d0d2b434b8fb68c8e7859a2e7aabfb
-    depends_on:
-      - keycloak
-    environment:
-      ADMIN_USER: admin
-      ADMIN_PASSWORD: admin
-      BASEURL: http://keycloak:8100/auth
-      WAIT_FOR_KEYCLOAK: 'true'
-      FAIL_ON_UNDEFINED_VARIABLES: 'true'
-      KEYCLOAK_CHANGELOG: /migration/keycloak-changelog.yml
-    volumes:
-      - './keycloak/migration:/migration'
-    networks:
-      - keycloak
-    security_opt: *security_settings
-
-  refarch-gateway:
-    image: ghcr.io/it-at-m/refarch/refarch-gateway:1.7.0@sha256:3f82ab83c212ca53c9c2b606cfe29291f21525eac86fece215d0e1c6ca51273f
-    depends_on:
-      init-keycloak:
-        condition: service_completed_successfully
-    ports:
-      - "8083:8080"
-    environment:
-    - ALLOWED_ORIGINS_PUBLIC=http://localhost:*
-    - ALLOWED_ORIGINS_CLIENTS=http://localhost:*
-    - SPRING_CLOUD_GATEWAY_SERVER_WEBFLUX_ROUTES_0_ID=sso
-    - SPRING_CLOUD_GATEWAY_SERVER_WEBFLUX_ROUTES_0_URI=http://keycloak:8100/
-    - SPRING_CLOUD_GATEWAY_SERVER_WEBFLUX_ROUTES_0_PREDICATES_0=Path=/api/sso/userinfo
-    - SPRING_CLOUD_GATEWAY_SERVER_WEBFLUX_ROUTES_0_FILTERS_0=RewritePath=/api/sso/userinfo, /auth/realms/local_realm/protocol/openid-connect/userinfo
-    - SPRING_CLOUD_GATEWAY_SERVER_WEBFLUX_ROUTES_1_ID=backend
-    - SPRING_CLOUD_GATEWAY_SERVER_WEBFLUX_ROUTES_1_URI=http://host.docker.internal:39146/
-    - SPRING_CLOUD_GATEWAY_SERVER_WEBFLUX_ROUTES_1_PREDICATES_0=Path=/api/backend-service/**
-    - SPRING_CLOUD_GATEWAY_SERVER_WEBFLUX_ROUTES_1_FILTERS_0=RewritePath=/api/backend-service/(?<urlsegments>.*), /$\{urlsegments}
-    - SPRING_CLOUD_GATEWAY_SERVER_WEBFLUX_ROUTES_2_ID=frontend
-    - SPRING_CLOUD_GATEWAY_SERVER_WEBFLUX_ROUTES_2_URI=http://host.docker.internal:8081/
-    - SPRING_CLOUD_GATEWAY_SERVER_WEBFLUX_ROUTES_2_PREDICATES_0=Path=/**
-    - SPRING_PROFILES_ACTIVE=hazelcast-local
-    - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=http://keycloak:8100/auth/realms/local_realm
-    - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_SSO_ISSUERURI=$${spring.security.oauth2.resourceserver.jwt.issuer-uri}
-    - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_PROVIDER=sso
-    - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_CLIENTID=local
-    - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_CLIENTSECRET=client_secret
-    - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_SSO_SCOPE=profile, openid, roles
-    networks:
-      - keycloak
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    healthcheck:
-      <<: *healthcheck
-      test: [ "CMD-SHELL", "curl http://localhost:8080/actuator/health/liveness" ]
-    security_opt: *security_settings
-
-  appswitcher-server:
-    image: ghcr.io/it-at-m/appswitcher-server:1.3.0@sha256:10006bc0f3093a548cf977dd65b3df56baa8a08e42eb04872e9e51011c9e21f8
-    environment:
-      - SPRING_WEB_RESOURCES_STATIC_LOCATIONS=file:/workspace/static
-      - THC_PATH=/actuator/health/liveness
-    ports:
-      - "8084:8080"
-    volumes:
-      - "./appswitcher-server/application.yml:/workspace/config/application.yml"
-      - "./appswitcher-server/static:/workspace/static"
-    healthcheck:
-      <<: *healthcheck
-      test: ["CMD-SHELL", "/workspace/health-check"]
-    security_opt: *security_settings
+      - "--global-response-templating"
+      - "--verbose"
 
 networks:
   keycloak:
+  internal:

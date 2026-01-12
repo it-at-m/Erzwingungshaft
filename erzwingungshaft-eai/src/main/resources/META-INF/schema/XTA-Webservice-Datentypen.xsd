@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://xoev.de/transport/xta/211" version="2.1.1" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xta="http://xoev.de/transport/xta/211" xmlns:oscimeta="http://www.osci.eu/ws/2014/10/transport" xmlns:xoev-dt="http://xoev.de/schemata/basisdatentypen/1_1"            xmlns:xmime="http://www.w3.org/2005/05/xmlmime"      >
+  <xs:annotation>
+    <xs:documentation>Hier wird die Sammlung von Typen dargestellt, welche innerhalb des Standards XTA definiert und verwendet werden.</xs:documentation>
+  </xs:annotation>
+  <xs:import schemaLocation="OSCI_MessageMetaData_V2.02.xsd" namespace="http://www.osci.eu/ws/2014/10/transport"/>
+  <xs:import schemaLocation="xoev-basisdatentypen.xsd" namespace="http://xoev.de/schemata/basisdatentypen/1_1"/>
+  <xs:complexType name="AdditionalReportListType">
+    <xs:annotation>
+      <xs:documentation>Dieser Typ gestattet das Ablegen weiterer Prüfberichte, welche das XTA-Protokoll (TransportReport) ergänzen sollen.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Report" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>In diesem Element  ist ein zusätzlicher Report abgelegt, der das XTA-Protokoll (TransportReport) ergänzt. Die Art des Reports (z. B. OSCI Process Card) und der Inhalt des Reports werden bzw. sind in separaten Bereichen dieses Containers eingetragen.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" type="xta:Code.ReportType">
+              <xs:annotation>
+                <xs:documentation>Dieses Element benennt den Typ des Reports, um dem Leser die Interpretation der Reportdaten zu ermöglichen. Die Benennung des Typs des Reports geschieht auf der Basis einer Codeliste.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="Data" type="xs:base64Binary" xmime:expectedContentTypes="application/octet-stream">
+              <xs:annotation>
+                <xs:documentation>Hier wird der zusätzliche Report in einem technisch neutralen Format eingetragen.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Code.Fehlernummer">
+    <xs:annotation>
+      <xs:appinfo>
+        <listAgencyName>Koordinierungsstelle für IT-Standards (KoSIT)</listAgencyName>
+        <listName>XTA-WS Fehlernummer</listName>
+      </xs:appinfo>
+      <xs:documentation>Diese Codeliste gibt eine Übersicht über die in XTA-WS zu verwendenden Fehlernummern (ErrorCodes) und ordnet sie den Exceptions zu, in deren Kontext sie auftreten können.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:restriction base="xoev-dt:Code">
+        <xs:sequence>
+          <xs:element name="code" type="xs:token" form="unqualified"/>
+          <xs:element name="name" type="xs:normalizedString" form="unqualified"/>
+        </xs:sequence>
+        <xs:attribute name="listURI" type="xs:anyURI" use="optional" fixed="urn:de:xta:webservice:codeliste:fehlernummer"/>
+        <xs:attribute name="listVersionID" type="xs:normalizedString" use="optional" fixed="1.0"/>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Code.RecordType">
+    <xs:annotation>
+      <xs:appinfo>
+        <listAgencyName>N.N.</listAgencyName>
+        <listName>Record Type</listName>
+      </xs:appinfo>
+      <xs:documentation>In diesen Typ  ist eine auszuwählende bzw. selbst zu definierende Codeliste einzubinden, die Arten von Meldungen benennt, welche in das Protokoll zur Abarbeitung eines Transportauftrags (TransportReport) eingetragen werden. Dort können die Meldungen als Fehler-, Warn- oder Informationseinträge eingeordnet sein.
+In die Attribute des vorliegenden Typs sind die Codelisten-URI und die Nummer der Version der ausgewählten Codeliste einzutragen.
+
+Die KoSIT hat die Absicht, für den Standard XTA eine passende Codeliste zu definieren und als einheitliches Angebot zur Einbindung für diesen Typ  bereitzustellen. Diese Codeliste ist, wenn die Bereitstellung erfolgt ist,  im XRepository (www.xrepository.de) unter der Codelisten-URI urn:de:xta:codeliste:record.type  auffindbar und kann von dort im XML-Format OASIS Genericode abgerufen werden.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:restriction base="xoev-dt:Code">
+        <xs:sequence>
+          <xs:element name="code" type="xs:token" form="unqualified">
+            <xs:annotation>
+              <xs:documentation>In diesem Element ist ein Schlüssel aus der referenzierten Codeliste einzutragen.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="listURI" type="xs:anyURI" use="required">
+          <xs:annotation>
+            <xs:documentation>Hier wird die URI einer Codeliste eingetragen, die dadurch hier eingebunden ist. Es ist die Codeliste dafür auszuwählen, auf deren Basis der übermittelte Schlüssel durch den Leser der Nachricht interpretiert werden soll.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="listVersionID" type="xs:normalizedString" use="required">
+          <xs:annotation>
+            <xs:documentation>Die Version der Codeliste, welche der Interpretation des übermittelten Schlüssels zu Grunde gelegt werden soll.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Code.ReportType">
+    <xs:annotation>
+      <xs:appinfo>
+        <listAgencyName>N.N.</listAgencyName>
+        <listName>Report Type</listName>
+      </xs:appinfo>
+      <xs:documentation>Dieser Typ gestattet die Kennzeichnung der Art eines zusätzlichen Reports. Es wird eine zu wählende Codeliste eingebunden, die mögliche Arten von Reports nennt (spezielles Format, innerhalb oder außerhalb von XTA definiert), die in das XTA-Protokoll (TransportReport) eingefügt werden können.
+Die KoSIT gibt für den Standard XTA eine Codeliste heraus, welche Einträge für einschlägige Arten von Reports auflistet. Diese Codeliste kann auf Antrag erweitert bzw. geändert werden. Sie ist durch XTA-konforme Systeme für übergreifende Prozesse zu verwenden.
+Diese Codeliste ist im XRepository (www.xrepository.de) unter Nennung ihrer Codelisten-URI urn:de:xta:codeliste:report.type auffindbar und kann dort im XML-Format OASIS Genericode in der aktuellen Version abgerufen werden (ggf. sind auch frühere Versionen verfügbar). In die Attribute des vorliegenden Typs sind entsprechend ihre Codelisten-URI und die Nummer der ausgewählten Version einzutragen.
+Für lokale Zwecke können XTA-Kommunikationspartner auch eigene Codelisten definieren (welche bilateral abgestimmte Reportformate benennen) und an dieser Stelle einbinden. In die Attribute des vorliegenden Typs werden dann Codelisten-URI und Versionsnummer der selbstdefinierten Codeliste  eingetragen.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:restriction base="xoev-dt:Code">
+        <xs:sequence>
+          <xs:element name="code" type="xs:token" form="unqualified">
+            <xs:annotation>
+              <xs:documentation>In diesem Element ist ein Schlüssel aus der referenzierten Codeliste einzutragen.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="listURI" type="xs:anyURI" use="required">
+          <xs:annotation>
+            <xs:documentation>Hier wird die URI einer Codeliste eingetragen, die dadurch hier eingebunden ist. Es ist die Codeliste dafür auszuwählen, auf deren Basis der übermittelte Schlüssel durch den Leser der Nachricht interpretiert werden soll.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="listVersionID" type="xs:normalizedString" use="required">
+          <xs:annotation>
+            <xs:documentation>Die Version der Codeliste, welche der Interpretation des übermittelten Schlüssel zu Grunde gelegt werden soll.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Code.ServiceParameterType">
+    <xs:annotation>
+      <xs:appinfo>
+        <listAgencyName>N.N.</listAgencyName>
+        <listName>Service Parameter Type</listName>
+      </xs:appinfo>
+      <xs:documentation>Dieser Typ gestattet die Kennzeichnung der Art eines Parameters für die technische Erreichbarkeit des Dienstes, der adressiert werden soll.
+Hier wird eine zu wählende Codeliste eingebunden, die mögliche Parameterarten nennt.
+Die KoSIT gibt für den Standard XTA eine Codeliste heraus, welche einschlägige solcher Parameterarten auflistet. Diese Codeliste kann auf Antrag erweitert bzw. geändert werden. Sie ist durch XTA-konforme Systeme für übergreifende Prozesse zu verwenden.
+Diese Codeliste ist im XRepository (www.xrepository.de) unter Nennung ihrer Codelisten-URI urn:de:xta:codeliste:service.parameter.type auffindbar und kann dort im XML-Format OASIS Genericode in der aktuellen Version abgerufen werden (ggf. sind auch frühere Versionen verfügbar). In die Attribute des vorliegenden Typs sind entsprechend ihre Codelisten-URI und die Nummer der ausgewählten Version einzutragen.
+Für lokale Zwecke können XTA-Kommunikationspartner auch eigene Codelisten definieren (welche bilateral abgestimmte Parameterarten benennen) und an dieser Stelle einbinden. In die Attribute des vorliegenden Typs werden dann Codelisten-URI und Versionsnummer der selbstdefinierten Codeliste  eingetragen.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:restriction base="xoev-dt:Code">
+        <xs:sequence>
+          <xs:element name="code" type="xs:token" form="unqualified">
+            <xs:annotation>
+              <xs:documentation>In diesem Element ist ein Schlüssel aus der referenzierten Codeliste einzutragen.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="listURI" type="xs:anyURI" use="required">
+          <xs:annotation>
+            <xs:documentation>Hier wird die URI einer Codeliste eingetragen, die dadurch hier eingebunden ist. Es ist die Codeliste dafür auszuwählen, auf deren Basis der übermittelte Schlüssel durch den Leser der Nachricht interpretiert werden soll.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="listVersionID" type="xs:normalizedString" use="required">
+          <xs:annotation>
+            <xs:documentation>Die Version der Codeliste, welche der Interpretation des übermittelten Schlüssel zu Grunde gelegt werden soll.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="Codelist.Fehlernummer">
+    <xs:annotation/>
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="9000">
+        <xs:annotation>
+          <xs:appinfo>
+            <codeName>Unspezifizierter Fehler, als Freitext beschrieben</codeName>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="9010">
+        <xs:annotation>
+          <xs:appinfo>
+            <codeName>Authentisierung/Zertifikat ist abgelaufen.</codeName>
+          </xs:appinfo>
+          <xs:documentation>PermissiondeniedException</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="9011">
+        <xs:annotation>
+          <xs:appinfo>
+            <codeName>Account ist gesperrt.</codeName>
+          </xs:appinfo>
+          <xs:documentation>PermissiondeniedException</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="9012">
+        <xs:annotation>
+          <xs:appinfo>
+            <codeName>Account nicht vorhanden.</codeName>
+          </xs:appinfo>
+          <xs:documentation>PermissiondeniedException</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="9013">
+        <xs:annotation>
+          <xs:appinfo>
+            <codeName>Dienst ist nicht gebucht.</codeName>
+          </xs:appinfo>
+          <xs:documentation>PermissiondeniedException</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="9014">
+        <xs:annotation>
+          <xs:appinfo>
+            <codeName>Authentisierung/Zertifikat passt nicht zur Absenderkennung.</codeName>
+          </xs:appinfo>
+          <xs:documentation>PermissiondeniedException</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="9020">
+        <xs:annotation>
+          <xs:appinfo>
+            <codeName>Keine Parameter vorhanden</codeName>
+          </xs:appinfo>
+          <xs:documentation>ParameterIsNotValidExeption</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="9021">
+        <xs:annotation>
+          <xs:appinfo>
+            <codeName>Keine gültige URI</codeName>
+          </xs:appinfo>
+          <xs:documentation>ParameterIsNotValidExeption</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="9022">
+        <xs:annotation>
+          <xs:appinfo>
+            <codeName>Ungültige Parameterkombination</codeName>
+          </xs:appinfo>
+          <xs:documentation>ParameterIsNotValidException</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="9023">
+        <xs:annotation>
+          <xs:appinfo>
+            <codeName>Die Nachricht überschreitet die Größenbeschränkung.</codeName>
+          </xs:appinfo>
+          <xs:documentation>ParameterIsNotValidException</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="9024">
+        <xs:annotation>
+          <xs:appinfo>
+            <codeName>MessageID ist bereits vergeben.</codeName>
+          </xs:appinfo>
+          <xs:documentation>ParameterIsNotValidException</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="9030">
+        <xs:annotation>
+          <xs:appinfo>
+            <codeName>Interner Fehler beim XTA-Server bzw. XTA-Dienstleister</codeName>
+          </xs:appinfo>
+          <xs:documentation>XTAWSTechnicalProblemException</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="9031">
+        <xs:annotation>
+          <xs:appinfo>
+            <codeName>Fehler beim externen Verzeichnisdienst</codeName>
+          </xs:appinfo>
+          <xs:documentation>XTAWSTechnicalProblemException</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="9032">
+        <xs:annotation>
+          <xs:appinfo>
+            <codeName>Fehler bei der Zustellung</codeName>
+          </xs:appinfo>
+          <xs:documentation>XTAWSTechnicalProblemException</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="9050">
+        <xs:annotation>
+          <xs:appinfo>
+            <codeName>Fachnachricht ist nicht schemakonform</codeName>
+          </xs:appinfo>
+          <xs:documentation>MessageSchemaViolationException</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="9051">
+        <xs:annotation>
+          <xs:appinfo>
+            <codeName>Fachnachricht trägt ein falsches Encoding.</codeName>
+          </xs:appinfo>
+          <xs:documentation>MessageSchemaViolationException</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="9052">
+        <xs:annotation>
+          <xs:appinfo>
+            <codeName>Nachricht verletzt das entsprechende Service Profil.</codeName>
+          </xs:appinfo>
+          <xs:documentation>MessageSchemaViolationException</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="9060">
+        <xs:annotation>
+          <xs:appinfo>
+            <codeName>Es wurde schadhafter Code ermittelt.</codeName>
+          </xs:appinfo>
+          <xs:documentation>MessageVirusDetectionException</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="9070">
+        <xs:annotation>
+          <xs:appinfo>
+            <codeName>MessageID für den Account nicht bekannt.</codeName>
+          </xs:appinfo>
+          <xs:documentation>InvalidMessageIDException</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="9080">
+        <xs:annotation>
+          <xs:appinfo>
+            <codeName>Der Dienst wird nur asynchron angeboten.</codeName>
+          </xs:appinfo>
+          <xs:documentation>SyncAsyncException</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="9081">
+        <xs:annotation>
+          <xs:appinfo>
+            <codeName>Der Dienst wird nur synchron angeboten.</codeName>
+          </xs:appinfo>
+          <xs:documentation>SyncAsyncException</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="9100">
+        <xs:annotation>
+          <xs:appinfo>
+            <codeName>Der durch den Schalter NotBefore gesetzte Termin ist
+verstrichen.</codeName>
+          </xs:appinfo>
+          <xs:documentation>CancelDeniedException</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="9101">
+        <xs:annotation>
+          <xs:appinfo>
+            <codeName>Der Schalter NotBefore wurde nicht gesetzt.</codeName>
+          </xs:appinfo>
+          <xs:documentation>CancelDeniedException</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="ContentType">
+    <xs:annotation>
+      <xs:documentation>Typ für die technisch neutrale (base64-kodierte) Darstellung  von Information. Enthält den base64-kodierten Inhalt (Fachnachricht), der zwischen WebService-Client und XTA-Server transportiert wird. Die Attribute sind der MIME-Spezifikation (RFC 2183) entnommen.
+Die Belegung der Attribute ist für verschiedene Fachlichkeiten unterschiedlich und ist durch den Fachstandard festzulegen, der für die Fachnachricht verantwortlich ist.</xs:documentation>
+    </xs:annotation>
+    <xs:simpleContent>
+      <xs:extension base="xs:base64Binary"  xmime:expectedContentTypes="application/octet-stream">
+        <xs:attribute name="contentDescription" type="oscimeta:NonEmptyStringType" use="optional">
+          <xs:annotation>
+            <xs:documentation>Beschreibung des fachlichen Inhalts, z.B. 'Angebot' oder 'Rechnung'.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="contentType" type="oscimeta:NonEmptyStringType" use="required">
+          <xs:annotation>
+            <xs:documentation>Dieses Attribut nennt den MIME-Typ des enthaltenen Inhalts, hat also Einträge wie text/xml, text/plain, application/gzip oder application/pdf. Mandatorisch, weil besonders wichtige Information (wird in E-Mail analog gehandhabt).</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="encoding" type="oscimeta:NonEmptyStringType" use="optional">
+          <xs:annotation>
+            <xs:documentation>Der Zeichensatz, der der Kodierung des Inhalts zugrunde gelegen hat.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="filename" type="oscimeta:NonEmptyStringType" use="optional">
+          <xs:annotation>
+            <xs:documentation>Der Dateiname der Datenquelle, falls der Inhalt einer Datei entnommen worden ist. Bsp.: Für die Übermittlung von xdomea-Nachrichten ist dieses Attribut Pflicht.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="id" type="oscimeta:NonEmptyStringType" use="optional">
+          <xs:annotation>
+            <xs:documentation>Bietet die Möglichkeit, den Inhalt über z.B. eine laufende Nummer zu referenzieren.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="lang" type="xs:language" use="optional">
+          <xs:annotation>
+            <xs:documentation>Sprache, in der der Inhalt formuliert ist.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="size" type="xs:positiveInteger" use="optional">
+          <xs:annotation>
+            <xs:documentation>Die Größe des Inhalts in Bytes.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="IsServiceAvailableValueType">
+    <xs:annotation>
+      <xs:documentation>Das Feld enthält die benötigten Attribute zum Ergebnis der Dienstanfrage: ob der Dienst angeboten wird oder nicht, oder ob diese Information generell nicht bekannt ist.</xs:documentation>
+    </xs:annotation>
+    <xs:choice>
+      <xs:element name="ServiceIsAvailable" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation>Der Dienst wird angeboten (true) oder nicht angeboten (false).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ServiceIsAvailableUnknown" fixed="true" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation>Es ist nicht bekannt, ob der Dienst angeboten wird oder nicht.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="LookupServiceResultType">
+    <xs:annotation>
+      <xs:documentation>Das Ergebnis zu einer Dienstanfrage, das die Information enthält, ob der Dienst angeboten wird. Außerdem sind die nötigen technischen Paramter für die Erreichbarkeit vorhanden.</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="xta:LookupServiceType">
+        <xs:sequence>
+          <xs:element name="IsServiceAvailableValue" type="xta:IsServiceAvailableValueType">
+            <xs:annotation>
+              <xs:documentation>Enthält das Ergebnis der Dienstanfrage: ob der Dienst angeboten wird oder nicht oder ob diese Information generell nicht bekannt ist.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="ServiceParameter" minOccurs="0" maxOccurs="unbounded">
+            <xs:annotation>
+              <xs:documentation>Dieses Element enthält im Erfolgsfall die benötigten technischen Parameter für die elektronische Kommunikation mit dem Leser, z.B. das öffentliche Zertifikat des Lesers zur Inhaltsdatenverschlüsselung. Das Feld ist zu füllen, falls der angefragte Dienst angeboten und in diesem Kontext der Parameter benötigt wird.
+Vom Fachszenario ist zu beschreiben, welche Parameter für die Erreichbarkeit der Dienste in diesem Fachszenario anzuwenden sind.</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="ParameterType" type="xta:Code.ServiceParameterType">
+                  <xs:annotation>
+                    <xs:documentation>Dieses Element steht für die Art des Parameters, welche ins passende Kindelement einzutragen bzw. eingetragen ist. Die vorgesehenen Parameterarten werden auf der Basis einer Codeliste interpretiert, welche durch die Attribute listURI und listVersionID referenziert ist.</xs:documentation>
+                  </xs:annotation>
+                </xs:element>
+                <xs:element name="Resource" type="xs:base64Binary"  xmime:expectedContentTypes="application/octet-stream">
+                  <xs:annotation>
+                    <xs:documentation>Hier ist der Parameter enthalten bzw. einnzutragen in technisch neutraler Darstellung.</xs:documentation>
+                  </xs:annotation>
+                </xs:element>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="LookupServiceType">
+    <xs:annotation>
+      <xs:documentation>Dies ist die Struktur einer Service-Anfrage: Sie enthält die Daten über den Diensteanbieter (Leser) und den Dienst des Lesers, den der Autor in Anspruch nehmen will. Diese Anfrage dient dazu, zu ermitteln, ob der Dienst von diesem Anbieter angeboten wird und über welche technischen Parameter er angesprochen werden kann.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="oscimeta:Reader">
+        <xs:annotation>
+          <xs:documentation>Dies ist die fachliche Identifizierung des Lesers. Der Wert entspricht z.B. dem DVDV-Behördenschlüssel.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ServiceType" type="xs:anyURI">
+        <xs:annotation>
+          <xs:documentation>Dies ist die Bezeichnung des anzufordernden Dienstes. Sie wird im Format einer URL übergeben, was den Vorteil hat, dass damit auch eine Versionsnummer eingeschlossen ist. Beispiel für Dienstebezeichnungen, wie sie im DVDV verwendet werden: http://www.osci.de/xmeld181/xmeld181Rueckmeldung.wsdl
+
+
+Abgrenzung: "Dienst" ist das, was gemäß Diensteeinteilung der Fachdomäne im Verzeichnisdienst als Service (im Sinne eines Web Service) eingetragen ist. Dadurch ist die Dienstebezeichnung weniger differenziert als der Nachrichtentyp. Typischerweise sind im Verzeichnisdienst mehrere Nachrichtentypen in einer Service-WSDL zusammengefasst.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="MessageStatusType">
+    <xs:annotation>
+      <xs:documentation>Gibt die Struktur für die Meldungen (Logging-Informationen) über den Transportverlauf vor. Er sieht Meldungszeilen für Infos, Warnungen und Fehler vor.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Status" type="xs:integer">
+        <xs:annotation>
+          <xs:documentation>Wird durch Sender bzw. Empfänger fortgeschrieben. Wird der TransportReport noch fortgeschrieben, wird er hier mit 0=offen markiert. Nach Abschluss des TransportReports wird nach dem Max-Prinzip der höchste Ampelstatus aus den Elementen ErrorList, WarnList, InfoList hier numerisch dargestellt.
+
+
+
+
+0=offen: Die Nachricht befindet sich noch in der Verarbeitung.
+1=grün: Es sind keine Fehler oder Warnungen aufgetreten.
+2=gelb: Es sind Warnungen, aber keine kritischen Fehler aufgetreten.
+3=rot: Es sind kritische Fehler aufgetreten.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ErrorList" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Liste der Fehlermeldungen.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Error" minOccurs="0" maxOccurs="unbounded" type="xta:RecordType">
+              <xs:annotation>
+                <xs:documentation>Hier wird die Fehlermeldung mit ihren Parametern eingetragen.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="WarnList" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Liste der Warnungen.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Warning" minOccurs="0" maxOccurs="unbounded" type="xta:RecordType">
+              <xs:annotation>
+                <xs:documentation>Hier wird die Warnung mit ihren Paramtern eingetragen.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="InfoList" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Liste der Informationsmeldungen.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Info" minOccurs="0" maxOccurs="unbounded" type="xta:RecordType">
+              <xs:annotation>
+                <xs:documentation>Hier wird die Informationsmeldung mit ihren Parametern eingetragen.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="RecordType">
+    <xs:annotation>
+      <xs:documentation>Der Typ zur Kennzeichnung und Erläuterung einer Meldung (anwendbar auf Info-, Fehlermeldungen und Warnungen).</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Timestamp" type="xs:dateTime">
+        <xs:annotation>
+          <xs:documentation>Zeitstempel für den Zeitpunkt der Aufzeichnung der Meldung.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Code" type="xta:Code.RecordType">
+        <xs:annotation>
+          <xs:documentation>Schlüssel, der die Bedeutung der Meldung kodiert. Dieser Schlüssel muss aus einer eingebundenen Codeliste stammen.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Reason" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Hier wird zur weiteren Erläuterung der Grund der Meldung als Freitext eingetragen.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

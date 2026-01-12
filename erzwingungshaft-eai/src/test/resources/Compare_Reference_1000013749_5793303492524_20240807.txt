@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><tns:nachricht.straf.owi.verfahrensmitteilung.externAnJustiz.0500010 xmlns:tns="http://www.xjustiz.de" xmlns:din91379="urn:xoev-de:kosit:xoev:datentyp:din-91379_2022-08" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xjustiz.de xjustiz_0500_straf_3_5.xsd">
+    <tns:nachrichtenkopf xjustizVersion="3.5.1">
+        
+        <tns:aktenzeichen.empfaenger>neu</tns:aktenzeichen.empfaenger>
+        
+        <tns:auswahl_absender>
+            <tns:absender.sonstige>Stadt München</tns:absender.sonstige>
+        </tns:auswahl_absender>
+        <tns:auswahl_empfaenger>
+            <tns:empfaenger.gericht listVersionID="3.6">
+                <code>D2601</code>
+            </tns:empfaenger.gericht>
+        </tns:auswahl_empfaenger>
+        
+        <tns:ereignis listVersionID="1.11">
+            <code>117</code>
+        </tns:ereignis>
+        <tns:herstellerinformation>
+            <tns:nameDesProdukts>KVUweb</tns:nameDesProdukts>
+            <tns:herstellerDesProdukts>LHM-itM-KM15</tns:herstellerDesProdukts>
+            <tns:version>1.0</tns:version>
+        </tns:herstellerinformation>
+    </tns:nachrichtenkopf>
+    <tns:grunddaten>
+        <tns:verfahrensdaten>
+            <tns:instanzdaten>
+                <tns:instanznummer>0</tns:instanznummer>
+                <tns:auswahl_instanzbehoerde>
+                    <tns:beteiligter>
+                        <tns:ref.beteiligtennummer>2</tns:ref.beteiligtennummer>
+                    </tns:beteiligter>
+                </tns:auswahl_instanzbehoerde>
+                <tns:aktenzeichen>
+                    <tns:auswahl_aktenzeichen>
+                        
+                    </tns:auswahl_aktenzeichen>
+                </tns:aktenzeichen>
+            </tns:instanzdaten>
+            <tns:instanzdaten>
+                <tns:instanznummer>1</tns:instanznummer>
+                <tns:sachgebiet listVersionID="2.3">
+                    <code>026</code>
+                </tns:sachgebiet>
+                <tns:auswahl_instanzbehoerde>
+                    <tns:gericht listVersionID="3.6">
+                        <code>D2601</code>
+                    </tns:gericht>
+                </tns:auswahl_instanzbehoerde>
+                <tns:aktenzeichen>
+                    <tns:auswahl_aktenzeichen>
+                        
+                    </tns:auswahl_aktenzeichen>
+                </tns:aktenzeichen>
+            </tns:instanzdaten>
+            <tns:beteiligung>
+                <tns:rolle>
+                    <tns:rollennummer>1</tns:rollennummer>
+                    <tns:rollenbezeichnung listVersionID="3.5">
+                        <code>040</code>
+                    </tns:rollenbezeichnung>
+                    <tns:nr>1</tns:nr>
+                </tns:rolle>
+                <tns:beteiligter>
+                    <tns:beteiligtennummer>1</tns:beteiligtennummer>
+                    <tns:auswahl_beteiligter>
+                        <tns:natuerlichePerson>
+                            <tns:vollerName>
+<tns:vorname>EXXXX</tns:vorname>
+<tns:titel/>
+<tns:namensvorsatz/>
+<tns:nachname>Test</tns:nachname>
+<tns:geburtsname/>
+                            </tns:vollerName>
+                            <tns:geburt>
+<tns:geburtsdatum>1956-08-20</tns:geburtsdatum>
+<tns:geburtsort>
+    <tns:ort>ULM</tns:ort>
+</tns:geburtsort>
+                            </tns:geburt>
+                            <tns:geschlecht>
+<code>1</code>
+                            </tns:geschlecht>
+                            <tns:anschrift>
+<tns:anschriftenzusatz>DG</tns:anschriftenzusatz>
+<tns:strasse>Stadtplatz</tns:strasse>
+<tns:hausnummer>98</tns:hausnummer>
+<tns:postfachnummer/>
+<tns:postleitzahl>84478</tns:postleitzahl>
+<tns:ort>Waldkraiburg</tns:ort>
+<tns:wohnungsgeber/>
+<tns:staat listVersionID="7.0">
+    <code>000</code>
+</tns:staat>
+                            </tns:anschrift>
+                        </tns:natuerlichePerson>
+                    </tns:auswahl_beteiligter>
+                </tns:beteiligter>
+            </tns:beteiligung>
+            <tns:beteiligung>
+                <tns:rolle>
+                    <tns:rollennummer>2</tns:rollennummer>
+                    <tns:rollenbezeichnung listVersionID="3.5">
+                        <code>046</code>
+                    </tns:rollenbezeichnung>
+                    <tns:nr>1</tns:nr>
+                </tns:rolle>
+                <tns:beteiligter>
+                    <tns:beteiligtennummer>2</tns:beteiligtennummer>
+                    <tns:auswahl_beteiligter>
+                        <tns:organisation>
+                            <tns:bezeichnung>
+<tns:bezeichnung.aktuell>Landeshauptstadt München Stadtkämmerei</tns:bezeichnung.aktuell>
+                            </tns:bezeichnung>
+                            <tns:anschrift>
+<tns:anschriftstyp listVersionID="3.0">
+    <code>003</code>
+</tns:anschriftstyp>
+<tns:strasse>Landsbergerstraße</tns:strasse>
+<tns:hausnummer>36</tns:hausnummer>
+<tns:postleitzahl>80339</tns:postleitzahl>
+<tns:ort>München</tns:ort>
+                            </tns:anschrift>
+                            <tns:bankverbindung>
+<tns:iban>DE86 7015 0000 0000 2030 00</tns:iban>
+                            </tns:bankverbindung>
+                        </tns:organisation>
+                    </tns:auswahl_beteiligter>
+                </tns:beteiligter>
+            </tns:beteiligung>
+        </tns:verfahrensdaten>
+    </tns:grunddaten>
+    <tns:schriftgutobjekte>
+        <tns:akte>
+            <tns:identifikation>
+                
+                <tns:nummerImUebergeordnetenContainer>1</tns:nummerImUebergeordnetenContainer>
+            </tns:identifikation>
+            <tns:xjustiz.fachspezifischeDaten>
+                <tns:aktentyp listVersionID="2.2">
+                    <code>010</code>
+                </tns:aktentyp>
+                <tns:aktenzeichen>
+                    <tns:auswahl_az.vergebendeStation>
+                        <tns:gericht listVersionID="3.6">
+                            <code>D2601</code>
+                        </tns:gericht>
+                    </tns:auswahl_az.vergebendeStation>
+                    <tns:auswahl_aktenzeichen>
+                        
+                    </tns:auswahl_aktenzeichen>
+                </tns:aktenzeichen>
+            </tns:xjustiz.fachspezifischeDaten>
+        </tns:akte>
+        <tns:dokument>
+            <tns:identifikation>
+                
+                <tns:nummerImUebergeordnetenContainer>1</tns:nummerImUebergeordnetenContainer>
+            </tns:identifikation>
+            <tns:xjustiz.fachspezifischeDaten>
+                <tns:dokumentklasse listVersionID="1.4">
+                    <code>017</code>
+                </tns:dokumentklasse>
+                
+                <tns:datei>
+                    <tns:dateiname>1000013749_5793303492524_20240807_URB.pdf</tns:dateiname>
+                    <tns:bestandteil listVersionID="2.4">
+                        <code>002</code>
+                    </tns:bestandteil>
+                    <tns:versionsnummer>1</tns:versionsnummer>
+                </tns:datei>
+            </tns:xjustiz.fachspezifischeDaten>
+        </tns:dokument>
+        <tns:dokument>
+            <tns:identifikation>
+                
+                <tns:nummerImUebergeordnetenContainer>2</tns:nummerImUebergeordnetenContainer>
+            </tns:identifikation>
+            <tns:xjustiz.fachspezifischeDaten>
+                <tns:dokumentklasse listVersionID="1.4">
+                    <code>016</code>
+                </tns:dokumentklasse>
+                
+                <tns:datei>
+                    <tns:dateiname>1000013749_5793303492524_20240807_EH.pdf</tns:dateiname>
+                    <tns:bestandteil listVersionID="2.4">
+                        <code>001</code>
+                    </tns:bestandteil>
+                    <tns:versionsnummer>1</tns:versionsnummer>
+                </tns:datei>
+            </tns:xjustiz.fachspezifischeDaten>
+        </tns:dokument>
+    </tns:schriftgutobjekte>
+    <tns:fachdaten>
+        <tns:bussgeldbescheid>
+            <tns:erlassdatum>2025-01-10</tns:erlassdatum>
+            <tns:rechtskraft>
+                <tns:rechtskraftdatum>2025-02-01</tns:rechtskraftdatum>
+            </tns:rechtskraft>
+            <tns:geldbusse>15.0</tns:geldbusse>
+            <tns:auslagen>59.5</tns:auslagen>
+            <tns:tat>
+                <tns:anfangsdatum>2024-10-02</tns:anfangsdatum>
+                <tns:anfangsuhrzeit>17:46</tns:anfangsuhrzeit>
+                <tns:endedatum>2024-10-02</tns:endedatum>
+                <tns:endeuhrzeit>18:55</tns:endeuhrzeit>
+                <tns:tatort>
+                    <tns:anschrift>
+                        <tns:anschriftstyp listVersionID="3.0">
+                            <code>006</code>
+                        </tns:anschriftstyp>
+                        <tns:strasse>FISCHBACHAUER STR.</tns:strasse>
+                        <tns:hausnummer/>
+                        <tns:ort>MÜNCHEN</tns:ort>
+                    </tns:anschrift>
+                </tns:tatort>
+            </tns:tat>
+        </tns:bussgeldbescheid>
+    </tns:fachdaten>
+</tns:nachricht.straf.owi.verfahrensmitteilung.externAnJustiz.0500010>

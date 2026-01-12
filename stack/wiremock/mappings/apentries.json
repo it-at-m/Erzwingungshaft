@@ -1,0 +1,30 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/api/apentries/COO.2150.9169.1.1632"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+				  "giobjecttype" : [ {
+					"objname" : "9512.0/SKA-3-2/1000000001-1000005000",
+					"objaddress" : "COO.2150.9169.1.1071882"
+				  }, {
+					"objname" : "9512.1/SKA-3-2/1000005001-1000010000",
+					"objaddress" : "COO.2150.9169.1.1071884"
+				  }, {
+					"objname" : "9512.2/SKA-3-2/1000010001-1000015000",
+					"objaddress" : "COO.2150.9169.1.1605576"
+				  }, {
+					"objname" : "9512.3/SKA-3-2/1000015001-1000020000",
+					"objaddress" : "COO.2150.9169.1.1605741"
+				  }, {
+					"objname" : "9512.4/SKA-3-2/1000020001-1000025000",
+					"objaddress" : "COO.2150.9169.1.1777775"
+				  } ]
+    }
+  }
+}

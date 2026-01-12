@@ -1,3 +1,23 @@
+batch:
+  enabled: false
+
+proxy:
+  http:
+    host: 1.1.1.1
+    port: 80
+    non-proxy-hosts:
+      - 127.0.0.1
+
+spring:
+  datasource:
+    url: jdbc:tc:postgresql:///testdb?TC_TMPFS=/testtmpfs:rw
+    username: admin
+    password: admin
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
 management:
   endpoints:
     access:
@@ -5,12 +25,193 @@ management:
 
 logging:
   level:
+    de.muenchen.eh: DEBUG
     org:
       springframework: INFO
+      apache:
+        cxf:
+          service: DEBUG
 
 camel:
   main:
     tracing: false
+  component:
+    aws2-s3:
+      override-endpoint: true
+      region: local
+      uri-endpoint-override: http://127.0.0.1:9000
+
+efile:
+  connection:
+    host: localhost
+    scheme: http
+    port: 8081
+    context-path: api/
+    username:
+    password:
+    eakte-api-version: openapi/eakte-api-v1.2.4.json
+  case-file:
+    aktenplan-eintrag: 1234/Testakte
+    x-anwendung: EH
+    userlogin: test
+    joboe: COO.2150.9150.1.15756
+    jobposition: DocumentManager
+    objaddress: COO.2150.9169.1.1632
+    subject-data-values:
+      gp-name: BusinessDataGPSurname
+      gp-first-name: BusinessDataGPFirstname
+      gp-birth-date: BusinessDataGPBirthDate
+  fine:
+    shortname: Bussgeldverfahren
+    filesubj: Bussgeldbescheid
+    accdef: 'Zugriffsdefinition für Schriftgutobjekte (allgemein lesbar)'
+    outgoing: Ausgang
+    doctemplate: 'LHM Schreiben Extern'
+    subfiletype: PDF-Dokument
+    incattachments: EH-Dokumente
+#    subject-data-values:
+#      owi-number: 'Ordnungswidrigkeiten-Nummer'
 
 # Custom properties
-output : mock:output
+xjustiz:
+  credentials:
+    s3:
+      access-key: minioadmin
+      secret-key: minioadmin
+  interface:
+    document:
+      processor: direct:xjustiz-document-processor
+    jpa:
+      import: jpa
+    file:
+      common: accessKey=${xjustiz.credentials.s3.access-key}&secretKey=${xjustiz.credentials.s3.secret-key}&region=${camel.component.aws2-s3.region}&overrideEndpoint=${camel.component.aws2-s3.override-endpoint}&uriEndpointOverride=${camel.component.aws2-s3.uri-endpoint-override}
+      consume: aws2-s3://eh-import-antrag?${xjustiz.interface.file.common}
+      file-output: aws2-s3://eh-backup?${xjustiz.interface.file.common}
+    pdf:
+      consume: aws2-s3://eh-import-pdf?${xjustiz.interface.file.common}
+      file-output: aws2-s3://eh-backup?${xjustiz.interface.file.common}
+    xta: bebpoService
+  xjustiz0500straf:
+    nachrichtenkopf:
+      auswahl-absender-sonstige: Stadt München
+      auswahl-herstellerinformation-produkt: LHM-itM-KM15
+      auswahl-herstellerinformation-produkt-name: KVUweb
+      auswahl-herstellerinformation-produkt-version: 1.0
+    grunddaten:
+      verfahrensdaten:
+        beteiligung:
+          organisation:
+            bezeichnung-aktuell: Landeshauptstadt München Stadtkämmerei
+            bezeichnung-anschrift-strasse: Landsbergerstraße
+            bezeichnung-anschrift-hausnummer: 36
+            bezeichnung-anschrift-plz: 80339
+            bezeichnung-anschrift-ort: München
+            bezeichnung-bankverbindung: DE86 7015 0000 0000 2030 00
+  codelisten:
+    gds-rollenbezeichnung:
+      current-version: 3.5
+      kennung: urn:xoev-de:xjustiz:codeliste:gds.rollenbezeichnung
+      codelist-versions:
+        gds-rollenbezeichnung-3-5:
+          betroffener: '040'
+          antragsteller: '016'
+          bussgeldempfaenger: '046'
+    gds-gerichte:
+      current-version: 3.6
+      kennung: urn:xoev-de:xjustiz:codeliste:gds.gerichte
+      codelist-versions:
+        gds-gericht-3-6:
+          amtsgericht-muenchen: D2601
+    gds-ereignis:
+      current-version: 1.11
+      kennung: urn:xoev-de:xjustiz:codeliste:gds.ereignis
+      codelist-versions:
+        gds-ereignis-1-11:
+          neueingang-e-haft: 117
+        gds-ereignis-1-10:
+          neueingang-e-haft: 117
+    gds-sachgebiet:
+      current-version: 2.3
+      kennung: urn:xoev-de:xjustiz:codeliste:gds.sachgebiet
+      codelist-versions:
+        gds-sachgebiet-2-3:
+          owi-sachen: '026'
+    gds-anschriftstyp:
+      current-version: 3.0
+      kennung: urn:xoev-de:xjustiz:codeliste:gds.anschriftstyp
+      codelist-versions:
+        gds-anschriftstyp-3-0:
+          tatortanschrift: '006'
+          dienst-geschaeftsanschrift: '003'
+    bjf-staat:
+      current-version: 7.0
+      kennung: urn:xoev-de:bund:bfj:codeliste:bfj.staat
+      codelist-versions:
+        bjf-staat-7-0:
+          deutschland: '000'
+    gds-geschlecht:
+      current-version: 2.1
+      kennung: urn:xoev-de:xjustiz:codeliste:gds.geschlecht
+      codelist-versions:
+        gds-geschlecht-2-1:
+          unbekannt: 0
+          maennlich: 1
+          weiblich: 2
+          divers: 3
+          saechlich: 4
+    gds-dokumentklasse:
+      current-version: 1.4
+      kennung: urn:xoev-de:xjustiz:codeliste:gds.dokumentklasse
+      codelist-versions:
+        gds-dokumentklasse-1-4:
+          antrag-behoerde: '016'
+          bescheid: '017'
+          kostendokument: '017'
+          verwerfung: '017'
+    gds-bestandteiltyp:
+      current-version: 2.4
+      kennung: urn:xoev-de:xjustiz:codeliste:gds.bestandteiltyp
+      codelist-versions:
+        gds-bestandteiltyp-2-4:
+          original: '001'
+          repraesentant: '002'
+    gds-aktentyp:
+      current-version: 2.2
+      kennung: urn:xoev-de:xjustiz:codeliste:gds.aktentyp
+      codelist-versions:
+        gds-aktentyp-2-2:
+          bussgeldakte: '010'
+    gds-aktenzeichenart:
+      current-version: 2.0
+      kennung: urn:xoev-de:xjustiz:codeliste:gds.aktenzeichenart
+      codelist-versions:
+        gds-aktenzeichenart-2-0:
+          aktuell: '001'
+    gds-registerzeichen:
+      current-version: 3.4
+      kennung: urn:xoev-de:xjustiz:codeliste:gds.registerzeichen
+      codelist-versions:
+        gds-registerzeichen-3-4:
+          bussgeldverfahren: OWi
+
+bebpo:
+  xta:
+    management-port-uri: https://my-xta-server.de/GovGateway211/management211
+    msg-boxport-uri: https://my-xta-server.de/MB_XTA-WS/XTA210msgBoxPort.svc
+    send-port-uri: https://my-xta-server.de/GovGateway211/send211
+    tls:
+      client-cert-keystore:
+        url: classpath:test-dummy.p12
+        store-password: changeit
+        type: PKCS12
+
+    party-identifier:
+      destination: DE.ABC.9999.888
+      originator: abc000-1111-2222-3333-44444444
+      type: XTA_ID
+      name: 'KVUE EHaft'
+    message-type:
+      list-uri: urn:de:bos_bremen:gov:gateway:messageTypes
+      list-version: 1.0
+      payload-schema: http://xoev.de/transport/xta/21
+      code: XTA
