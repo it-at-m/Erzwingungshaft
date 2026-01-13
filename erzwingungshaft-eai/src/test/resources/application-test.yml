@@ -17,6 +17,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    schemas: eh
 
 management:
   endpoints:
@@ -74,6 +76,7 @@ efile:
 
 # Custom properties
 xjustiz:
+  version: 3.5.1
   credentials:
     s3:
       access-key: minioadmin
