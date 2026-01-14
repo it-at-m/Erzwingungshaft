@@ -138,7 +138,7 @@ xjustiz:
       import: jpa
     file:
       line-break: \n
-      common: # Must be configured example : accessKey=${xjustiz.credentials.s3.access-key}&secretKey=${xjustiz.credentials.s3.secret-key}&region=${camel.component.aws2-s3.region}&overrideEndpoint=${camel.component.aws2-s3.override-endpoint}&uriEndpointOverride=${camel.component.aws2-s3.uri-endpoint-override}
+      common: # Can be configured example : accessKey=${xjustiz.credentials.s3.access-key}&secretKey=${xjustiz.credentials.s3.secret-key}&region=${camel.component.aws2-s3.region}&overrideEndpoint=${camel.component.aws2-s3.override-endpoint}&uriEndpointOverride=${camel.component.aws2-s3.uri-endpoint-override}
       consume: # Must be configured example : aws2-s3://eh-import-antrag?${xjustiz.interface.file.common}
       file-output: # Must be configured example : aws2-s3://eh-backup?${xjustiz.interface.file.common}
     pdf:
