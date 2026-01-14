@@ -1,23 +1,33 @@
 batch:
   enabled: true
 
+proxy:
+  http:
+    host: # Can be configured
+    port: # Can be configured
+    non-proxy-hosts:
+      - # Can be configured
+
 spring:
   application:
     name: @project.artifactId@
   main:
     web-application-type: none
   datasource:
-    url:
-    username:
-    password:
+    url:     # Must be configured
+    username: # Must be configured
+    password:  # Must be configured
   jpa:
     hibernate:
       ddl-auto: validate
     show-sql: true
+    properties:
+      hibernate:
+        dialect: # Must be configured
   flyway:
     enabled: true
     baseline-on-migrate: false
-    schemas: eh
+    schemas: # Must be configured
 
 logging:
   level:
@@ -76,12 +86,109 @@ camel:
   servlet:
     mapping:
       context-path: /api/*
+  component:
+    aws2-s3:
+      override-endpoint: true
+      region: # Must be configured
+      uri-endpoint-override: # Must be configured
 
 # Custom properties
+efile:
+  connection:
+    host:  # Must be configured
+    scheme: # Must be configured
+    port: # Must be configured
+    context-path: api/
+    username: # Must be configured
+    password: # Must be configured
+    eakte-api-version: openapi/eakte-api-v1.2.4.json
+  case-file:
+    aktenplan-eintrag: # Must be configured
+    x-anwendung: # Must be configured
+    userlogin: # Must be configured
+    joboe: # Must be configured
+    jobposition: # Must be configured
+    objaddress: # Must be configured
+    subject-data-values:
+      gp-name: # Can be configured
+      gp-first-name: # Can be configured
+      gp-birth-date: # Can be configured
+  fine:
+    shortname: # Must be configured
+    filesubj: # Must be configured
+    accdef: # Must be configured
+    outgoing: # Must be configured
+    doctemplate: # Must be configured
+    subfiletype: # Must be configured
+    incattachments: # Must be configured
+#    subject-data-values:      # If commented create WARN otherwise INFO Message
+#      owi-number: # Can be configured
+
+
 xjustiz:
-  version: 3.5.1
+  version: # Must be configured
+  credentials:
+    s3:
+      access-key: # Must be configured
+      secret-key: # Must be configured
   interface:
     document:
       processor: direct:xjustiz-document-processor
+    jpa:
+      import: jpa
     file:
       line-break: \n
+      common: # Can be configured example : accessKey=${xjustiz.credentials.s3.access-key}&secretKey=${xjustiz.credentials.s3.secret-key}&region=${camel.component.aws2-s3.region}&overrideEndpoint=${camel.component.aws2-s3.override-endpoint}&uriEndpointOverride=${camel.component.aws2-s3.uri-endpoint-override}
+      consume: # Must be configured example : aws2-s3://eh-import-antrag?${xjustiz.interface.file.common}
+      file-output: # Must be configured example : aws2-s3://eh-backup?${xjustiz.interface.file.common}
+    pdf:
+      consume: # Must be configured exmample : aws2-s3://eh-import-pdf?${xjustiz.interface.file.common}
+      file-output: # Must be configured example : aws2-s3://eh-backup?${xjustiz.interface.file.common}
+    xta: bebpoService
+  xjustiz0500straf:
+    nachrichtenkopf:
+      auswahl-absender-sonstige: # Must be configured
+      auswahl-herstellerinformation-produkt: # Must be configured
+      auswahl-herstellerinformation-produkt-name: # Must be configured
+      auswahl-herstellerinformation-produkt-version: # Must be configured
+    grunddaten:
+      verfahrensdaten:
+        beteiligung:
+          organisation:
+            bezeichnung-aktuell: # Must be configured
+            bezeichnung-anschrift-strasse: # Must be configured
+            bezeichnung-anschrift-hausnummer: # Must be configured
+            bezeichnung-anschrift-plz: # Must be configured
+            bezeichnung-anschrift-ort: # Must be configured
+            bezeichnung-bankverbindung: # Must be configured
+  codelisten:  # Example see https://github.com/it-at-m/xjustiz
+    gds-rollenbezeichnung:
+      current-version: # Must be configured
+      kennung: # Must be configured
+      codelist-versions:
+        gds-rollenbezeichnung-3-5:
+          betroffener: # Must be configured
+          antragsteller: # Must be configured
+          bussgeldempfaenger: # Must be configured
+
+bebpo:
+  xta:
+    management-port-uri: # Must be configured
+    msg-boxport-uri: # Must be configured
+    send-port-uri: # Must be configured
+    tls:
+      client-cert-keystore:
+        url: # Must be configured
+        store-password: # Must be configured
+        type: # Must be configured
+
+    party-identifier:
+      destination: # Must be configured
+      originator: # Must be configured
+      type: # Must be configured
+      name: # Must be configured
+    message-type:
+      list-uri: # Must be configured
+      list-version: # Must be configured
+      payload-schema: # Must be configured
+      code: # Must be configured
