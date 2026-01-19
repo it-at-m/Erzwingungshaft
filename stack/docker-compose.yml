@@ -75,7 +75,7 @@ services:
       security_opt: *security_settings
 
   wiremock:
-    image: wiremock/wiremock:3.3.1
+    image: wiremock/wiremock:3.3.1@sha256:684a27557e02c3ec36effec17ad6a51ef4f1b5a443e7a26d227f90f9b79e03e8
     container_name: wiremock
     ports:
       - "8080:8080"
