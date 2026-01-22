@@ -16,7 +16,7 @@ Github-Repo: https://github.com/it-at-m/Erzwingungshaft
 
 ## Ablauf / Verarbeitungszustände
 
-![Ablauf](EAI_ABLAUF_v1.drawio.png)
+![Ablauf](EAI_ABLAUF.drawio.png)
 
 | Status                                             | Beschreibung                                                                                                              |
 |----------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------|
@@ -132,6 +132,17 @@ xjustiz:
   interface:
     document:
       processor: direct:xjustiz-document-processor
+````
+
+Das Artefakt _xjustiz-starter_ beinhaltet alle Klassen zur jeweiligen [xJustiz-Standard](https://xjustiz.justiz.de/) Version. Die Klassen stehen im _xjustiz-starter_ in compilierter Form zur Verfügung.
+Die Klassen jeder XSD stehen in einem eigenen Java Package zur Verfügung. Damit die Klassen einer XSD zur Laufzeit gefunden werden können muss die Ablage der XSDs und Klassenpackages konfiguriert sein.
+Die Werte Konfigurationsparemeter sind im [xJustiz Projekt](https://github.com/it-at-m/xjustiz) festgelegt.
+
+````
+xjustiz:
+  xsd:
+    path: # Must be configured.  
+    generated-package-base: # Must be configured
 ````
 
 Für die im Erzwingungshaft Projekt erforderliche Kommunikation mit dem xJustiz-Standard muss das Dokument _NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010_ als XML erstellt werden.
@@ -339,6 +350,9 @@ efile:
 # Custom properties
 xjustiz:
   version: 3.5.1
+  xsd:
+    path: xsd/XJustiz-3.5.1-XSD/
+    generated-package-base: de.muenchen.xjustiz.generated
   credentials:
     s3:
       access-key: minioadmin
@@ -357,6 +371,8 @@ xjustiz:
       file-output: aws2-s3://eh-backup?${xjustiz.interface.file.common}
     xta: bebpoService
   xjustiz0500straf:
+    xsd:
+      name: xjustiz_0500_straf_3_5.xsd
     nachrichtenkopf:
       auswahl-absender-sonstige: Stadt München
       auswahl-herstellerinformation-produkt: LHM-itM-KM15
