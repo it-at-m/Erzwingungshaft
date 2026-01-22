@@ -23,7 +23,8 @@ import de.muenchen.eh.db.repository.ClaimRepository;
 import de.muenchen.eh.db.repository.ClaimXmlRepository;
 import de.muenchen.eh.db.repository.XtaRepository;
 import de.muenchen.eh.db.service.ClaimService;
-import de.muenchen.xjustiz.generated.NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010;
+
+import de.muenchen.xjustiz.generated.xjustiz0500straf35.NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010;
 import de.xoev.transport.xta._211.MessageStatusType;
 import de.xoev.transport.xta._211.TransportReport;
 import java.io.File;
@@ -263,7 +264,7 @@ public class ReadCreateFilingTest {
                 Files.readString(
                         Paths.get("src/test/resources/Compare_Reference_1000013749_5793303492524_20240807.txt")).replace("\r\n", "\n"),
                 ProcessXmlDocumentCompare.process(xJustizXml).replace("\r\n", "\n"),
-                "All elements with dynamic content have been removed. The content should be the same.");
+                "All elements with dynamic content have been removed. The XML content should be the same.");
 
         NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010 lastXJustizMessage = XmlUnmarshaller
                 .unmarshalNachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010(xJustizXml);

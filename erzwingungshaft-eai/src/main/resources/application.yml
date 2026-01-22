@@ -127,6 +127,9 @@ efile:
 
 xjustiz:
   version: # Must be configured
+  xsd:
+    path: # Must be configured
+    generated-package-base: # Must be configured
   credentials:
     s3:
       access-key: # Must be configured
@@ -146,6 +149,8 @@ xjustiz:
       file-output: # Must be configured example : aws2-s3://eh-backup?${xjustiz.interface.file.common}
     xta: bebpoService
   xjustiz0500straf:
+    xsd:
+      name: # Must be configured
     nachrichtenkopf:
       auswahl-absender-sonstige: # Must be configured
       auswahl-herstellerinformation-produkt: # Must be configured

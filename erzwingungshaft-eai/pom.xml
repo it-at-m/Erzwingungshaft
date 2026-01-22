@@ -83,7 +83,7 @@
         <p2.mirror>download.eclipse.org</p2.mirror>
 
         <!-- xJustiz XML Generation -->
-        <xjustiz.converter>0.0.9</xjustiz.converter>
+        <xjustiz.version>0.0.10-SNAPSHOT</xjustiz.version>
 
         <!-- Openapi Generation-->
         <openapi-maven-plugin.version>7.18.0</openapi-maven-plugin.version>
@@ -157,8 +157,9 @@
         <dependency>
             <groupId>de.muenchen.oss</groupId>
             <artifactId>xjustiz-starter</artifactId>
-            <version>${xjustiz.converter}</version>
+            <version>${xjustiz.version}</version>
         </dependency>
+
 
         <!--  Spring-Boot-Actuator (https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.enabling) -->
         <dependency>

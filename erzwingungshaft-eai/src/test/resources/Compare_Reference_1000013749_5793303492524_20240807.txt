@@ -65,32 +65,32 @@
                     <tns:auswahl_beteiligter>
                         <tns:natuerlichePerson>
                             <tns:vollerName>
-<tns:vorname>EXXXX</tns:vorname>
-<tns:titel/>
-<tns:namensvorsatz/>
-<tns:nachname>Test</tns:nachname>
-<tns:geburtsname/>
+                                <tns:vorname>EXXXX</tns:vorname>
+                                <tns:titel/>
+                                <tns:namensvorsatz/>
+                                <tns:nachname>Test</tns:nachname>
+                                <tns:geburtsname/>
                             </tns:vollerName>
                             <tns:geburt>
-<tns:geburtsdatum>1956-08-20</tns:geburtsdatum>
-<tns:geburtsort>
-    <tns:ort>ULM</tns:ort>
-</tns:geburtsort>
+                                <tns:geburtsdatum>1956-08-20</tns:geburtsdatum>
+                                <tns:geburtsort>
+                                    <tns:ort>ULM</tns:ort>
+                                </tns:geburtsort>
                             </tns:geburt>
                             <tns:geschlecht>
-<code>1</code>
+                                <code>1</code>
                             </tns:geschlecht>
                             <tns:anschrift>
-<tns:anschriftenzusatz>DG</tns:anschriftenzusatz>
-<tns:strasse>Stadtplatz</tns:strasse>
-<tns:hausnummer>98</tns:hausnummer>
-<tns:postfachnummer/>
-<tns:postleitzahl>84478</tns:postleitzahl>
-<tns:ort>Waldkraiburg</tns:ort>
-<tns:wohnungsgeber/>
-<tns:staat listVersionID="7.0">
-    <code>000</code>
-</tns:staat>
+                                <tns:anschriftenzusatz>DG</tns:anschriftenzusatz>
+                                <tns:strasse>Stadtplatz</tns:strasse>
+                                <tns:hausnummer>98</tns:hausnummer>
+                                <tns:postfachnummer/>
+                                <tns:postleitzahl>84478</tns:postleitzahl>
+                                <tns:ort>Waldkraiburg</tns:ort>
+                                <tns:wohnungsgeber/>
+                                <tns:staat listVersionID="7.0">
+                                    <code>000</code>
+                                </tns:staat>
                             </tns:anschrift>
                         </tns:natuerlichePerson>
                     </tns:auswahl_beteiligter>
@@ -109,19 +109,19 @@
                     <tns:auswahl_beteiligter>
                         <tns:organisation>
                             <tns:bezeichnung>
-<tns:bezeichnung.aktuell>Landeshauptstadt München Stadtkämmerei</tns:bezeichnung.aktuell>
+                                <tns:bezeichnung.aktuell>Landeshauptstadt München Stadtkämmerei</tns:bezeichnung.aktuell>
                             </tns:bezeichnung>
                             <tns:anschrift>
-<tns:anschriftstyp listVersionID="3.0">
-    <code>003</code>
-</tns:anschriftstyp>
-<tns:strasse>Landsbergerstraße</tns:strasse>
-<tns:hausnummer>36</tns:hausnummer>
-<tns:postleitzahl>80339</tns:postleitzahl>
-<tns:ort>München</tns:ort>
+                                <tns:anschriftstyp listVersionID="3.0">
+                                    <code>003</code>
+                                </tns:anschriftstyp>
+                                <tns:strasse>Landsbergerstraße</tns:strasse>
+                                <tns:hausnummer>36</tns:hausnummer>
+                                <tns:postleitzahl>80339</tns:postleitzahl>
+                                <tns:ort>München</tns:ort>
                             </tns:anschrift>
                             <tns:bankverbindung>
-<tns:iban>DE86 7015 0000 0000 2030 00</tns:iban>
+                                <tns:iban>DE86 7015 0000 0000 2030 00</tns:iban>
                             </tns:bankverbindung>
                         </tns:organisation>
                     </tns:auswahl_beteiligter>

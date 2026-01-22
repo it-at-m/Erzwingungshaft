@@ -77,6 +77,9 @@ efile:
 # Custom properties
 xjustiz:
   version: 3.5.1
+  xsd:
+    path: xsd/XJustiz-3.5.1-XSD/
+    generated-package-base: de.muenchen.xjustiz.generated
   credentials:
     s3:
       access-key: minioadmin
@@ -84,6 +87,7 @@ xjustiz:
   interface:
     document:
       processor: direct:xjustiz-document-processor
+      json-adapter: direct:xjustiz-document-json-adapter
     jpa:
       import: jpa
     file:
@@ -95,6 +99,8 @@ xjustiz:
       file-output: aws2-s3://eh-backup?${xjustiz.interface.file.common}
     xta: bebpoService
   xjustiz0500straf:
+    xsd:
+      name: xjustiz_0500_straf_3_5.xsd
     nachrichtenkopf:
       auswahl-absender-sonstige: Stadt München
       auswahl-herstellerinformation-produkt: LHM-itM-KM15
