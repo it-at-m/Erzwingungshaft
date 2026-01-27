@@ -24,13 +24,14 @@ public class FileImportRouteBuilder extends BaseRouteBuilder {
 
         super.configure();
 
+        // spotless:off
         from("{{xjustiz.interface.file.consume}}")
                 .routeId("generate-import-files")
                 .convertBodyTo(String.class, StandardCharsets.ISO_8859_1.name())
                 .split(body().tokenize(lineBreak), new GroupedBodyAggregationStrategy())
-                .process("importDataEnricher")
-                .process("claimMetadataFile")
-                .bean("logServiceImport", "logClaimImport")
+                    .process("importDataEnricher")
+                    .process("claimMetadataFile")
+                    .bean("logServiceImport", "logClaimImport")
                 .end()
                 .log(LoggingLevel.INFO, "de.muenchen.eh", "'${body.size}' claims imported.")
                 .process(exchange -> {
@@ -54,9 +55,10 @@ public class FileImportRouteBuilder extends BaseRouteBuilder {
                 .aggregate(constant(true), new GroupedBodyAggregationStrategy())
                 .completionSize(100)
                 .completionTimeout(2000)
-                .bean("importEntityCache", "clear")
-                .log(LoggingLevel.INFO, "de.muenchen.eh", "'${body.size}' pdf files imported.")
-                .to(ClaimRouteBuilder.PROCESS_CLAIMS);
+                    .bean("importEntityCache", "clear")
+                    .log(LoggingLevel.INFO, "de.muenchen.eh", "'${body.size}' pdf files imported.")
+                    .to(ClaimRouteBuilder.PROCESS_CLAIMS).id("process-claims");
+        // spotless:on
 
     }
 

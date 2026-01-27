@@ -23,17 +23,18 @@ public class ClaimRouteBuilder extends BaseRouteBuilder {
 
         super.configure();
 
+        // spotless:off
         from(PROCESS_CLAIMS)
                 .routeId("claim-eh-process")
                 .log(LoggingLevel.INFO, "Starting process eh-process ...")
                 .setBody(method(claimService, "claimsForProcessing"))
                 .split().body().aggregationStrategy(new GroupedBodyAggregationStrategy())
-                .process("claimDataUnmarshaller")
-                .process("claimContentDataEnricher")
-                .process("claimXJustizXmlEnricher")
-                .process("efilesOperationExecutor")
-                .process("{{xjustiz.interface.xta}}").id("bebpoService")
-                .log(LoggingLevel.DEBUG, "claim-eh-process completed gpid '${body.claimImport.geschaeftspartnerId}'.").id("claim-eh-process-gpid")
+                    .process("claimDataUnmarshaller")
+                    .process("claimContentDataEnricher")
+                    .process("claimXJustizXmlEnricher")
+                    .process("efilesOperationExecutor")
+                    .process("{{xjustiz.interface.xta}}").id("bebpoService")
+                    .log(LoggingLevel.DEBUG, "claim-eh-process completed gpid '${body.claimImport.geschaeftspartnerId}'.").id("claim-eh-process-gpid")
                 .end()
                 .bean("findCollection", "clearCollectionCache");
 
@@ -43,6 +44,8 @@ public class ClaimRouteBuilder extends BaseRouteBuilder {
 
         from(PROCESS_XJUSTIZ_DOCUMENT).routeId("process-xjustiz-document")
                 .to("{{xjustiz.interface.document.processor}}");
+
+        // spotless:on
 
     }
 

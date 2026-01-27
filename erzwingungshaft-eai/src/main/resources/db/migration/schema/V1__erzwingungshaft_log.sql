@@ -366,3 +366,13 @@ CREATE TABLE eh.claim_efile
 );
 
 CREATE INDEX idx_claim_efile_claim_id ON eh.claim_efile (claim_id);
+
+CREATE TABLE eh.unassignable_error
+(
+
+    id          SERIAL PRIMARY KEY, -- INT PK
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    message     TEXT    NOT NULL,
+    comment     TEXT    DEFAULT ''
+
+);

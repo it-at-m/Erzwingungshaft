@@ -5,8 +5,10 @@ import de.muenchen.eh.db.ImportEntityCache;
 import de.muenchen.eh.db.entity.ClaimImport;
 import de.muenchen.eh.db.entity.ClaimImportLog;
 import de.muenchen.eh.db.entity.MessageType;
+import de.muenchen.eh.db.entity.UnassignableError;
 import de.muenchen.eh.db.repository.ClaimImportLogRepository;
 import de.muenchen.eh.db.repository.ClaimImportRepository;
+import de.muenchen.eh.db.repository.UnassignableErrorRepository;
 import de.muenchen.eh.file.ImportClaimIdentifierData;
 import de.muenchen.eh.file.ImportContentWrapper;
 import java.util.List;
@@ -28,6 +30,7 @@ public class LogServiceImport {
 
     private final ClaimImportRepository claimImportRepository;
     private final ClaimImportLogRepository claimImportLogRepository;
+    private final UnassignableErrorRepository unassignableErrorRepository;
 
     private final ImportEntityCache claimImportCache;
 
@@ -67,33 +70,47 @@ public class LogServiceImport {
             var ehkasszEhgpidPrintDate = FileNameUtils.getIdentifier(fileName);
             List<ClaimImport> claimImports = claimImportCache.getImportEntities(ehkasszEhgpidPrintDate);
 
-            AtomicReference<StatusProcessingType> type = new AtomicReference<>();
-            claimImports.forEach(claimImport -> {
-                if (FileNameUtils.isEHFile(fileName)) {
-                    claimImport.setIsAntragImport(true);
-                    type.set(StatusProcessingType.IMPORT_ANTRAG_IMPORT_DIRECTORY);
-                } else if (FileNameUtils.isURBFile(fileName)) {
-                    claimImport.setIsBescheidImport(true);
-                    type.set(StatusProcessingType.IMPORT_BESCHEID_IMPORT_DIRECTORY);
-                } else if (FileNameUtils.isVWFile(fileName)) {
-                    claimImport.setIsVerwerfungBescheidImport(true);
-                    type.set(StatusProcessingType.IMPORT_VERWERFUNG_BESCHEID_IMPORT_DIRECTORY);
-                } else if (FileNameUtils.isURKFile(fileName)) {
-                    claimImport.setIsKostenBescheidImport(true);
-                    type.set(StatusProcessingType.IMPORT_KOSTEN_BESCHEID_IMPORT_DIRECTORY);
-                } else {
-                    exchange.setException(new Exception("Unkown File: " + fileName));
-                }
+            if (claimImports.isEmpty()) {
+                metadataNotAssignableError(exchange, "Metadata in table claim_import not found : " + ehkasszEhgpidPrintDate,
+                        "Pdf is moved to  s3 backup with prefix : " + exchange.getIn().getHeader(AWS2S3Constants.KEY));
+            } else {
+                AtomicReference<StatusProcessingType> type = new AtomicReference<>();
+                claimImports.forEach(claimImport -> {
+                    if (FileNameUtils.isEHFile(fileName)) {
+                        claimImport.setIsAntragImport(true);
+                        type.set(StatusProcessingType.IMPORT_ANTRAG_IMPORT_DIRECTORY);
+                    } else if (FileNameUtils.isURBFile(fileName)) {
+                        claimImport.setIsBescheidImport(true);
+                        type.set(StatusProcessingType.IMPORT_BESCHEID_IMPORT_DIRECTORY);
+                    } else if (FileNameUtils.isVWFile(fileName)) {
+                        claimImport.setIsVerwerfungBescheidImport(true);
+                        type.set(StatusProcessingType.IMPORT_VERWERFUNG_BESCHEID_IMPORT_DIRECTORY);
+                    } else if (FileNameUtils.isURKFile(fileName)) {
+                        claimImport.setIsKostenBescheidImport(true);
+                        type.set(StatusProcessingType.IMPORT_KOSTEN_BESCHEID_IMPORT_DIRECTORY);
+                    } else {
+                        exchange.setException(new Exception("Unkown File: " + fileName));
+                    }
 
-                var updateClaimImport = claimImportRepository.save(claimImport);
-                claimImportCache.put(ehkasszEhgpidPrintDate, updateClaimImport);
-                exchange.setProperty(Constants.CLAIM_IMPORT, updateClaimImport);
-                writeInfoImportLogMessage(type.get(), exchange);
+                    var updateClaimImport = claimImportRepository.save(claimImport);
+                    claimImportCache.put(ehkasszEhgpidPrintDate, updateClaimImport);
+                    exchange.setProperty(Constants.CLAIM_IMPORT, updateClaimImport);
+                    writeInfoImportLogMessage(type.get(), exchange);
 
-            });
+                });
+            }
         } catch (Exception e) {
             exchange.setException(e);
         }
+    }
+
+    private void metadataNotAssignableError(Exchange exchange, String message, String comment) {
+
+        UnassignableError unassignableError = new UnassignableError();
+        unassignableError.setMessage(message);
+        unassignableError.setComment(comment);
+        unassignableErrorRepository.save(unassignableError);
+        exchange.setRouteStop(true);
     }
 
     public void writeInfoImportLogMessage(StatusProcessingType processingType, Exchange exchange) {
