@@ -72,9 +72,9 @@ public class ImportClaimData {
     private String ehtatstdv;
     @DataField(pos = 368, length = 2, trim = true, align = "B")
     private String ehtatminv;
-    @DataField(pos = 370, length = 2, trim = true, align = "B", required = true)
+    @DataField(pos = 370, length = 2, trim = true, align = "B")
     private String ehtatstdb;
-    @DataField(pos = 372, length = 2, trim = true, align = "B", required = true)
+    @DataField(pos = 372, length = 2, trim = true, align = "B")
     private String ehtatminb;
     @DataField(pos = 374, length = 5, trim = true, align = "B")
     private String ehbusskz1;

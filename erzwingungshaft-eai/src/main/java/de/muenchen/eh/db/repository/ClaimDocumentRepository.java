@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ClaimDocumentRepository extends CrudRepository<ClaimDocument, Long> {
 
-    List<ClaimDocument> findByClaimImportId(Integer claimImportId);
+    List<ClaimDocument> findByClaimImportIdOrderByDocumentType(Integer claimImportId);
 
     List<ClaimDocument> findByDocumentType(String type);
 }

@@ -1,6 +1,7 @@
 package de.muenchen.eh.claim;
 
 import de.muenchen.eh.common.FileNameUtils;
+import de.muenchen.eh.common.TimeFormatUtils;
 import de.muenchen.eh.db.entity.ClaimDocument;
 import de.muenchen.eh.db.entity.ClaimImport;
 import de.muenchen.eh.db.repository.ClaimDocumentRepository;
@@ -29,7 +30,6 @@ import de.muenchen.xjustiz.xoev.codelisten.XoevGeschlecht;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +47,8 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @Slf4j
 public class ClaimContentContainerFactory {
+
+    public static final String YYYY_MM_DD = "yyyy-MM-dd";
 
     private final ClaimContentWrapper claimContentWrapper;
     private final ClaimDocumentRepository claimDocumentRepository;
@@ -78,14 +80,12 @@ public class ClaimContentContainerFactory {
 
         fachdatenContent.setErlassdatum(getLocalDate(claimContentWrapper.getEhImportClaimData().getEhbdat()));
         fachdatenContent.setRechtskraftdatum(
-                getXMLGregorianCalendar(dateFormatConverter(claimContentWrapper.getEhImportClaimData().getEhbrkdat(), "yyyy-MM-dd")));
+                getXMLGregorianCalendar(dateFormatConverter(claimContentWrapper.getEhImportClaimData().getEhbrkdat(), YYYY_MM_DD)));
 
-        var startDate = getLocalDate(getImportClaimData().getEhtatdatv());
-        fachdatenContent.setAnfangsDatumUhrzeit(LocalDateTime.of(startDate.getYear(), startDate.getMonth(), startDate.getDayOfMonth(),
-                Integer.parseInt(getImportClaimData().getEhtatstdv()), Integer.parseInt(getImportClaimData().getEhtatminv())));
-        LocalDate endDate = getImportClaimData().getEhtatdatb().isBlank() ? startDate : getLocalDate(getImportClaimData().getEhtatdatb());
-        fachdatenContent.setEndeDatumUhrzeit(LocalDateTime.of(endDate.getYear(), endDate.getMonth(), endDate.getDayOfMonth(),
-                Integer.parseInt(getImportClaimData().getEhtatstdb()), Integer.parseInt(getImportClaimData().getEhtatminb())));
+        fachdatenContent.setAnfangDatum(dateFormatConverter(getImportClaimData().getEhtatdatv(), YYYY_MM_DD));
+        fachdatenContent.setAnfangUhrzeit(TimeFormatUtils.formatTime(getImportClaimData().getEhtatstdv(), getImportClaimData().getEhtatminv()));
+        fachdatenContent.setEndeDatum(dateFormatConverter(getImportClaimData().getEhtatdatb(), YYYY_MM_DD));
+        fachdatenContent.setEndeUhrzeit(TimeFormatUtils.formatTime(getImportClaimData().getEhtatstdb(), getImportClaimData().getEhtatminb()));
 
         Tatort tatortContent = new Tatort();
         tatortContent.getStrasseHausnummer().add(new StrasseHausnummer(getImportClaimData().getEhtatstr1(), getImportClaimData().getEhtathnr1()));
@@ -148,7 +148,7 @@ public class ClaimContentContainerFactory {
     private List<Dokument> createDocuments() {
 
         List<Dokument> documents = new ArrayList<>();
-        List<ClaimDocument> claimDocuments = claimDocumentRepository.findByClaimImportId(claimImport.getId());
+        List<ClaimDocument> claimDocuments = claimDocumentRepository.findByClaimImportIdOrderByDocumentType(claimImport.getId());
 
         AtomicLong count = new AtomicLong(1);
         claimDocuments.forEach(document -> {
@@ -199,7 +199,7 @@ public class ClaimContentContainerFactory {
         name.setGeburtsname(getImportClaimData().getEhp1gebname());
 
         var geburt = person.generateGeburt();
-        geburt.setGeburtsdatum(dateFormatConverter(getImportClaimData().getEhp1gebdat(), "yyyy-MM-dd"));
+        geburt.setGeburtsdatum(dateFormatConverter(getImportClaimData().getEhp1gebdat(), YYYY_MM_DD));
         geburt.setGeburtsort(getImportClaimData().getEhp1gebort());
 
         person.addAnschrift(setAddress());
@@ -236,6 +236,10 @@ public class ClaimContentContainerFactory {
     }
 
     public static String dateFormatConverter(String dateToConvert, String outputFormat) {
+
+        if (dateToConvert == null || dateToConvert.isEmpty()) {
+            return null;
+        }
 
         DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern(outputFormat);

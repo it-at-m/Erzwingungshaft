@@ -158,13 +158,13 @@
             </tns:identifikation>
             <tns:xjustiz.fachspezifischeDaten>
                 <tns:dokumentklasse listVersionID="1.4">
-                    <code>017</code>
+                    <code>016</code>
                 </tns:dokumentklasse>
                 
                 <tns:datei>
-                    <tns:dateiname>1000013749_5793303492524_20240807_URB.pdf</tns:dateiname>
+                    <tns:dateiname>1000013749_5793303492524_20240807_EH.pdf</tns:dateiname>
                     <tns:bestandteil listVersionID="2.4">
-                        <code>002</code>
+                        <code>001</code>
                     </tns:bestandteil>
                     <tns:versionsnummer>1</tns:versionsnummer>
                 </tns:datei>
@@ -177,13 +177,13 @@
             </tns:identifikation>
             <tns:xjustiz.fachspezifischeDaten>
                 <tns:dokumentklasse listVersionID="1.4">
-                    <code>016</code>
+                    <code>017</code>
                 </tns:dokumentklasse>
                 
                 <tns:datei>
-                    <tns:dateiname>1000013749_5793303492524_20240807_EH.pdf</tns:dateiname>
+                    <tns:dateiname>1000013749_5793303492524_20240807_URB.pdf</tns:dateiname>
                     <tns:bestandteil listVersionID="2.4">
-                        <code>001</code>
+                        <code>002</code>
                     </tns:bestandteil>
                     <tns:versionsnummer>1</tns:versionsnummer>
                 </tns:datei>
@@ -201,7 +201,6 @@
             <tns:tat>
                 <tns:anfangsdatum>2024-10-02</tns:anfangsdatum>
                 <tns:anfangsuhrzeit>17:46</tns:anfangsuhrzeit>
-                <tns:endedatum>2024-10-02</tns:endedatum>
                 <tns:endeuhrzeit>18:55</tns:endeuhrzeit>
                 <tns:tatort>
                     <tns:anschrift>

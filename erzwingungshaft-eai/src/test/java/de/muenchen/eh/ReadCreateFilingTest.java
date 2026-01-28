@@ -144,12 +144,12 @@ public class ReadCreateFilingTest extends TestContainerConfiguration {
                 "3 claims expected (gp_id : 1000809085/5793341761427, 1000013749, 1000258309).");
         assertEquals(6, claimDocumentRepository.count(),
                 "6 claim documents expected. 2 (Antrag, Urbescheid) for each gp_id : 1000809085, 1000013749, 1000258309");
-        assertEquals(2, claimContentRepository.count(),
-                "2 claim contents expected (gp_id : 1000809085/5793341761427, 1000013749).");
-        assertEquals(2, claimDataRepository.count(),
-                "2 claim data expected (gp_id : 1000809085/5793341761427, 1000013749).");
-        assertEquals(2, claimlXmlRepository.count(),
-                "2 claim xml expected (gp_id : 1000809085/5793341761427, 1000013749).");
+        assertEquals(3, claimContentRepository.count(),
+                "3 claim contents expected (gp_id : 1000809085/5793341761427, 1000013749, 1000258309).");
+        assertEquals(3, claimDataRepository.count(),
+                "3 claim data expected (gp_id : 1000809085/5793341761427, 1000013749, 1000258309).");
+        assertEquals(3, claimlXmlRepository.count(),
+                "3 claim xml expected (gp_id : 1000809085/5793341761427, 1000013749, 1000258309).");
         assertEquals(1, claimEfileRepository.count(), "1 claim efile expected (gp_id : 1000013749).");
         assertEquals(17, claimImportLogRepository.count(), "17 claim import logs expected.");
         assertEquals(5, claimImportLogRepository.findByMessage("IMPORT_DATA_FILE_CREATED").size(),
@@ -162,8 +162,8 @@ public class ReadCreateFilingTest extends TestContainerConfiguration {
                 "3 claims contains ANTRAG to import in db.");
         assertEquals(3, claimImportLogRepository.findByMessage("IMPORT_BESCHEID_IMPORT_DB").size(),
                 "3 claims contains BESCHEID to import in db.");
-        assertEquals(26, claimLogRepository.count(), "26 claim logs expected.");
-        assertEquals(23, claimLogRepository.findByMessageTyp(MessageType.INFO).size(), "23 import INFO expected.");
+        assertEquals(31, claimLogRepository.count(), "31 claim logs expected.");
+        assertEquals(28, claimLogRepository.findByMessageTyp(MessageType.INFO).size(), "28 import INFO expected.");
         assertEquals(1, claimLogRepository.findByMessageTyp(MessageType.WARN).size(), "1 import WARN expected.");
         assertEquals(2, claimLogRepository.findByMessageTyp(MessageType.ERROR).size(), "2 import ERROR expected.");
         assertEquals(1, xtaRepository.count(), "1 send message expected.");
@@ -245,15 +245,6 @@ public class ReadCreateFilingTest extends TestContainerConfiguration {
                 .filter(ci -> ci.getGeschaeftspartnerId().equals("1000258309")).findFirst();
         var claimImport_1000258309_5793402494421 = first_claimImport_1000258309_5793402494421
                 .orElseThrow(() -> new AssertionError("ClaimImport for geschaeftspartnerId 1000258309 not found"));
-
-        Claim claim_1000258309_5793402494421 = claimRepository
-                .findByClaimImportId(claimImport_1000258309_5793402494421.getId());
-        var claimlog_errors_1000258309_5793402494421 = claimLogRepository
-                .findByClaimIdAndMessageTyp(claim_1000258309_5793402494421.getId(), MessageType.ERROR);
-        assertEquals(1, claimlog_errors_1000258309_5793402494421.size(), "One error expected.");
-        assertEquals(
-                "The mandatory field defined at the position 31 (de.muenchen.eh.claim.ImportClaimData.ehtatstdb) is empty for the line: 1",
-                claimlog_errors_1000258309_5793402494421.getFirst().getMessage());
 
     }
 
