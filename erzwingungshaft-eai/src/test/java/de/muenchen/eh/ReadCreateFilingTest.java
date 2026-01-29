@@ -10,6 +10,7 @@ import de.muenchen.eh.db.entity.ClaimEfile;
 import de.muenchen.eh.db.entity.ClaimImport;
 import de.muenchen.eh.db.entity.ClaimImportLog;
 import de.muenchen.eh.db.entity.ClaimLog;
+import de.muenchen.eh.db.entity.ClaimXml;
 import de.muenchen.eh.db.entity.MessageType;
 import de.muenchen.eh.db.repository.ClaimContentRepository;
 import de.muenchen.eh.db.repository.ClaimDataRepository;
@@ -185,8 +186,12 @@ public class ReadCreateFilingTest extends TestContainerConfiguration {
         assertEquals(11, s3BucketObjectCount(EH_BUCKET_BACKUP, s3InitClient), "11 backup files expected.");
 
         // XML message
-        String xJustizXml = claimlXmlRepository.findByClaimId(claims.get(0).getId()).getFirst().getContent();
-
+        List<ClaimImport> list_claimImport_1000013749_5793303492524 = claimImportRepository.findByGeschaeftspartnerIdAndKassenzeichen("1000013749", "5793303492524" );
+        assertEquals(1, list_claimImport_1000013749_5793303492524.size(), "1 claim import expected.");
+        Claim claim_1000013749_5793303492524 = claimRepository.findByClaimImportId(list_claimImport_1000013749_5793303492524.getFirst().getId());
+        List<ClaimXml> claimXml_1000013749_5793303492524 = claimlXmlRepository.findByClaimId(claim_1000013749_5793303492524.getId());
+        assertEquals(1, claimXml_1000013749_5793303492524.size(), "1 claim xml expected.");
+        String xJustizXml = claimXml_1000013749_5793303492524.getFirst().getContent();
         assertFalse(
                 testXmlCompare(Files.readString(Paths.get("src/test/resources/Compare_Reference_1000013749_5793303492524_20240807.txt")),
                         ProcessXmlDocumentCompare.process(xJustizXml)),
@@ -240,11 +245,6 @@ public class ReadCreateFilingTest extends TestContainerConfiguration {
         assertEquals("EFILE_GESCHAEFTSPARTNERID_COLLECTION_NOT_FOUND",
                 claimlog_errors_1000809085_5793341761427.getFirst().getMessage());
 
-        // DB log 1000258309_5793402494421
-        Optional<ClaimImport> first_claimImport_1000258309_5793402494421 = claimImports.stream()
-                .filter(ci -> ci.getGeschaeftspartnerId().equals("1000258309")).findFirst();
-        var claimImport_1000258309_5793402494421 = first_claimImport_1000258309_5793402494421
-                .orElseThrow(() -> new AssertionError("ClaimImport for geschaeftspartnerId 1000258309 not found"));
 
     }
 
