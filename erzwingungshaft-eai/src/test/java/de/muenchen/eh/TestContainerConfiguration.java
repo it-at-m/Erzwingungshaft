@@ -24,7 +24,7 @@ import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 
 @Testcontainers
-public class TestContainerConfiguration {
+public class TestContainerConfiguration extends TestHelper {
 
     protected static final String EH_BUCKET_BACKUP = "eh-backup";
     protected static final String EH_BUCKET_PDF = "eh-import-pdf";

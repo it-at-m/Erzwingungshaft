@@ -32,7 +32,6 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 @EnableAutoConfiguration
 @DirtiesContext
 @ActiveProfiles(profiles = { TestConstants.SPRING_TEST_PROFILE })
-//@Testcontainers
 public class MetadataNotAvailableTest extends TestContainerConfiguration {
 
     @EndpointInject("mock:test-end")

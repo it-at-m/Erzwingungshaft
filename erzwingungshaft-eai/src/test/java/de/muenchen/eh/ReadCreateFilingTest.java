@@ -1,6 +1,7 @@
 package de.muenchen.eh;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import de.muenchen.eh.common.XmlUnmarshaller;
@@ -186,11 +187,10 @@ public class ReadCreateFilingTest extends TestContainerConfiguration {
         // XML message
         String xJustizXml = claimlXmlRepository.findByClaimId(claims.get(0).getId()).getFirst().getContent();
 
-        assertEquals(
-                Files.readString(
-                        Paths.get("src/test/resources/Compare_Reference_1000013749_5793303492524_20240807.txt")).replace("\r\n", "\n"),
-                ProcessXmlDocumentCompare.process(xJustizXml).replace("\r\n", "\n"),
-                "All elements with dynamic content have been removed. The content should be the same.");
+        assertFalse(
+                testXmlCompare(Files.readString(Paths.get("src/test/resources/Compare_Reference_1000013749_5793303492524_20240807.txt")),
+                        ProcessXmlDocumentCompare.process(xJustizXml)),
+                "All xml elements with dynamic content have been removed. The content should be the same.");
 
         NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010 lastXJustizMessage = XmlUnmarshaller
                 .unmarshalNachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010(xJustizXml);
