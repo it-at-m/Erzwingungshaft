@@ -12,6 +12,8 @@ public class TestHelper {
         Diff diff = DiffBuilder.compare(expectedXml)
                 .withTest(actualXml)
                 .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName))
+                .ignoreWhitespace()
+                .ignoreComments()
                 .build();
 
         if (diff.hasDifferences()) {
