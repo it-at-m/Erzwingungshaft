@@ -65,6 +65,7 @@ public class ClaimContentContainerFactory {
     }
 
     public ContentContainer supplyContentContainer() throws DatatypeConfigurationException {
+        log.debug("Data for xml generation: {}", claimContentWrapper.getEhImportClaimData().toString());
         ContentContainer content = new ContentContainer(supplyNachrichtenKopfContent(), supplyFachdatenContent(), supplyGrunddatenContent(),
                 supplySchriftgutContent());
         log.debug("Content for xml generation: {}", content);
@@ -239,6 +240,8 @@ public class ClaimContentContainerFactory {
     }
 
     public static String dateFormatConverter(String dateToConvert, String outputFormat) {
+
+        log.debug("dateFormatConverter : " + dateToConvert + " " + outputFormat);
 
         if (dateToConvert == null || dateToConvert.isEmpty()) {
             return null;
