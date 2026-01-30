@@ -241,7 +241,7 @@ public class ClaimContentContainerFactory {
 
     public static String dateFormatConverter(String dateToConvert, String outputFormat) {
 
-        log.debug("dateFormatConverter : " + dateToConvert + " " + outputFormat);
+        log.debug("dateFormatConverter : dateToConvert '{}' outputFormat '{}'", dateToConvert, outputFormat);
 
         if (dateToConvert == null || dateToConvert.isEmpty()) {
             return null;
