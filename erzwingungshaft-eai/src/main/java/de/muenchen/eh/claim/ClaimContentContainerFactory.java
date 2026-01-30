@@ -65,7 +65,10 @@ public class ClaimContentContainerFactory {
     }
 
     public ContentContainer supplyContentContainer() throws DatatypeConfigurationException {
-        return new ContentContainer(supplyNachrichtenKopfContent(), supplyFachdatenContent(), supplyGrunddatenContent(), supplySchriftgutContent());
+        ContentContainer content = new ContentContainer(supplyNachrichtenKopfContent(), supplyFachdatenContent(), supplyGrunddatenContent(),
+                supplySchriftgutContent());
+        log.debug("Content for xml generation: {}", content);
+        return content;
     }
 
     private NachrichtenkopfContent supplyNachrichtenKopfContent() {

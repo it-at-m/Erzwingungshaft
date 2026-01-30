@@ -186,7 +186,8 @@ public class ReadCreateFilingTest extends TestContainerConfiguration {
         assertEquals(11, s3BucketObjectCount(EH_BUCKET_BACKUP, s3InitClient), "11 backup files expected.");
 
         // XML message
-        List<ClaimImport> list_claimImport_1000013749_5793303492524 = claimImportRepository.findByGeschaeftspartnerIdAndKassenzeichen("1000013749", "5793303492524" );
+        List<ClaimImport> list_claimImport_1000013749_5793303492524 = claimImportRepository.findByGeschaeftspartnerIdAndKassenzeichen("1000013749",
+                "5793303492524");
         assertEquals(1, list_claimImport_1000013749_5793303492524.size(), "1 claim import expected.");
         Claim claim_1000013749_5793303492524 = claimRepository.findByClaimImportId(list_claimImport_1000013749_5793303492524.getFirst().getId());
         List<ClaimXml> claimXml_1000013749_5793303492524 = claimlXmlRepository.findByClaimId(claim_1000013749_5793303492524.getId());
@@ -244,7 +245,6 @@ public class ReadCreateFilingTest extends TestContainerConfiguration {
         assertEquals(1, claimlog_errors_1000809085_5793341761427.size(), "One error expected.");
         assertEquals("EFILE_GESCHAEFTSPARTNERID_COLLECTION_NOT_FOUND",
                 claimlog_errors_1000809085_5793341761427.getFirst().getMessage());
-
 
     }
 
