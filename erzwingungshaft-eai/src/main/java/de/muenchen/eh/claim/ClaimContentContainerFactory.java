@@ -33,6 +33,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
@@ -87,9 +88,9 @@ public class ClaimContentContainerFactory {
                 getXMLGregorianCalendar(dateFormatConverter(claimContentWrapper.getEhImportClaimData().getEhbrkdat(), YYYY_MM_DD)));
 
         fachdatenContent.setAnfangDatum(dateFormatConverter(getImportClaimData().getEhtatdatv(), YYYY_MM_DD));
-        fachdatenContent.setAnfangUhrzeit(TimeFormatUtils.formatTime(getImportClaimData().getEhtatstdv(), getImportClaimData().getEhtatminv()));
+        fachdatenContent.setAnfangUhrzeit(TimeFormatUtils.formatTime(getImportClaimData().getEhtatstdv(), getImportClaimData().getEhtatminv(), Locale.GERMANY));
         fachdatenContent.setEndeDatum(dateFormatConverter(getImportClaimData().getEhtatdatb(), YYYY_MM_DD));
-        fachdatenContent.setEndeUhrzeit(TimeFormatUtils.formatTime(getImportClaimData().getEhtatstdb(), getImportClaimData().getEhtatminb()));
+        fachdatenContent.setEndeUhrzeit(TimeFormatUtils.formatTime(getImportClaimData().getEhtatstdb(), getImportClaimData().getEhtatminb(), Locale.GERMANY));
 
         Tatort tatortContent = new Tatort();
         tatortContent.getStrasseHausnummer().add(new StrasseHausnummer(getImportClaimData().getEhtatstr1(), getImportClaimData().getEhtathnr1()));
