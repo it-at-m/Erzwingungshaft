@@ -194,7 +194,7 @@
         <tns:bussgeldbescheid>
             <tns:erlassdatum>2025-01-10</tns:erlassdatum>
             <tns:rechtskraft>
-                <tns:rechtskraftdatum>2025-02-01</tns:rechtskraftdatum>
+                <tns:rechtskraftdatum>2025-02-01+01:00</tns:rechtskraftdatum>
             </tns:rechtskraft>
             <tns:geldbusse>15.0</tns:geldbusse>
             <tns:auslagen>59.5</tns:auslagen>
