@@ -1,5 +1,7 @@
 package de.muenchen.eh;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import de.muenchen.eh.claim.content.ContentContainerFactoryHelper;
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -9,8 +11,6 @@ import java.util.TimeZone;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DateFormatTest {
 
@@ -37,9 +37,9 @@ public class DateFormatTest {
         GregorianCalendar gregorianCalendar = new GregorianCalendar(2020, Calendar.OCTOBER, 20, 0, 0, 0);
         gregorianCalendar.setTimeZone(TimeZone.getTimeZone("Europe/Berlin"));
 
-        assertEquals(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregorianCalendar), ContentContainerFactoryHelper.convertXMLGregorianCalendar("20.10.2020", "dd.MM.yyyyy", "Europe/Berlin"));
+        assertEquals(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregorianCalendar),
+                ContentContainerFactoryHelper.convertXMLGregorianCalendar("20.10.2020", "dd.MM.yyyyy", "Europe/Berlin"));
 
     }
-
 
 }

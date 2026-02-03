@@ -79,19 +79,23 @@ public class ClaimContentContainerFactory {
         return nachrichtenkopfContent;
     }
 
-
     private FachdatenContent supplyFachdatenContent() throws DatatypeConfigurationException, ParseException {
 
         FachdatenContent fachdatenContent = new FachdatenContent();
 
         fachdatenContent.setErlassdatum(ContentContainerFactoryHelper.convertLocalDate(claimContentWrapper.getEhImportClaimData().getEhbdat(), DD_MM_YYYY_DOT));
         fachdatenContent.setRechtskraftdatum(
-                ContentContainerFactoryHelper.convertXMLGregorianCalendar(claimContentWrapper.getEhImportClaimData().getEhbrkdat(), DD_MM_YYYY_DOT, EUROPE_BERLIN));
+                ContentContainerFactoryHelper.convertXMLGregorianCalendar(claimContentWrapper.getEhImportClaimData().getEhbrkdat(), DD_MM_YYYY_DOT,
+                        EUROPE_BERLIN));
 
-        fachdatenContent.setAnfangDatum(ContentContainerFactoryHelper.convertTargetStringFormat(getImportClaimData().getEhtatdatv(), DD_MM_YYYY_DOT, YYYY_MM_DD_HYPHEN));
-        fachdatenContent.setAnfangUhrzeit(ContentContainerFactoryHelper.xJustizTypeGDSZeitangabeFormat(getImportClaimData().getEhtatstdv(), getImportClaimData().getEhtatminv(), null, Locale.GERMANY));
-        fachdatenContent.setEndeDatum(ContentContainerFactoryHelper.convertTargetStringFormat(getImportClaimData().getEhtatdatb(), DD_MM_YYYY_DOT, YYYY_MM_DD_HYPHEN));
-        fachdatenContent.setEndeUhrzeit(ContentContainerFactoryHelper.xJustizTypeGDSZeitangabeFormat(getImportClaimData().getEhtatstdb(), getImportClaimData().getEhtatminb(), null, Locale.GERMANY));
+        fachdatenContent.setAnfangDatum(
+                ContentContainerFactoryHelper.convertTargetStringFormat(getImportClaimData().getEhtatdatv(), DD_MM_YYYY_DOT, YYYY_MM_DD_HYPHEN));
+        fachdatenContent.setAnfangUhrzeit(ContentContainerFactoryHelper.xJustizTypeGDSZeitangabeFormat(getImportClaimData().getEhtatstdv(),
+                getImportClaimData().getEhtatminv(), null, Locale.GERMANY));
+        fachdatenContent
+                .setEndeDatum(ContentContainerFactoryHelper.convertTargetStringFormat(getImportClaimData().getEhtatdatb(), DD_MM_YYYY_DOT, YYYY_MM_DD_HYPHEN));
+        fachdatenContent.setEndeUhrzeit(ContentContainerFactoryHelper.xJustizTypeGDSZeitangabeFormat(getImportClaimData().getEhtatstdb(),
+                getImportClaimData().getEhtatminb(), null, Locale.GERMANY));
 
         Tatort tatortContent = new Tatort();
         tatortContent.getStrasseHausnummer().add(new StrasseHausnummer(getImportClaimData().getEhtatstr1(), getImportClaimData().getEhtathnr1()));
@@ -205,7 +209,8 @@ public class ClaimContentContainerFactory {
         name.setGeburtsname(getImportClaimData().getEhp1gebname());
 
         var geburt = person.generateGeburt();
-        geburt.setGeburtsdatum(ContentContainerFactoryHelper.convertTargetStringFormat(getImportClaimData().getEhp1gebdat(), DD_MM_YYYY_DOT, YYYY_MM_DD_HYPHEN));
+        geburt.setGeburtsdatum(
+                ContentContainerFactoryHelper.convertTargetStringFormat(getImportClaimData().getEhp1gebdat(), DD_MM_YYYY_DOT, YYYY_MM_DD_HYPHEN));
         geburt.setGeburtsort(getImportClaimData().getEhp1gebort());
 
         person.addAnschrift(setAddress());
@@ -226,6 +231,5 @@ public class ClaimContentContainerFactory {
 
         return anschrift;
     }
-
 
 }

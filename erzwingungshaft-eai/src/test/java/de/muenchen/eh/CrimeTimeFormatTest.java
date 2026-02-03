@@ -1,12 +1,12 @@
 package de.muenchen.eh;
 
-import de.muenchen.eh.claim.content.ContentContainerFactoryHelper;
-import java.util.Locale;
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import de.muenchen.eh.claim.content.ContentContainerFactoryHelper;
+import java.util.Locale;
+import org.junit.jupiter.api.Test;
 
 public class CrimeTimeFormatTest {
 
@@ -44,7 +44,7 @@ public class CrimeTimeFormatTest {
         assertEquals("20:20:20", ContentContainerFactoryHelper.xJustizTypeGDSZeitangabeFormat("20", " 20  ", "20  ", Locale.GERMANY));
         assertEquals("10:30:59", ContentContainerFactoryHelper.xJustizTypeGDSZeitangabeFormat("10", "30", "59", Locale.US));
 
-        assertThrows(IllegalArgumentException.class, () ->  ContentContainerFactoryHelper.xJustizTypeGDSZeitangabeFormat("20", "30", "60", Locale.GERMANY));
+        assertThrows(IllegalArgumentException.class, () -> ContentContainerFactoryHelper.xJustizTypeGDSZeitangabeFormat("20", "30", "60", Locale.GERMANY));
         assertThrows(IllegalArgumentException.class, () -> ContentContainerFactoryHelper.xJustizTypeGDSZeitangabeFormat("16", "60", "30", Locale.GERMANY));
         assertThrows(IllegalArgumentException.class, () -> ContentContainerFactoryHelper.xJustizTypeGDSZeitangabeFormat("15", "15", "15", Locale.US));
         assertThrows(IllegalArgumentException.class, () -> ContentContainerFactoryHelper.xJustizTypeGDSZeitangabeFormat("11", "15", "-15", Locale.US));

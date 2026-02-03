@@ -68,7 +68,8 @@ public class ContentContainerFactoryHelper {
      * @return XMLGregorianCalendar
      * @throws DatatypeConfigurationException
      */
-    public static XMLGregorianCalendar convertXMLGregorianCalendar(String dateString, String dateFormat, String timeZoneId) throws DatatypeConfigurationException, ParseException {
+    public static XMLGregorianCalendar convertXMLGregorianCalendar(String dateString, String dateFormat, String timeZoneId)
+            throws DatatypeConfigurationException, ParseException {
 
         SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
         sdf.setTimeZone(TimeZone.getTimeZone(timeZoneId));
@@ -82,9 +83,8 @@ public class ContentContainerFactoryHelper {
         return DatatypeFactory.newInstance().newXMLGregorianCalendar(gregorianCalendar);
     }
 
-
     /**
-     *  xJustiz XML validation expects '\d{1,2}(:\d{2}){0,2}' for Typ 'Type.GDS.Zeitangabe'
+     * xJustiz XML validation expects '\d{1,2}(:\d{2}){0,2}' for Typ 'Type.GDS.Zeitangabe'
      *
      * Formats the given hour, minute, and second into a GDS-compliant time string.
      * Validates hour range based on the provided locale (12-hour or 24-hour format).
@@ -95,7 +95,7 @@ public class ContentContainerFactoryHelper {
      * Since the XML elements can be set to minOccurs="0",
      * missing time values ​​are not treated as errors, but rather terminated with 'null'.
      *
-     * @param hour   The hour as a String, can be null or empty
+     * @param hour The hour as a String, can be null or empty
      * @param minute The minute as a String (0-59), can be null or empty
      * @param second The second as a String (0-59), can be null or empty
      * @param locale The locale for validation (determines 12-hour or 24-hour format)
@@ -111,7 +111,7 @@ public class ContentContainerFactoryHelper {
         second = StringUtils.trimToNull(second);
 
         if (StringUtils.isEmpty(hour)) {
-           return null;
+            return null;
         }
 
         int hourInt;
@@ -129,8 +129,7 @@ public class ContentContainerFactoryHelper {
 
         if (hourInt < 0 || hourInt > maxHour) {
             throw new IllegalArgumentException(
-                    String.format("Hour must be between 0 and %d for the given locale.", maxHour)
-            );
+                    String.format("Hour must be between 0 and %d for the given locale.", maxHour));
         }
 
         // Parse and validate minute (if provided)
@@ -182,25 +181,24 @@ public class ContentContainerFactoryHelper {
     /**
      *
      * @param gender as String (W,M,S,D)
-     * @return  XoevGeschlecht
+     * @return XoevGeschlecht
      */
     public static XoevGeschlecht supplyXoevGeschlecht(String gender) {
 
         switch (gender.trim().toUpperCase()) {
 
-            case "M":
-                return XoevGeschlecht.MAENNLICH;
-            case "W":
-                return XoevGeschlecht.WEIBLICH;
-            case "D":
-                return XoevGeschlecht.DIVERS;
-            case "S":
-                return XoevGeschlecht.SAECHLICH;
-            default:
-                return XoevGeschlecht.UNBEKANNT;
+        case "M":
+            return XoevGeschlecht.MAENNLICH;
+        case "W":
+            return XoevGeschlecht.WEIBLICH;
+        case "D":
+            return XoevGeschlecht.DIVERS;
+        case "S":
+            return XoevGeschlecht.SAECHLICH;
+        default:
+            return XoevGeschlecht.UNBEKANNT;
 
         }
     }
-
 
 }
