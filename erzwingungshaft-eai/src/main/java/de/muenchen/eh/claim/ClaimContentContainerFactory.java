@@ -1,12 +1,12 @@
-package de.muenchen.eh.claim.content;
+package de.muenchen.eh.claim;
 
-import de.muenchen.eh.claim.ClaimContentWrapper;
-import de.muenchen.eh.claim.ImportClaimData;
 import de.muenchen.eh.common.FileNameUtils;
 import de.muenchen.eh.db.entity.ClaimDocument;
 import de.muenchen.eh.db.entity.ClaimImport;
 import de.muenchen.eh.db.repository.ClaimDocumentRepository;
 import de.muenchen.eh.log.DocumentType;
+import de.muenchen.oss.xjustizlib.DateTimeHelper;
+import de.muenchen.oss.xjustizlib.GenderHelper;
 import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmitteilung.extern.an.justiz0500010.content.ContentContainer;
 import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmitteilung.extern.an.justiz0500010.content.FachdatenContent;
 import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmitteilung.extern.an.justiz0500010.content.GrunddatenContent;
@@ -83,14 +83,14 @@ public class ClaimContentContainerFactory {
 
         FachdatenContent fachdatenContent = new FachdatenContent();
 
-        fachdatenContent.setErlassdatum(ContentContainerFactoryHelper.convertLocalDate(claimContentWrapper.getEhImportClaimData().getEhbdat(), DD_MM_YYYY_DOT));
+        fachdatenContent.setErlassdatum(DateTimeHelper.convertLocalDate(claimContentWrapper.getEhImportClaimData().getEhbdat(), DD_MM_YYYY_DOT));
         fachdatenContent.setRechtskraftdatum(
-                ContentContainerFactoryHelper.convertXMLGregorianCalendar(claimContentWrapper.getEhImportClaimData().getEhbrkdat(), DD_MM_YYYY_DOT, EUROPE_BERLIN));
+                DateTimeHelper.convertXMLGregorianCalendar(claimContentWrapper.getEhImportClaimData().getEhbrkdat(), DD_MM_YYYY_DOT, EUROPE_BERLIN));
 
-        fachdatenContent.setAnfangDatum(ContentContainerFactoryHelper.convertTargetStringFormat(getImportClaimData().getEhtatdatv(), DD_MM_YYYY_DOT, YYYY_MM_DD_HYPHEN));
-        fachdatenContent.setAnfangUhrzeit(ContentContainerFactoryHelper.xJustizTypeGDSZeitangabeFormat(getImportClaimData().getEhtatstdv(), getImportClaimData().getEhtatminv(), null, Locale.GERMANY));
-        fachdatenContent.setEndeDatum(ContentContainerFactoryHelper.convertTargetStringFormat(getImportClaimData().getEhtatdatb(), DD_MM_YYYY_DOT, YYYY_MM_DD_HYPHEN));
-        fachdatenContent.setEndeUhrzeit(ContentContainerFactoryHelper.xJustizTypeGDSZeitangabeFormat(getImportClaimData().getEhtatstdb(), getImportClaimData().getEhtatminb(), null, Locale.GERMANY));
+        fachdatenContent.setAnfangDatum(DateTimeHelper.convertTargetStringFormat(getImportClaimData().getEhtatdatv(), DD_MM_YYYY_DOT, YYYY_MM_DD_HYPHEN));
+        fachdatenContent.setAnfangUhrzeit(DateTimeHelper.xJustizTypeGDSZeitangabeFormat(getImportClaimData().getEhtatstdv(), getImportClaimData().getEhtatminv(), null, Locale.GERMANY));
+        fachdatenContent.setEndeDatum(DateTimeHelper.convertTargetStringFormat(getImportClaimData().getEhtatdatb(), DD_MM_YYYY_DOT, YYYY_MM_DD_HYPHEN));
+        fachdatenContent.setEndeUhrzeit(DateTimeHelper.xJustizTypeGDSZeitangabeFormat(getImportClaimData().getEhtatstdb(), getImportClaimData().getEhtatminb(), null, Locale.GERMANY));
 
         Tatort tatortContent = new Tatort();
         tatortContent.getStrasseHausnummer().add(new StrasseHausnummer(getImportClaimData().getEhtatstr1(), getImportClaimData().getEhtathnr1()));
@@ -194,7 +194,7 @@ public class ClaimContentContainerFactory {
     private void setPersonalData(Beteiligung ehBetroffener) {
 
         var person = ehBetroffener.generateBeteiligter().generateNatuerlichePerson();
-        person.setGeschlecht(ContentContainerFactoryHelper.supplyXoevGeschlecht(getImportClaimData().getEhp1geschl()));
+        person.setGeschlecht(GenderHelper.supplyXoevGeschlecht(getImportClaimData().getEhp1geschl()));
 
         var name = person.generateVollerName();
         name.setVorname(getImportClaimData().getEhp1vorname());
@@ -204,7 +204,7 @@ public class ClaimContentContainerFactory {
         name.setGeburtsname(getImportClaimData().getEhp1gebname());
 
         var geburt = person.generateGeburt();
-        geburt.setGeburtsdatum(ContentContainerFactoryHelper.convertTargetStringFormat(getImportClaimData().getEhp1gebdat(), DD_MM_YYYY_DOT, YYYY_MM_DD_HYPHEN));
+        geburt.setGeburtsdatum(DateTimeHelper.convertTargetStringFormat(getImportClaimData().getEhp1gebdat(), DD_MM_YYYY_DOT, YYYY_MM_DD_HYPHEN));
         geburt.setGeburtsort(getImportClaimData().getEhp1gebort());
 
         person.addAnschrift(setAddress());
