@@ -79,7 +79,6 @@ public class ClaimContentContainerFactory {
         return nachrichtenkopfContent;
     }
 
-
     private FachdatenContent supplyFachdatenContent() throws DatatypeConfigurationException, ParseException {
 
         FachdatenContent fachdatenContent = new FachdatenContent();

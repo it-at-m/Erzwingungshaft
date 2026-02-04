@@ -111,7 +111,7 @@ public class OperationIdFactory {
     private Exchange createExchangeOutgoing(ClaimContentWrapper dataWrapper) {
         Exchange exchange = createExchange(OperationId.CREATE_OUTGOING.getDescriptor());
         exchange.getMessage().setHeader(Exchange.CONTENT_TYPE, "multipart/form-data");
-        List<ClaimDocument> documents = claimDocumentRepository.findByClaimImportId(dataWrapper.getClaimImport().getId());
+        List<ClaimDocument> documents = claimDocumentRepository.findByClaimImportIdOrderByDocumentType(dataWrapper.getClaimImport().getId());
         log.debug("Process outgoing geschaeftspartnerId : {} ", dataWrapper.getClaimImport().getGeschaeftspartnerId());
 
         try {

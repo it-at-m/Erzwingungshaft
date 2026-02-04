@@ -13,4 +13,6 @@ public interface ClaimImportRepository extends CrudRepository<ClaimImport, UUID>
 
     List<ClaimImport> findByOutputDirectoryAndIsAntragImportIsNullAndIsBescheidImportIsNull(String outputDirectory);
 
+    List<ClaimImport> findByGeschaeftspartnerIdAndKassenzeichen(String geschaeftspartnerId, String kassenzeichen);
+
 }

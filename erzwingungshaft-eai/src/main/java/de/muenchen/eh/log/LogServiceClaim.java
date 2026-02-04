@@ -100,6 +100,19 @@ public class LogServiceClaim {
         }
     }
 
+    /*
+     * We currently do not have a corresponding attribute check.
+     * However, when importing data with Apache Camel Bindy,
+     * it is possible to check whether a required field contains data.
+     *
+     * ImportClaimData
+     * ...
+     *
+     * @DataField(pos = 370, length = 2, trim = true, align = "B", required = true)
+     * private String ehtatstdb;
+     * ...
+     *
+     */
     public void logIllegalArgumentException(final Exchange exchange) {
 
         try {

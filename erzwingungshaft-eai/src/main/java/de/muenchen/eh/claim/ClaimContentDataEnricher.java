@@ -1,5 +1,6 @@
 package de.muenchen.eh.claim;
 
+import de.muenchen.eh.claim.content.ClaimContentContainerFactory;
 import de.muenchen.eh.db.repository.ClaimDocumentRepository;
 import de.muenchen.eh.log.LogServiceClaim;
 import lombok.RequiredArgsConstructor;

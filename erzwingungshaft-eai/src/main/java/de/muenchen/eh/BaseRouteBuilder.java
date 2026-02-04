@@ -22,12 +22,15 @@ public class BaseRouteBuilder extends RouteBuilder {
         Predicate claimOrClaimImportExists = PredicateBuilder.or(exchangeProperty(Constants.CLAIM).isNotNull(),
                 exchangeProperty(Constants.CLAIM_IMPORT).isNotNull());
 
+        // spotless:off
         onException(IllegalArgumentException.class)
                 .handled(true)
                 .log(LoggingLevel.ERROR, "${exception}")
                 .choice()
-                .when(exchangeProperty(Constants.CLAIM).isNotNull())
-                .bean("logServiceClaim", "logIllegalArgumentException")
+                    .when(exchangeProperty(Constants.CLAIM).isNotNull())
+                    .bean("logServiceClaim", "logIllegalArgumentException")
+                    .otherwise()
+                    .log(LoggingLevel.ERROR, "${exception.stacktrace}")
                 .end()
                 .process(new StopExchange());
 
@@ -37,8 +40,11 @@ public class BaseRouteBuilder extends RouteBuilder {
                 .choice()
                 .when(claimOrClaimImportExists)
                 .bean("logServiceError", "logError")
+                .otherwise()
+                .log(LoggingLevel.ERROR, "${exception.stacktrace}")
                 .end()
                 .process(new StopExchange());
+        // spotless:on
 
     }
 

@@ -1,16 +1,16 @@
 package de.muenchen.eh;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import de.muenchen.eh.common.XmlUnmarshaller;
 import de.muenchen.eh.db.entity.Claim;
 import de.muenchen.eh.db.entity.ClaimEfile;
 import de.muenchen.eh.db.entity.ClaimImport;
 import de.muenchen.eh.db.entity.ClaimImportLog;
 import de.muenchen.eh.db.entity.ClaimLog;
+import de.muenchen.eh.db.entity.ClaimXml;
 import de.muenchen.eh.db.entity.MessageType;
 import de.muenchen.eh.db.repository.ClaimContentRepository;
 import de.muenchen.eh.db.repository.ClaimDataRepository;
@@ -23,14 +23,11 @@ import de.muenchen.eh.db.repository.ClaimRepository;
 import de.muenchen.eh.db.repository.ClaimXmlRepository;
 import de.muenchen.eh.db.repository.XtaRepository;
 import de.muenchen.eh.db.service.ClaimService;
-
 import de.muenchen.xjustiz.generated.xjustiz0500straf35.NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010;
 import de.xoev.transport.xta._211.MessageStatusType;
 import de.xoev.transport.xta._211.TransportReport;
 import java.io.File;
 import java.math.BigInteger;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -47,29 +44,13 @@ import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.UseAdviceWith;
 import org.apache.cxf.ws.addressing.AttributedURIType;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.MinIOContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
-import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
-import software.amazon.awssdk.services.s3.model.DeleteBucketRequest;
-import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
-import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
-import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @UseAdviceWith
@@ -78,8 +59,7 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 @EnableAutoConfiguration
 @DirtiesContext
 @ActiveProfiles(profiles = { TestConstants.SPRING_TEST_PROFILE })
-@Testcontainers
-public class ReadCreateFilingTest {
+public class ReadCreateFilingTest extends TestContainerConfiguration {
 
     @EndpointInject("mock:test-end")
     private MockEndpoint mockTestEnd;
@@ -110,58 +90,6 @@ public class ReadCreateFilingTest {
 
     @Autowired
     protected CamelContext camelContext;
-
-    private static final String EH_BUCKET_BACKUP = "eh-backup";
-    private static final String EH_BUCKET_PDF = "eh-import-pdf";
-    private static final String EH_BUCKET_ANTRAG = "eh-import-antrag";
-
-    private static final String METADATA = "D.KVU.EUDG0P0.20240807.EZH";
-
-    private WireMockServer wireMockContainer;
-
-    @Container
-    private static MinIOContainer minioContainer = new MinIOContainer(DockerImageName.parse("minio/minio:latest"))
-            .withExposedPorts(9000);
-
-    static {
-        minioContainer.setPortBindings(List.of("9000:9000"));
-    }
-
-    @DynamicPropertySource
-    static void overrideProperties(DynamicPropertyRegistry registry) {
-        // S3-Minio
-        registry.add("spring.minio.url", minioContainer::getContainerIpAddress);
-        registry.add("spring.minio.access-key", minioContainer::getUserName);
-        registry.add("spring.minio.secret-key", minioContainer::getPassword);
-
-        // WireMockServer
-        registry.add("server.port", () -> 8081);
-    }
-
-    private static S3Client s3InitClient;
-
-    @BeforeEach
-    public void setUp() throws URISyntaxException {
-
-        wireMockContainer = new WireMockServer(
-                WireMockConfiguration.wireMockConfig().port(8081).withRootDirectory("../stack/wiremock"));
-        wireMockContainer.start();
-
-        // Test Setup
-        s3InitClient = S3Client.builder().endpointOverride(new URI("http://127.0.0.1:9000")).region(Region.of("local"))
-                .credentialsProvider(StaticCredentialsProvider
-                        .create(AwsBasicCredentials.create(minioContainer.getUserName(), minioContainer.getPassword())))
-                .build();
-
-        initializeS3Bucket(s3InitClient);
-
-    }
-
-    @AfterEach
-    public void teardown() {
-        wireMockContainer.stop();
-        minioContainer.stop();
-    }
 
     @Test
     void test_5_claims() throws Exception {
@@ -218,12 +146,12 @@ public class ReadCreateFilingTest {
                 "3 claims expected (gp_id : 1000809085/5793341761427, 1000013749, 1000258309).");
         assertEquals(6, claimDocumentRepository.count(),
                 "6 claim documents expected. 2 (Antrag, Urbescheid) for each gp_id : 1000809085, 1000013749, 1000258309");
-        assertEquals(2, claimContentRepository.count(),
-                "2 claim contents expected (gp_id : 1000809085/5793341761427, 1000013749).");
-        assertEquals(2, claimDataRepository.count(),
-                "2 claim data expected (gp_id : 1000809085/5793341761427, 1000013749).");
-        assertEquals(2, claimlXmlRepository.count(),
-                "2 claim xml expected (gp_id : 1000809085/5793341761427, 1000013749).");
+        assertEquals(3, claimContentRepository.count(),
+                "3 claim contents expected (gp_id : 1000809085/5793341761427, 1000013749, 1000258309).");
+        assertEquals(3, claimDataRepository.count(),
+                "3 claim data expected (gp_id : 1000809085/5793341761427, 1000013749, 1000258309).");
+        assertEquals(3, claimlXmlRepository.count(),
+                "3 claim xml expected (gp_id : 1000809085/5793341761427, 1000013749, 1000258309).");
         assertEquals(1, claimEfileRepository.count(), "1 claim efile expected (gp_id : 1000013749).");
         assertEquals(17, claimImportLogRepository.count(), "17 claim import logs expected.");
         assertEquals(5, claimImportLogRepository.findByMessage("IMPORT_DATA_FILE_CREATED").size(),
@@ -236,8 +164,8 @@ public class ReadCreateFilingTest {
                 "3 claims contains ANTRAG to import in db.");
         assertEquals(3, claimImportLogRepository.findByMessage("IMPORT_BESCHEID_IMPORT_DB").size(),
                 "3 claims contains BESCHEID to import in db.");
-        assertEquals(26, claimLogRepository.count(), "26 claim logs expected.");
-        assertEquals(23, claimLogRepository.findByMessageTyp(MessageType.INFO).size(), "23 import INFO expected.");
+        assertEquals(31, claimLogRepository.count(), "31 claim logs expected.");
+        assertEquals(28, claimLogRepository.findByMessageTyp(MessageType.INFO).size(), "28 import INFO expected.");
         assertEquals(1, claimLogRepository.findByMessageTyp(MessageType.WARN).size(), "1 import WARN expected.");
         assertEquals(2, claimLogRepository.findByMessageTyp(MessageType.ERROR).size(), "2 import ERROR expected.");
         assertEquals(1, xtaRepository.count(), "1 send message expected.");
@@ -253,18 +181,22 @@ public class ReadCreateFilingTest {
         assertEquals("COO.2150.9169.1.2119722", claimEfile.getXml());
 
         // S3 buckets
-        assertEquals(0, s3BucketObjectCount(EH_BUCKET_ANTRAG), "Claim import bucket should be empty.");
-        assertEquals(0, s3BucketObjectCount(EH_BUCKET_PDF), "Pdf import bucket should be empty.");
-        assertEquals(11, s3BucketObjectCount(EH_BUCKET_BACKUP), "11 backup files expected.");
+        assertEquals(0, s3BucketObjectCount(EH_BUCKET_ANTRAG, s3InitClient), "Claim import bucket should be empty.");
+        assertEquals(0, s3BucketObjectCount(EH_BUCKET_PDF, s3InitClient), "Pdf import bucket should be empty.");
+        assertEquals(11, s3BucketObjectCount(EH_BUCKET_BACKUP, s3InitClient), "11 backup files expected.");
 
         // XML message
-        String xJustizXml = claimlXmlRepository.findByClaimId(claims.get(0).getId()).getFirst().getContent();
-
-        assertEquals(
-                Files.readString(
-                        Paths.get("src/test/resources/Compare_Reference_1000013749_5793303492524_20240807.txt")).replace("\r\n", "\n"),
-                ProcessXmlDocumentCompare.process(xJustizXml).replace("\r\n", "\n"),
-                "All elements with dynamic content have been removed. The XML content should be the same.");
+        List<ClaimImport> list_claimImport_1000013749_5793303492524 = claimImportRepository.findByGeschaeftspartnerIdAndKassenzeichen("1000013749",
+                "5793303492524");
+        assertEquals(1, list_claimImport_1000013749_5793303492524.size(), "1 claim import expected.");
+        Claim claim_1000013749_5793303492524 = claimRepository.findByClaimImportId(list_claimImport_1000013749_5793303492524.getFirst().getId());
+        List<ClaimXml> claimXml_1000013749_5793303492524 = claimlXmlRepository.findByClaimId(claim_1000013749_5793303492524.getId());
+        assertEquals(1, claimXml_1000013749_5793303492524.size(), "1 claim xml expected.");
+        String xJustizXml = claimXml_1000013749_5793303492524.getFirst().getContent();
+        assertFalse(
+                testXmlCompare(Files.readString(Paths.get("src/test/resources/Compare_Reference_1000013749_5793303492524_20240807.txt")),
+                        ProcessXmlDocumentCompare.process(xJustizXml)),
+                "All xml elements with dynamic content have been removed. The content should be the same.");
 
         NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010 lastXJustizMessage = XmlUnmarshaller
                 .unmarshalNachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010(xJustizXml);
@@ -314,47 +246,6 @@ public class ReadCreateFilingTest {
         assertEquals("EFILE_GESCHAEFTSPARTNERID_COLLECTION_NOT_FOUND",
                 claimlog_errors_1000809085_5793341761427.getFirst().getMessage());
 
-        // DB log 1000258309_5793402494421
-        Optional<ClaimImport> first_claimImport_1000258309_5793402494421 = claimImports.stream()
-                .filter(ci -> ci.getGeschaeftspartnerId().equals("1000258309")).findFirst();
-        var claimImport_1000258309_5793402494421 = first_claimImport_1000258309_5793402494421
-                .orElseThrow(() -> new AssertionError("ClaimImport for geschaeftspartnerId 1000258309 not found"));
-
-        Claim claim_1000258309_5793402494421 = claimRepository
-                .findByClaimImportId(claimImport_1000258309_5793402494421.getId());
-        var claimlog_errors_1000258309_5793402494421 = claimLogRepository
-                .findByClaimIdAndMessageTyp(claim_1000258309_5793402494421.getId(), MessageType.ERROR);
-        assertEquals(1, claimlog_errors_1000258309_5793402494421.size(), "One error expected.");
-        assertEquals(
-                "The mandatory field defined at the position 31 (de.muenchen.eh.claim.ImportClaimData.ehtatstdb) is empty for the line: 1",
-                claimlog_errors_1000258309_5793402494421.getFirst().getMessage());
-
-    }
-
-    private int s3BucketObjectCount(String bucketName) {
-        return s3InitClient.listObjectsV2(ListObjectsV2Request.builder().bucket(bucketName).build()).contents().size();
-    }
-
-    public static void initializeS3Bucket(S3Client s3InitClient) {
-        // Remove old test content
-        var bucketsInTest = s3InitClient.listBuckets();
-
-        // Remove bucket objects
-        bucketsInTest.buckets().forEach(b -> {
-            var content = s3InitClient.listObjects(ListObjectsRequest.builder().bucket(b.name()).build());
-            content.contents().forEach(o -> {
-                s3InitClient.deleteObject(DeleteObjectRequest.builder().bucket(b.name()).key(o.key()).build());
-            });
-        });
-        // Delete buckets
-        bucketsInTest.buckets().forEach(b -> {
-            s3InitClient.deleteBucket(DeleteBucketRequest.builder().bucket(b.name()).build());
-        });
-
-        // Create test bucket
-        s3InitClient.createBucket(CreateBucketRequest.builder().bucket(EH_BUCKET_ANTRAG).build());
-        s3InitClient.createBucket(CreateBucketRequest.builder().bucket(EH_BUCKET_BACKUP).build());
-        s3InitClient.createBucket(CreateBucketRequest.builder().bucket(EH_BUCKET_PDF).build());
     }
 
     public static void uploadBucketTestFileConfiguration(S3Client s3InitClient) {

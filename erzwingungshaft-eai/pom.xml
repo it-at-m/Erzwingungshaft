@@ -71,11 +71,11 @@
         <refarch-tools.version>1.2.0</refarch-tools.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <commons-lang3.version>3.18.0</commons-lang3.version>
-        <javax.annotation.version>1.3.2</javax.annotation.version>
-        <jakarta.databind.version>0.2.8</jakarta.databind.version>
-        <jakarta.xml.soap>3.0.2</jakarta.xml.soap>
-        <messaging.saaj>3.0.2</messaging.saaj>
-
+        <javax-annotation.version>1.3.2</javax-annotation.version>
+        <jakarta-databind.version>0.2.8</jakarta-databind.version>
+        <jakarta-xm-soap.version>3.0.2</jakarta-xm-soap.version>
+        <messaging-saaj.version>3.0.2</messaging-saaj.version>
+        <commons-validator.version>1.9.0</commons-validator.version>
 
         <!-- Spotless P2 Mirror configuration (e.g. required when using company internal registry -->
         <p2.username /> <!-- must be empty, override via Maven settings.xml if needed -->
@@ -83,7 +83,7 @@
         <p2.mirror>download.eclipse.org</p2.mirror>
 
         <!-- xJustiz XML Generation -->
-        <xjustiz.version>0.0.11-SNAPSHOT</xjustiz.version>
+        <xjustiz.converter>0.0.9</xjustiz.converter>
 
         <!-- Openapi Generation-->
         <openapi-maven-plugin.version>7.18.0</openapi-maven-plugin.version>
@@ -159,7 +159,6 @@
             <artifactId>xjustiz-starter</artifactId>
             <version>${xjustiz.version}</version>
         </dependency>
-
 
         <!--  Spring-Boot-Actuator (https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.enabling) -->
         <dependency>
@@ -384,12 +383,12 @@
         <dependency>
             <groupId>jakarta.xml.soap</groupId>
             <artifactId>jakarta.xml.soap-api</artifactId>
-            <version>${jakarta.xml.soap}</version>
+            <version>${jakarta-xm-soap.version}</version>
         </dependency>
         <dependency>
             <groupId>com.sun.xml.messaging.saaj</groupId>
             <artifactId>saaj-impl</artifactId>
-            <version>${messaging.saaj}</version>
+            <version>${messaging-saaj.version}</version>
             <scope>runtime</scope>
         </dependency>
 
@@ -529,6 +528,7 @@
                 </dependencies>
                 <configuration>
                     <java>
+                        <toggleOffOn />
                         <includes>
                             <include>src/main/java/**/*.java</include>
                             <include>src/test/java/**/*.java</include>

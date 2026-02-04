@@ -158,25 +158,6 @@
             </tns:identifikation>
             <tns:xjustiz.fachspezifischeDaten>
                 <tns:dokumentklasse listVersionID="1.4">
-                    <code>017</code>
-                </tns:dokumentklasse>
-                
-                <tns:datei>
-                    <tns:dateiname>1000013749_5793303492524_20240807_URB.pdf</tns:dateiname>
-                    <tns:bestandteil listVersionID="2.4">
-                        <code>002</code>
-                    </tns:bestandteil>
-                    <tns:versionsnummer>1</tns:versionsnummer>
-                </tns:datei>
-            </tns:xjustiz.fachspezifischeDaten>
-        </tns:dokument>
-        <tns:dokument>
-            <tns:identifikation>
-                
-                <tns:nummerImUebergeordnetenContainer>2</tns:nummerImUebergeordnetenContainer>
-            </tns:identifikation>
-            <tns:xjustiz.fachspezifischeDaten>
-                <tns:dokumentklasse listVersionID="1.4">
                     <code>016</code>
                 </tns:dokumentklasse>
                 
@@ -189,19 +170,37 @@
                 </tns:datei>
             </tns:xjustiz.fachspezifischeDaten>
         </tns:dokument>
+        <tns:dokument>
+            <tns:identifikation>
+                
+                <tns:nummerImUebergeordnetenContainer>2</tns:nummerImUebergeordnetenContainer>
+            </tns:identifikation>
+            <tns:xjustiz.fachspezifischeDaten>
+                <tns:dokumentklasse listVersionID="1.4">
+                    <code>017</code>
+                </tns:dokumentklasse>
+                
+                <tns:datei>
+                    <tns:dateiname>1000013749_5793303492524_20240807_URB.pdf</tns:dateiname>
+                    <tns:bestandteil listVersionID="2.4">
+                        <code>002</code>
+                    </tns:bestandteil>
+                    <tns:versionsnummer>1</tns:versionsnummer>
+                </tns:datei>
+            </tns:xjustiz.fachspezifischeDaten>
+        </tns:dokument>
     </tns:schriftgutobjekte>
     <tns:fachdaten>
         <tns:bussgeldbescheid>
             <tns:erlassdatum>2025-01-10</tns:erlassdatum>
             <tns:rechtskraft>
-                <tns:rechtskraftdatum>2025-02-01</tns:rechtskraftdatum>
+                <tns:rechtskraftdatum>2025-02-01+01:00</tns:rechtskraftdatum>
             </tns:rechtskraft>
             <tns:geldbusse>15.0</tns:geldbusse>
             <tns:auslagen>59.5</tns:auslagen>
             <tns:tat>
                 <tns:anfangsdatum>2024-10-02</tns:anfangsdatum>
                 <tns:anfangsuhrzeit>17:46</tns:anfangsuhrzeit>
-                <tns:endedatum>2024-10-02</tns:endedatum>
                 <tns:endeuhrzeit>18:55</tns:endeuhrzeit>
                 <tns:tatort>
                     <tns:anschrift>
