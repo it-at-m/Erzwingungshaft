@@ -1,11 +1,12 @@
-package de.muenchen.eh.claim;
+package de.muenchen.eh.claim.content;
 
+import de.muenchen.eh.claim.ClaimContentWrapper;
+import de.muenchen.eh.claim.ImportClaimData;
 import de.muenchen.eh.common.FileNameUtils;
 import de.muenchen.eh.db.entity.ClaimDocument;
 import de.muenchen.eh.db.entity.ClaimImport;
 import de.muenchen.eh.db.repository.ClaimDocumentRepository;
 import de.muenchen.eh.log.DocumentType;
-
 import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmitteilung.extern.an.justiz0500010.content.ContentContainer;
 import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmitteilung.extern.an.justiz0500010.content.FachdatenContent;
 import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmitteilung.extern.an.justiz0500010.content.GrunddatenContent;
@@ -26,28 +27,28 @@ import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmittei
 import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmitteilung.extern.an.justiz0500010.content.schriftgutobjekte.Identifikation;
 import de.muenchen.xjustiz.xoev.codelisten.XoevCodeGDSRollenbezeichnungTyp3;
 import de.muenchen.xjustiz.xoev.codelisten.XoevCodeGDSStaatenTyp3;
-import de.muenchen.xjustiz.xoev.codelisten.XoevGeschlecht;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Getter
 @Slf4j
 public class ClaimContentContainerFactory {
+
+    public static final String DD_MM_YYYY_DOT = "dd.MM.yyyy";
+    public static final String YYYY_MM_DD_HYPHEN = "yyyy-MM-dd";
+    public static final String EUROPE_BERLIN = "Europe/Berlin";
 
     private final ClaimContentWrapper claimContentWrapper;
     private final ClaimDocumentRepository claimDocumentRepository;
@@ -56,6 +57,7 @@ public class ClaimContentContainerFactory {
     private final ClaimImport claimImport;
 
     public ClaimContentContainerFactory(ClaimContentWrapper claimContentWrapper, ClaimDocumentRepository claimDocumentRepository) {
+
         this.claimContentWrapper = claimContentWrapper;
         this.claimDocumentRepository = claimDocumentRepository;
 
@@ -63,8 +65,12 @@ public class ClaimContentContainerFactory {
         this.importClaimData = claimContentWrapper.getEhImportClaimData();
     }
 
-    public ContentContainer supplyContentContainer() throws DatatypeConfigurationException {
-        return new ContentContainer(supplyNachrichtenKopfContent(), supplyFachdatenContent(), supplyGrunddatenContent(), supplySchriftgutContent());
+    public ContentContainer supplyContentContainer() throws DatatypeConfigurationException, ParseException {
+        log.debug("Data for xml generation: {}", claimContentWrapper.getEhImportClaimData().toString());
+        ContentContainer content = new ContentContainer(supplyNachrichtenKopfContent(), supplyFachdatenContent(), supplyGrunddatenContent(),
+                supplySchriftgutContent());
+        log.debug("Content for xml generation: {}", content);
+        return content;
     }
 
     private NachrichtenkopfContent supplyNachrichtenKopfContent() {
@@ -73,20 +79,19 @@ public class ClaimContentContainerFactory {
         return nachrichtenkopfContent;
     }
 
-    private FachdatenContent supplyFachdatenContent() throws DatatypeConfigurationException {
+
+    private FachdatenContent supplyFachdatenContent() throws DatatypeConfigurationException, ParseException {
 
         FachdatenContent fachdatenContent = new FachdatenContent();
 
-        fachdatenContent.setErlassdatum(getLocalDate(claimContentWrapper.getEhImportClaimData().getEhbdat()));
+        fachdatenContent.setErlassdatum(ContentContainerFactoryHelper.convertLocalDate(claimContentWrapper.getEhImportClaimData().getEhbdat(), DD_MM_YYYY_DOT));
         fachdatenContent.setRechtskraftdatum(
-                getXMLGregorianCalendar(dateFormatConverter(claimContentWrapper.getEhImportClaimData().getEhbrkdat(), "yyyy-MM-dd")));
+                ContentContainerFactoryHelper.convertXMLGregorianCalendar(claimContentWrapper.getEhImportClaimData().getEhbrkdat(), DD_MM_YYYY_DOT, EUROPE_BERLIN));
 
-        var startDate = getLocalDate(getImportClaimData().getEhtatdatv());
-        fachdatenContent.setAnfangsDatumUhrzeit(LocalDateTime.of(startDate.getYear(), startDate.getMonth(), startDate.getDayOfMonth(),
-                Integer.parseInt(getImportClaimData().getEhtatstdv()), Integer.parseInt(getImportClaimData().getEhtatminv())));
-        LocalDate endDate = getImportClaimData().getEhtatdatb().isBlank() ? startDate : getLocalDate(getImportClaimData().getEhtatdatb());
-        fachdatenContent.setEndeDatumUhrzeit(LocalDateTime.of(endDate.getYear(), endDate.getMonth(), endDate.getDayOfMonth(),
-                Integer.parseInt(getImportClaimData().getEhtatstdb()), Integer.parseInt(getImportClaimData().getEhtatminb())));
+        fachdatenContent.setAnfangDatum(ContentContainerFactoryHelper.convertTargetStringFormat(getImportClaimData().getEhtatdatv(), DD_MM_YYYY_DOT, YYYY_MM_DD_HYPHEN));
+        fachdatenContent.setAnfangUhrzeit(ContentContainerFactoryHelper.xJustizTypeGDSZeitangabeFormat(getImportClaimData().getEhtatstdv(), getImportClaimData().getEhtatminv(), null, Locale.GERMANY));
+        fachdatenContent.setEndeDatum(ContentContainerFactoryHelper.convertTargetStringFormat(getImportClaimData().getEhtatdatb(), DD_MM_YYYY_DOT, YYYY_MM_DD_HYPHEN));
+        fachdatenContent.setEndeUhrzeit(ContentContainerFactoryHelper.xJustizTypeGDSZeitangabeFormat(getImportClaimData().getEhtatstdb(), getImportClaimData().getEhtatminb(), null, Locale.GERMANY));
 
         Tatort tatortContent = new Tatort();
         tatortContent.getStrasseHausnummer().add(new StrasseHausnummer(getImportClaimData().getEhtatstr1(), getImportClaimData().getEhtathnr1()));
@@ -149,7 +154,7 @@ public class ClaimContentContainerFactory {
     private List<Dokument> createDocuments() {
 
         List<Dokument> documents = new ArrayList<>();
-        List<ClaimDocument> claimDocuments = claimDocumentRepository.findByClaimImportId(claimImport.getId());
+        List<ClaimDocument> claimDocuments = claimDocumentRepository.findByClaimImportIdOrderByDocumentType(claimImport.getId());
 
         AtomicLong count = new AtomicLong(1);
         claimDocuments.forEach(document -> {
@@ -190,7 +195,7 @@ public class ClaimContentContainerFactory {
     private void setPersonalData(Beteiligung ehBetroffener) {
 
         var person = ehBetroffener.generateBeteiligter().generateNatuerlichePerson();
-        person.setGeschlecht(supplyGeschlecht(getImportClaimData().getEhp1geschl()));
+        person.setGeschlecht(ContentContainerFactoryHelper.supplyXoevGeschlecht(getImportClaimData().getEhp1geschl()));
 
         var name = person.generateVollerName();
         name.setVorname(getImportClaimData().getEhp1vorname());
@@ -200,7 +205,7 @@ public class ClaimContentContainerFactory {
         name.setGeburtsname(getImportClaimData().getEhp1gebname());
 
         var geburt = person.generateGeburt();
-        geburt.setGeburtsdatum(dateFormatConverter(getImportClaimData().getEhp1gebdat(), "yyyy-MM-dd"));
+        geburt.setGeburtsdatum(ContentContainerFactoryHelper.convertTargetStringFormat(getImportClaimData().getEhp1gebdat(), DD_MM_YYYY_DOT, YYYY_MM_DD_HYPHEN));
         geburt.setGeburtsort(getImportClaimData().getEhp1gebort());
 
         person.addAnschrift(setAddress());
@@ -222,44 +227,5 @@ public class ClaimContentContainerFactory {
         return anschrift;
     }
 
-    private XoevGeschlecht supplyGeschlecht(String ehp1geschl) {
-
-        switch (ehp1geschl.trim().toUpperCase()) {
-
-        case "M":
-            return XoevGeschlecht.MAENNLICH;
-        case "W":
-            return XoevGeschlecht.WEIBLICH;
-        default:
-            return XoevGeschlecht.UNBEKANNT;
-
-        }
-    }
-
-    public static String dateFormatConverter(String dateToConvert, String outputFormat) {
-
-        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern(outputFormat);
-
-        LocalDate date = LocalDate.parse(dateToConvert, inputFormatter);
-        return date.format(outputFormatter);
-
-    }
-
-    private LocalDate getLocalDate(String dateToConvert) {
-
-        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        return LocalDate.parse(dateToConvert, inputFormatter);
-
-    }
-
-    /**
-     * @param formatedDate "yyyy-MM-dd"
-     * @return XMLGregorianCalendar
-     * @throws DatatypeConfigurationException
-     */
-    private XMLGregorianCalendar getXMLGregorianCalendar(String formatedDate) throws DatatypeConfigurationException {
-        return DatatypeFactory.newInstance().newXMLGregorianCalendar(formatedDate);
-    }
 
 }
