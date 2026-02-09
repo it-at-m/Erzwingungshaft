@@ -83,7 +83,7 @@
         <p2.mirror>download.eclipse.org</p2.mirror>
 
         <!-- xJustiz XML Generation -->
-        <xjustiz.converter>0.0.9</xjustiz.converter>
+        <xjustiz.converter>0.0.10</xjustiz.converter>
 
         <!-- Openapi Generation-->
         <openapi-maven-plugin.version>7.18.0</openapi-maven-plugin.version>
