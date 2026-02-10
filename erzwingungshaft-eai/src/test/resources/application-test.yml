@@ -72,7 +72,7 @@ efile:
     subfiletype: PDF-Dokument
     incattachments: EH-Dokumente
 #    subject-data-values:
-#      owi-number: 'Ordnungswidrigkeiten-Nummer'
+#      owi-number: 'OWI_Nummer'
 
 # Custom properties
 xjustiz:

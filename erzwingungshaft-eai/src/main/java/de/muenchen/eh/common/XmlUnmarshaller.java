@@ -1,6 +1,5 @@
 package de.muenchen.eh.common;
 
-
 import de.muenchen.xjustiz.generated.xjustiz0500straf35.NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;

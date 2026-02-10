@@ -2,7 +2,7 @@ package de.muenchen.eh.common;
 
 import de.muenchen.eh.log.DocumentType;
 import de.muenchen.eh.log.StatusProcessingType;
-import de.muenchen.xjustiz.xoev.codelisten.XoevCodeGDSDokumentklasse;
+import de.muenchen.xjustizlib.xoev.codelisten.XoevCodeGDSDokumentklasse;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

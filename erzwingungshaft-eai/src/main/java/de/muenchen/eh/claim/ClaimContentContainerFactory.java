@@ -5,8 +5,6 @@ import de.muenchen.eh.db.entity.ClaimDocument;
 import de.muenchen.eh.db.entity.ClaimImport;
 import de.muenchen.eh.db.repository.ClaimDocumentRepository;
 import de.muenchen.eh.log.DocumentType;
-import de.muenchen.oss.xjustizlib.DateTimeHelper;
-import de.muenchen.oss.xjustizlib.GenderHelper;
 import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmitteilung.extern.an.justiz0500010.content.ContentContainer;
 import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmitteilung.extern.an.justiz0500010.content.FachdatenContent;
 import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmitteilung.extern.an.justiz0500010.content.GrunddatenContent;
@@ -25,8 +23,10 @@ import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmittei
 import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmitteilung.extern.an.justiz0500010.content.schriftgutobjekte.FachspezifischeDatenAkte;
 import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmitteilung.extern.an.justiz0500010.content.schriftgutobjekte.FachspezifischeDatenDokument;
 import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmitteilung.extern.an.justiz0500010.content.schriftgutobjekte.Identifikation;
-import de.muenchen.xjustiz.xoev.codelisten.XoevCodeGDSRollenbezeichnungTyp3;
-import de.muenchen.xjustiz.xoev.codelisten.XoevCodeGDSStaatenTyp3;
+import de.muenchen.xjustizlib.DateTimeHelper;
+import de.muenchen.xjustizlib.GenderHelper;
+import de.muenchen.xjustizlib.xoev.codelisten.XoevCodeGDSRollenbezeichnungTyp3;
+import de.muenchen.xjustizlib.xoev.codelisten.XoevCodeGDSStaatenTyp3;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.ParseException;
@@ -88,9 +88,11 @@ public class ClaimContentContainerFactory {
                 DateTimeHelper.convertXMLGregorianCalendar(claimContentWrapper.getEhImportClaimData().getEhbrkdat(), DD_MM_YYYY_DOT, EUROPE_BERLIN));
 
         fachdatenContent.setAnfangDatum(DateTimeHelper.convertTargetStringFormat(getImportClaimData().getEhtatdatv(), DD_MM_YYYY_DOT, YYYY_MM_DD_HYPHEN));
-        fachdatenContent.setAnfangUhrzeit(DateTimeHelper.xJustizTypeGDSZeitangabeFormat(getImportClaimData().getEhtatstdv(), getImportClaimData().getEhtatminv(), null, Locale.GERMANY));
+        fachdatenContent.setAnfangUhrzeit(
+                DateTimeHelper.xJustizTypeGDSZeitangabeFormat(getImportClaimData().getEhtatstdv(), getImportClaimData().getEhtatminv(), null, Locale.GERMANY));
         fachdatenContent.setEndeDatum(DateTimeHelper.convertTargetStringFormat(getImportClaimData().getEhtatdatb(), DD_MM_YYYY_DOT, YYYY_MM_DD_HYPHEN));
-        fachdatenContent.setEndeUhrzeit(DateTimeHelper.xJustizTypeGDSZeitangabeFormat(getImportClaimData().getEhtatstdb(), getImportClaimData().getEhtatminb(), null, Locale.GERMANY));
+        fachdatenContent.setEndeUhrzeit(
+                DateTimeHelper.xJustizTypeGDSZeitangabeFormat(getImportClaimData().getEhtatstdb(), getImportClaimData().getEhtatminb(), null, Locale.GERMANY));
 
         Tatort tatortContent = new Tatort();
         tatortContent.getStrasseHausnummer().add(new StrasseHausnummer(getImportClaimData().getEhtatstr1(), getImportClaimData().getEhtathnr1()));
@@ -225,6 +227,5 @@ public class ClaimContentContainerFactory {
 
         return anschrift;
     }
-
 
 }

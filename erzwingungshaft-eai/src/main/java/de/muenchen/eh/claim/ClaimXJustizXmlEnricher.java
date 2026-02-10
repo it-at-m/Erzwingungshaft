@@ -34,7 +34,8 @@ public class ClaimXJustizXmlEnricher implements Processor {
 
         ClaimContentWrapper claimContentWrapper = exchange.getMessage().getBody(ClaimContentWrapper.class);
 
-        Exchange xjustizContent = ExchangeBuilder.anExchange(exchange.getContext()).withHeader(DynamicXmlMarshaller.SCHEMA_PATH, schemaPath).withHeader(DynamicXmlMarshaller.SCHEMA_NAME, schemaName ).withBody(documentBuilder.start(claimContentWrapper.getContentContainer())).build();
+        Exchange xjustizContent = ExchangeBuilder.anExchange(exchange.getContext()).withHeader(DynamicXmlMarshaller.SCHEMA_PATH, schemaPath)
+                .withHeader(DynamicXmlMarshaller.SCHEMA_NAME, schemaName).withBody(documentBuilder.start(claimContentWrapper.getContentContainer())).build();
         Exchange xJustizXML = xjustizProducer.send(xjustizContent);
         claimContentWrapper.setXjustizXml(xJustizXML.getMessage().getBody(String.class));
         exchange.setException(xJustizXML.getException());
