@@ -3,9 +3,11 @@ package de.muenchen.eh.development;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import de.muenchen.eh.Application;
+import de.muenchen.eh.MetadataNotAvailableTest;
 import de.muenchen.eh.ReadCreateFilingTest;
 import de.muenchen.eh.TestConstants;
 import de.muenchen.eh.XtaTestContext;
+import de.muenchen.eh.db.entity.ClaimDocument;
 import de.muenchen.eh.db.entity.MessageType;
 import de.muenchen.eh.db.repository.ClaimContentRepository;
 import de.muenchen.eh.db.repository.ClaimDataRepository;
@@ -16,9 +18,11 @@ import de.muenchen.eh.db.repository.ClaimImportRepository;
 import de.muenchen.eh.db.repository.ClaimLogRepository;
 import de.muenchen.eh.db.repository.ClaimRepository;
 import de.muenchen.eh.db.repository.ClaimXmlRepository;
+import de.muenchen.eh.db.repository.UnassignableErrorRepository;
 import de.muenchen.eh.db.repository.XtaRepository;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.apache.camel.CamelContext;
 import org.apache.camel.EndpointInject;
@@ -42,6 +46,7 @@ import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
 import software.amazon.awssdk.services.s3.model.DeleteBucketRequest;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
+import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 
 @UseAdviceWith
 @SpringBootTest(classes = { Application.class, XtaTestContext.class })
@@ -77,6 +82,8 @@ class DevelopmentReadCreateFilingTest {
     private ClaimLogRepository claimLogRepository;
     @Autowired
     protected XtaRepository xtaRepository;
+    @Autowired
+    protected UnassignableErrorRepository unassignableErrorRepository;
 
     @Autowired
     CamelContext camelContext;
@@ -153,6 +160,49 @@ class DevelopmentReadCreateFilingTest {
         assertEquals(2, claimLogRepository.findByMessageTyp(MessageType.ERROR).size(), "2 import ERROR expected.");
         assertEquals(1, xtaRepository.count(), "1 send message expected.");
 
+    }
+
+    @Test
+    void test_document_not_assignable() throws Exception {
+
+        AdviceWith.adviceWith(camelContext, "import-pdfs", a -> {
+            a.weaveById("process-claims").replace().to("mock:test-end");
+        });
+
+        camelContext.start();
+
+        // Start test ...
+        testEnd.expectedMessageCount(1);
+
+        MetadataNotAvailableTest.uploadBucketTestFileConfiguration(s3InitClient);
+
+        testEnd.assertIsSatisfied(TimeUnit.MINUTES.toMillis(3));
+        assertEquals(1, testEnd.getExchanges().size(), "One happy path implemented.");
+
+        // Database
+        assertEquals(5, claimImportRepository.count(), "5 imports expected.");
+
+        List<ClaimDocument> claimDocuments = claimDocumentRepository.findByDocumentType("Antrag");
+        assertEquals(1, claimDocuments.size(), "1 claim document Antrag expected 1000013749");
+        assertEquals(7, claimImportLogRepository.count(), "7 claim import logs expected.");
+        assertEquals(5, claimImportLogRepository.findByMessage("IMPORT_DATA_FILE_CREATED").size(),
+                "D.KVU.EUDG0P0.20240807.EZH contains 5 lines to import.");
+        assertEquals(1, claimImportLogRepository.findByMessage("IMPORT_ANTRAG_IMPORT_DIRECTORY").size(),
+                "1 claims contains ANTRAG to import.");
+        assertEquals(1, claimImportLogRepository.findByMessage("IMPORT_ANTRAG_IMPORT_DB").size(),
+                "1 claims contains ANTRAG to import in db.");
+
+        assertEquals(1, unassignableErrorRepository.count(), "1 unassignable error expected.");
+
+        // S3 buckets
+        assertEquals(0, s3BucketObjectCount(EH_BUCKET_ANTRAG), "Claim import bucket should be empty.");
+        assertEquals(0, s3BucketObjectCount(EH_BUCKET_PDF), "Pdf import bucket should be empty.");
+        assertEquals(7, s3BucketObjectCount(EH_BUCKET_BACKUP), "7 backup files expected.");
+
+    }
+
+    private int s3BucketObjectCount(String bucketName) {
+        return s3InitClient.listObjectsV2(ListObjectsV2Request.builder().bucket(bucketName).build()).contents().size();
     }
 
 }

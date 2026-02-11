@@ -1,12 +1,13 @@
 # Dokumentation
- 
-- Die Enterprise Application Integration Komponente (EAI) verarbeitet Anträge aus der Verwaltung, erstellt ein XML im [xJustiz Format](https://xjustiz.justiz.de/) Format und übermittelt die Fälle einzeln über das [Behördenpostfach](https://www.bamf.de/DE/Themen/Digitalisierung/beBPo/beBPo-node.html) an die Justizverwaltung. 
-- Die Antragsfälle werden mit der Kombination _GeschäftspartnerId_, _Kassenzeichen_ und _Datum_ eindeutig identifiziert. 
-- Die Antrags Metadaten werden in einer Datei im Format Satz-Fester-Länge zusammen mit den erstellten amtlichen Dokumenten im PDF Format der EAI in einem S3 Objektspeicher zur Verarbeitung Verfügung gestellt. 
+
+- Die Enterprise Application Integration Komponente (EAI) verarbeitet Anträge aus der Verwaltung, erstellt ein XML im [xJustiz Format](https://xjustiz.justiz.de/) Format und übermittelt die Fälle einzeln über das [Behördenpostfach](https://www.bamf.de/DE/Themen/Digitalisierung/beBPo/beBPo-node.html) an die Justizverwaltung.
+- Die Antragsfälle werden mit der Kombination _GeschäftspartnerId_, _Kassenzeichen_ und _Datum_ eindeutig identifiziert.
+- Die Antrags Metadaten werden in einer Datei im Format Satz-Fester-Länge zusammen mit den erstellten amtlichen Dokumenten im PDF Format der EAI in einem S3 Objektspeicher zur Verarbeitung Verfügung gestellt.
 - Die Antrags Metadaten und PDFs werden auf unterschiedlichen Wegen bereit gestellt und von der EAI aus einem jeweils eigenen S3-Bucket für die Antrags Metadaten und die PDFs gelesen.
 - Die Verarbeitung erfolgt in _zwei Schritten_. Zur Synchronisation der Fallbearbeitung in Schritt 1 + 2 dient eine Datenbank.
 - Die Verabeitung der EAI dokumentiert für jeden einzelnen Antragsfall verschiedene erreichte 'Zustände' ihrer Bearbeitung in eigenen Log-Tabellen. Sollte die Verarbeitung eines Falls auf einen unbekannten Fehler laufen, ist auch dieser zur Nachvollziehbarkeit dort dokumentiert.
 - In _Schritt 1 werden die Antrags Metadaten eingelesen_. Alle eingelesenen Dateien werden zur weiteren EAI Verarbeitung in der Datenbank gespeichert und zur Dokumentation / Fehlerbhandlung und einen eigenen S3 'Backup' verschoben.
+- Können PDFs (über die Kombination _GeschäftspartnerId_, _Kassenzeichen_ und _Datum_) keinen Metadaten zugeordnet werden, werden sie als _nicht zuordenbar_ aussortiert.
 - In _Schritt 2 erfolgt nach dem vollständigen Eingang aller Antragsdaten_ (Metadaten + erforderliche PDFs) die eigentliche Verarbeitung.
 - Für die Antrags Verarbeitung muss pro Antrag ein XML im [xJustiz Format](https://xjustiz.justiz.de/) erstellt werden. Dazu dient ein eigenes [xJustiz Projekt](https://github.com/it-at-m/xjustiz) das in der EAI als Maven Artefakt referenziert ist.
 - Vor dem Versand an die Justiz über das [Behördenpostfach](https://www.bamf.de/DE/Themen/Digitalisierung/beBPo/beBPo-node.html) werden die versendeten Dateien pro Fall im Dokumentenmanagment System (DMS) abgelegt.
@@ -16,7 +17,22 @@ Github-Repo: https://github.com/it-at-m/Erzwingungshaft
 
 ## Ablauf / Verarbeitungszustände
 
-![Ablauf](EAI_ABLAUF_v1.drawio.png)
+Jeder _Antragsfall_ besteht aus den Komponenten _Metadaten_ und zum Antrag gehörenden _PDF Dokumenten_.
+Für eine erfolgreiche Antragsverarebitung müssen beide Teile zur Verfügung stehen.
+Die Bereitstellung beider Komponenten wird gemeinsam angestoßen, durchläuft aber unterschiedliche Verarbeitungswege, sodaß beide Teile zu unterschiedlichen Zeitpunkten zur Verfügung stehen können.
+Das _Datum_ des Identifier bestehend aus _GeschäftspartnerId_, _Kassenzeichen_ und _Datum_ ist das _Tagesdatum_ an dem die Bereitstellung angestossen wurde.
+Antragsfälle mit unterschiedlichem Datum und gleicher GeschäftspartnerId und Kassenzeichen werden von der EAI als unterschiedliche Antragsfälle betrachtet.
+
+Die EAI wird als "Batch Job" gestartet und beendet sich nach der Verarbeitung aller vorgefundenen Antragsfälle wieder.
+Die Synchronisierung der Antragsfall Komponenten für eine erfolgreiche Antragsfallverarbeitung kann auf zwei Wegen erreicht werden.
+- Der EAI "Batch Job" wird erst gestart, wenn Metadaten und PDFs mit gleichem Datum vorliegen.
+- Wird die EAI zu einem Zeitpunkt gestartet zu dem erst die Metadaten erstellt wurden, werden diese durch die EAI eingelesen. Stehen PDFs mit einem gleichen Datum erst bei einem folgenden EAI Start zur Verfügung, synchronisiert die EAI diese Komponenten automatisch. Die Antragsfälle können erfolgreich dem Schritt 2 übergeben werden.
+
+Sollte der umgekehrte Fall eintreten und erst die _PDF Dokumente ohne Metadaten_ zur Verarbeitung bereit stehen, erfolgt _keine automatische Synchronisierung_. Die PDFs werden in diesem Fall durch die EAI in den Backup verschoben und als _nicht zuordenbar_ in der Datenbanktabelle _unassignable_error_ dokumentiert.
+In diesem Fall können die Metadaten und PDF Dokumente des Antragfalls mit einem aktualisierten Tagesdatum neu erstellt und ihre Verarbeitung durch die EAI wiederholt werden.
+
+
+![Ablauf](EAI_ABLAUF.drawio.png)
 
 | Status                                             | Beschreibung                                                                                                              |
 |----------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------|
@@ -65,9 +81,9 @@ Github-Repo: https://github.com/it-at-m/Erzwingungshaft
 - Zur Ausführung der Tests mit Testcontainern ist eine laufende Docker / Podman Instanz erforderlich.
 
 
-### xJustiz 
+### xJustiz
 
-Die _xjustiz_ Eigenschaften fassen verschiedene Konfigurationen der XML Generierung startend von Datei Operationen bis zu Inhalten des _xJustiz XML_ zusammen. 
+Die _xjustiz_ Eigenschaften fassen verschiedene Konfigurationen der XML Generierung startend von Datei Operationen bis zu Inhalten des _xJustiz XML_ zusammen.
 
 Der [xJustiz-Standard](https://xjustiz.justiz.de/) ist ein bundesweiter Standard für den elektronischen Datenaustausch.
 Der xJustiz-Standard unterliegt einer [Versionierung](https://xjustiz.justiz.de/Dokumentation_Versionen/index.php).
@@ -134,6 +150,17 @@ xjustiz:
       processor: direct:xjustiz-document-processor
 ````
 
+Das Artefakt _xjustiz-starter_ beinhaltet alle Klassen zur jeweiligen [xJustiz-Standard](https://xjustiz.justiz.de/) Version. Die Klassen stehen im _xjustiz-starter_ in compilierter Form zur Verfügung.
+Die Klassen jeder XSD stehen in einem eigenen Java Package zur Verfügung. Damit die Klassen einer XSD zur Laufzeit gefunden werden können muss die Ablage der XSDs und Klassenpackages konfiguriert sein.
+Die Werte Konfigurationsparemeter sind im [xJustiz Projekt](https://github.com/it-at-m/xjustiz) festgelegt.
+
+````
+xjustiz:
+  xsd:
+    path: # Must be configured.  
+    generated-package-base: # Must be configured
+````
+
 Für die im Erzwingungshaft Projekt erforderliche Kommunikation mit dem xJustiz-Standard muss das Dokument _NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010_ als XML erstellt werden.
 
 Mit _xjustiz-starter_ Artefakt bietet die Möglichkeit eine mit allen Inhalten komplettierte Objektinstanz des _NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010_ Dokuments per marshalling (Serialisierung) in ein XML zu wandeln.
@@ -141,7 +168,7 @@ Darüberhinaus stellt das _xjustiz-starter_ Artefakt auch einen _Builder_ zur Er
 Der Builder erstellt die Objektinstanz und fügt an den erforderlichen Stellen die nötigen Inhalte ein. Die Inhalte können differenziert werden in _statische_ und _dynamische_ fallbezogene Inhalte.
 
 Unter _xjustiz.xjustiz0500straf..._ können alle _statischen_ Inhalte für den LHM Anwendungsfall _NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010_ konfiguriert werden.
-Die _dynamischen_ Inhalte werden im Schritt 2 'Erzeuge XML Inhaltsdaten' aus den eingelesenen Sätzen der 'Antrags Medadaten Datei' ergänzt. 
+Die _dynamischen_ Inhalte werden im Schritt 2 'Erzeuge XML Inhaltsdaten' aus den eingelesenen Sätzen der 'Antrags Medadaten Datei' ergänzt.
 
 Der [xJustiz-Standard](https://xjustiz.justiz.de/) sieht an verschiedener Stelle die Verwendung von [xJustiz-Codelisten](https://xjustiz.justiz.de/Dokumentation_Versionen/index.php#XJustiz-Codelisten) vor.
 Diese können unter _xjustiz.codelisten..._ definiert werden. Weitere Informationen dazu finden sich der Dokumentation des [xjustiz-Projekts](https://github.com/it-at-m/xjustiz).
@@ -184,7 +211,7 @@ Das Dokumenten Management System (DMS) ist über eine REST Schnittstellen EAI an
 Die Openapi JSON Version der aktuell veröffentlichten REST EAI muss korrekt angegeben sein (_efile.connection.eakte-api-version_).
 
 Unter _efile.case_file_ und _efile.fine_ sind die nötigen Angaben zum Auffinden und Einfügen der DMS Einträge zu konfigurieren.
-Mit _...subject-data-values_ können die Inhalte ausgewählter Element geändert werden. 
+Mit _...subject-data-values_ können die Inhalte ausgewählter Element geändert werden.
 
 ````
 efile:
@@ -339,6 +366,9 @@ efile:
 # Custom properties
 xjustiz:
   version: 3.5.1
+  xsd:
+    path: xsd/XJustiz-3.5.1-XSD/
+    generated-package-base: de.muenchen.xjustiz.generated
   credentials:
     s3:
       access-key: minioadmin
@@ -357,6 +387,8 @@ xjustiz:
       file-output: aws2-s3://eh-backup?${xjustiz.interface.file.common}
     xta: bebpoService
   xjustiz0500straf:
+    xsd:
+      name: xjustiz_0500_straf_3_5.xsd
     nachrichtenkopf:
       auswahl-absender-sonstige: Stadt München
       auswahl-herstellerinformation-produkt: LHM-itM-KM15

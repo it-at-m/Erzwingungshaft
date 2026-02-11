@@ -28,7 +28,7 @@ public class XtaMessageContainer {
     public GenericContentContainer build(ClaimContentWrapper claimContentWrapper) {
 
         this.claimContentWrapper = claimContentWrapper;
-        this.documents = this.claimDocumentRepository.findByClaimImportId(this.claimContentWrapper.getClaimImport().getId());
+        this.documents = this.claimDocumentRepository.findByClaimImportIdOrderByDocumentType(this.claimContentWrapper.getClaimImport().getId());
 
         ContentContainerBuilder contentContainerBuilder = ContentContainerBuilder.builder()
                 .message(build())

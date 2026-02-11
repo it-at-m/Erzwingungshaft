@@ -24,12 +24,13 @@ public class EfileRouteBuilder extends BaseRouteBuilder {
 
         super.configure();
 
+        // spotless:off
         onException(HttpOperationFailedException.class)
                 .handled(true)
                 .log(LoggingLevel.ERROR, "${exception}")
                 .choice()
-                .when(exchangeProperty(Constants.CLAIM).isNotNull())
-                .bean("logServiceClaim", "logHttpOperationFailedException")
+                    .when(exchangeProperty(Constants.CLAIM).isNotNull())
+                        .bean("logServiceClaim", "logHttpOperationFailedException")
                 .end()
                 .process(new StopExchange());
 
@@ -57,6 +58,8 @@ public class EfileRouteBuilder extends BaseRouteBuilder {
         from(DMS_CONNECTION).routeId("rest-openapi-eakte")
                 .toD("rest-openapi:classpath:openapi/eakte-api-v1.2.4.json#${header.operationId}?componentName=http")
                 .process("efileResponseMapper");
+
+        // spotless:on
 
     }
 }
