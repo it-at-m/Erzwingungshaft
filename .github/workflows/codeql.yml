@@ -38,10 +38,10 @@ jobs:
       java: ${{ steps.filter.outputs.java }}
     steps:
       - name: Checkout repository
-        uses: it-at-m/lhm_actions/action-templates/actions/action-checkout@12966547963631f8429d42bab860485b413003c2 # v1.0.22
+        uses: it-at-m/lhm_actions/action-templates/actions/action-checkout@e012d3bda6f9d5511415e2d885f32826049284a4 # v1.0.23
       - name: Path Filter
         id: filter
-        uses: it-at-m/lhm_actions/action-templates/actions/action-filter@12966547963631f8429d42bab860485b413003c2 # v1.0.22
+        uses: it-at-m/lhm_actions/action-templates/actions/action-filter@e012d3bda6f9d5511415e2d885f32826049284a4 # v1.0.23
   codeql-java:
     name: Analyze Java source files
     runs-on: ubuntu-latest
@@ -51,7 +51,7 @@ jobs:
       matrix:
         build-path: ["./erzwingungshaft-eai"] # JSON array formatted as string, contains the paths to the java projects to build
     steps:
-      - uses: it-at-m/lhm_actions/action-templates/actions/action-codeql@12966547963631f8429d42bab860485b413003c2 # v1.0.22
+      - uses: it-at-m/lhm_actions/action-templates/actions/action-codeql@e012d3bda6f9d5511415e2d885f32826049284a4 # v1.0.23
         if: ${{ env.analyze-java == 'true' && (github.ref_name == 'main' || needs.check-changes.outputs.java == 'true') }}
         with:
           codeql-language: java-kotlin
