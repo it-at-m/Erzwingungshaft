@@ -86,7 +86,7 @@
         <xjustiz.converter>0.0.10</xjustiz.converter>
 
         <!-- Openapi Generation-->
-        <openapi-maven-plugin.version>7.18.0</openapi-maven-plugin.version>
+        <openapi-maven-plugin.version>7.19.0</openapi-maven-plugin.version>
         <build-helper-maven-plugin.version>3.6.1</build-helper-maven-plugin.version>
 
         <!-- Flyway maven plugin configuration for local stack database -->
