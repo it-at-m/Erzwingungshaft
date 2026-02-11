@@ -1,5 +1,9 @@
 # Release-Notes
 
+## 11.2.2026
+- Anpassung an modularisiertes xJustiz-Artefakt.
+
+
 ## 28.01.2026
 ### Aenderung
 - PDFs ohne Metadaten werden aussortiert.
