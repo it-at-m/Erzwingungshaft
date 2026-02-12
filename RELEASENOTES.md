@@ -1,5 +1,9 @@
 # Release-Notes
 
+## 12.2.2026
+### Hinzugefuegt
+- Zentralaktkennung im Betreff der Einzelakte der eAkte anzeigen.
+
 ## 28.01.2026
 ### Aenderung
 - PDFs ohne Metadaten werden aussortiert.
