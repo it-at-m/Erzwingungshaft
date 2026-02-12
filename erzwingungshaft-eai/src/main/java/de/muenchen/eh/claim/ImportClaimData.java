@@ -5,7 +5,7 @@ import org.apache.camel.dataformat.bindy.annotation.DataField;
 import org.apache.camel.dataformat.bindy.annotation.FixedLengthRecord;
 
 @Data
-@FixedLengthRecord(length = 3542, paddingChar = ' ')
+@FixedLengthRecord(length = 3546, paddingChar = ' ', ignoreTrailingChars = true)
 public class ImportClaimData {
 
     @DataField(pos = 1, length = 4, trim = true, align = "B")
@@ -425,5 +425,9 @@ public class ImportClaimData {
     // Geschaeftspartner
     @DataField(pos = 3533, length = 10, trim = true, align = "B")
     private String ehgpid;
+
+    // Zentralaktkennung
+    @DataField(pos = 3543, length = 4, trim = true, align = "B")
+    private String zentralaktkennung;
 
 }

@@ -7,7 +7,7 @@ import org.apache.camel.dataformat.bindy.annotation.FixedLengthRecord;
 
 @Getter
 @Setter
-@FixedLengthRecord(length = 3542, paddingChar = ' ')
+@FixedLengthRecord(length = 3546, paddingChar = ' ', ignoreTrailingChars = true)
 public class ImportClaimIdentifierData {
 
     @DataField(pos = 1169, length = 20, trim = true, align = "B")

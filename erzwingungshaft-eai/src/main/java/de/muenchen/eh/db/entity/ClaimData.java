@@ -211,5 +211,6 @@ public class ClaimData extends BaseEntity implements IClaimEntity {
     private String ehsbtel;
     private String ehlinefeed;
     private String ehgpid;
+    private String zentralaktkennung;
 
 }
