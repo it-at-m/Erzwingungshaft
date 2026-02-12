@@ -26,6 +26,7 @@ public class FileDTOBuilder {
         Optional<ClaimEfile> collection = Optional.ofNullable(contentWrapper.getClaimEfile());
         collection.ifPresent(coll -> {
             createFileDTO.setShortname(contentWrapper.getClaimImport().getGeschaeftspartnerId());
+            createFileDTO.setFilesubj(contentWrapper.getEhImportClaimData().getZentralaktkennung());
             createFileDTO.setApentry(coll.getCollection());
         });
 
