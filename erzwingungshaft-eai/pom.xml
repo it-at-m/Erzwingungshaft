@@ -450,7 +450,7 @@
             <plugin>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-codegen-plugin</artifactId>
-                <version>4.1.4</version>
+                <version>4.2.0</version>
                 <configuration>
                     <defaultOptions>
                         <noAddressBinding>true</noAddressBinding>
