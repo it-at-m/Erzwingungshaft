@@ -75,7 +75,7 @@
         <jakarta-databind.version>0.2.8</jakarta-databind.version>
         <jakarta-xm-soap.version>3.0.2</jakarta-xm-soap.version>
         <messaging-saaj.version>3.0.2</messaging-saaj.version>
-        <commons-validator.version>1.9.0</commons-validator.version>
+        <commons-validator.version>1.10.1</commons-validator.version>
 
         <!-- Spotless P2 Mirror configuration (e.g. required when using company internal registry -->
         <p2.username /> <!-- must be empty, override via Maven settings.xml if needed -->
