@@ -3,7 +3,7 @@ package de.muenchen.eh.claim;
 import de.muenchen.eh.db.entity.Claim;
 import de.muenchen.eh.db.entity.ClaimEfile;
 import de.muenchen.eh.db.entity.ClaimImport;
-import de.muenchen.xjustiz.xjustiz0500straf.content.ContentContainer;
+import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmitteilung.extern.an.justiz0500010.content.ContentContainer;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.Getter;

@@ -1,32 +1,32 @@
-package de.muenchen.eh.claim.content;
+package de.muenchen.eh.claim;
 
-import de.muenchen.eh.claim.ClaimContentWrapper;
-import de.muenchen.eh.claim.ImportClaimData;
 import de.muenchen.eh.common.FileNameUtils;
 import de.muenchen.eh.db.entity.ClaimDocument;
 import de.muenchen.eh.db.entity.ClaimImport;
 import de.muenchen.eh.db.repository.ClaimDocumentRepository;
 import de.muenchen.eh.log.DocumentType;
-import de.muenchen.xjustiz.xjustiz0500straf.content.ContentContainer;
-import de.muenchen.xjustiz.xjustiz0500straf.content.FachdatenContent;
-import de.muenchen.xjustiz.xjustiz0500straf.content.GrunddatenContent;
-import de.muenchen.xjustiz.xjustiz0500straf.content.NachrichtenkopfContent;
-import de.muenchen.xjustiz.xjustiz0500straf.content.SchriftgutContent;
-import de.muenchen.xjustiz.xjustiz0500straf.content.fachdaten.StrasseHausnummer;
-import de.muenchen.xjustiz.xjustiz0500straf.content.fachdaten.Tatort;
-import de.muenchen.xjustiz.xjustiz0500straf.content.grunddaten.verfahrensdaten.beteiligung.Anschrift;
-import de.muenchen.xjustiz.xjustiz0500straf.content.grunddaten.verfahrensdaten.beteiligung.Beteiligung;
-import de.muenchen.xjustiz.xjustiz0500straf.content.grunddaten.verfahrensdaten.beteiligung.Rolle;
-import de.muenchen.xjustiz.xjustiz0500straf.content.grunddaten.verfahrensdaten.instanzdaten.Aktenzeichen;
-import de.muenchen.xjustiz.xjustiz0500straf.content.grunddaten.verfahrensdaten.instanzdaten.Instanztype;
-import de.muenchen.xjustiz.xjustiz0500straf.content.schriftgutobjekte.Akte;
-import de.muenchen.xjustiz.xjustiz0500straf.content.schriftgutobjekte.Datei;
-import de.muenchen.xjustiz.xjustiz0500straf.content.schriftgutobjekte.Dokument;
-import de.muenchen.xjustiz.xjustiz0500straf.content.schriftgutobjekte.FachspezifischeDatenAkte;
-import de.muenchen.xjustiz.xjustiz0500straf.content.schriftgutobjekte.FachspezifischeDatenDokument;
-import de.muenchen.xjustiz.xjustiz0500straf.content.schriftgutobjekte.Identifikation;
-import de.muenchen.xjustiz.xoev.codelisten.XoevCodeGDSRollenbezeichnungTyp3;
-import de.muenchen.xjustiz.xoev.codelisten.XoevCodeGDSStaatenTyp3;
+import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmitteilung.extern.an.justiz0500010.content.ContentContainer;
+import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmitteilung.extern.an.justiz0500010.content.FachdatenContent;
+import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmitteilung.extern.an.justiz0500010.content.GrunddatenContent;
+import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmitteilung.extern.an.justiz0500010.content.NachrichtenkopfContent;
+import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmitteilung.extern.an.justiz0500010.content.SchriftgutContent;
+import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmitteilung.extern.an.justiz0500010.content.fachdaten.StrasseHausnummer;
+import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmitteilung.extern.an.justiz0500010.content.fachdaten.Tatort;
+import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmitteilung.extern.an.justiz0500010.content.grunddaten.verfahrensdaten.beteiligung.Anschrift;
+import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmitteilung.extern.an.justiz0500010.content.grunddaten.verfahrensdaten.beteiligung.Beteiligung;
+import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmitteilung.extern.an.justiz0500010.content.grunddaten.verfahrensdaten.beteiligung.Rolle;
+import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmitteilung.extern.an.justiz0500010.content.grunddaten.verfahrensdaten.instanzdaten.Aktenzeichen;
+import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmitteilung.extern.an.justiz0500010.content.grunddaten.verfahrensdaten.instanzdaten.Instanztype;
+import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmitteilung.extern.an.justiz0500010.content.schriftgutobjekte.Akte;
+import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmitteilung.extern.an.justiz0500010.content.schriftgutobjekte.Datei;
+import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmitteilung.extern.an.justiz0500010.content.schriftgutobjekte.Dokument;
+import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmitteilung.extern.an.justiz0500010.content.schriftgutobjekte.FachspezifischeDatenAkte;
+import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmitteilung.extern.an.justiz0500010.content.schriftgutobjekte.FachspezifischeDatenDokument;
+import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmitteilung.extern.an.justiz0500010.content.schriftgutobjekte.Identifikation;
+import de.muenchen.xjustizlib.DateTimeHelper;
+import de.muenchen.xjustizlib.GenderHelper;
+import de.muenchen.xjustizlib.xoev.codelisten.XoevCodeGDSRollenbezeichnungTyp3;
+import de.muenchen.xjustizlib.xoev.codelisten.XoevCodeGDSStaatenTyp3;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.ParseException;
@@ -83,19 +83,16 @@ public class ClaimContentContainerFactory {
 
         FachdatenContent fachdatenContent = new FachdatenContent();
 
-        fachdatenContent.setErlassdatum(ContentContainerFactoryHelper.convertLocalDate(claimContentWrapper.getEhImportClaimData().getEhbdat(), DD_MM_YYYY_DOT));
+        fachdatenContent.setErlassdatum(DateTimeHelper.convertLocalDate(claimContentWrapper.getEhImportClaimData().getEhbdat(), DD_MM_YYYY_DOT));
         fachdatenContent.setRechtskraftdatum(
-                ContentContainerFactoryHelper.convertXMLGregorianCalendar(claimContentWrapper.getEhImportClaimData().getEhbrkdat(), DD_MM_YYYY_DOT,
-                        EUROPE_BERLIN));
+                DateTimeHelper.convertXMLGregorianCalendar(claimContentWrapper.getEhImportClaimData().getEhbrkdat(), DD_MM_YYYY_DOT, EUROPE_BERLIN));
 
-        fachdatenContent.setAnfangDatum(
-                ContentContainerFactoryHelper.convertTargetStringFormat(getImportClaimData().getEhtatdatv(), DD_MM_YYYY_DOT, YYYY_MM_DD_HYPHEN));
-        fachdatenContent.setAnfangUhrzeit(ContentContainerFactoryHelper.xJustizTypeGDSZeitangabeFormat(getImportClaimData().getEhtatstdv(),
-                getImportClaimData().getEhtatminv(), null, Locale.GERMANY));
-        fachdatenContent
-                .setEndeDatum(ContentContainerFactoryHelper.convertTargetStringFormat(getImportClaimData().getEhtatdatb(), DD_MM_YYYY_DOT, YYYY_MM_DD_HYPHEN));
-        fachdatenContent.setEndeUhrzeit(ContentContainerFactoryHelper.xJustizTypeGDSZeitangabeFormat(getImportClaimData().getEhtatstdb(),
-                getImportClaimData().getEhtatminb(), null, Locale.GERMANY));
+        fachdatenContent.setAnfangDatum(DateTimeHelper.convertTargetStringFormat(getImportClaimData().getEhtatdatv(), DD_MM_YYYY_DOT, YYYY_MM_DD_HYPHEN));
+        fachdatenContent.setAnfangUhrzeit(
+                DateTimeHelper.xJustizTypeGDSZeitangabeFormat(getImportClaimData().getEhtatstdv(), getImportClaimData().getEhtatminv(), null, Locale.GERMANY));
+        fachdatenContent.setEndeDatum(DateTimeHelper.convertTargetStringFormat(getImportClaimData().getEhtatdatb(), DD_MM_YYYY_DOT, YYYY_MM_DD_HYPHEN));
+        fachdatenContent.setEndeUhrzeit(
+                DateTimeHelper.xJustizTypeGDSZeitangabeFormat(getImportClaimData().getEhtatstdb(), getImportClaimData().getEhtatminb(), null, Locale.GERMANY));
 
         Tatort tatortContent = new Tatort();
         tatortContent.getStrasseHausnummer().add(new StrasseHausnummer(getImportClaimData().getEhtatstr1(), getImportClaimData().getEhtathnr1()));
@@ -149,8 +146,8 @@ public class ClaimContentContainerFactory {
     private SchriftgutContent supplySchriftgutContent() throws DatatypeConfigurationException {
         SchriftgutContent schriftgutContent = new SchriftgutContent();
 
-        schriftgutContent.setDokumente(Optional.of(createDocuments()));
-        schriftgutContent.setAkten(Optional.of(createAkte(BigInteger.valueOf(1))));
+        schriftgutContent.setDokumente(createDocuments());
+        schriftgutContent.setAkten(createAkte(BigInteger.valueOf(1)));
 
         return schriftgutContent;
     }
@@ -199,7 +196,7 @@ public class ClaimContentContainerFactory {
     private void setPersonalData(Beteiligung ehBetroffener) {
 
         var person = ehBetroffener.generateBeteiligter().generateNatuerlichePerson();
-        person.setGeschlecht(ContentContainerFactoryHelper.supplyXoevGeschlecht(getImportClaimData().getEhp1geschl()));
+        person.setGeschlecht(GenderHelper.supplyXoevGeschlecht(getImportClaimData().getEhp1geschl()));
 
         var name = person.generateVollerName();
         name.setVorname(getImportClaimData().getEhp1vorname());
@@ -209,8 +206,7 @@ public class ClaimContentContainerFactory {
         name.setGeburtsname(getImportClaimData().getEhp1gebname());
 
         var geburt = person.generateGeburt();
-        geburt.setGeburtsdatum(
-                ContentContainerFactoryHelper.convertTargetStringFormat(getImportClaimData().getEhp1gebdat(), DD_MM_YYYY_DOT, YYYY_MM_DD_HYPHEN));
+        geburt.setGeburtsdatum(DateTimeHelper.convertTargetStringFormat(getImportClaimData().getEhp1gebdat(), DD_MM_YYYY_DOT, YYYY_MM_DD_HYPHEN));
         geburt.setGeburtsort(getImportClaimData().getEhp1gebort());
 
         person.addAnschrift(setAddress());

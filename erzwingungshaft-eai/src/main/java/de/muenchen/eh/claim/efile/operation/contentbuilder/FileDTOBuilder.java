@@ -2,7 +2,9 @@ package de.muenchen.eh.claim.efile.operation.contentbuilder;
 
 import de.muenchen.eakte.api.rest.model.CreateFileDTO;
 import de.muenchen.eh.claim.ClaimContentWrapper;
+import de.muenchen.eh.claim.ImportClaimData;
 import de.muenchen.eh.db.entity.ClaimEfile;
+import de.muenchen.eh.db.entity.ClaimImport;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 
@@ -25,8 +27,17 @@ public class FileDTOBuilder {
 
         Optional<ClaimEfile> collection = Optional.ofNullable(contentWrapper.getClaimEfile());
         collection.ifPresent(coll -> {
-            createFileDTO.setShortname(contentWrapper.getClaimImport().getGeschaeftspartnerId());
             createFileDTO.setApentry(coll.getCollection());
+        });
+
+        Optional<ClaimImport> claimImport = Optional.ofNullable(contentWrapper.getClaimImport());
+        claimImport.ifPresent(ci -> {
+            createFileDTO.setShortname(ci.getGeschaeftspartnerId());
+        });
+
+        Optional<ImportClaimData> claimImportData = Optional.ofNullable(contentWrapper.getEhImportClaimData());
+        claimImportData.ifPresent(icd -> {
+            createFileDTO.setFilesubj(icd.getZentralaktkennung());
         });
 
         return createFileDTO;

@@ -1,5 +1,14 @@
 # Release-Notes
 
+## 23.02.2026
+### Refactoring
+- Anpassung an modularisiertes xJustiz-Artefakt.
+- xjustiz Version 3.5.1 --> 3.6.2
+
+## 12.02.2026
+### Hinzugefuegt
+- Zentralaktkennung im Betreff der Einzelakte der eAkte anzeigen.
+
 ## 28.01.2026
 ### Aenderung
 - PDFs ohne Metadaten werden aussortiert.

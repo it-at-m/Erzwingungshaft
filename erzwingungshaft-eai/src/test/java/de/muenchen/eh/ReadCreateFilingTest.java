@@ -23,7 +23,7 @@ import de.muenchen.eh.db.repository.ClaimRepository;
 import de.muenchen.eh.db.repository.ClaimXmlRepository;
 import de.muenchen.eh.db.repository.XtaRepository;
 import de.muenchen.eh.db.service.ClaimService;
-import de.muenchen.xjustiz.generated.NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010;
+import de.muenchen.xjustiz.generated.xjustiz0500straf36.NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010;
 import de.xoev.transport.xta._211.MessageStatusType;
 import de.xoev.transport.xta._211.TransportReport;
 import java.io.File;
@@ -211,7 +211,7 @@ public class ReadCreateFilingTest extends TestContainerConfiguration {
         assertEquals("046", beteiligung.getRolle().getFirst().getRollenbezeichnung().getCode());
 
         assertEquals("Stadt München",
-                lastXJustizMessage.getNachrichtenkopf().getAuswahlAbsender().getAbsenderSonstige());
+                lastXJustizMessage.getNachrichtenkopf().getAbsender().getInformationen().getAuswahlKommunikationspartner().getSonstige());
 
         List<ClaimImport> claimImports = claimImportRepository
                 .findByIsDataImportTrueAndIsAntragImportTrueAndIsBescheidImportTrueOrderByIdAsc();
