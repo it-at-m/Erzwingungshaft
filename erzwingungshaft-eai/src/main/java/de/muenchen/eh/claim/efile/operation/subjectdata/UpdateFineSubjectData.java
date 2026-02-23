@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UpdateFineSubjectData extends UpdateSubjectData {
 
-    private static final String OWI_NUMBER = " OWI_Nummer";
+    private static final String OWI_NUMBER = "OWI_Nummer";
 
     private final FineProperties properties;
 
