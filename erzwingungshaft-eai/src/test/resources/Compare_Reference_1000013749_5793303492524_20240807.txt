@@ -1,17 +1,27 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><tns:nachricht.straf.owi.verfahrensmitteilung.externAnJustiz.0500010 xmlns:tns="http://www.xjustiz.de" xmlns:din91379="urn:xoev-de:kosit:xoev:datentyp:din-91379_2022-08" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xjustiz.de xjustiz_0500_straf_3_5.xsd">
-    <tns:nachrichtenkopf xjustizVersion="3.5.1">
-        
-        <tns:aktenzeichen.empfaenger>neu</tns:aktenzeichen.empfaenger>
-        
-        <tns:auswahl_absender>
-            <tns:absender.sonstige>Stadt München</tns:absender.sonstige>
-        </tns:auswahl_absender>
-        <tns:auswahl_empfaenger>
-            <tns:empfaenger.gericht listVersionID="3.6">
-                <code>D2601</code>
-            </tns:empfaenger.gericht>
-        </tns:auswahl_empfaenger>
-        
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><tns:nachricht.straf.owi.verfahrensmitteilung.externAnJustiz.0500010 xmlns:tns="http://www.xjustiz.de" xmlns:din91379="urn:xoev-de:kosit:xoev:datentyp:din-91379_2022-08" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.xjustiz.de xjustiz_0500_straf_3_6.xsd">
+    <tns:nachrichtenkopf xjustizVersion="3.6.2">
+
+        <tns:absender>
+            <tns:informationen>
+                <tns:auswahl_kommunikationspartner>
+                    <tns:sonstige>Stadt München</tns:sonstige>
+                </tns:auswahl_kommunikationspartner>
+            </tns:informationen>
+            <tns:aktenzeichen>5793303492524</tns:aktenzeichen>
+
+        </tns:absender>
+        <tns:empfaenger>
+            <tns:informationen>
+                <tns:auswahl_kommunikationspartner>
+                    <tns:gericht listVersionID="3.6">
+                        <code>D2601</code>
+                    </tns:gericht>
+                </tns:auswahl_kommunikationspartner>
+            </tns:informationen>
+            <tns:auswahl_aktenzeichen>
+                <tns:aktenzeichen.neu>true</tns:aktenzeichen.neu>
+            </tns:auswahl_aktenzeichen>
+        </tns:empfaenger>
         <tns:ereignis listVersionID="1.11">
             <code>117</code>
         </tns:ereignis>
@@ -32,7 +42,7 @@
                 </tns:auswahl_instanzbehoerde>
                 <tns:aktenzeichen>
                     <tns:auswahl_aktenzeichen>
-                        
+
                     </tns:auswahl_aktenzeichen>
                 </tns:aktenzeichen>
             </tns:instanzdaten>
@@ -48,7 +58,7 @@
                 </tns:auswahl_instanzbehoerde>
                 <tns:aktenzeichen>
                     <tns:auswahl_aktenzeichen>
-                        
+
                     </tns:auswahl_aktenzeichen>
                 </tns:aktenzeichen>
             </tns:instanzdaten>
@@ -132,7 +142,7 @@
     <tns:schriftgutobjekte>
         <tns:akte>
             <tns:identifikation>
-                
+
                 <tns:nummerImUebergeordnetenContainer>1</tns:nummerImUebergeordnetenContainer>
             </tns:identifikation>
             <tns:xjustiz.fachspezifischeDaten>
@@ -146,24 +156,24 @@
                         </tns:gericht>
                     </tns:auswahl_az.vergebendeStation>
                     <tns:auswahl_aktenzeichen>
-                        
+
                     </tns:auswahl_aktenzeichen>
                 </tns:aktenzeichen>
             </tns:xjustiz.fachspezifischeDaten>
         </tns:akte>
         <tns:dokument>
             <tns:identifikation>
-                
+
                 <tns:nummerImUebergeordnetenContainer>1</tns:nummerImUebergeordnetenContainer>
             </tns:identifikation>
             <tns:xjustiz.fachspezifischeDaten>
                 <tns:dokumentklasse listVersionID="1.4">
                     <code>016</code>
                 </tns:dokumentklasse>
-                
+
                 <tns:datei>
                     <tns:dateiname>1000013749_5793303492524_20240807_EH.pdf</tns:dateiname>
-                    <tns:bestandteil listVersionID="2.4">
+                    <tns:bestandteil listVersionID="2.5">
                         <code>001</code>
                     </tns:bestandteil>
                     <tns:versionsnummer>1</tns:versionsnummer>
@@ -172,17 +182,17 @@
         </tns:dokument>
         <tns:dokument>
             <tns:identifikation>
-                
+
                 <tns:nummerImUebergeordnetenContainer>2</tns:nummerImUebergeordnetenContainer>
             </tns:identifikation>
             <tns:xjustiz.fachspezifischeDaten>
                 <tns:dokumentklasse listVersionID="1.4">
                     <code>017</code>
                 </tns:dokumentklasse>
-                
+
                 <tns:datei>
                     <tns:dateiname>1000013749_5793303492524_20240807_URB.pdf</tns:dateiname>
-                    <tns:bestandteil listVersionID="2.4">
+                    <tns:bestandteil listVersionID="2.5">
                         <code>002</code>
                     </tns:bestandteil>
                     <tns:versionsnummer>1</tns:versionsnummer>

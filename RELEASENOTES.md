@@ -1,8 +1,9 @@
 # Release-Notes
 
-## 13.02.2026
+## 23.02.2026
 ### Refactoring
 - Anpassung an modularisiertes xJustiz-Artefakt.
+- xjustiz Version 3.5.1 --> 3.6.2
 
 ## 12.02.2026
 ### Hinzugefuegt

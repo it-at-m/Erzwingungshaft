@@ -20,7 +20,7 @@ import de.muenchen.eh.db.repository.ClaimLogRepository;
 import de.muenchen.eh.db.repository.ClaimRepository;
 import de.muenchen.eh.db.repository.ClaimXmlRepository;
 import de.muenchen.eh.log.convert.DataEntityMapper;
-import de.muenchen.xjustiz.generated.xjustiz0500straf35.NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010;
+import de.muenchen.xjustiz.generated.xjustiz0500straf36.NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010;
 import de.muenchen.xjustiz.xjustiz0500straf.nachricht.straf.owi.verfahrensmitteilung.extern.an.justiz0500010.content.ContentContainer;
 import java.util.Arrays;
 import java.util.UUID;
@@ -174,7 +174,7 @@ public class LogServiceClaim {
             var entryEntity = ClaimFactory.claimFacade(exchange);
             NachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010 justiz0500010 = XmlUnmarshaller
                     .unmarshalNachrichtStrafOwiVerfahrensmitteilungExternAnJustiz0500010(xml);
-            entryEntity.setEhUuid(UUID.fromString(justiz0500010.getNachrichtenkopf().getEigeneNachrichtenID()));
+            entryEntity.setEhUuid(UUID.fromString(justiz0500010.getNachrichtenkopf().getAbsender().getEigeneNachrichtenID()));
             claimRepository.save(entryEntity);
             writeInfoClaimLogMessage(StatusProcessingType.CLAIM_EH_UUID_UPDATED, exchange);
 
