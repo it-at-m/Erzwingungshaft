@@ -160,7 +160,7 @@
                 <tns:dokumentklasse listVersionID="1.4">
                     <code>016</code>
                 </tns:dokumentklasse>
-                
+                <tns:anzeigename>EH-Antrag.pdf</tns:anzeigename>
                 <tns:datei>
                     <tns:dateiname>EH-Antrag.pdf</tns:dateiname>
                     <tns:bestandteil listVersionID="2.4">
@@ -179,7 +179,7 @@
                 <tns:dokumentklasse listVersionID="1.4">
                     <code>017</code>
                 </tns:dokumentklasse>
-
+                <tns:anzeigename>Bussgeldbescheid.pdf</tns:anzeigename>
                 <tns:datei>
                     <tns:dateiname>Bussgeldbescheid.pdf</tns:dateiname>
                     <tns:bestandteil listVersionID="2.4">
