@@ -125,7 +125,7 @@ public class OperationIdFactory {
 
             DataHandler xmlDataHandler = new DataHandler(dataWrapper.getXjustizXml(), ContentType.TEXT_XML.getMimeType());
             builder.addBinaryBody("giattachmenttype", xmlDataHandler.getInputStream(), ContentType.TEXT_XML,
-                    DocumentName.VERFAHRENSMITTEILUNG.getDescriptor().concat(".xml"));
+                    DocumentName.VERFAHRENSMITTEILUNG.getDescriptor());
 
             exchange.getMessage().setBody(builder.build());
 

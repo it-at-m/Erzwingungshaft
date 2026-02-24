@@ -2,6 +2,7 @@ package de.muenchen.eh.claim.efile.operation.contentbuilder;
 
 import com.sun.istack.ByteArrayDataSource;
 import de.muenchen.eh.claim.efile.DocumentName;
+import de.muenchen.eh.common.FileNameUtils;
 import de.muenchen.eh.db.entity.ClaimDocument;
 import de.muenchen.eh.log.DocumentType;
 import jakarta.activation.DataHandler;
@@ -11,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.io.FilenameUtils;
 
 @RequiredArgsConstructor
 public class OutgoingRequestBodyDTOBuilder {
@@ -35,12 +35,8 @@ public class OutgoingRequestBodyDTOBuilder {
         if (documents != null) {
             for (ClaimDocument document : documents) {
 
-                String prefix = DOCUMENT_TYPE_TO_PREFIX.getOrDefault(document.getDocumentType(), "unknown");
-
-                var suffix = FilenameUtils.getExtension(document.getFileName());
-
                 DataSource dataSource = new ByteArrayDataSource(document.getDocument(), document.getDocument().length, "application/octet-stream");
-                dataHandlers.put(prefix.concat(".").concat(suffix), new DataHandler(dataSource));
+                dataHandlers.put(FileNameUtils.toHumanReadableFileName(document.getFileName()), new DataHandler(dataSource));
 
             }
         }

@@ -5,11 +5,11 @@ import lombok.Getter;
 @Getter
 public enum DocumentName {
 
-    ANTRAG("EH-Antrag"),
-    BESCHEID("EH-Bescheid"),
-    KOSTEN("EH-Kostenbescheid"),
-    VERWERFUNG("EH-Verwerfungsbescheid"),
-    VERFAHRENSMITTEILUNG("EH-Verfahrensmitteilung");
+    ANTRAG("EH-Antrag.pdf"),
+    BESCHEID("Bussgeldbescheid.pdf"),
+    KOSTEN("Kostenbescheid.pdf"),
+    VERWERFUNG("Verwerfungsbescheid.pdf"),
+    VERFAHRENSMITTEILUNG("EH-Verfahrensmitteilung.xml");
 
     private final String descriptor;
 

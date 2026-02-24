@@ -13,15 +13,15 @@
       "objname": "Ausgang (9512.2-38-0005-0001)",
       "giobjecttype": [
         {
-          "objname": "EH-Antrag",
+          "objname": "EH-Antrag.pdf",
           "objaddress": "COO.2150.9169.1.2119720"
         },
         {
-          "objname": "EH-Bescheid",
+          "objname": "Bussgeldbescheid.pdf",
           "objaddress": "COO.2150.9169.1.2119721"
         },
         {
-          "objname": "EH-Verfahrensmitteilung",
+          "objname": "EH-Verfahrensmitteilung.xml",
           "objaddress": "COO.2150.9169.1.2119722"
         }
       ]
