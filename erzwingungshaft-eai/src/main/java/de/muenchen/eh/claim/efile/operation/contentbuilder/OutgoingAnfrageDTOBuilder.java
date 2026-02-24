@@ -43,7 +43,7 @@ public class OutgoingAnfrageDTOBuilder {
         params.put("accdef", fineProperties.getAccdef());
         params.put("doctemplate", fineProperties.getDoctemplate());
         params.put("outgoingdate", OffsetDateTimeFormatter.formatNow());
-        //      params.put("subfiletype", fineProperties.getSubfiletype());
+
         params.put("incattachments", fineProperties.getIncattachments());
         params.put("shortname", fineProperties.getOutgoing());
 
