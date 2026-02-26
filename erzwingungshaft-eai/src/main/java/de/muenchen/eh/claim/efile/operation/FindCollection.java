@@ -32,7 +32,8 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class FindCollection extends EfileOperation {
 
-    @Setter @Getter
+    @Setter
+    @Getter
     private Optional<ReadApentryAntwortDTO> collectionCache = Optional.empty();
     private final Object cacheLock = new Object();
 

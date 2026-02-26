@@ -1,5 +1,7 @@
 package de.muenchen.eh;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import de.muenchen.eakte.api.rest.model.Objektreferenz;
 import de.muenchen.eakte.api.rest.model.ReadApentryAntwortDTO;
 import de.muenchen.eh.claim.efile.operation.FindCollection;
@@ -13,8 +15,6 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class FindCollectionTest {
 
