@@ -13,6 +13,8 @@ import de.muenchen.eh.log.StatusProcessingType;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.camel.Exchange;
 import org.springframework.stereotype.Component;
@@ -30,6 +32,7 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class FindCollection extends EfileOperation {
 
+    @Setter @Getter
     private Optional<ReadApentryAntwortDTO> collectionCache = Optional.empty();
     private final Object cacheLock = new Object();
 
@@ -94,27 +97,31 @@ public class FindCollection extends EfileOperation {
     }
 
     private List<Objektreferenz> gpIdFilter(List<Objektreferenz> objektList, long gpid) {
+
         return objektList.stream()
                 .filter(obj -> {
+
+                    if (obj.getObjname() == null || obj.getObjname().isBlank())
+                        return false;
+
                     String objname = obj.getObjname();
                     String[] parts = objname.split("/");
-                    if (parts.length != 3) {
-                        return false;
-                    }
-                    String rangePart = parts[2];
+
+                    String rangePart = parts[parts.length - 1];
                     String[] range = rangePart.split("-");
                     if (range.length != 2) {
                         return false;
                     }
                     try {
-                        long gpidVon = Long.parseLong(range[0]);
-                        long gpidBis = Long.parseLong(range[1]);
+                        long gpidVon = Long.parseLong(range[0].trim());
+                        long gpidBis = Long.parseLong(range[1].trim());
                         return gpid >= gpidVon && gpid <= gpidBis;
                     } catch (NumberFormatException e) {
                         return false;
                     }
                 })
                 .collect(Collectors.toList());
+
     }
 
     public void clearCollectionCache() {
