@@ -5,8 +5,8 @@ import de.muenchen.eh.claim.efile.DocumentName;
 import de.muenchen.eh.claim.efile.ExchangeBuilder;
 import de.muenchen.eh.claim.efile.OpenApiParameterExtractor;
 import de.muenchen.eh.claim.efile.operation.contentbuilder.FileDTOBuilder;
-import de.muenchen.eh.claim.efile.operation.contentbuilder.OutgoingAnfrageDTOBuilder;
 import de.muenchen.eh.claim.efile.operation.contentbuilder.OutgoingRequestBodyDTOBuilder;
+import de.muenchen.eh.claim.efile.operation.contentbuilder.OutgoingRequestDTOBuilder;
 import de.muenchen.eh.claim.efile.operation.contentbuilder.ProcedureDTOBuilder;
 import de.muenchen.eh.claim.efile.operation.contentbuilder.SearchFileDTOBuilder;
 import de.muenchen.eh.claim.efile.properties.ConnectionProperties;
@@ -118,7 +118,7 @@ public class OperationIdFactory {
 
         try {
             MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-            builder.addTextBody("params", OutgoingAnfrageDTOBuilder.create(fineProperties, dataWrapper).buildAsJson(), ContentType.APPLICATION_JSON);
+            builder.addTextBody("params", OutgoingRequestDTOBuilder.create(fineProperties, dataWrapper).buildAsJson(), ContentType.APPLICATION_JSON);
 
             var docs = OutgoingRequestBodyDTOBuilder.create(documents).build();
             for (Map.Entry<String, DataHandler> entry : docs.entrySet()) {
@@ -127,7 +127,7 @@ public class OperationIdFactory {
 
             DataHandler xmlDataHandler = new DataHandler(dataWrapper.getXjustizXml(), ContentType.TEXT_XML.getMimeType());
             builder.addBinaryBody(GIATTACHMENTTYPE, xmlDataHandler.getInputStream(), ContentType.TEXT_XML,
-                    DocumentName.VERFAHRENSMITTEILUNG.getDescriptor());
+                    DocumentName.VERFAHRENSMITTEILUNG.getFullName());
 
             exchange.getMessage().setBody(builder.build());
 

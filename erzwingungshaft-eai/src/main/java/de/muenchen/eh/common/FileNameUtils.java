@@ -100,13 +100,13 @@ public class FileNameUtils {
     public static String toHumanReadableFileName(String fileName) {
 
         if (isEHFile(fileName))
-            return DocumentName.ANTRAG.getDescriptor();
+            return DocumentName.ANTRAG.getFullName();
         if (isURBFile(fileName))
-            return DocumentName.BESCHEID.getDescriptor();
+            return DocumentName.BESCHEID.getFullName();
         if (isURKFile(fileName))
-            return DocumentName.KOSTEN.getDescriptor();
+            return DocumentName.KOSTEN.getFullName();
         if (isVWFile(fileName))
-            return DocumentName.VERWERFUNG.getDescriptor();
+            return DocumentName.VERWERFUNG.getFullName();
 
         throw new IllegalArgumentException("File not found: " + fileName);
     }

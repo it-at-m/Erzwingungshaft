@@ -12,14 +12,14 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class OutgoingAnfrageDTOBuilder {
+public class OutgoingRequestDTOBuilder {
 
     private final FineProperties fineProperties;
     private final ClaimContentWrapper contentWrapper;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public static OutgoingAnfrageDTOBuilder create(FineProperties fineProperties, ClaimContentWrapper contentWrapper) {
-        return new OutgoingAnfrageDTOBuilder(fineProperties, contentWrapper);
+    public static OutgoingRequestDTOBuilder create(FineProperties fineProperties, ClaimContentWrapper contentWrapper) {
+        return new OutgoingRequestDTOBuilder(fineProperties, contentWrapper);
     }
 
     public Map<String, String> buildAsMap() {
