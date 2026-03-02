@@ -3,6 +3,7 @@ package de.muenchen.eh.claim.efile.operation;
 import de.muenchen.eakte.api.rest.model.Objektreferenz;
 import de.muenchen.eakte.api.rest.model.ReadApentryAntwortDTO;
 import de.muenchen.eh.claim.ClaimContentWrapper;
+import de.muenchen.eh.claim.efile.IdRangeGenerator;
 import de.muenchen.eh.db.entity.Claim;
 import de.muenchen.eh.db.entity.ClaimEfile;
 import de.muenchen.eh.db.entity.MessageType;
@@ -76,12 +77,29 @@ public class FindCollection extends EfileOperation {
                 }
 
                 collectionCache.ifPresent(collection -> {
-                    List<Objektreferenz> filteredCollections = gpIdFilter(collection.getGiobjecttype(),
-                            Long.valueOf(processingDataWrapper.getClaimImport().getGeschaeftspartnerId()));
+
+                    long gpId = Long.parseLong(processingDataWrapper.getClaimImport().getGeschaeftspartnerId());
+                    List<Objektreferenz> filteredCollections = gpIdFilter(collection.getGiobjecttype(), gpId);
+
                     if (filteredCollections.isEmpty()) {
                         logServiceClaim.writeGenericClaimLogMessage(
                                 StatusProcessingType.EFILE_GESCHAEFTSPARTNERID_COLLECTION_NOT_FOUND, MessageType.ERROR, exchange);
                         exchange.setRouteStop(true);
+
+
+                        /*
+                            - Berechne neuen Range.
+                            - Formatiere neue Range.
+                            - Neuen Collectioneintrag in eAkte hinzufuegen: --> Klaeren ob Aktenplaneintraege ueberhaupz ueber die eai Schnittstelle hinzugefuegt werden koennen ?
+                            - collectionCache aktualisieren.
+                            - Akte dem neuen Collectioneintrag hinzufügen.
+
+                         */
+
+                        String collectionName = IdRangeGenerator.formatCollectionName("9512.2-", gpId);
+
+
+
                     } else if (filteredCollections.size() > 1) {
                         logServiceClaim.writeGenericClaimLogMessage(
                                 StatusProcessingType.EFILE_GESCHAEFTSPARTNERID_COLLECTION_AMBIGUOUS, MessageType.ERROR, exchange);
