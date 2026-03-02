@@ -1,10 +1,8 @@
 package de.muenchen.eh.claim.efile.operation.contentbuilder;
 
 import com.sun.istack.ByteArrayDataSource;
-import de.muenchen.eh.claim.efile.DocumentName;
 import de.muenchen.eh.common.FileNameUtils;
 import de.muenchen.eh.db.entity.ClaimDocument;
-import de.muenchen.eh.log.DocumentType;
 import jakarta.activation.DataHandler;
 import jakarta.activation.DataSource;
 import java.io.IOException;
@@ -17,12 +15,6 @@ import lombok.RequiredArgsConstructor;
 public class OutgoingRequestBodyDTOBuilder {
 
     private final List<ClaimDocument> documents;
-
-    private static final Map<String, String> DOCUMENT_TYPE_TO_PREFIX = Map.of(
-            DocumentType.ANTRAG.getDescriptor(), DocumentName.ANTRAG.getDescriptor(),
-            DocumentType.BESCHEID.getDescriptor(), DocumentName.BESCHEID.getDescriptor(),
-            DocumentType.KOSTEN.getDescriptor(), DocumentType.KOSTEN.getDescriptor(),
-            DocumentType.VERWERFUNG.getDescriptor(), DocumentType.VERWERFUNG.getDescriptor());
 
     public static OutgoingRequestBodyDTOBuilder create(List<ClaimDocument> documents) {
         return new OutgoingRequestBodyDTOBuilder(documents);
