@@ -1,10 +1,14 @@
 # Release-Notes
 
+## 2.3.2026
+## Aenderung
+- Attachment Dateinamen fuer den Versand an xjustiz angepasst.
+
 ## 12.2.2026
 ### Hinzugefuegt
 - Zentralaktkennung im Betreff der Einzelakte der eAkte anzeigen.
 
-## 28.01.2026
+## 28.1.2026
 ### Aenderung
 - PDFs ohne Metadaten werden aussortiert.
 - Die Tatzeitraum Attribute anfangsdatum, anfangsuhrzeit, endedatum, endeuhrzeit sind unabhaengig voneinander und optional.
