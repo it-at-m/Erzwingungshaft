@@ -5,7 +5,7 @@ package de.muenchen.eh.claim.efile;
  */
 public class GpidRangeGenerator {
 
-    public static String[] counterAndRangeSplitted (Long id){
+    public static String[] counterAndRangeSplitted(Long id) {
         return generateRangeWithAutoCounter(id).split("/");
     }
 

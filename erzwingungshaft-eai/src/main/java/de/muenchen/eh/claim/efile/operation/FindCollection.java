@@ -1,6 +1,5 @@
 package de.muenchen.eh.claim.efile.operation;
 
-import de.muenchen.eakte.api.rest.model.BusinessObjectReference;
 import de.muenchen.eakte.api.rest.model.Objektreferenz;
 import de.muenchen.eakte.api.rest.model.ReadApentryAntwortDTO;
 import de.muenchen.eh.claim.ClaimContentWrapper;
@@ -41,7 +40,7 @@ public class FindCollection extends EfileOperation {
     private final ClaimService claimService;
 
     public FindCollection(OperationIdFactory operationIdFactory, LogServiceClaim logServiceClaim,
-                          ClaimEfileRepository claimEfileRepository, ClaimService claimService) {
+            ClaimEfileRepository claimEfileRepository, ClaimService claimService) {
         super(operationIdFactory, logServiceClaim, claimEfileRepository);
         this.claimService = claimService;
     }

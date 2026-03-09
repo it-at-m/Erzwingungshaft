@@ -1,6 +1,5 @@
 package de.muenchen.eh.db.repository;
 
-import de.muenchen.eh.db.entity.ClaimImportLog;
 import de.muenchen.eh.db.entity.ClaimLog;
 import de.muenchen.eh.db.entity.MessageType;
 import jakarta.validation.constraints.NotEmpty;

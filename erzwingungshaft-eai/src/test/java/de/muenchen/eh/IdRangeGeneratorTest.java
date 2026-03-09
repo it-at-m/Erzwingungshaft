@@ -1,11 +1,11 @@
 package de.muenchen.eh;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import de.muenchen.eh.claim.efile.GpidRangeGenerator;
 import java.util.Random;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class IdRangeGeneratorTest {
 
@@ -57,7 +57,7 @@ public class IdRangeGeneratorTest {
         Random rnd = new Random(123456);
         long start = 1_000_000_001L;
         long end = 2_000_000_000L;
-        int range = (int)(end - start + 1);
+        int range = (int) (end - start + 1);
 
         for (int j = 0; j < 10; j++) {
             long id = start + rnd.nextInt(range);
@@ -79,6 +79,5 @@ public class IdRangeGeneratorTest {
             assertTrue(id >= lower && id <= upper, "The ID is not within the generated area: id=" + id + ", range=" + result);
         }
     }
-
 
 }
