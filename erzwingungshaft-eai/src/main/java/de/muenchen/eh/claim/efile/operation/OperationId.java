@@ -30,6 +30,8 @@ public enum OperationId {
     CREATE_OUTGOING("CreateOutgoing", new TypeReference<CreateOutgoingAntwortDTO>() {
     }),
     CREATE_CONTENT_OBJECT("CreateContentObject", new TypeReference<CreateContentObjectAntwortDTO>() {
+    }),
+    SUBJECT_AREA_UNITS("CreateSubjectAreaUnit", new TypeReference<DmsObjektResponse>() {
     });
 
     private final String descriptor;

@@ -1,0 +1,16 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/api/subjectAreaUnits"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "objid" : "COO.2150.9169.1.1777776",
+      "objname" : "9512.5/SKA-3-2/1000025001-1000030000"
+    }
+  }
+}

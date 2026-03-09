@@ -9,7 +9,9 @@ import de.muenchen.eh.claim.efile.operation.contentbuilder.OutgoingRequestBodyDT
 import de.muenchen.eh.claim.efile.operation.contentbuilder.OutgoingRequestDTOBuilder;
 import de.muenchen.eh.claim.efile.operation.contentbuilder.ProcedureDTOBuilder;
 import de.muenchen.eh.claim.efile.operation.contentbuilder.SearchFileDTOBuilder;
+import de.muenchen.eh.claim.efile.operation.contentbuilder.SubjectAreaUnitRequestDTOBuilder;
 import de.muenchen.eh.claim.efile.properties.ConnectionProperties;
+import de.muenchen.eh.claim.efile.properties.FileProperties;
 import de.muenchen.eh.claim.efile.properties.FineProperties;
 import de.muenchen.eh.db.entity.ClaimDocument;
 import de.muenchen.eh.db.repository.ClaimDocumentRepository;
@@ -47,6 +49,7 @@ public class OperationIdFactory {
     private final CamelContext camelContext;
     private final ConnectionProperties connectionProperties;
     private final FineProperties fineProperties;
+    private final FileProperties fileProperties;
     private final ClaimDocumentRepository claimDocumentRepository;
 
     private Map<OperationId, Function<ClaimContentWrapper, Exchange>> operationIdHandlers;
@@ -62,7 +65,8 @@ public class OperationIdFactory {
                 OperationId.UPDATE_SUBJECT_DATA_FINE, wrapper -> createExchangeSubject(wrapper, OperationId.UPDATE_SUBJECT_DATA_FINE),
                 OperationId.CREATE_FINE, this::createExchangeFine,
                 OperationId.CREATE_OUTGOING, this::createExchangeOutgoing,
-                OperationId.CREATE_CONTENT_OBJECT, wrapper -> createExchangeContentObject());
+                OperationId.CREATE_CONTENT_OBJECT, wrapper -> createExchangeContentObject(),
+                OperationId.SUBJECT_AREA_UNITS, this::createSubjectAreaUnit);
     }
 
     public Exchange createExchange(OperationId operationId, Exchange exchange) {
@@ -77,6 +81,15 @@ public class OperationIdFactory {
                 .withBasicAuth(connectionProperties.getUsername(), connectionProperties.getPassword())
                 .withRequestValidation(true)
                 .build();
+    }
+
+    private Exchange createSubjectAreaUnit(ClaimContentWrapper claimContentWrapper) {
+
+        Exchange exchange = createExchange(OperationId.SUBJECT_AREA_UNITS.getDescriptor());
+        exchange.getMessage().setBody(SubjectAreaUnitRequestDTOBuilder.create(claimContentWrapper, fileProperties).build());
+
+        return exchange;
+
     }
 
     private Exchange createExchangeForReadCollections(ClaimContentWrapper dataWrapper) {

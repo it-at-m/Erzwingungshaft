@@ -140,6 +140,8 @@ public class ReadCreateFilingTest extends TestContainerConfiguration {
         mockTestEnd.assertIsSatisfied(TimeUnit.MINUTES.toMillis(3));
         assertEquals(1, mockTestEnd.getExchanges().size(), "One happy path implemented.");
 
+        Thread.sleep(5000); // Waiting for database inserts
+
         // Database
         assertEquals(5, claimImportRepository.count(), "5 imports expected.");
         assertEquals(3, claimRepository.count(),
@@ -152,7 +154,7 @@ public class ReadCreateFilingTest extends TestContainerConfiguration {
                 "3 claim data expected (gp_id : 1000809085/5793341761427, 1000013749, 1000258309).");
         assertEquals(3, claimlXmlRepository.count(),
                 "3 claim xml expected (gp_id : 1000809085/5793341761427, 1000013749, 1000258309).");
-        assertEquals(1, claimEfileRepository.count(), "1 claim efile expected (gp_id : 1000013749).");
+        assertEquals(3, claimEfileRepository.count(), "3 claim efile expected (gp_id : 1000013749, 1000258309, 1000809085).");
         assertEquals(17, claimImportLogRepository.count(), "17 claim import logs expected.");
         assertEquals(5, claimImportLogRepository.findByMessage("IMPORT_DATA_FILE_CREATED").size(),
                 "D.KVU.EUDG0P0.20240807.EZH contains 5 lines to import.");
@@ -164,11 +166,13 @@ public class ReadCreateFilingTest extends TestContainerConfiguration {
                 "3 claims contains ANTRAG to import in db.");
         assertEquals(3, claimImportLogRepository.findByMessage("IMPORT_BESCHEID_IMPORT_DB").size(),
                 "3 claims contains BESCHEID to import in db.");
-        assertEquals(31, claimLogRepository.count(), "31 claim logs expected.");
-        assertEquals(28, claimLogRepository.findByMessageTyp(MessageType.INFO).size(), "28 import INFO expected.");
-        assertEquals(1, claimLogRepository.findByMessageTyp(MessageType.WARN).size(), "1 import WARN expected.");
-        assertEquals(2, claimLogRepository.findByMessageTyp(MessageType.ERROR).size(), "2 import ERROR expected.");
-        assertEquals(1, xtaRepository.count(), "1 send message expected.");
+        assertEquals(1, claimLogRepository.findByMessage("EFILE_GESCHAEFTSPARTNERID_COLLECTION_ADDED").size(),
+                "1 claims add gpid collection expected.");
+        assertEquals(53, claimLogRepository.count(), "47 claim logs expected.");
+        assertEquals(49, claimLogRepository.findByMessageTyp(MessageType.INFO).size(), "43 import INFO expected.");
+        assertEquals(4, claimLogRepository.findByMessageTyp(MessageType.WARN).size(), "4 import WARN expected.");
+        assertEquals(0, claimLogRepository.findByMessageTyp(MessageType.ERROR).size(), "2 import ERROR expected.");
+        assertEquals(3, xtaRepository.count(), "1 send message expected.");
 
         List<Claim> claims = claimService.claimEfilesWithCorrespondingGId("1000013749");
         ClaimEfile claimEfile = claims.get(0).getClaimEfile();
@@ -236,15 +240,13 @@ public class ReadCreateFilingTest extends TestContainerConfiguration {
                 .findByClaimImportId(claimImport_1000809085_5793341761427.getId());
         List<ClaimLog> infoClaimLogs = claimLogRepository
                 .findByClaimIdAndMessageTyp(claim_1000809085_5793341761427.getId(), MessageType.INFO);
-        assertEquals(6, infoClaimLogs.size());
+        assertEquals(17, infoClaimLogs.size());
 
         assertNotNull(claim_1000809085_5793341761427.getEhUuid(),
                 "With the xml generation a uuid is created which is persisted in db.");
         var claimlog_errors_1000809085_5793341761427 = claimLogRepository
                 .findByClaimIdAndMessageTyp(claim_1000809085_5793341761427.getId(), MessageType.ERROR);
-        assertEquals(1, claimlog_errors_1000809085_5793341761427.size(), "One error expected.");
-        assertEquals("EFILE_GESCHAEFTSPARTNERID_COLLECTION_NOT_FOUND",
-                claimlog_errors_1000809085_5793341761427.getFirst().getMessage());
+        assertEquals(0, claimlog_errors_1000809085_5793341761427.size(), "No error expected.");
 
     }
 

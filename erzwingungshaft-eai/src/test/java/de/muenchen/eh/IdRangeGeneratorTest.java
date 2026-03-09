@@ -1,6 +1,6 @@
 package de.muenchen.eh;
 
-import de.muenchen.eh.claim.efile.IdRangeGenerator;
+import de.muenchen.eh.claim.efile.GpidRangeGenerator;
 import java.util.Random;
 import org.junit.jupiter.api.Test;
 
@@ -13,23 +13,25 @@ public class IdRangeGeneratorTest {
     void test_explicitIntervals() {
 
         // Lower edge
-        assertEquals("999995001-1000000000", IdRangeGenerator.generateRange(1000000000L));
+        assertEquals("-1/999995001-1000000000", GpidRangeGenerator.generateRangeWithAutoCounter(1000000000L));
 
         // Lower limit
-        assertEquals("1000000001-1000005000", IdRangeGenerator.generateRange(1000000001L));
-        assertEquals("1000005001-1000010000", IdRangeGenerator.generateRange(1000005001L));
-        assertEquals("1000010001-1000015000", IdRangeGenerator.generateRange(1000010001L));
-        assertEquals("1000015001-1000020000", IdRangeGenerator.generateRange(1000015001L));
+        assertEquals("0/1000000001-1000005000", GpidRangeGenerator.generateRangeWithAutoCounter(1000000001L));
+        assertEquals("1/1000005001-1000010000", GpidRangeGenerator.generateRangeWithAutoCounter(1000005001L));
+        assertEquals("2/1000010001-1000015000", GpidRangeGenerator.generateRangeWithAutoCounter(1000010001L));
+        assertEquals("3/1000015001-1000020000", GpidRangeGenerator.generateRangeWithAutoCounter(1000015001L));
 
         // Upper limit
-        assertEquals("1000000001-1000005000", IdRangeGenerator.generateRange(1000005000L));
-        assertEquals("1000005001-1000010000", IdRangeGenerator.generateRange(1000010000L));
-        assertEquals("1000010001-1000015000", IdRangeGenerator.generateRange(1000015000L));
-        assertEquals("1000015001-1000020000", IdRangeGenerator.generateRange(1000020000L));
+        assertEquals("0/1000000001-1000005000", GpidRangeGenerator.generateRangeWithAutoCounter(1000005000L));
+        assertEquals("1/1000005001-1000010000", GpidRangeGenerator.generateRangeWithAutoCounter(1000010000L));
+        assertEquals("2/1000010001-1000015000", GpidRangeGenerator.generateRangeWithAutoCounter(1000015000L));
+        assertEquals("3/1000015001-1000020000", GpidRangeGenerator.generateRangeWithAutoCounter(1000020000L));
+
+        assertEquals("399/1001995001-1002000000", GpidRangeGenerator.generateRangeWithAutoCounter(1002000000));
 
         // upper edge
-        assertEquals("1999995001-2000000000", IdRangeGenerator.generateRange(2000000000L));
-        assertEquals("2000000001-2000005000", IdRangeGenerator.generateRange(2000000001L));
+        assertEquals("199999/1999995001-2000000000", GpidRangeGenerator.generateRangeWithAutoCounter(2000000000L));
+        assertEquals("200000/2000000001-2000005000", GpidRangeGenerator.generateRangeWithAutoCounter(2000000001L));
 
     }
 
@@ -40,10 +42,11 @@ public class IdRangeGeneratorTest {
         long end = 2_000_000_000L;
 
         for (long lower = start; lower <= end; lower += 5000L) {
-            String expected = String.format("%d-%d", lower, lower + 4999L);
+            int i = (int) ((lower - 1_000_000_001L) / 5000);
+            String expected = String.format("%d/%d-%d", i, lower, lower + 4999L);
 
-            assertEquals(expected, IdRangeGenerator.generateRange(lower), "Error lower=" + lower);
-            assertEquals(expected, IdRangeGenerator.generateRange(lower + 4999L), "Error upper=" + (lower + 4999L));
+            assertEquals(expected, GpidRangeGenerator.generateRangeWithAutoCounter(lower), "Error lower=" + lower);
+            assertEquals(expected, GpidRangeGenerator.generateRangeWithAutoCounter(lower + 4999L), "Error upper=" + (lower + 4999L));
         }
     }
 
@@ -56,26 +59,26 @@ public class IdRangeGeneratorTest {
         long end = 2_000_000_000L;
         int range = (int)(end - start + 1);
 
-        for (int i = 0; i < 10; i++) {
+        for (int j = 0; j < 10; j++) {
             long id = start + rnd.nextInt(range);
+            String result = GpidRangeGenerator.generateRangeWithAutoCounter(id);
 
-            String result = IdRangeGenerator.generateRange(id);
-            // Parse result "lower-upper"
-            String[] parts = result.split("-");
-            long lower = Long.parseLong(parts[0]);
-            long upper = Long.parseLong(parts[1]);
+            // Parse result "[i]/lower-upper"
+            String[] parts = result.split("/|-");
+            int i = Integer.parseInt(parts[0]);
+            long lower = Long.parseLong(parts[1]);
+            long upper = Long.parseLong(parts[2]);
 
+            // Calculate expected values
             long expectedLower = ((id - 1) / 5000) * 5000 + 1;
             long expectedUpper = expectedLower + 4999;
-            String expected = String.format("%d-%d", expectedLower, expectedUpper);
+            int expectedI = (int) ((expectedLower - 1_000_000_001L) / 5000);
+            String expected = String.format("%d/%d-%d", expectedI, expectedLower, expectedUpper);
 
-            assertEquals(expected, result,
-                    "Errors in random id=" + id);
-
-            assertTrue(id >= lower && id <= upper,
-                    "The ID is not within the generated area: id=" + id + ", range=" + result);
-
+            assertEquals(expected, result, "Errors in random id=" + id);
+            assertTrue(id >= lower && id <= upper, "The ID is not within the generated area: id=" + id + ", range=" + result);
         }
     }
+
 
 }
