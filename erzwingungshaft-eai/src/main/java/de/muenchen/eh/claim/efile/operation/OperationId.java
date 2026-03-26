@@ -23,9 +23,9 @@ public enum OperationId {
     }),
     CREATE_FINE("CreateProcedure", new TypeReference<DmsObjektResponse>() {
     }),
-    UPDATE_SUBJECT_DATA_FILE("UpdateBusinessDataValue", new TypeReference<Map<String, Object>>() {
+    UPDATE_BUSINESS_DATA_FILE("UpdateBusinessDataValue", new TypeReference<Map<String, Object>>() {
     }),
-    UPDATE_SUBJECT_DATA_FINE("UpdateBusinessDataValue", new TypeReference<Map<String, Object>>() {
+    UPDATE_BUSINESS_DATA_FINE("UpdateBusinessDataValue", new TypeReference<Map<String, Object>>() {
     }),
     CREATE_OUTGOING("CreateOutgoing", new TypeReference<CreateOutgoingAntwortDTO>() {
     }),

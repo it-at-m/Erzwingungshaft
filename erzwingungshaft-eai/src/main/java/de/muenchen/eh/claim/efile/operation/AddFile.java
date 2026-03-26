@@ -3,7 +3,7 @@ package de.muenchen.eh.claim.efile.operation;
 import de.muenchen.eakte.api.rest.model.Objektreferenz;
 import de.muenchen.eakte.api.rest.model.SearchFileResponseDTO;
 import de.muenchen.eh.claim.ClaimContentWrapper;
-import de.muenchen.eh.claim.efile.operation.subjectdata.UpdateFileSubjectData;
+import de.muenchen.eh.claim.efile.operation.userformdata.UpdateFileUserFormData;
 import de.muenchen.eh.claim.efile.properties.FileProperties;
 import de.muenchen.eh.db.entity.ClaimEfile;
 import de.muenchen.eh.db.entity.MessageType;
@@ -22,10 +22,10 @@ public class AddFile extends EfileOperation {
 
     private final ClaimDataRepository claimDataRepository;
     private final FileProperties fileProperties;
-    private final UpdateFileSubjectData updateFileSubjectData;
+    private final UpdateFileUserFormData updateFileSubjectData;
 
     public AddFile(OperationIdFactory operationIdFactory, LogServiceClaim logServiceClaim, ClaimEfileRepository claimEfileRepository,
-            ClaimDataRepository claimDataRepository, FileProperties fileProperties, UpdateFileSubjectData updateFileSubjectData) {
+            ClaimDataRepository claimDataRepository, FileProperties fileProperties, UpdateFileUserFormData updateFileSubjectData) {
 
         super(operationIdFactory, logServiceClaim, claimEfileRepository);
         this.claimDataRepository = claimDataRepository;
@@ -87,7 +87,7 @@ public class AddFile extends EfileOperation {
     }
 
     private Exchange updateSubjectData(Exchange exchange) {
-        return this.updateFileSubjectData.execute(exchange, OperationId.UPDATE_SUBJECT_DATA_FILE);
+        return this.updateFileSubjectData.execute(exchange, OperationId.UPDATE_BUSINESS_DATA_FILE);
     }
 
     private Optional<List<Objektreferenz>> checkIfEfileFileWithGpidExists(Exchange exchange) {

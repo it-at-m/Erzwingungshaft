@@ -1,4 +1,4 @@
-package de.muenchen.eh.claim.efile.operation.subjectdata;
+package de.muenchen.eh.claim.efile.operation.userformdata;
 
 import de.muenchen.eh.claim.ClaimContentWrapper;
 import de.muenchen.eh.claim.efile.operation.OperationIdFactory;
@@ -14,22 +14,22 @@ import org.apache.camel.Exchange;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UpdateFineSubjectData extends UpdateSubjectData {
+public class UpdateFineUserFormData extends UpdateUserFormData {
 
-    private static final String OWI_NUMBER = "Ordnungswidrigkeiten-Nummer";
+    private static final String OWI_NUMBER = "OWI_Nummer";
 
     private final FineProperties properties;
 
     @Nullable private Map<String, String> subjectProperties;
 
-    public UpdateFineSubjectData(LogServiceClaim logServiceClaim, OperationIdFactory operationIdFactory,
-            FineProperties properties) {
+    public UpdateFineUserFormData(LogServiceClaim logServiceClaim, OperationIdFactory operationIdFactory,
+                                  FineProperties properties) {
         super(logServiceClaim, operationIdFactory);
         this.properties = properties;
     }
 
     @Override
-    protected Map<String, String> subjectDataValuesBuilder(Exchange exchange) {
+    protected Map<String, String> userFormValuesBuilder(Exchange exchange) {
 
         this.subjectExchange = exchange;
 

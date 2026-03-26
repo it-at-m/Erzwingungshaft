@@ -27,8 +27,8 @@ public class EfileResponseMapper implements Processor {
             return;
         }
 
-        if (operationId.equals(OperationId.UPDATE_SUBJECT_DATA_FILE.getDescriptor())
-                || operationId.equals(OperationId.UPDATE_SUBJECT_DATA_FINE.getDescriptor()))
+        if (operationId.equals(OperationId.UPDATE_BUSINESS_DATA_FILE.getDescriptor())
+                || operationId.equals(OperationId.UPDATE_BUSINESS_DATA_FINE.getDescriptor()))
             return;
 
         if (json == null || json.isBlank()) {

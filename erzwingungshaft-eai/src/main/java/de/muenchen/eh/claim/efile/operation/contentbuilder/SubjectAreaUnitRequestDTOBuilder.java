@@ -22,13 +22,13 @@ public class SubjectAreaUnitRequestDTOBuilder {
 
     private CreateSubjectAreaUnitAnfrageDTO createCaseFileDTO() {
 
-        String[] splittedParts = GpidRangeGenerator.counterAndRangeSplitted(Long.parseLong(contentWrapper.getClaimImport().getGeschaeftspartnerId()));
+        String[] splitParts = GpidRangeGenerator.counterAndRangeSplitted(Long.parseLong(contentWrapper.getClaimImport().getGeschaeftspartnerId()));
 
         CreateSubjectAreaUnitAnfrageDTO createSubjectAreaUnitAnfrageDTO = new CreateSubjectAreaUnitAnfrageDTO();
 
         createSubjectAreaUnitAnfrageDTO.setObjaddress(fileProperties.getObjaddress());
-        createSubjectAreaUnitAnfrageDTO.setBasenr(fileProperties.getBasenr() + splittedParts[0]);
-        createSubjectAreaUnitAnfrageDTO.setShortterm(splittedParts[1]);
+        createSubjectAreaUnitAnfrageDTO.setBasenr(fileProperties.getBasenr() + splitParts[0]);
+        createSubjectAreaUnitAnfrageDTO.setShortterm(splitParts[1]);
 
         return createSubjectAreaUnitAnfrageDTO;
     }

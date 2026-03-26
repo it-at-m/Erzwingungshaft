@@ -168,11 +168,11 @@ public class ReadCreateFilingTest extends TestContainerConfiguration {
                 "3 claims contains BESCHEID to import in db.");
         assertEquals(1, claimLogRepository.findByMessage("EFILE_GESCHAEFTSPARTNERID_COLLECTION_ADDED").size(),
                 "1 claims add gpid collection expected.");
-        assertEquals(53, claimLogRepository.count(), "47 claim logs expected.");
-        assertEquals(49, claimLogRepository.findByMessageTyp(MessageType.INFO).size(), "43 import INFO expected.");
-        assertEquals(4, claimLogRepository.findByMessageTyp(MessageType.WARN).size(), "4 import WARN expected.");
-        assertEquals(0, claimLogRepository.findByMessageTyp(MessageType.ERROR).size(), "2 import ERROR expected.");
-        assertEquals(3, xtaRepository.count(), "1 send message expected.");
+        assertEquals(53, claimLogRepository.count());
+        assertEquals(52, claimLogRepository.findByMessageTyp(MessageType.INFO).size());
+        assertEquals(1, claimLogRepository.findByMessageTyp(MessageType.WARN).size());
+        assertEquals(0, claimLogRepository.findByMessageTyp(MessageType.ERROR).size());
+        assertEquals(3, xtaRepository.count());
 
         List<Claim> claims = claimService.claimEfilesWithCorrespondingGId("1000013749");
         ClaimEfile claimEfile = claims.get(0).getClaimEfile();
@@ -240,7 +240,7 @@ public class ReadCreateFilingTest extends TestContainerConfiguration {
                 .findByClaimImportId(claimImport_1000809085_5793341761427.getId());
         List<ClaimLog> infoClaimLogs = claimLogRepository
                 .findByClaimIdAndMessageTyp(claim_1000809085_5793341761427.getId(), MessageType.INFO);
-        assertEquals(17, infoClaimLogs.size());
+        assertEquals(18, infoClaimLogs.size());
 
         assertNotNull(claim_1000809085_5793341761427.getEhUuid(),
                 "With the xml generation a uuid is created which is persisted in db.");

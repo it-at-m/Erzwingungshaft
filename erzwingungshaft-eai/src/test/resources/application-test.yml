@@ -72,8 +72,8 @@ efile:
     doctemplate: 'LHM Schreiben Extern'
     subfiletype: PDF-Dokument
     incattachments: EH-Dokumente
-#    subject-data-values:
-#      owi-number: 'Ordnungswidrigkeiten-Nummer'
+    subject-data-values:
+      owi-number: 'OWI_Nummer'
 
 # Custom properties
 xjustiz:

@@ -61,8 +61,8 @@ public class OperationIdFactory {
                 OperationId.READ_COLLECTIONS, this::createExchangeForReadCollections,
                 OperationId.SEARCH_FILE, this::createExchangeSearchFile,
                 OperationId.CREATE_FILE, this::createExchangeCaseFile,
-                OperationId.UPDATE_SUBJECT_DATA_FILE, wrapper -> createExchangeSubject(wrapper, OperationId.UPDATE_SUBJECT_DATA_FILE),
-                OperationId.UPDATE_SUBJECT_DATA_FINE, wrapper -> createExchangeSubject(wrapper, OperationId.UPDATE_SUBJECT_DATA_FINE),
+                OperationId.UPDATE_BUSINESS_DATA_FILE, wrapper -> createExchangeSubject(wrapper, OperationId.UPDATE_BUSINESS_DATA_FILE),
+                OperationId.UPDATE_BUSINESS_DATA_FINE, wrapper -> createExchangeSubject(wrapper, OperationId.UPDATE_BUSINESS_DATA_FINE),
                 OperationId.CREATE_FINE, this::createExchangeFine,
                 OperationId.CREATE_OUTGOING, this::createExchangeOutgoing,
                 OperationId.CREATE_CONTENT_OBJECT, wrapper -> createExchangeContentObject(),
@@ -89,7 +89,6 @@ public class OperationIdFactory {
         exchange.getMessage().setBody(SubjectAreaUnitRequestDTOBuilder.create(claimContentWrapper, fileProperties).build());
 
         return exchange;
-
     }
 
     private Exchange createExchangeForReadCollections(ClaimContentWrapper dataWrapper) {
@@ -109,7 +108,7 @@ public class OperationIdFactory {
     }
 
     private String getObjAddress(ClaimContentWrapper dataWrapper, OperationId operationId) {
-        return operationId == OperationId.UPDATE_SUBJECT_DATA_FILE
+        return operationId == OperationId.UPDATE_BUSINESS_DATA_FILE
                 ? dataWrapper.getClaimEfile().getFile()
                 : dataWrapper.getClaimEfile().getFine();
     }
