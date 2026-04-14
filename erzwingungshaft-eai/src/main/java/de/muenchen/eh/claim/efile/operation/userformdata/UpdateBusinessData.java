@@ -10,7 +10,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
 
-abstract class UpdateUserFormData {
+abstract public class UpdateBusinessData {
 
     @Produce(value = EfileRouteBuilder.MARSHAL_JSON_DMS_CONNECTION)
     protected ProducerTemplate efileConnector;
@@ -20,7 +20,7 @@ abstract class UpdateUserFormData {
     private final OperationIdFactory operationIdFactory;
     protected Exchange subjectExchange;
 
-    public UpdateUserFormData(LogServiceClaim logServiceClaim, OperationIdFactory operationIdFactory) {
+    public UpdateBusinessData(LogServiceClaim logServiceClaim, OperationIdFactory operationIdFactory) {
 
         this.logServiceClaim = logServiceClaim;
         this.operationIdFactory = operationIdFactory;
@@ -44,9 +44,6 @@ abstract class UpdateUserFormData {
         this.subjectExchange = exchange;
 
         var requestUpdateExchange = operationIdFactory.createExchange(operationId, subjectExchange);
-
-        Für die Aktualisierung Name, Vorname, Geburstsdatum UpdateBusinessData verwenden und das aktuelle Objekt auf
-                die Implementierung mit UpdateUserFormsDataRequestDTO zur Aktualisierung der OWI_Nummer zurücksetzen ?
 
         UpdateBusinessDataValueDTO updateBusinessData = new UpdateBusinessDataValueDTO();
 

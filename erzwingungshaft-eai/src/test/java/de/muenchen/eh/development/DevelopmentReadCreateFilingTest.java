@@ -54,9 +54,9 @@ import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 @EnableAutoConfiguration
 @DirtiesContext
 @ActiveProfiles(profiles = { TestConstants.SPRING_TEST_PROFILE, TestConstants.SPRING_INTEGRATION_PROFILE, TestConstants.SPRING_DEVELOPMENT_PROFILE })
-@Disabled(
-    "This is not a regular JUnit test. Rather, it can be used as a basis to flexibly configure the various endpoints (db, s3, efile, gmm) and to simulate a test run."
-)
+//@Disabled(
+//    "This is not a regular JUnit test. Rather, it can be used as a basis to flexibly configure the various endpoints (db, s3, efile, gmm) and to simulate a test run."
+//)
 class DevelopmentReadCreateFilingTest {
 
     @EndpointInject("mock:test-end")
