@@ -9,7 +9,7 @@ public enum DocumentName {
     BESCHEID("Bussgeldbescheid", "Bussgeldbescheid.pdf"),
     KOSTEN("Kostenbescheid", "Kostenbescheid.pdf"),
     VERWERFUNG("Verwerfungsbescheid", "Verwerfungsbescheid.pdf"),
-    VERFAHRENSMITTEILUNG("EH-Verfahrensmitteilung", "EH-Verfahrensmitteilung.xml");
+    VERFAHRENSMITTEILUNG("EH-Verfahrensmitteilung", "xjustiz_nachricht.xml");
 
     private final String descriptor;
     private final String fullName;
