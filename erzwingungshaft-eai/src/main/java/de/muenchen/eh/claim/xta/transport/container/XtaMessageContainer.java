@@ -13,7 +13,6 @@ import jakarta.activation.DataHandler;
 import jakarta.activation.DataSource;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -42,7 +41,7 @@ public class XtaMessageContainer {
     private ContentType build() {
 
         DataSource textMessage = new StringDataSource(
-                Base64.getEncoder().encodeToString(claimContentWrapper.getClaimImport().getOutputDirectory().getBytes()),
+                new String(claimContentWrapper.getClaimImport().getOutputDirectory().getBytes()),
                 "text/plain",
                 "message");
 
@@ -65,7 +64,7 @@ public class XtaMessageContainer {
     private ContentType buildxJustizXml() {
         String xmlFileName = DocumentName.VERFAHRENSMITTEILUNG.getFullName();
         DataSource justizMessage = new StringDataSource(
-                Base64.getEncoder().encodeToString(this.claimContentWrapper.getXjustizXml().getBytes(StandardCharsets.UTF_8)),
+                new String(this.claimContentWrapper.getXjustizXml().getBytes(StandardCharsets.UTF_8)),
                 "application/xml",
                 xmlFileName);
         DataHandler justizDataHandler = new DataHandler(justizMessage);
