@@ -138,7 +138,7 @@ public class ClaimContentContainerFactory {
 
         Map<Instanztype, Aktenzeichen> auswahlInstanzbehoerden = new TreeMap<>();
         auswahlInstanzbehoerden.put(Instanztype.GERICHT, new Aktenzeichen("neu"));
-        auswahlInstanzbehoerden.put(Instanztype.BETEILIGTER, new Aktenzeichen(claimContentWrapper.getClaimImport().getOutputDirectory()));
+        auswahlInstanzbehoerden.put(Instanztype.BETEILIGTER, new Aktenzeichen(claimContentWrapper.getClaimImport().getKassenzeichen()));
 
         return new GrunddatenContent(new ArrayList<>(List.of(ehBetroffener)), auswahlInstanzbehoerden);
     }

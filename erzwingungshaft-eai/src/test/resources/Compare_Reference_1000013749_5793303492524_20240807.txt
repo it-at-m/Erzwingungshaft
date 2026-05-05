@@ -42,7 +42,7 @@
                 </tns:auswahl_instanzbehoerde>
                 <tns:aktenzeichen>
                     <tns:auswahl_aktenzeichen>
-
+                        <tns:aktenzeichen.freitext>5793303492524</tns:aktenzeichen.freitext>
                     </tns:auswahl_aktenzeichen>
                 </tns:aktenzeichen>
             </tns:instanzdaten>
@@ -58,7 +58,7 @@
                 </tns:auswahl_instanzbehoerde>
                 <tns:aktenzeichen>
                     <tns:auswahl_aktenzeichen>
-
+                        <tns:aktenzeichen.freitext>neu</tns:aktenzeichen.freitext>
                     </tns:auswahl_aktenzeichen>
                 </tns:aktenzeichen>
             </tns:instanzdaten>
@@ -156,7 +156,7 @@
                         </tns:gericht>
                     </tns:auswahl_az.vergebendeStation>
                     <tns:auswahl_aktenzeichen>
-
+                        <tns:aktenzeichen.freitext>-</tns:aktenzeichen.freitext>
                     </tns:auswahl_aktenzeichen>
                 </tns:aktenzeichen>
             </tns:xjustiz.fachspezifischeDaten>
