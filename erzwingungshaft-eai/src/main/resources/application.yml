@@ -172,6 +172,7 @@ xjustiz:
           bussgeldempfaenger: # Must be configured
 
 bebpo:
+  email-subject: # Must be configured
   xta:
     management-port-uri: # Must be configured
     msg-boxport-uri: # Must be configured
