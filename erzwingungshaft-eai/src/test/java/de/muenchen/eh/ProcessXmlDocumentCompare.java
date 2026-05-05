@@ -27,7 +27,6 @@ public class ProcessXmlDocumentCompare {
             "tns:aktenzeichen.absender",
             "tns:erstellungszeitpunkt",
             "tns:eigeneNachrichtenID",
-            "tns:aktenzeichen.freitext",
             "tns:id",
             "tns:anzeigename");
 
