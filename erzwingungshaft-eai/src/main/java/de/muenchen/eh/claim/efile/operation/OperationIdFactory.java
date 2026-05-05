@@ -5,21 +5,25 @@ import de.muenchen.eh.claim.efile.DocumentName;
 import de.muenchen.eh.claim.efile.ExchangeBuilder;
 import de.muenchen.eh.claim.efile.OpenApiParameterExtractor;
 import de.muenchen.eh.claim.efile.operation.contentbuilder.FileDTOBuilder;
-import de.muenchen.eh.claim.efile.operation.contentbuilder.OutgoingAnfrageDTOBuilder;
 import de.muenchen.eh.claim.efile.operation.contentbuilder.OutgoingRequestBodyDTOBuilder;
+import de.muenchen.eh.claim.efile.operation.contentbuilder.OutgoingRequestDTOBuilder;
 import de.muenchen.eh.claim.efile.operation.contentbuilder.ProcedureDTOBuilder;
 import de.muenchen.eh.claim.efile.operation.contentbuilder.SearchFileDTOBuilder;
+import de.muenchen.eh.claim.efile.operation.contentbuilder.SubjectAreaUnitRequestDTOBuilder;
 import de.muenchen.eh.claim.efile.properties.ConnectionProperties;
+import de.muenchen.eh.claim.efile.properties.FileProperties;
 import de.muenchen.eh.claim.efile.properties.FineProperties;
 import de.muenchen.eh.db.entity.ClaimDocument;
 import de.muenchen.eh.db.repository.ClaimDocumentRepository;
 import de.muenchen.eh.log.Constants;
 import jakarta.activation.DataHandler;
+import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
@@ -37,52 +41,59 @@ import org.springframework.stereotype.Component;
 public class OperationIdFactory {
 
     private static final String EFILE_CASE_FILE_PROPERTIES = "efile.case-file.";
+    private static final String HEADER_OBJADDRESS = "objaddress";
+    private static final String CONTENT_TYPE_MULTIPART = "multipart/form-data";
+    private static final String GIATTACHMENTTYPE = "giattachmenttype";
 
     private final Environment environment;
     private final CamelContext camelContext;
     private final ConnectionProperties connectionProperties;
     private final FineProperties fineProperties;
-
+    private final FileProperties fileProperties;
     private final ClaimDocumentRepository claimDocumentRepository;
+
+    private Map<OperationId, Function<ClaimContentWrapper, Exchange>> operationIdHandlers;
+
+    @PostConstruct
+    public void init() {
+
+        operationIdHandlers = Map.of(
+                OperationId.READ_COLLECTIONS, this::createExchangeForReadCollections,
+                OperationId.SEARCH_FILE, this::createExchangeSearchFile,
+                OperationId.CREATE_FILE, this::createExchangeCaseFile,
+                OperationId.UPDATE_SUBJECT_DATA_FILE, wrapper -> createExchangeSubject(wrapper, OperationId.UPDATE_SUBJECT_DATA_FILE),
+                OperationId.UPDATE_SUBJECT_DATA_FINE, wrapper -> createExchangeSubject(wrapper, OperationId.UPDATE_SUBJECT_DATA_FINE),
+                OperationId.CREATE_FINE, this::createExchangeFine,
+                OperationId.CREATE_OUTGOING, this::createExchangeOutgoing,
+                OperationId.CREATE_CONTENT_OBJECT, wrapper -> createExchangeContentObject(),
+                OperationId.SUBJECT_AREA_UNITS, this::createSubjectAreaUnit);
+    }
 
     public Exchange createExchange(OperationId operationId, Exchange exchange) {
 
-        Exchange efileExchange;
-        switch (operationId) {
-        case READ_COLLECTIONS -> {
-            efileExchange = createExchange(OperationId.READ_COLLECTIONS.getDescriptor());
-        }
-        case SEARCH_FILE -> {
-            efileExchange = createExchangeSearchFile(exchange.getMessage().getBody(ClaimContentWrapper.class));
-        }
-        case CREATE_FILE -> {
-            efileExchange = createExchangeCaseFile(exchange.getMessage().getBody(ClaimContentWrapper.class));
-        }
-        case UPDATE_SUBJECT_DATA_FILE -> {
-            efileExchange = createExchangeSubject(exchange.getMessage().getBody(ClaimContentWrapper.class), OperationId.UPDATE_SUBJECT_DATA_FILE);
-        }
-        case UPDATE_SUBJECT_DATA_FINE -> {
-            efileExchange = createExchangeSubject(exchange.getMessage().getBody(ClaimContentWrapper.class), OperationId.UPDATE_SUBJECT_DATA_FINE);
-        }
-        case CREATE_FINE -> {
-            efileExchange = createExchangeFine(exchange.getMessage().getBody(ClaimContentWrapper.class));
-        }
-        case CREATE_OUTGOING -> {
-            efileExchange = createExchangeOutgoing(exchange.getMessage().getBody(ClaimContentWrapper.class));
-        }
-        case CREATE_CONTENT_OBJECT -> {
-            efileExchange = createExchangeContentObject();
-        }
-        default -> {
-            efileExchange = new DefaultExchange(camelContext);
-        }
-        }
+        Exchange efileExchange = operationIdHandlers.get(operationId)
+                .apply(exchange.getMessage().getBody(ClaimContentWrapper.class));
 
         efileExchange.getMessage().setHeader(Constants.OPERATION_ID, operationId.getDescriptor());
         efileExchange.setProperty(Constants.CLAIM, exchange.getProperty(Constants.CLAIM));
 
         return ExchangeBuilder.create(efileExchange, operationId.getDescriptor())
-                .withBasicAuth(connectionProperties.getUsername(), connectionProperties.getPassword()).withRequestValidation(true).build();
+                .withBasicAuth(connectionProperties.getUsername(), connectionProperties.getPassword())
+                .withRequestValidation(true)
+                .build();
+    }
+
+    private Exchange createSubjectAreaUnit(ClaimContentWrapper claimContentWrapper) {
+
+        Exchange exchange = createExchange(OperationId.SUBJECT_AREA_UNITS.getDescriptor());
+        exchange.getMessage().setBody(SubjectAreaUnitRequestDTOBuilder.create(claimContentWrapper, fileProperties).build());
+
+        return exchange;
+
+    }
+
+    private Exchange createExchangeForReadCollections(ClaimContentWrapper dataWrapper) {
+        return createExchange(OperationId.READ_COLLECTIONS.getDescriptor());
     }
 
     private Exchange createExchangeSearchFile(ClaimContentWrapper dataWrapper) {
@@ -93,10 +104,14 @@ public class OperationIdFactory {
 
     private Exchange createExchangeSubject(ClaimContentWrapper dataWrapper, OperationId operationId) {
         Exchange exchange = createExchange(operationId.getDescriptor());
-        exchange.getMessage().setHeader("objaddress", operationId.compareTo(OperationId.UPDATE_SUBJECT_DATA_FILE) == 0 ? dataWrapper.getClaimEfile().getFile()
-                : dataWrapper.getClaimEfile().getFine());
-
+        exchange.getMessage().setHeader(HEADER_OBJADDRESS, getObjAddress(dataWrapper, operationId));
         return exchange;
+    }
+
+    private String getObjAddress(ClaimContentWrapper dataWrapper, OperationId operationId) {
+        return operationId == OperationId.UPDATE_SUBJECT_DATA_FILE
+                ? dataWrapper.getClaimEfile().getFile()
+                : dataWrapper.getClaimEfile().getFine();
     }
 
     private Exchange createExchangeContentObject() {
@@ -110,22 +125,22 @@ public class OperationIdFactory {
 
     private Exchange createExchangeOutgoing(ClaimContentWrapper dataWrapper) {
         Exchange exchange = createExchange(OperationId.CREATE_OUTGOING.getDescriptor());
-        exchange.getMessage().setHeader(Exchange.CONTENT_TYPE, "multipart/form-data");
+        exchange.getMessage().setHeader(Exchange.CONTENT_TYPE, CONTENT_TYPE_MULTIPART);
         List<ClaimDocument> documents = claimDocumentRepository.findByClaimImportIdOrderByDocumentType(dataWrapper.getClaimImport().getId());
         log.debug("Process outgoing geschaeftspartnerId : {} ", dataWrapper.getClaimImport().getGeschaeftspartnerId());
 
         try {
             MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-            builder.addTextBody("params", OutgoingAnfrageDTOBuilder.create(fineProperties, dataWrapper).buildAsJson(), ContentType.APPLICATION_JSON);
+            builder.addTextBody("params", OutgoingRequestDTOBuilder.create(fineProperties, dataWrapper).buildAsJson(), ContentType.APPLICATION_JSON);
 
             var docs = OutgoingRequestBodyDTOBuilder.create(documents).build();
             for (Map.Entry<String, DataHandler> entry : docs.entrySet()) {
-                builder.addBinaryBody("giattachmenttype", entry.getValue().getInputStream(), ContentType.APPLICATION_OCTET_STREAM, entry.getKey());
+                builder.addBinaryBody(GIATTACHMENTTYPE, entry.getValue().getInputStream(), ContentType.APPLICATION_OCTET_STREAM, entry.getKey());
             }
 
             DataHandler xmlDataHandler = new DataHandler(dataWrapper.getXjustizXml(), ContentType.TEXT_XML.getMimeType());
-            builder.addBinaryBody("giattachmenttype", xmlDataHandler.getInputStream(), ContentType.TEXT_XML,
-                    DocumentName.VERFAHRENSMITTEILUNG.getDescriptor().concat(".xml"));
+            builder.addBinaryBody(GIATTACHMENTTYPE, xmlDataHandler.getInputStream(), ContentType.TEXT_XML,
+                    DocumentName.VERFAHRENSMITTEILUNG.getFullName());
 
             exchange.getMessage().setBody(builder.build());
 

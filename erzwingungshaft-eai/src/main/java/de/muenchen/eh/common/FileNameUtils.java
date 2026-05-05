@@ -1,5 +1,6 @@
 package de.muenchen.eh.common;
 
+import de.muenchen.eh.claim.efile.DocumentName;
 import de.muenchen.eh.log.DocumentType;
 import de.muenchen.eh.log.StatusProcessingType;
 import de.muenchen.xjustizlib.xoev.codelisten.XoevCodeGDSDokumentklasse;
@@ -92,6 +93,20 @@ public class FileNameUtils {
             return StatusProcessingType.IMPORT_KOSTEN_IMPORT_DB;
         if (isVWFile(fileName))
             return StatusProcessingType.IMPORT_VERWERFUNG_IMPORT_DB;
+
+        throw new IllegalArgumentException("File not found: " + fileName);
+    }
+
+    public static String toHumanReadableFileName(String fileName) {
+
+        if (isEHFile(fileName))
+            return DocumentName.ANTRAG.getFullName();
+        if (isURBFile(fileName))
+            return DocumentName.BESCHEID.getFullName();
+        if (isURKFile(fileName))
+            return DocumentName.KOSTEN.getFullName();
+        if (isVWFile(fileName))
+            return DocumentName.VERWERFUNG.getFullName();
 
         throw new IllegalArgumentException("File not found: " + fileName);
     }
