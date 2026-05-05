@@ -5,16 +5,18 @@ import lombok.Getter;
 @Getter
 public enum DocumentName {
 
-    ANTRAG("EH-Antrag"),
-    BESCHEID("EH-Bescheid"),
-    KOSTEN("EH-Kostenbescheid"),
-    VERWERFUNG("EH-Verwerfungsbescheid"),
-    VERFAHRENSMITTEILUNG("EH-Verfahrensmitteilung");
+    ANTRAG("EH-Antrag", "EH-Antrag.pdf"),
+    BESCHEID("Bussgeldbescheid", "Bussgeldbescheid.pdf"),
+    KOSTEN("Kostenbescheid", "Kostenbescheid.pdf"),
+    VERWERFUNG("Verwerfungsbescheid", "Verwerfungsbescheid.pdf"),
+    VERFAHRENSMITTEILUNG("xjustiz_nachricht", "xjustiz_nachricht.xml");
 
     private final String descriptor;
+    private final String fullName;
 
-    DocumentName(String descriptor) {
+    DocumentName(String descriptor, String fullName) {
         this.descriptor = descriptor;
+        this.fullName = fullName;
     }
 
     public static DocumentName fromDescriptor(String descriptor) {

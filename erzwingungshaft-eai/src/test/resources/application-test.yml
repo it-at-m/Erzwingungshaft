@@ -59,6 +59,7 @@ efile:
     joboe: COO.2150.9150.1.15756
     jobposition: DocumentManager
     objaddress: COO.2150.9169.1.1632
+    basenr: '9512.'
     subject-data-values:
       gp-name: BusinessDataGPSurname
       gp-first-name: BusinessDataGPFirstname

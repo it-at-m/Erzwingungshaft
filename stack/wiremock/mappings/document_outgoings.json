@@ -17,11 +17,11 @@
           "objaddress": "COO.2150.9169.1.2119720"
         },
         {
-          "objname": "EH-Bescheid",
+          "objname": "Bussgeldbescheid",
           "objaddress": "COO.2150.9169.1.2119721"
         },
         {
-          "objname": "EH-Verfahrensmitteilung",
+          "objname": "xjustiz_nachricht",
           "objaddress": "COO.2150.9169.1.2119722"
         }
       ]

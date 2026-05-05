@@ -23,6 +23,7 @@ public enum StatusProcessingType {
     CLAIM_EH_KASSENZEICHEN_GESCHAEFTSPARTNERID_UPDATED("'Kassenzeichen' and 'GeschaeftsparterId' updated in database."),
     EFILE_GPID_COLLECTION_READ_FROM_DB("'GeschaeftspartnerId' known in efile."),
     EFILE_GESCHAEFTSPARTNERID_COLLECTION_NOT_FOUND("Collection file for 'GeschaeftspartnerId' not found in efile."),
+    EFILE_GESCHAEFTSPARTNERID_COLLECTION_ADDED("New collection file for 'GeschaeftspartnerId' added in efile."),
     EFILE_GESCHAEFTSPARTNERID_COLLECTION_FOUND("Collection file for 'GeschaeftspartnerId' found in efile."),
     EFILE_GESCHAEFTSPARTNERID_COLLECTION_AMBIGUOUS("More than one collection file for 'GeschaeftspartnerId' found in efile."),
     EFILE_FILE_ADDED_TO_COLLECTION("Case file added to efile collection."),
