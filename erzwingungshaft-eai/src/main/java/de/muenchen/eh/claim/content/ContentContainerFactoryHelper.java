@@ -1,6 +1,5 @@
 package de.muenchen.eh.claim.content;
 
-
 import de.muenchen.xjustizlib.xoev.codelisten.XoevGeschlecht;
 import java.text.DateFormat;
 import java.text.ParseException;
