@@ -4,13 +4,19 @@ import de.muenchen.eh.claim.xta.transport.properties.XtaClientConfiguration;
 import eu.osci.ws._2014._10.transport.MessageMetaData;
 import java.util.GregorianCalendar;
 import javax.xml.datatype.DatatypeFactory;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.cxf.ws.addressing.AttributedURIType;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class XtaMessageMetaData {
+
+    @Getter
+    @Value("${bebpo.email-subject}")
+    private String emailSubject;
 
     private final XtaClientConfiguration clientConfiguration;
 
@@ -39,7 +45,7 @@ public class XtaMessageMetaData {
 
     private QualifierBuilder getQualifier() {
         return QualifierBuilder.builder()
-                .subject("ehaft-test-attachment")
+                .subject(getEmailSubject())
                 .service("")
                 .messageType(
                         QualifierBuilder.MessageTypeBuilder.builder()

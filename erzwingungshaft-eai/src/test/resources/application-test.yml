@@ -205,6 +205,7 @@ xjustiz:
           bussgeldverfahren: OWi
 
 bebpo:
+  email-subject: configurable-email-subject
   xta:
     management-port-uri: https://my-xta-server.de/GovGateway211/management211
     msg-boxport-uri: https://my-xta-server.de/MB_XTA-WS/XTA210msgBoxPort.svc
