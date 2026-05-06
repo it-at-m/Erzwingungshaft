@@ -27,8 +27,7 @@ public class ProcessXmlDocumentCompare {
             "tns:aktenzeichen.absender",
             "tns:erstellungszeitpunkt",
             "tns:eigeneNachrichtenID",
-            "tns:id",
-            "tns:anzeigename");
+            "tns:id");
 
     public static String process(String xml) throws Exception {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
