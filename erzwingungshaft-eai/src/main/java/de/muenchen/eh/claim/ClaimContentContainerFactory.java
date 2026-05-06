@@ -163,14 +163,14 @@ public class ClaimContentContainerFactory {
             var uuidIdentAntrag = UUID.randomUUID().toString();
             List<Datei> antraege = new ArrayList<>();
 
-            var fileName = FileNameUtils.getFileName(document.getFileName());
+            var fileName = FileNameUtils.toHumanReadableFileName(document.getFileName());
             long index = count.getAndIncrement();
             Identifikation identifikationAntrag = new Identifikation(uuidIdentAntrag, BigInteger.valueOf(index));
             Datei file = new Datei(fileName, BigInteger.valueOf(1));
             antraege.add(file);
             FachspezifischeDatenDokument fachspezifischeDatenDokumentAntrag = new FachspezifischeDatenDokument(
                     FileNameUtils.getGdsDokumentenklasse(DocumentType.fromDescriptor(document.getDocumentType())),
-                    uuidIdentAntrag.concat("_").concat(fileName), antraege);
+                    fileName, antraege);
             documents.add(new Dokument(identifikationAntrag, fachspezifischeDatenDokumentAntrag));
 
         });

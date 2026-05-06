@@ -170,9 +170,9 @@
                 <tns:dokumentklasse listVersionID="1.4">
                     <code>016</code>
                 </tns:dokumentklasse>
-
+                <tns:anzeigename>EH-Antrag.pdf</tns:anzeigename>
                 <tns:datei>
-                    <tns:dateiname>1000013749_5793303492524_20240807_EH.pdf</tns:dateiname>
+                    <tns:dateiname>EH-Antrag.pdf</tns:dateiname>
                     <tns:bestandteil listVersionID="2.5">
                         <code>001</code>
                     </tns:bestandteil>
@@ -189,9 +189,9 @@
                 <tns:dokumentklasse listVersionID="1.4">
                     <code>017</code>
                 </tns:dokumentklasse>
-
+                <tns:anzeigename>Bussgeldbescheid.pdf</tns:anzeigename>
                 <tns:datei>
-                    <tns:dateiname>1000013749_5793303492524_20240807_URB.pdf</tns:dateiname>
+                    <tns:dateiname>Bussgeldbescheid.pdf</tns:dateiname>
                     <tns:bestandteil listVersionID="2.5">
                         <code>002</code>
                     </tns:bestandteil>
