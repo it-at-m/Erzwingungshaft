@@ -1,4 +1,18 @@
 # Release-Notes
+## 6.5.2026
+## Aenderung
+- Umbennung EH-Antrag und Kassenzeichen in eAkte.
+
+## 5.5.2026
+## Aenderung
+- Kassenzeichen in aktenzeichen.freitext uebernehmen.
+- EMail Betreff konfigurierbar machen.
+- Automatisches anlegen von GpId Bereichen in der eAktewenn nicht vorhanden.
+- Base64 Kodierung beim BebPo Versand entfernt. 
+
+## 2.3.2026
+## Aenderung
+- Attachment Dateinamen fuer den Versand an xjustiz angepasst.
 
 ## 23.02.2026
 ### Refactoring
