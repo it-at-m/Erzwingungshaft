@@ -37,7 +37,7 @@ public class OutgoingRequestDTOBuilder {
 
         assert fineFileReference.getObjid() != null;
         params.put("referrednumber", fineFileReference.getObjid());
-        params.put("filesubj", fineProperties.getFilesubj());
+        params.put("filesubj", contentWrapper.getClaimImport().getKassenzeichen());
         params.put("objterms",
                 (contentWrapper.getClaimImport().getGeschaeftspartnerId().concat(";").concat(contentWrapper.getClaimImport().getKassenzeichen())));
         params.put("accdef", fineProperties.getAccdef());
@@ -45,7 +45,7 @@ public class OutgoingRequestDTOBuilder {
         params.put("outgoingdate", OffsetDateTimeFormatter.formatNow());
 
         params.put("incattachments", fineProperties.getIncattachments());
-        params.put("shortname", fineProperties.getOutgoing());
+        params.put("shortname", fineProperties.getOutgoing().concat(" ").concat(contentWrapper.getClaimImport().getGeschaeftspartnerId()));
 
         return params;
     }
