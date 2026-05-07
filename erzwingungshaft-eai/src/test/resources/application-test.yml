@@ -66,9 +66,9 @@ efile:
       gp-birth-date: BusinessDataGPBirthDate
   fine:
     shortname: Bussgeldverfahren
-    filesubj: Bussgeldbescheid
+#    filesubj: Bussgeldbescheid
     accdef: 'Zugriffsdefinition für Schriftgutobjekte (allgemein lesbar)'
-    outgoing: Ausgang
+    outgoing: EH-Antrag
     doctemplate: 'LHM Schreiben Extern'
     subfiletype: PDF-Dokument
     incattachments: EH-Dokumente

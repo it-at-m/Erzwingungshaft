@@ -9,7 +9,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class FineProperties {
 
     private String shortname;
-    private String filesubj;
     private String accdef;
     private String doctemplate;
     private String subfiletype;
