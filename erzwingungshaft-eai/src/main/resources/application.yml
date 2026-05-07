@@ -115,7 +115,6 @@ efile:
       gp-birth-date: # Can be configured
   fine:
     shortname: # Must be configured
-    filesubj: # Must be configured
     accdef: # Must be configured
     outgoing: # Must be configured
     doctemplate: # Must be configured
