@@ -1,4 +1,4 @@
-package de.muenchen.eh.claim.efile.operation.subjectdata;
+package de.muenchen.eh.claim.efile.operation.userformdata;
 
 import de.muenchen.eh.claim.ClaimContentWrapper;
 import de.muenchen.eh.claim.efile.operation.OperationIdFactory;
@@ -16,8 +16,9 @@ import org.apache.camel.Exchange;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UpdateFileSubjectData extends UpdateSubjectData {
+public class UpdateFileUserFormData extends UpdateUserFormData {
 
+    private static final String USER_FORM_REFERENCE = "lhmdfvpublic@2150.8800:";
     private static final String NAME_GESCHAEFTSPARTNER = "BusinessDataGPSurname";
     private static final String FIRST_NAME_GESCHAEFTSPARTNER = "BusinessDataGPFirstname";
     private static final String BIRTHDATE_GESCHAEFTSPARTNER = "BusinessDataGPBirthDate";
@@ -26,15 +27,15 @@ public class UpdateFileSubjectData extends UpdateSubjectData {
     private final ClaimDataRepository claimDataRepository;
     @Nullable private Map<String, String> subjectProperties;
 
-    public UpdateFileSubjectData(LogServiceClaim logServiceClaim, OperationIdFactory operationIdFactory,
-            FileProperties properties, ClaimDataRepository claimDataRepository) {
+    public UpdateFileUserFormData(LogServiceClaim logServiceClaim, OperationIdFactory operationIdFactory,
+                                  FileProperties properties, ClaimDataRepository claimDataRepository) {
         super(logServiceClaim, operationIdFactory);
         this.properties = properties;
         this.claimDataRepository = claimDataRepository;
     }
 
     @Override
-    protected Map<String, String> subjectDataValuesBuilder(Exchange exchange) {
+    protected Map<String, String> userFormValuesBuilder(Exchange exchange) {
 
         this.subjectExchange = exchange;
 
@@ -48,11 +49,11 @@ public class UpdateFileSubjectData extends UpdateSubjectData {
             for (Map.Entry<String, String> entry : properties.getSubjectDataValues().entrySet()) {
 
                 if (entry.getValue().equals(NAME_GESCHAEFTSPARTNER)) {
-                    subjectDataValues.put(entry.getValue(), claimData.getEhp1name());
+                    subjectDataValues.put(USER_FORM_REFERENCE + entry.getValue(), claimData.getEhp1name());
                 } else if (entry.getValue().equals(FIRST_NAME_GESCHAEFTSPARTNER)) {
-                    subjectDataValues.put(entry.getValue(), claimData.getEhp1vorname());
+                    subjectDataValues.put(USER_FORM_REFERENCE + entry.getValue(), claimData.getEhp1vorname());
                 } else if (entry.getValue().equals(BIRTHDATE_GESCHAEFTSPARTNER)) {
-                    subjectDataValues.put(entry.getValue(), claimData.getEhp1gebdat());
+                    subjectDataValues.put(USER_FORM_REFERENCE + entry.getValue(), claimData.getEhp1gebdat());
                 }
             }
         }

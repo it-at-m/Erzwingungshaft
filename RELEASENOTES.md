@@ -1,6 +1,15 @@
 # Release-Notes
 
-## 23.02.2026
+## 8.5.2026
+## Aenderung
+- Upgrade eAkte Version 1.2.5.
+- Umstellung auf Schnittstellen-Verfahrensdaten (eAkte: Name, Vorname, Geburtsdatum).
+
+## 2.3.2026
+## Aenderung
+- Attachment Dateinamen fuer den Versand an xjustiz angepasst.
+
+## 23.2.2026
 ### Refactoring
 - Anpassung an modularisiertes xJustiz-Artefakt.
 - xjustiz Version 3.5.1 --> 3.6.2
@@ -9,7 +18,7 @@
 ### Hinzugefuegt
 - Zentralaktkennung im Betreff der Einzelakte der eAkte anzeigen.
 
-## 28.01.2026
+## 28.1.2026
 ### Aenderung
 - PDFs ohne Metadaten werden aussortiert.
 - Die Tatzeitraum Attribute anfangsdatum, anfangsuhrzeit, endedatum, endeuhrzeit sind unabhaengig voneinander und optional.

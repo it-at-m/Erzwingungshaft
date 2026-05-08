@@ -51,7 +51,7 @@ efile:
     context-path: api/
     username:
     password:
-    eakte-api-version: openapi/eakte-api-v1.2.4.json
+    eakte-api-version: openapi/eakte-api-v1.2.5.json
   case-file:
     aktenplan-eintrag: 1234/Testakte
     x-anwendung: EH

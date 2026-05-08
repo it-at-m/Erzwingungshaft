@@ -56,7 +56,7 @@ public class EfileRouteBuilder extends BaseRouteBuilder {
                 .to(DMS_CONNECTION);
 
         from(DMS_CONNECTION).routeId("rest-openapi-eakte")
-                .toD("rest-openapi:classpath:openapi/eakte-api-v1.2.4.json#${header.operationId}?componentName=http")
+                .toD("rest-openapi:classpath:{{efile.connection.eakte-api-version}}#${header.operationId}?componentName=http")
                 .process("efileResponseMapper");
 
         // spotless:on
