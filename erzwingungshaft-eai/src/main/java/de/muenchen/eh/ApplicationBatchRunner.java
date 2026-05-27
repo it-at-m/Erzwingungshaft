@@ -54,13 +54,13 @@ public class ApplicationBatchRunner implements CommandLineRunner {
             waitUntilIdle();
             log.info("... all imported files are done.");
 
-            log.info("START XTA message status refresh: " +
+            log.info("START XTA message status update: " +
                     "Give xta/gmm time to send messages, wait arbitrarily for 20 seconds. " +
                     "If that is not enough, restart the EAI after a certain period of time. " +
-                    "Then start status refresh ...");
+                    "Start status update ...");
             Thread.sleep(20000);
             camelContext.createProducerTemplate().sendBody(XtaRouteBuilder.BEPBO_REFRESH_MESSAGE_STATUS, null);
-            log.info("... END XTA message status refresh.");
+            log.info("... END XTA message status update.");
 
         } finally {
             try {
