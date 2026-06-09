@@ -28,11 +28,13 @@ management:
 logging:
   level:
     de.muenchen.eh: DEBUG
+    de.muenchen.xjustiz: DEBUG
     org:
       springframework: INFO
       apache:
         cxf:
           service: DEBUG
+
 
 camel:
   main:
@@ -98,7 +100,6 @@ xjustiz:
     pdf:
       consume: aws2-s3://eh-import-pdf?${xjustiz.interface.file.common}
       file-output: aws2-s3://eh-backup?${xjustiz.interface.file.common}
-    xta: bebpoService
   xjustiz0500straf:
     xsd:
       name: xjustiz_0500_straf_3_6.xsd

@@ -51,6 +51,24 @@ public class XtaContext {
     }
 
     @Bean
+    public CxfEndpoint sendMessageBoxPortType(XtaClientConfiguration xtaClientConfig, XtaClientConfigurer xtaClientConfigurer) {
+
+        CxfEndpoint mbpt = new CxfEndpoint();
+        mbpt.setAddress(xtaClientConfig.getSendPortUri());
+        mbpt.setServiceClass(de.xoev.transport.xta._211.MsgBoxPortType.class);
+
+        mbpt.getFeatures().add(new LoggingFeature());
+        mbpt.getFeatures().add(new WSAddressingFeature());
+        mbpt.setMtomEnabled(true);
+
+        mbpt.setCxfConfigurer(xtaClientConfigurer);
+
+        mbpt.setDataFormat(DataFormat.POJO);
+
+        return mbpt;
+    }
+
+    @Bean
     public XtaClientConfigurer xtaClientConfigurer(TlsClientParametersFactory tlsClientParametersFactory) {
         return new XtaClientConfigurer(tlsClientParametersFactory);
     }

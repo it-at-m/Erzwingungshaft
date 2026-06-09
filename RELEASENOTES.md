@@ -1,4 +1,8 @@
 # Release-Notes
+## 27.5.2026
+## Erweiterung
+- Aktualisierung der gmm/xta-message-id Stati hinzugefuegt.
+
 ## 6.5.2026
 ## Aenderung
 - Umbennung EH-Antrag und Kassenzeichen in eAkte.

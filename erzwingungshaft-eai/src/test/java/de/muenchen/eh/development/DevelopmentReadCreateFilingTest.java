@@ -36,7 +36,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
@@ -52,7 +51,6 @@ import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 @SpringBootTest(classes = { Application.class, XtaTestContext.class })
 @CamelSpringBootTest
 @EnableAutoConfiguration
-@DirtiesContext
 @ActiveProfiles(profiles = { TestConstants.SPRING_TEST_PROFILE, TestConstants.SPRING_INTEGRATION_PROFILE, TestConstants.SPRING_DEVELOPMENT_PROFILE })
 @Disabled(
     "This is not a regular JUnit test. Rather, it can be used as a basis to flexibly configure the various endpoints (db, s3, efile, gmm) and to simulate a test run."
