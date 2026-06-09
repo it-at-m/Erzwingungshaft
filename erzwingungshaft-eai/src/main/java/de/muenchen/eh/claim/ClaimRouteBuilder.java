@@ -14,7 +14,7 @@ public class ClaimRouteBuilder extends BaseRouteBuilder {
 
     public static final String PROCESS_CLAIMS = "direct:processClaims";
     public static final String UNMARSHALL_EH_CLAIM_DATA = "direct:unmarshalEhClaimData";
-    public static final String PROCESS_XJUSTIZ_DOCUMENT = "direct:processXjustizDocument";
+    public static final String PROCESS_XJUSTIZ_DOCUMENT = "direct:xjustiz-document-processor";
 
     private final ClaimService claimService;
 
@@ -41,9 +41,6 @@ public class ClaimRouteBuilder extends BaseRouteBuilder {
         from(UNMARSHALL_EH_CLAIM_DATA).routeId("unmarshal-eh-claimdata")
                 .unmarshal().bindy(BindyType.Fixed, ImportClaimData.class)
                 .log(LoggingLevel.DEBUG, "unmarshal-eh-claimdata : ${body}");
-
-        from(PROCESS_XJUSTIZ_DOCUMENT).routeId("process-xjustiz-document")
-                .to("{{xjustiz.interface.document.processor}}");
 
         // spotless:on
 

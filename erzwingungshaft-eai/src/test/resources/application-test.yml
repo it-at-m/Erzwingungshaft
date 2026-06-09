@@ -28,11 +28,13 @@ management:
 logging:
   level:
     de.muenchen.eh: DEBUG
+    de.muenchen.xjustiz: DEBUG
     org:
       springframework: INFO
       apache:
         cxf:
           service: DEBUG
+
 
 camel:
   main:

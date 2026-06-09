@@ -48,7 +48,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
@@ -57,7 +56,6 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 @SpringBootTest(classes = { Application.class, XtaTestContext.class })
 @CamelSpringBootTest
 @EnableAutoConfiguration
-@DirtiesContext
 @ActiveProfiles(profiles = { TestConstants.SPRING_TEST_PROFILE })
 public class ReadCreateFilingTest extends TestContainerConfiguration {
 
