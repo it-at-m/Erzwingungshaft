@@ -3,17 +3,13 @@ package de.muenchen.eh.claim.xta.transport;
 import de.muenchen.eh.claim.ClaimContentWrapper;
 import de.muenchen.eh.claim.xta.XtaRouteBuilder;
 import de.muenchen.eh.claim.xta.transport.container.XtaMessageContainer;
-import de.muenchen.eh.claim.xta.transport.metadata.PartyBuilder;
-import de.muenchen.eh.claim.xta.transport.metadata.PartyIdentifierBuilder;
 import de.muenchen.eh.claim.xta.transport.metadata.XtaMessageMetaData;
-import de.muenchen.eh.claim.xta.transport.properties.XtaClientConfiguration;
 import de.muenchen.eh.db.entity.MessageType;
 import de.muenchen.eh.db.entity.Xta;
 import de.muenchen.eh.db.repository.XtaRepository;
 import de.muenchen.eh.log.LogServiceClaim;
 import de.muenchen.eh.log.StatusProcessingType;
 import de.xoev.transport.xta._211.GenericContentContainer;
-import de.xoev.transport.xta._211.TransportReport;
 import eu.osci.ws._2008._05.transport.X509TokenContainerType;
 import eu.osci.ws._2014._10.transport.MessageMetaData;
 import java.util.Collections;
@@ -21,6 +17,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.ExchangeBuilder;
@@ -30,14 +27,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class XtaMessage {
+public class XtaMessage implements Processor {
 
     private final CamelContext camelContext;
     private final XtaMessageContainer xtaMessageContainer;
     private final XtaMessageMetaData xtaMessageMetaData;
-    private final XtaRepository xtaRepository;
     private final LogServiceClaim logServiceClaim;
-    private final XtaClientConfiguration clientConfiguration;
+    private final XtaRepository xtaRepository;
 
     @Produce(XtaRouteBuilder.BEPBO_SEND_PORT)
     private ProducerTemplate sendPort;
@@ -45,7 +41,7 @@ public class XtaMessage {
     @Produce(XtaRouteBuilder.BEPBO_MANAGEMENT_PORT)
     private ProducerTemplate managementPort;
 
-    public Exchange send(Exchange exchange) {
+    public void process(Exchange exchange) {
 
         // Message id
         Exchange requestMessageId = ExchangeBuilder.anExchange(camelContext)
@@ -58,7 +54,7 @@ public class XtaMessage {
 
         if (responseMessageId.isRouteStop()) {
             exchange.setRouteStop(true);
-            return exchange;
+            return;
         }
 
         AttributedURIType attributedURIType = responseMessageId.getIn().getBody(AttributedURIType.class);
@@ -86,33 +82,16 @@ public class XtaMessage {
 
         if (responseSend.isRouteStop()) {
             exchange.setRouteStop(true);
-            return exchange;
         }
 
-        // Transport report
-        PartyIdentifierBuilder pt = PartyIdentifierBuilder.builder().name(clientConfiguration.getPartyIdentifier().getName())
-                .type(clientConfiguration.getPartyIdentifier().getType())
-                .value(clientConfiguration.getPartyIdentifier().getOriginator()).build();
-        PartyBuilder.builder().identifier(pt).build();
-
-        Exchange requestTransportReport = ExchangeBuilder.anExchange(camelContext)
-                .withBody(List.of(attributedURIType, PartyBuilder.builder().identifier(pt).build().build()))
-                .withHeader(CxfConstants.OPERATION_NAME, "getTransportReport")
-                .withHeader(CxfConstants.OPERATION_NAMESPACE, "http://xoev.de/transport/xta/211")
-                .build();
-
-        Exchange responseTransportReport = managementPort.send(requestTransportReport);
-
-        TransportReport transportReport = responseTransportReport.getMessage().getBody(TransportReport.class);
-        xta.setTransportMessageStatus(transportReport.getMessageStatus().getStatus().intValueExact());
-
+        /**
+         * Set transport message status to '0' ( = in progress).
+         * All xtaMessages with transport message status '0' will be updated in the last step.
+         * The update is always executed at the very end —regardless of any potential imports— so that
+         * the application can be launched solely to update the message status.
+         */
+        xta.setTransportMessageStatus(0);
         xtaRepository.save(xta);
-
-        if (responseTransportReport.isRouteStop()) {
-            exchange.setRouteStop(true);
-        }
-
-        return exchange;
 
     }
 }

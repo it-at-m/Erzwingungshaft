@@ -1,5 +1,6 @@
 package de.muenchen.eh;
 
+import de.muenchen.eh.claim.xta.XtaRouteBuilder;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
@@ -48,9 +49,19 @@ public class ApplicationBatchRunner implements CommandLineRunner {
 
         try {
             camelContext.start();
+
             log.info("CamelContext started. Looking for files to import ...");
             waitUntilIdle();
             log.info("... all imported files are done.");
+
+            log.info("START XTA message status update: " +
+                    "Give xta/gmm time to send messages, wait arbitrarily for 20 seconds. " +
+                    "If that is not enough, restart the EAI after a certain period of time. " +
+                    "Start status update ...");
+            Thread.sleep(20000);
+            camelContext.createProducerTemplate().sendBody(XtaRouteBuilder.BEPBO_REFRESH_MESSAGE_STATUS, null);
+            log.info("... END XTA message status update.");
+
         } finally {
             try {
                 camelContext.stop();

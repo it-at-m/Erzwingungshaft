@@ -7,4 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface XtaRepository extends CrudRepository<Xta, UUID> {
+
+    Xta findById(Integer id);
+
 }

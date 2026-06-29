@@ -1,0 +1,2 @@
+ALTER TABLE eh.xta
+    ADD COLUMN updated_at TIMESTAMPTZ;

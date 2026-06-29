@@ -27,8 +27,8 @@ public class WsAdminLanTestClientConfigurer implements CxfConfigurer {
 
         HTTPClientPolicy policy = new HTTPClientPolicy();
         policy.setProxyServer("127.0.0.1");
-        policy.setProxyServerPort(9999);
-        policy.setProxyServerType(ProxyServerType.HTTP);
+        policy.setProxyServerPort(10080);
+        policy.setProxyServerType(ProxyServerType.SOCKS);
 
         try {
             conduit.setTlsClientParameters(tlsClientParametersFactory.create());

@@ -5,6 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import java.time.Instant;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -25,5 +26,8 @@ public class Xta extends BaseEntity {
 
     @Column(name = "transport_message_status")
     private Integer transportMessageStatus;
+
+    @Column(name = "updated_at")
+    private Instant updatedAt;
 
 }
