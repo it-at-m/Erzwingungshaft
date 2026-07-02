@@ -102,6 +102,7 @@ efile:
     username: # Must be configured
     password: # Must be configured
     eakte-api-version: openapi/eakte-api-v1.2.4.json
+# case-file used to be mandatory. It is no longer required, but it was not removed from the code. Therefore, it is still required in the configuration.
   case-file:
     aktenplan-eintrag: # Must be configured
     x-anwendung: # Must be configured
@@ -109,10 +110,11 @@ efile:
     joboe: # Must be configured
     jobposition: # Must be configured
     objaddress: # Must be configured
-    subject-data-values:
-      gp-name: # Can be configured
-      gp-first-name: # Can be configured
-      gp-birth-date: # Can be configured
+    km-akte-definition: # Must be configured
+#    subject-data-values: # If commented create WARN otherwise INFO Message
+#      gp-name: # Can be configured
+#      gp-first-name: # Can be configured
+#      gp-birth-date: # Can be configured
   fine:
     shortname: # Must be configured
     accdef: # Must be configured
@@ -120,6 +122,7 @@ efile:
     doctemplate: # Must be configured
     subfiletype: # Must be configured
     incattachments: # Must be configured
+    eh-vorgang-definition: # Must be configured
 #    subject-data-values:      # If commented create WARN otherwise INFO Message
 #      owi-number: # Can be configured
 

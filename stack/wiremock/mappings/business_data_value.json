@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "PUT",
-    "url": "/api/businessDataValue/COO.2150.9169.1.1957003"
+    "url": "/api/userFormsData/COO.2150.9169.1.1957003"
   },
   "response": {
     "status": 200,

@@ -159,7 +159,7 @@ public class OperationIdFactory {
     private Exchange createExchangeCaseFile(ClaimContentWrapper dataWrapper) {
 
         Exchange exchange = createExchange(OperationId.CREATE_FILE.getDescriptor());
-        exchange.getMessage().setBody(FileDTOBuilder.create(dataWrapper).build());
+        exchange.getMessage().setBody(FileDTOBuilder.create(fileProperties, dataWrapper).build());
         return exchange;
     }
 

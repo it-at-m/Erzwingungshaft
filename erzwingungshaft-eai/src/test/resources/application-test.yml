@@ -62,20 +62,21 @@ efile:
     jobposition: DocumentManager
     objaddress: COO.2150.9169.1.1632
     basenr: '9512.'
-    subject-data-values:
-      gp-name: BusinessDataGPSurname
-      gp-first-name: BusinessDataGPFirstname
-      gp-birth-date: BusinessDataGPBirthDate
+    km-akte-definition: COO.2150.8801.2.1055475
+#    subject-data-values:
+#      gp-name: BusinessDataGPSurname
+#      gp-first-name: BusinessDataGPFirstname
+#      gp-birth-date: BusinessDataGPBirthDate
   fine:
     shortname: Bussgeldverfahren
 #    filesubj: Bussgeldbescheid
-    accdef: 'Zugriffsdefinition für Schriftgutobjekte (allgemein lesbar)'
+#    accdef: 'Zugriffsdefinition für Schriftgutobjekte (allgemein lesbar)'
+    accdef: 'Eigener Mandant'
     outgoing: EH-Antrag
     doctemplate: 'LHM Schreiben Extern'
     subfiletype: PDF-Dokument
     incattachments: EH-Dokumente
-#    subject-data-values:
-#      owi-number: 'OWI_Nummer'
+    eh-vorgang-definition: COO.2150.8801.2.1055476
 
 # Custom properties
 xjustiz:

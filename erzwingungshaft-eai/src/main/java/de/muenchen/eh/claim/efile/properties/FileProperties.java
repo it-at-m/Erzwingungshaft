@@ -15,6 +15,7 @@ public class FileProperties {
     private String jobposition;
     private String objaddress;
     private String basenr;
+    private String kmAkteDefinition;
     private Map<String, String> subjectDataValues;
 
 }
