@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class AddFine extends EfileOperation {
 
-
     public AddFine(OperationIdFactory operationIdFactory, LogServiceClaim logServiceClaim, ClaimEfileRepository claimEfileRepository) {
         super(operationIdFactory, logServiceClaim, claimEfileRepository);
     }
@@ -29,5 +28,5 @@ public class AddFine extends EfileOperation {
         processingDataWrapper.getEfile().put(OperationId.CREATE_FINE.name(), createCaseFileResponse.getMessage().getBody());
         createUpdateClaimEfile(exchange, OperationId.CREATE_FINE);
         logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_FINE_ADDED_TO_CASE_FILE, MessageType.INFO, exchange);
-     }
+    }
 }

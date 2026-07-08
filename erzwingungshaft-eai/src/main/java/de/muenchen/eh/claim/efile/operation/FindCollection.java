@@ -33,7 +33,7 @@ import org.springframework.stereotype.Component;
 public class FindCollection extends EfileOperation {
 
     /*
-        Optimize efile requests with collection cache.
+     * Optimize efile requests with collection cache.
      */
 
     @Setter
@@ -56,7 +56,7 @@ public class FindCollection extends EfileOperation {
 
     private void findCollectionByGpId(Exchange exchange) {
         /*
-           Check GP-ID already registered in db.
+         * Check GP-ID already registered in db.
          */
         ClaimContentWrapper processingDataWrapper = exchange.getMessage().getBody(ClaimContentWrapper.class);
         List<Claim> gpClaimEfiles = claimService.claimEfilesWithCorrespondingGId(processingDataWrapper.getClaimImport().getGeschaeftspartnerId());
@@ -71,7 +71,7 @@ public class FindCollection extends EfileOperation {
         } else {
 
             /*
-                 Check if file exists in efile.
+             * Check if file exists in efile.
              */
             synchronized (cacheLock) {
 
