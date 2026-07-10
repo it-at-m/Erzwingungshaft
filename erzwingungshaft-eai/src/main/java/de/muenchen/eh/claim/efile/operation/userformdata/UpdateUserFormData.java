@@ -18,6 +18,20 @@ abstract class UpdateUserFormData {
     @Produce(value = EfileRouteBuilder.MARSHAL_JSON_DMS_CONNECTION)
     protected ProducerTemplate efileConnector;
 
+    /*
+     * Github coderabbit drew attention to this problem:
+     * UpdateFileUserFormData is a Spring @Component (singleton), but UpdateUserFormData stores per-invocation state in instance fields: userFormDataValues (set in execute(),
+     * read in updateBusinessValues()) and subjectExchange (set in updateBusinessValues(), returned from execute() and read by the subclass's logMessage()).
+     * The subclass also has subjectProperties set in userFormValuesBuilder() and read in logMessage().
+     * If two exchanges are processed concurrently, one invocation can overwrite another's field values before they are read,
+     * causing wrong user-form data to be sent or wrong log messages to be written.
+     *
+     * Currently, no UserFormData updates are being performed via the EAI configuration. From a functional standpoint,
+     * this is not intended to be an EAI task in the future either.
+     * Consequently, investigating the problem is not a priority for the time being.
+     *
+     */
+
     protected final LogServiceClaim logServiceClaim;
     private Map<String, String> userFormDataValues;
     private final OperationIdFactory operationIdFactory;

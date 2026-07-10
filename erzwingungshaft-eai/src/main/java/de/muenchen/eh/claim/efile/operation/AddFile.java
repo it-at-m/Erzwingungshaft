@@ -20,14 +20,14 @@ import org.springframework.stereotype.Component;
 public class AddFile extends EfileOperation {
 
     private final ClaimDataRepository claimDataRepository;
-    private final UpdateFileUserFormData updateFileSubjectData;
+    private final UpdateFileUserFormData updateFileUserFormData;
 
     public AddFile(OperationIdFactory operationIdFactory, LogServiceClaim logServiceClaim, ClaimEfileRepository claimEfileRepository,
-            ClaimDataRepository claimDataRepository, UpdateFileUserFormData updateFileSubjectData) {
+            ClaimDataRepository claimDataRepository, UpdateFileUserFormData updateFileUserFormData) {
 
         super(operationIdFactory, logServiceClaim, claimEfileRepository);
         this.claimDataRepository = claimDataRepository;
-        this.updateFileSubjectData = updateFileSubjectData;
+        this.updateFileUserFormData = updateFileUserFormData;
     }
 
     @Override
@@ -84,7 +84,7 @@ public class AddFile extends EfileOperation {
     }
 
     private Exchange updateSubjectData(Exchange exchange) {
-        return this.updateFileSubjectData.execute(exchange, OperationId.UPDATE_USER_FORMS_DATA);
+        return this.updateFileUserFormData.execute(exchange, OperationId.UPDATE_USER_FORMS_DATA);
     }
 
     private Optional<List<Objektreferenz>> checkIfEfileFileWithGpidExists(Exchange exchange) {

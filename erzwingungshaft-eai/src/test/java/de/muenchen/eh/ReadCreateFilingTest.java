@@ -168,7 +168,6 @@ public class ReadCreateFilingTest extends TestContainerConfiguration {
                 "1 claims add gpid collection expected.");
         assertEquals(50, claimLogRepository.count(), "50 claim logs expected.");
         assertEquals(46, claimLogRepository.findByMessageTyp(MessageType.INFO).size(), "43 import INFO expected.");
-        var log = claimLogRepository.findByMessageTyp(MessageType.WARN);
         assertEquals(4, claimLogRepository.findByMessageTyp(MessageType.WARN).size(), "1 import WARN expected.");
         assertEquals(0, claimLogRepository.findByMessageTyp(MessageType.ERROR).size(), "2 import ERROR expected.");
         assertEquals(3, xtaRepository.count(), "1 send message expected.");

@@ -22,7 +22,15 @@ public class SubjectAreaUnitRequestDTOBuilder {
 
     private CreateSubjectAreaUnitAnfrageDTO createCaseFileDTO() {
 
-        String[] splitParts = GpidRangeGenerator.counterAndRangeSplitted(Long.parseLong(contentWrapper.getClaimImport().getGeschaeftspartnerId()));
+        String geschaeftspartnerId = contentWrapper.getClaimImport().getGeschaeftspartnerId();
+        long parsedGeschaeftspartnerId;
+        try {
+            parsedGeschaeftspartnerId = Long.parseLong(geschaeftspartnerId);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid geschaeftspartnerId: " + geschaeftspartnerId, e);
+        }
+
+        String[] splitParts = GpidRangeGenerator.counterAndRangeSplitted(parsedGeschaeftspartnerId);
 
         CreateSubjectAreaUnitAnfrageDTO createSubjectAreaUnitAnfrageDTO = new CreateSubjectAreaUnitAnfrageDTO();
 
