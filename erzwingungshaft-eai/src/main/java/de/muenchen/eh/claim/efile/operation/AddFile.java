@@ -41,9 +41,9 @@ public class AddFile extends EfileOperation {
 
             logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_FILE_ALREADY_EXISTS_IN_COLLECTION, MessageType.INFO, exchange);
 
-            Exchange responseSubjectUpdate = updateSubjectData(exchange);
+            Exchange responseUpdate = updateFileUserFormData(exchange);
 
-            if (responseSubjectUpdate.isRouteStop()) {
+            if (responseUpdate.isRouteStop()) {
                 exchange.setRouteStop(true);
             }
 
@@ -74,16 +74,16 @@ public class AddFile extends EfileOperation {
                 createUpdateClaimEfile(exchange, OperationId.CREATE_FILE);
                 logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_FILE_ADDED_TO_COLLECTION, MessageType.INFO, exchange);
 
-                Exchange responseSubjectUpdate = updateSubjectData(exchange);
+                Exchange responseUpdate = updateFileUserFormData(exchange);
 
-                if (responseSubjectUpdate.isRouteStop()) {
+                if (responseUpdate.isRouteStop()) {
                     exchange.setRouteStop(true);
                 }
             });
         }
     }
 
-    private Exchange updateSubjectData(Exchange exchange) {
+    private Exchange updateFileUserFormData(Exchange exchange) {
         return this.updateFileUserFormData.execute(exchange, OperationId.UPDATE_USER_FORMS_DATA);
     }
 
