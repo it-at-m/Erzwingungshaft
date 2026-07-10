@@ -14,6 +14,7 @@ public class FineProperties {
     private String subfiletype;
     private String incattachments;
     private String outgoing;
+    private String ehVorgangDefinition;
     private Map<String, String> subjectDataValues;
 
 }

@@ -32,6 +32,10 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class FindCollection extends EfileOperation {
 
+    /*
+     * Optimize efile requests with collection cache.
+     */
+
     @Setter
     @Getter
     private Optional<ReadApentryAntwortDTO> collectionCache = Optional.empty();
@@ -51,6 +55,9 @@ public class FindCollection extends EfileOperation {
     }
 
     private void findCollectionByGpId(Exchange exchange) {
+        /*
+         * Check GP-ID already registered in db.
+         */
         ClaimContentWrapper processingDataWrapper = exchange.getMessage().getBody(ClaimContentWrapper.class);
         List<Claim> gpClaimEfiles = claimService.claimEfilesWithCorrespondingGId(processingDataWrapper.getClaimImport().getGeschaeftspartnerId());
 
@@ -63,6 +70,9 @@ public class FindCollection extends EfileOperation {
             logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_GPID_COLLECTION_READ_FROM_DB, MessageType.INFO, exchange);
         } else {
 
+            /*
+             * Check if file exists in efile.
+             */
             synchronized (cacheLock) {
 
                 if (collectionCache.isEmpty()) {

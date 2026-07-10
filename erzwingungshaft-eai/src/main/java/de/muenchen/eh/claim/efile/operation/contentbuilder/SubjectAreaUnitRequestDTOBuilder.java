@@ -22,13 +22,21 @@ public class SubjectAreaUnitRequestDTOBuilder {
 
     private CreateSubjectAreaUnitAnfrageDTO createCaseFileDTO() {
 
-        String[] splittedParts = GpidRangeGenerator.counterAndRangeSplitted(Long.parseLong(contentWrapper.getClaimImport().getGeschaeftspartnerId()));
+        String geschaeftspartnerId = contentWrapper.getClaimImport().getGeschaeftspartnerId();
+        long parsedGeschaeftspartnerId;
+        try {
+            parsedGeschaeftspartnerId = Long.parseLong(geschaeftspartnerId);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid geschaeftspartnerId: " + geschaeftspartnerId, e);
+        }
+
+        String[] splitParts = GpidRangeGenerator.counterAndRangeSplitted(parsedGeschaeftspartnerId);
 
         CreateSubjectAreaUnitAnfrageDTO createSubjectAreaUnitAnfrageDTO = new CreateSubjectAreaUnitAnfrageDTO();
 
         createSubjectAreaUnitAnfrageDTO.setObjaddress(fileProperties.getObjaddress());
-        createSubjectAreaUnitAnfrageDTO.setBasenr(fileProperties.getBasenr() + splittedParts[0]);
-        createSubjectAreaUnitAnfrageDTO.setShortterm(splittedParts[1]);
+        createSubjectAreaUnitAnfrageDTO.setBasenr(fileProperties.getBasenr() + splitParts[0]);
+        createSubjectAreaUnitAnfrageDTO.setShortterm(splitParts[1]);
 
         return createSubjectAreaUnitAnfrageDTO;
     }

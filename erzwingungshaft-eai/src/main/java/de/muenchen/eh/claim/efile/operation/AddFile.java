@@ -3,8 +3,7 @@ package de.muenchen.eh.claim.efile.operation;
 import de.muenchen.eakte.api.rest.model.Objektreferenz;
 import de.muenchen.eakte.api.rest.model.SearchFileResponseDTO;
 import de.muenchen.eh.claim.ClaimContentWrapper;
-import de.muenchen.eh.claim.efile.operation.subjectdata.UpdateFileSubjectData;
-import de.muenchen.eh.claim.efile.properties.FileProperties;
+import de.muenchen.eh.claim.efile.operation.userformdata.UpdateFileUserFormData;
 import de.muenchen.eh.db.entity.ClaimEfile;
 import de.muenchen.eh.db.entity.MessageType;
 import de.muenchen.eh.db.repository.ClaimDataRepository;
@@ -21,32 +20,30 @@ import org.springframework.stereotype.Component;
 public class AddFile extends EfileOperation {
 
     private final ClaimDataRepository claimDataRepository;
-    private final FileProperties fileProperties;
-    private final UpdateFileSubjectData updateFileSubjectData;
+    private final UpdateFileUserFormData updateFileUserFormData;
 
     public AddFile(OperationIdFactory operationIdFactory, LogServiceClaim logServiceClaim, ClaimEfileRepository claimEfileRepository,
-            ClaimDataRepository claimDataRepository, FileProperties fileProperties, UpdateFileSubjectData updateFileSubjectData) {
+            ClaimDataRepository claimDataRepository, UpdateFileUserFormData updateFileUserFormData) {
 
         super(operationIdFactory, logServiceClaim, claimEfileRepository);
         this.claimDataRepository = claimDataRepository;
-        this.fileProperties = fileProperties;
-        this.updateFileSubjectData = updateFileSubjectData;
+        this.updateFileUserFormData = updateFileUserFormData;
     }
 
     @Override
     public void execute(Exchange exchange) {
 
         ClaimContentWrapper processingDataWrapper = exchange.getMessage().getBody(ClaimContentWrapper.class);
-        Optional<ClaimEfile> claimEfile = Optional.ofNullable(exchange.getIn().getBody(ClaimContentWrapper.class).getClaimEfile());
+        Optional<ClaimEfile> claimEfile = Optional.ofNullable(processingDataWrapper.getClaimEfile());
 
         // Database contains no efile file
         if (claimEfile.isPresent() && claimEfile.get().getFile() != null) {
-            processingDataWrapper.setClaimEfile(claimEfile.get());
+
             logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_FILE_ALREADY_EXISTS_IN_COLLECTION, MessageType.INFO, exchange);
 
-            Exchange responseSubjectUpdate = updateSubjectData(exchange);
+            Exchange responseUpdate = updateFileUserFormData(exchange);
 
-            if (responseSubjectUpdate.isRouteStop()) {
+            if (responseUpdate.isRouteStop()) {
                 exchange.setRouteStop(true);
             }
 
@@ -77,17 +74,17 @@ public class AddFile extends EfileOperation {
                 createUpdateClaimEfile(exchange, OperationId.CREATE_FILE);
                 logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_FILE_ADDED_TO_COLLECTION, MessageType.INFO, exchange);
 
-                Exchange responseSubjectUpdate = updateSubjectData(exchange);
+                Exchange responseUpdate = updateFileUserFormData(exchange);
 
-                if (responseSubjectUpdate.isRouteStop()) {
+                if (responseUpdate.isRouteStop()) {
                     exchange.setRouteStop(true);
                 }
             });
         }
     }
 
-    private Exchange updateSubjectData(Exchange exchange) {
-        return this.updateFileSubjectData.execute(exchange, OperationId.UPDATE_SUBJECT_DATA_FILE);
+    private Exchange updateFileUserFormData(Exchange exchange) {
+        return this.updateFileUserFormData.execute(exchange, OperationId.UPDATE_USER_FORMS_DATA);
     }
 
     private Optional<List<Objektreferenz>> checkIfEfileFileWithGpidExists(Exchange exchange) {

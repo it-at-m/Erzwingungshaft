@@ -12,7 +12,7 @@
 
     <groupId>de.muenchen.erzwingungshaft</groupId>
     <artifactId>erzwinungshaft-eai</artifactId>
-    <version>0.2.2-SNAPSHOT</version>
+    <version>0.3.1-SNAPSHOT</version>
     <name>erzwingungshaft-eai</name>
     <description>This is the default starting project for a EAI project based on the reference architecture of it@M</description>
     <url>https://github.com/it-at-m/erzwingungshaft</url>
@@ -636,7 +636,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapi/eakte-api-v1.2.4.json</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/openapi/eakte-api-v1.2.5.json</inputSpec>
                             <generatorName>java</generatorName>
                             <library>resttemplate</library>
                             <generateAliasAsModel>true</generateAliasAsModel>

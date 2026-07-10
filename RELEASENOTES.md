@@ -1,7 +1,17 @@
 # Release-Notes
+
+## 9.7.2026
+## Aenderung
+- Anpassung an eAkte26 verwende Templates EH-Akte und EH-Vorgang.
+
 ## 27.5.2026
 ## Erweiterung
 - Aktualisierung der gmm/xta-message-id Stati hinzugefuegt.
+
+## 8.5.2026
+## Aenderung
+- Upgrade eAkte Version 1.2.5.
+- Umstellung auf Schnittstellen-Verfahrensdaten (eAkte: Name, Vorname, Geburtsdatum).
 
 ## 6.5.2026
 ## Aenderung
@@ -12,13 +22,13 @@
 - Kassenzeichen in aktenzeichen.freitext uebernehmen.
 - EMail Betreff konfigurierbar machen.
 - Automatisches anlegen von GpId Bereichen in der eAktewenn nicht vorhanden.
-- Base64 Kodierung beim BebPo Versand entfernt. 
+- Base64 Kodierung beim BebPo Versand entfernt.
 
 ## 2.3.2026
 ## Aenderung
 - Attachment Dateinamen fuer den Versand an xjustiz angepasst.
 
-## 23.02.2026
+## 23.2.2026
 ### Refactoring
 - Anpassung an modularisiertes xJustiz-Artefakt.
 - xjustiz Version 3.5.1 --> 3.6.2
@@ -27,7 +37,7 @@
 ### Hinzugefuegt
 - Zentralaktkennung im Betreff der Einzelakte der eAkte anzeigen.
 
-## 28.01.2026
+## 28.1.2026
 ### Aenderung
 - PDFs ohne Metadaten werden aussortiert.
 - Die Tatzeitraum Attribute anfangsdatum, anfangsuhrzeit, endedatum, endeuhrzeit sind unabhaengig voneinander und optional.

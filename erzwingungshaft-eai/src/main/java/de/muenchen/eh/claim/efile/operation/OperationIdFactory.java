@@ -61,8 +61,7 @@ public class OperationIdFactory {
                 OperationId.READ_COLLECTIONS, this::createExchangeForReadCollections,
                 OperationId.SEARCH_FILE, this::createExchangeSearchFile,
                 OperationId.CREATE_FILE, this::createExchangeCaseFile,
-                OperationId.UPDATE_SUBJECT_DATA_FILE, wrapper -> createExchangeSubject(wrapper, OperationId.UPDATE_SUBJECT_DATA_FILE),
-                OperationId.UPDATE_SUBJECT_DATA_FINE, wrapper -> createExchangeSubject(wrapper, OperationId.UPDATE_SUBJECT_DATA_FINE),
+                OperationId.UPDATE_USER_FORMS_DATA, wrapper -> createExchangeSubject(wrapper, OperationId.UPDATE_USER_FORMS_DATA),
                 OperationId.CREATE_FINE, this::createExchangeFine,
                 OperationId.CREATE_OUTGOING, this::createExchangeOutgoing,
                 OperationId.CREATE_CONTENT_OBJECT, wrapper -> createExchangeContentObject(),
@@ -109,7 +108,7 @@ public class OperationIdFactory {
     }
 
     private String getObjAddress(ClaimContentWrapper dataWrapper, OperationId operationId) {
-        return operationId == OperationId.UPDATE_SUBJECT_DATA_FILE
+        return operationId == OperationId.UPDATE_USER_FORMS_DATA
                 ? dataWrapper.getClaimEfile().getFile()
                 : dataWrapper.getClaimEfile().getFine();
     }
@@ -160,7 +159,7 @@ public class OperationIdFactory {
     private Exchange createExchangeCaseFile(ClaimContentWrapper dataWrapper) {
 
         Exchange exchange = createExchange(OperationId.CREATE_FILE.getDescriptor());
-        exchange.getMessage().setBody(FileDTOBuilder.create(dataWrapper).build());
+        exchange.getMessage().setBody(FileDTOBuilder.create(fileProperties, dataWrapper).build());
         return exchange;
     }
 
