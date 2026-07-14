@@ -7,19 +7,19 @@ import de.muenchen.eh.MetadataNotAvailableTest;
 import de.muenchen.eh.ReadCreateFilingTest;
 import de.muenchen.eh.TestConstants;
 import de.muenchen.eh.XtaTestContext;
-import de.muenchen.eh.db.entity.ClaimDocument;
-import de.muenchen.eh.db.entity.MessageType;
-import de.muenchen.eh.db.repository.ClaimContentRepository;
-import de.muenchen.eh.db.repository.ClaimDataRepository;
-import de.muenchen.eh.db.repository.ClaimDocumentRepository;
-import de.muenchen.eh.db.repository.ClaimEfileRepository;
-import de.muenchen.eh.db.repository.ClaimImportLogRepository;
-import de.muenchen.eh.db.repository.ClaimImportRepository;
-import de.muenchen.eh.db.repository.ClaimLogRepository;
-import de.muenchen.eh.db.repository.ClaimRepository;
-import de.muenchen.eh.db.repository.ClaimXmlRepository;
-import de.muenchen.eh.db.repository.UnassignableErrorRepository;
-import de.muenchen.eh.db.repository.XtaRepository;
+import de.muenchen.eh.infrastructure.db.entity.ClaimDocument;
+import de.muenchen.eh.infrastructure.db.entity.MessageType;
+import de.muenchen.eh.infrastructure.db.repository.ClaimContentRepository;
+import de.muenchen.eh.infrastructure.db.repository.ClaimDataRepository;
+import de.muenchen.eh.infrastructure.db.repository.ClaimDocumentRepository;
+import de.muenchen.eh.infrastructure.db.repository.ClaimEfileRepository;
+import de.muenchen.eh.infrastructure.db.repository.ClaimImportLogRepository;
+import de.muenchen.eh.infrastructure.db.repository.ClaimImportRepository;
+import de.muenchen.eh.infrastructure.db.repository.ClaimLogRepository;
+import de.muenchen.eh.infrastructure.db.repository.ClaimRepository;
+import de.muenchen.eh.infrastructure.db.repository.ClaimXmlRepository;
+import de.muenchen.eh.infrastructure.db.repository.UnassignableErrorRepository;
+import de.muenchen.eh.infrastructure.db.repository.XtaRepository;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -204,3 +204,4 @@ class DevelopmentReadCreateFilingTest {
     }
 
 }
+

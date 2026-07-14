@@ -1,7 +1,7 @@
 package de.muenchen.eh;
 
-import de.muenchen.eh.claim.xta.exception.XtaClientInitializationException;
-import de.muenchen.eh.claim.xta.tls.TlsClientParametersFactory;
+import de.muenchen.eh.infrastructure.integration.xta.exception.XtaClientInitializationException;
+import de.muenchen.eh.infrastructure.integration.xta.tls.TlsClientParametersFactory;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.component.cxf.jaxws.CxfConfigurer;
 import org.apache.cxf.endpoint.Client;
@@ -44,3 +44,5 @@ public class WsAdminLanTestClientConfigurer implements CxfConfigurer {
     public void configureServer(Server server) {
     }
 }
+
+

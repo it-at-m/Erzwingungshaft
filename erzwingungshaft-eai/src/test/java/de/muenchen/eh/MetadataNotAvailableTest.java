@@ -2,11 +2,11 @@ package de.muenchen.eh;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import de.muenchen.eh.db.entity.ClaimDocument;
-import de.muenchen.eh.db.repository.ClaimDocumentRepository;
-import de.muenchen.eh.db.repository.ClaimImportLogRepository;
-import de.muenchen.eh.db.repository.ClaimImportRepository;
-import de.muenchen.eh.db.repository.UnassignableErrorRepository;
+import de.muenchen.eh.infrastructure.db.entity.ClaimDocument;
+import de.muenchen.eh.infrastructure.db.repository.ClaimDocumentRepository;
+import de.muenchen.eh.infrastructure.db.repository.ClaimImportLogRepository;
+import de.muenchen.eh.infrastructure.db.repository.ClaimImportRepository;
+import de.muenchen.eh.infrastructure.db.repository.UnassignableErrorRepository;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
@@ -108,3 +108,4 @@ public class MetadataNotAvailableTest extends TestContainerConfiguration {
     }
 
 }
+

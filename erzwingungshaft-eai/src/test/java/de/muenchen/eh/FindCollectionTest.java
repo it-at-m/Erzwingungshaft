@@ -4,11 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import de.muenchen.eakte.api.rest.model.Objektreferenz;
 import de.muenchen.eakte.api.rest.model.ReadApentryAntwortDTO;
-import de.muenchen.eh.claim.efile.operation.FindCollection;
-import de.muenchen.eh.claim.efile.operation.OperationIdFactory;
-import de.muenchen.eh.db.repository.ClaimEfileRepository;
-import de.muenchen.eh.db.service.ClaimService;
-import de.muenchen.eh.log.LogServiceClaim;
+import de.muenchen.eh.infrastructure.integration.efile.operation.FindCollection;
+import de.muenchen.eh.infrastructure.integration.efile.operation.OperationIdFactory;
+import de.muenchen.eh.infrastructure.db.repository.ClaimEfileRepository;
+import de.muenchen.eh.infrastructure.db.service.ClaimService;
+import de.muenchen.eh.infrastructure.log.LogServiceClaim;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
@@ -55,3 +55,5 @@ class FindCollectionTest {
         assertEquals(4, result.size());
     }
 }
+
+

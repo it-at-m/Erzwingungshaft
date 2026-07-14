@@ -1,6 +1,6 @@
 package de.muenchen.eh;
 
-import de.muenchen.eh.log.Constants;
+import de.muenchen.eh.infrastructure.log.Constants;
 import lombok.RequiredArgsConstructor;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.Predicate;
@@ -49,3 +49,4 @@ public class BaseRouteBuilder extends RouteBuilder {
     }
 
 }
+

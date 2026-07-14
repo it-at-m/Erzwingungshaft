@@ -3,7 +3,7 @@ package de.muenchen.eh;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import de.muenchen.eh.claim.efile.GpidRangeGenerator;
+import de.muenchen.eh.infrastructure.integration.efile.GpidRangeGenerator;
 import java.util.Random;
 import org.junit.jupiter.api.Test;
 
@@ -81,3 +81,5 @@ public class IdRangeGeneratorTest {
     }
 
 }
+
+

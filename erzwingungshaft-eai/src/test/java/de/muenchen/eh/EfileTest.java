@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import de.muenchen.eakte.api.rest.model.ReadApentryAntwortDTO;
-import de.muenchen.eh.claim.efile.EfileRouteBuilder;
-import de.muenchen.eh.claim.efile.operation.OperationId;
-import de.muenchen.eh.claim.efile.operation.OperationIdFactory;
+import de.muenchen.eh.infrastructure.integration.efile.EfileRouteBuilder;
+import de.muenchen.eh.infrastructure.integration.efile.operation.OperationId;
+import de.muenchen.eh.infrastructure.integration.efile.operation.OperationIdFactory;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Produce;
@@ -51,3 +51,5 @@ class EfileTest extends TestContainerConfiguration {
     }
 
 }
+
+
