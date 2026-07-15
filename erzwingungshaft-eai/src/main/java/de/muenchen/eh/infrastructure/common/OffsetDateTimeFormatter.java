@@ -15,4 +15,3 @@ public class OffsetDateTimeFormatter {
         return currentTime.format(DATE_TIME_FORMATTER);
     }
 }
-

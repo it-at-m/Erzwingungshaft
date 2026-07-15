@@ -17,6 +17,3 @@ public class DeliveryAttributesBuilder {
         return da;
     }
 }
-
-
-

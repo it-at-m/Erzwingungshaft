@@ -63,5 +63,3 @@ public class FileImportRouteBuilder extends BaseRouteBuilder {
     }
 
 }
-
-

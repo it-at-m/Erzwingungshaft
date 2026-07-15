@@ -10,10 +10,10 @@ import org.apache.camel.Exchange;
  * EAPL‑Ablauf. Die {@link #execute(Exchange)}-Methode definiert die feste
  * Abfolge der Schritte:
  * <ol>
- *   <li>addCollection</li>
- *   <li>addFile</li>
- *   <li>addFine</li>
- *   <li>addOutgoing</li>
+ * <li>addCollection</li>
+ * <li>addFile</li>
+ * <li>addFine</li>
+ * <li>addOutgoing</li>
  * </ol>
  * Zwischen den Schritten wird geprüft, ob {@link Exchange#isRouteStop()} gesetzt
  * wurde; dann wird die Ausführung frühzeitig abgebrochen.
@@ -55,7 +55,8 @@ abstract class EAPLTemplate {
     }
 
     /**
-     * Fügt eine Ziel‑Collection für die weitere Verarbeitung, wenn die Collection nicht schon vorhanden ist.
+     * Fügt eine Ziel‑Collection für die weitere Verarbeitung, wenn die Collection nicht schon vorhanden
+     * ist.
      *
      * @param exchange Camel Exchange mit Kontext/Message
      */
@@ -83,7 +84,3 @@ abstract class EAPLTemplate {
     protected abstract void addOutgoing(Exchange exchange);
 
 }
-
-
-
-

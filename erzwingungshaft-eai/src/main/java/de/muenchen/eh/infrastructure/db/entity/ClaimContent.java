@@ -22,5 +22,3 @@ public class ClaimContent extends BaseEntity implements IClaimEntity {
     @NotEmpty private String json;
 
 }
-
-

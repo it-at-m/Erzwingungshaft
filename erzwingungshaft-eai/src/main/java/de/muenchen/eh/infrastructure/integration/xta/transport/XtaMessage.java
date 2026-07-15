@@ -1,12 +1,12 @@
 package de.muenchen.eh.infrastructure.integration.xta.transport;
 
 import de.muenchen.eh.domain.claim.ClaimContentWrapper;
-import de.muenchen.eh.infrastructure.integration.xta.XtaRouteBuilder;
-import de.muenchen.eh.infrastructure.integration.xta.transport.container.XtaMessageContainer;
-import de.muenchen.eh.infrastructure.integration.xta.transport.metadata.XtaMessageMetaData;
 import de.muenchen.eh.infrastructure.db.entity.MessageType;
 import de.muenchen.eh.infrastructure.db.entity.Xta;
 import de.muenchen.eh.infrastructure.db.repository.XtaRepository;
+import de.muenchen.eh.infrastructure.integration.xta.XtaRouteBuilder;
+import de.muenchen.eh.infrastructure.integration.xta.transport.container.XtaMessageContainer;
+import de.muenchen.eh.infrastructure.integration.xta.transport.metadata.XtaMessageMetaData;
 import de.muenchen.eh.infrastructure.log.LogServiceClaim;
 import de.muenchen.eh.infrastructure.log.StatusProcessingType;
 import de.xoev.transport.xta._211.GenericContentContainer;
@@ -95,7 +95,3 @@ public class XtaMessage implements Processor {
 
     }
 }
-
-
-
-

@@ -1,5 +1,7 @@
 package de.muenchen.eh.infrastructure.log;
 
+import de.muenchen.eh.domain.file.ImportClaimIdentifierData;
+import de.muenchen.eh.domain.file.ImportContentWrapper;
 import de.muenchen.eh.infrastructure.common.FileNameUtils;
 import de.muenchen.eh.infrastructure.db.ImportEntityCache;
 import de.muenchen.eh.infrastructure.db.entity.ClaimImport;
@@ -9,8 +11,6 @@ import de.muenchen.eh.infrastructure.db.entity.UnassignableError;
 import de.muenchen.eh.infrastructure.db.repository.ClaimImportLogRepository;
 import de.muenchen.eh.infrastructure.db.repository.ClaimImportRepository;
 import de.muenchen.eh.infrastructure.db.repository.UnassignableErrorRepository;
-import de.muenchen.eh.domain.file.ImportClaimIdentifierData;
-import de.muenchen.eh.domain.file.ImportContentWrapper;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import lombok.RequiredArgsConstructor;
@@ -129,5 +129,3 @@ public class LogServiceImport {
     }
 
 }
-
-

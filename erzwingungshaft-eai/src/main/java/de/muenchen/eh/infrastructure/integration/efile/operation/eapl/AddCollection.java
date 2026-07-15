@@ -46,7 +46,7 @@ public class AddCollection extends EAPLOperation {
     private final ClaimService claimService;
 
     public AddCollection(OperationIdFactory operationIdFactory, LogServiceClaim logServiceClaim,
-                         ClaimEfileRepository claimEfileRepository, ClaimService claimService) {
+            ClaimEfileRepository claimEfileRepository, ClaimService claimService) {
         super(operationIdFactory, logServiceClaim, claimEfileRepository);
         this.claimService = claimService;
     }
@@ -187,7 +187,3 @@ public class AddCollection extends EAPLOperation {
         }
     }
 }
-
-
-
-

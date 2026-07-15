@@ -33,6 +33,3 @@ public class ByteArrayDataSource implements DataSource {
         return this.name;
     }
 }
-
-
-

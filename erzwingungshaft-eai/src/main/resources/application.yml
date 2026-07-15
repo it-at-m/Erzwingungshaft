@@ -110,6 +110,7 @@ efile:
     joboe: # Must be configured
     jobposition: # Must be configured
     objaddress: # Must be configured
+    basenr: # Must be configured
     km-akte-definition: # Must be configured
 #    subject-data-values: # If commented create WARN otherwise INFO Message
 #      gp-name: # Can be configured

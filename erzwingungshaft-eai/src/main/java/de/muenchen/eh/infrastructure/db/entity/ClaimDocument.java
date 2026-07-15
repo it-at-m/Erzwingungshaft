@@ -55,5 +55,3 @@ public class ClaimDocument extends BaseEntity {
     private String awsS3ETag;
 
 }
-
-

@@ -28,6 +28,3 @@ public enum DocumentName {
         throw new IllegalArgumentException("Unknown descriptor: " + descriptor);
     }
 }
-
-
-

@@ -11,12 +11,25 @@ import org.apache.camel.Exchange;
  * EAPLAddFine‑Ablauf. Die {@link #execute(Exchange)}-Methode definiert die feste
  * Abfolge der Schritte:
  * <ol>
- *   <li>findCollection</li>
- *   <li>findFile</li>
- *   <li>addFine</li>
+ * <li>findCollection</li>
+ * <li>findFile</li>
+ * <li>addFine</li>
  * </ol>
  * Zwischen den Schritten wird geprüft, ob {@link Exchange#isRouteStop()} gesetzt
  * wurde; dann wird die Ausführung frühzeitig abgebrochen.
+ * </p>
+ *
+ * <p>
+ * findCollection und findFile findet die Akte anhand der übergebenen GeschäftspartnerId.
+ * addFine fügt den zum Kassenzeichen gehörenden Bußgeldeintrag ein.
+ * Die EAkten COO... Addresse des neu angelegten Bußgeldeintrags wird in der Datenbank Tabelle
+ * eh.identifier gespeichert.
+ *
+ * Der Identifier hat die Struktur <kassenzeichen>-SKA<basenr><coo_address_text>.
+ * eh.identifier : kassenzeichen
+ * eh.identifier : coo_address_text
+ * application.yml : efile.case-file.basenr
+ *
  * </p>
  *
  * <p>
@@ -27,9 +40,9 @@ import org.apache.camel.Exchange;
  */
 public abstract class EAPLAddFineTemplate {
 
-
     /**
-     * Führt den kompletten EAPL‑Workflow in der festgelegten Reihenfolge aus.
+     * Führt den EAPLAddFine‑Workflow in der festgelegten Reihenfolge aus.
+     *
      * <p>
      * Prüfungen auf {@link Exchange#isRouteStop()} verhindern die weitere
      * Ausführung des Workflows, sobald ein Schritt die Route gestoppt hat.
@@ -59,7 +72,8 @@ public abstract class EAPLAddFineTemplate {
     protected abstract void findCollection(Exchange exchange);
 
     /**
-     * Findet eine Akte in der zuvor gefundene Collection für die weitere Verarbeitung oder endet mit einem Fehler.
+     * Findet eine Akte in der zuvor gefundene Collection für die weitere Verarbeitung oder endet mit
+     * einem Fehler.
      *
      * @param exchange Camel Exchange mit Kontext/Message
      */
@@ -71,6 +85,5 @@ public abstract class EAPLAddFineTemplate {
      * @param exchange Camel Exchange mit Kontext/Message
      */
     protected abstract void addFine(Exchange exchange);
-
 
 }

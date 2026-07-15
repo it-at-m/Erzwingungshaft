@@ -214,5 +214,3 @@ public class ClaimData extends BaseEntity implements IClaimEntity {
     private String zentralaktkennung;
 
 }
-
-

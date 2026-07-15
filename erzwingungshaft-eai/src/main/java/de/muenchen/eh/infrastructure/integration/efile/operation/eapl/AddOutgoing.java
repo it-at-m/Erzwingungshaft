@@ -2,10 +2,10 @@ package de.muenchen.eh.infrastructure.integration.efile.operation.eapl;
 
 import de.muenchen.eakte.api.rest.model.CreateOutgoingAntwortDTO;
 import de.muenchen.eh.domain.claim.ClaimContentWrapper;
-import de.muenchen.eh.infrastructure.integration.efile.EfileRouteBuilder;
 import de.muenchen.eh.infrastructure.db.entity.ClaimEfile;
 import de.muenchen.eh.infrastructure.db.entity.MessageType;
 import de.muenchen.eh.infrastructure.db.repository.ClaimEfileRepository;
+import de.muenchen.eh.infrastructure.integration.efile.EfileRouteBuilder;
 import de.muenchen.eh.infrastructure.integration.efile.operation.OperationId;
 import de.muenchen.eh.infrastructure.integration.efile.operation.OperationIdFactory;
 import de.muenchen.eh.infrastructure.log.LogServiceClaim;
@@ -54,7 +54,3 @@ public class AddOutgoing extends EAPLOperation {
 
     }
 }
-
-
-
-

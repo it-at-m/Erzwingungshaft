@@ -32,4 +32,3 @@ public abstract class BaseEntity implements Serializable {
     private Integer id;
 
 }
-

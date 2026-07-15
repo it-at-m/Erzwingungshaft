@@ -37,4 +37,3 @@ public class ImportDataEnricher implements Processor {
         return unmarshalImportDataProducer.send(marshalContent);
     }
 }
-

@@ -21,6 +21,3 @@ public class GenericContentContainerBuilder {
         return gcc;
     }
 }
-
-
-

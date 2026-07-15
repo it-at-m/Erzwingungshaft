@@ -44,5 +44,3 @@ public class WsAdminLanTestClientConfigurer implements CxfConfigurer {
     public void configureServer(Server server) {
     }
 }
-
-

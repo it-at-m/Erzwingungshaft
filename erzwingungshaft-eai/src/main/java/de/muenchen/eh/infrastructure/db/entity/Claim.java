@@ -49,5 +49,3 @@ public class Claim extends BaseEntity {
     @OneToOne(mappedBy = "claim", cascade = CascadeType.ALL, orphanRemoval = true)
     private ClaimEfile claimEfile;
 }
-
-

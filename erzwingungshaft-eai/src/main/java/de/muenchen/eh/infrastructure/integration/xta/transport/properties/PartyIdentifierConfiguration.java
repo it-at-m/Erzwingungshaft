@@ -15,6 +15,3 @@ public class PartyIdentifierConfiguration {
     private String name;
 
 }
-
-
-

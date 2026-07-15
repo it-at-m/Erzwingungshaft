@@ -52,6 +52,3 @@ public enum OperationId {
                 .orElseThrow(() -> new IllegalArgumentException("Unknown openapi.operationId : ".concat(descriptor)));
     }
 }
-
-
-

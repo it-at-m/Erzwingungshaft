@@ -33,7 +33,3 @@ public class XtaClientConfiguration {
 
     private MessageTypeConfiguration messageType;
 }
-
-
-
-

@@ -16,6 +16,3 @@ public class ConnectionProperties {
     private String eakteApiVersion;
 
 }
-
-
-

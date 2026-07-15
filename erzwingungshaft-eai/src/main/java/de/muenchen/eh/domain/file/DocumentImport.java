@@ -47,5 +47,3 @@ public class DocumentImport implements Processor {
 
     }
 }
-
-

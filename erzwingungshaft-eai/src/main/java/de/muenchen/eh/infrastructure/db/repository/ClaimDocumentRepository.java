@@ -6,11 +6,9 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ClaimDocumentRepository extends CrudRepository<ClaimDocument, Long> {
+public interface ClaimDocumentRepository extends CrudRepository<ClaimDocument, Integer> {
 
     List<ClaimDocument> findByClaimImportIdOrderByDocumentType(Integer claimImportId);
 
     List<ClaimDocument> findByDocumentType(String type);
 }
-
-

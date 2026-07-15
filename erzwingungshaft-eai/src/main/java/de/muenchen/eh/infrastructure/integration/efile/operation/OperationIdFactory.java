@@ -1,6 +1,8 @@
 package de.muenchen.eh.infrastructure.integration.efile.operation;
 
 import de.muenchen.eh.domain.claim.ClaimContentWrapper;
+import de.muenchen.eh.infrastructure.db.entity.ClaimDocument;
+import de.muenchen.eh.infrastructure.db.repository.ClaimDocumentRepository;
 import de.muenchen.eh.infrastructure.integration.efile.DocumentName;
 import de.muenchen.eh.infrastructure.integration.efile.ExchangeBuilder;
 import de.muenchen.eh.infrastructure.integration.efile.OpenApiParameterExtractor;
@@ -13,8 +15,6 @@ import de.muenchen.eh.infrastructure.integration.efile.operation.contentbuilder.
 import de.muenchen.eh.infrastructure.integration.efile.properties.ConnectionProperties;
 import de.muenchen.eh.infrastructure.integration.efile.properties.FileProperties;
 import de.muenchen.eh.infrastructure.integration.efile.properties.FineProperties;
-import de.muenchen.eh.infrastructure.db.entity.ClaimDocument;
-import de.muenchen.eh.infrastructure.db.repository.ClaimDocumentRepository;
 import de.muenchen.eh.infrastructure.log.Constants;
 import jakarta.activation.DataHandler;
 import jakarta.annotation.PostConstruct;
@@ -186,7 +186,3 @@ public class OperationIdFactory {
     }
 
 }
-
-
-
-

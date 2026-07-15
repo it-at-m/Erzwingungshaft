@@ -47,5 +47,3 @@ public class ClaimXJustizXmlEnricher implements Processor {
     }
 
 }
-
-

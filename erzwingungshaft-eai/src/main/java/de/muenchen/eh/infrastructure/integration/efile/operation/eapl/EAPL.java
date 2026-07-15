@@ -4,25 +4,25 @@ import lombok.RequiredArgsConstructor;
 import org.apache.camel.Exchange;
 import org.springframework.stereotype.Component;
 
- /**
-  * EAPL-Komponente (Einheitaktenplan).
-  *
-  * <p>
-  * Implementiert die konkreten Verarbeitungsschritte für den Einheitaktenplan-Workflow
-  * und delegiert die eigentliche Arbeit an die injizierten Executor-Komponenten:
-  * <ul>
-  *   <li>AddCollection  – Suche/Ermittlung der Ziel-Collection</li>
-  *   <li>AddFile         – Hinzufügen einer Datei zur Collection</li>
-  *   <li>AddFine         – Hinzufügen einer Geldbuße/Strafe (falls relevant)</li>
-  *   <li>AddOutgoing     – Versand/Weiterleitung der Outgoing-Information</li>
-  * </ul>
-  * </p>
-  *
-  * <p>
-  * Die Klasse erweitert {@link EAPLTemplate} und überschreibt die Template-Methoden,
-  * wobei die konkrete Logik an die jeweiligen Helfer/Handler delegiert wird.
-  * </p>
-  */
+/**
+ * EAPL-Komponente (Einheitaktenplan).
+ *
+ * <p>
+ * Implementiert die konkreten Verarbeitungsschritte für den Einheitaktenplan-Workflow
+ * und delegiert die eigentliche Arbeit an die injizierten Executor-Komponenten:
+ * <ul>
+ * <li>AddCollection – Suche/Ermittlung der Ziel-Collection</li>
+ * <li>AddFile – Hinzufügen einer Datei zur Collection</li>
+ * <li>AddFine – Hinzufügen einer Geldbuße/Strafe (falls relevant)</li>
+ * <li>AddOutgoing – Versand/Weiterleitung der Outgoing-Information</li>
+ * </ul>
+ * </p>
+ *
+ * <p>
+ * Die Klasse erweitert {@link EAPLTemplate} und überschreibt die Template-Methoden,
+ * wobei die konkrete Logik an die jeweiligen Helfer/Handler delegiert wird.
+ * </p>
+ */
 @Component
 @RequiredArgsConstructor
 public class EAPL extends EAPLTemplate {
@@ -52,7 +52,7 @@ public class EAPL extends EAPLTemplate {
         addFile.execute(exchange);
     }
 
-     /**
+    /**
      * Fügt einen neuen zum Kassenzeichen gehörenden Vorgang (Geldbuße/Strafe (fine)) in die Akte ein.
      *
      * @param exchange Camel-Exchange mit Kontext/Message
@@ -63,7 +63,7 @@ public class EAPL extends EAPLTemplate {
     }
 
     /**
-     *  Fügt Outgoing Dokumente an.
+     * Fügt Outgoing Dokumente an.
      *
      * @param exchange Camel-Exchange mit Kontext/Message
      */
@@ -72,7 +72,3 @@ public class EAPL extends EAPLTemplate {
         addOutgoing.execute(exchange);
     }
 }
-
-
-
-

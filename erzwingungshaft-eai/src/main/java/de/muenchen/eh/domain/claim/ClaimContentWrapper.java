@@ -24,5 +24,3 @@ public class ClaimContentWrapper {
     private Map<String, Object> efile = new HashMap<>();
 
 }
-
-

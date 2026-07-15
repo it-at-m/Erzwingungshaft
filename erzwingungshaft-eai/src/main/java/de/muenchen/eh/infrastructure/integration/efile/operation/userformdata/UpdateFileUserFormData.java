@@ -1,12 +1,12 @@
 package de.muenchen.eh.infrastructure.integration.efile.operation.userformdata;
 
 import de.muenchen.eh.domain.claim.ClaimContentWrapper;
-import de.muenchen.eh.infrastructure.integration.efile.operation.OperationIdFactory;
-import de.muenchen.eh.infrastructure.integration.efile.properties.FileProperties;
 import de.muenchen.eh.infrastructure.db.entity.Claim;
 import de.muenchen.eh.infrastructure.db.entity.ClaimData;
 import de.muenchen.eh.infrastructure.db.entity.MessageType;
 import de.muenchen.eh.infrastructure.db.repository.ClaimDataRepository;
+import de.muenchen.eh.infrastructure.integration.efile.operation.OperationIdFactory;
+import de.muenchen.eh.infrastructure.integration.efile.properties.FileProperties;
 import de.muenchen.eh.infrastructure.log.LogServiceClaim;
 import de.muenchen.eh.infrastructure.log.StatusProcessingType;
 import java.util.HashMap;
@@ -69,7 +69,3 @@ public class UpdateFileUserFormData extends UpdateUserFormData {
     }
 
 }
-
-
-
-

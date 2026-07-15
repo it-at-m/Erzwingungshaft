@@ -26,5 +26,3 @@ public class ClaimXml extends BaseEntity implements IClaimEntity {
     private String content;
 
 }
-
-

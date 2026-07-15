@@ -29,5 +29,3 @@ public class ClaimImportLog extends BaseEntity {
     private String comment;
 
 }
-
-

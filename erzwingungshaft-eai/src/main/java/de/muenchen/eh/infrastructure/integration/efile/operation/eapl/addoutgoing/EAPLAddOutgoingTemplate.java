@@ -11,11 +11,14 @@ import org.apache.camel.Exchange;
  * EAPL‑Ablauf. Die {@link #execute(Exchange)}-Methode definiert die feste
  * Abfolge der Schritte:
  * <ol>
- *   <li>findFine</li>
- *   <li>addOutgoing</li>
+ * <li>addOutgoing</li>
  * </ol>
  * Zwischen den Schritten wird geprüft, ob {@link Exchange#isRouteStop()} gesetzt
  * wurde; dann wird die Ausführung frühzeitig abgebrochen.
+ * </p>
+ *
+ * <p>
+ *
  * </p>
  *
  * <p>
@@ -37,20 +40,9 @@ abstract class EAPLAddOutgoingTemplate {
      */
     public final void execute(Exchange exchange) {
 
-        findFine(exchange);
-        if (exchange.isRouteStop())
-            return;
-
         addOutgoing(exchange);
 
     }
-
-    /**
-     * Fügt einen Vorgang (Bußgeld/Strafe) in die Akte ein.
-     *
-     * @param exchange Camel Exchange mit Kontext/Message
-     */
-    protected abstract void findFine(Exchange exchange);
 
     /**
      * Fügt ausgehende Dokumente in den Vorgang ein.
@@ -60,7 +52,3 @@ abstract class EAPLAddOutgoingTemplate {
     protected abstract void addOutgoing(Exchange exchange);
 
 }
-
-
-
-

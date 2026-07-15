@@ -6,4 +6,3 @@ public interface IClaimEntity {
 
     void setClaimId(Integer claimId);
 }
-

@@ -14,6 +14,3 @@ public class MessageTypeConfiguration {
     private String payloadSchema;
     private String code;
 }
-
-
-

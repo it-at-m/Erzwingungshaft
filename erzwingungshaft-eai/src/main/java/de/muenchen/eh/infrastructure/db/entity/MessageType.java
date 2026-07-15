@@ -9,4 +9,3 @@ public enum MessageType {
     TRACE
 
 }
-

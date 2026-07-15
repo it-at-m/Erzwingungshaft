@@ -36,5 +36,3 @@ public class ImportEntityCache {
         log.debug("Import entity cache is cleared. '{}' remaining entities.", claimImportCache.size());
     }
 }
-
-

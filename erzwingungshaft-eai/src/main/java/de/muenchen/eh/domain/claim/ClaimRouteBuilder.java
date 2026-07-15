@@ -47,5 +47,3 @@ public class ClaimRouteBuilder extends BaseRouteBuilder {
     }
 
 }
-
-

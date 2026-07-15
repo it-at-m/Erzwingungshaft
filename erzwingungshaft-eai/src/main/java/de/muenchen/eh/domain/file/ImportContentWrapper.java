@@ -13,4 +13,3 @@ public class ImportContentWrapper {
     private ImportClaimIdentifierData importClaimIdentifierData;
 
 }
-

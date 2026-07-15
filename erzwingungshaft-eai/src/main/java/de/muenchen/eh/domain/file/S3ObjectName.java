@@ -27,5 +27,3 @@ public class S3ObjectName implements Processor {
 
     }
 }
-
-

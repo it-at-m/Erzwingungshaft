@@ -25,6 +25,3 @@ public class XtaClientRuntimeException extends RuntimeException {
         super(message, cause);
     }
 }
-
-
-

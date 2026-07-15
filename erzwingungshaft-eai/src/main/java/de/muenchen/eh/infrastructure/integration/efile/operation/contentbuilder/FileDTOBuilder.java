@@ -2,8 +2,8 @@ package de.muenchen.eh.infrastructure.integration.efile.operation.contentbuilder
 
 import de.muenchen.eakte.api.rest.model.CreateFileDTO;
 import de.muenchen.eh.domain.claim.ClaimContentWrapper;
-import de.muenchen.eh.infrastructure.integration.efile.properties.FileProperties;
 import de.muenchen.eh.infrastructure.db.entity.ClaimEfile;
+import de.muenchen.eh.infrastructure.integration.efile.properties.FileProperties;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 
@@ -38,7 +38,3 @@ public class FileDTOBuilder {
     }
 
 }
-
-
-
-

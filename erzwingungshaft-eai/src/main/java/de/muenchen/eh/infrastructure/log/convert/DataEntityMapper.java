@@ -14,5 +14,3 @@ public interface DataEntityMapper {
 
     ClaimData toClaimDataEntity(ImportClaimData importClaimData);
 }
-
-

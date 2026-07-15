@@ -32,7 +32,3 @@ public class AddFine extends EAPLOperation {
         logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_FINE_ADDED_TO_CASE_FILE, MessageType.INFO, exchange);
     }
 }
-
-
-
-

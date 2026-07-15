@@ -36,7 +36,3 @@ public class XtaRouteBuilder extends BaseRouteBuilder {
 
     }
 }
-
-
-
-

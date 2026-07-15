@@ -30,6 +30,3 @@ public class ContentContainerBuilder {
         return cc;
     }
 }
-
-
-

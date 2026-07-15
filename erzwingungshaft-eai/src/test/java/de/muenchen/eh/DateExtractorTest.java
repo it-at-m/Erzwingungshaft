@@ -17,4 +17,3 @@ public class DateExtractorTest {
         assertNull(DateExtractor.extractDate("D.KVU.EUDG0P0.07082024.EZH"), "Wrong format ddMMyyyy");
     }
 }
-

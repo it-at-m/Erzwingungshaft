@@ -1,12 +1,12 @@
 package de.muenchen.eh.infrastructure.integration.xta.transport.container;
 
 import de.muenchen.eh.domain.claim.ClaimContentWrapper;
-import de.muenchen.eh.infrastructure.integration.efile.DocumentName;
-import de.muenchen.eh.infrastructure.integration.xta.transport.ByteArrayDataSource;
-import de.muenchen.eh.infrastructure.integration.xta.transport.StringDataSource;
 import de.muenchen.eh.infrastructure.common.FileNameUtils;
 import de.muenchen.eh.infrastructure.db.entity.ClaimDocument;
 import de.muenchen.eh.infrastructure.db.repository.ClaimDocumentRepository;
+import de.muenchen.eh.infrastructure.integration.efile.DocumentName;
+import de.muenchen.eh.infrastructure.integration.xta.transport.ByteArrayDataSource;
+import de.muenchen.eh.infrastructure.integration.xta.transport.StringDataSource;
 import de.xoev.transport.xta._211.ContentType;
 import de.xoev.transport.xta._211.GenericContentContainer;
 import jakarta.activation.DataHandler;
@@ -103,8 +103,3 @@ public class XtaMessageContainer {
         return documentBuilders;
     }
 }
-
-
-
-
-

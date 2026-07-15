@@ -8,4 +8,3 @@ public class Constants {
     public static final String OPERATION_ID = "EH_OPERATION_ID";
 
 }
-

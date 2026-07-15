@@ -34,6 +34,3 @@ public class StringDataSource implements DataSource {
         return this.name;
     }
 }
-
-
-

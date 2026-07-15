@@ -22,5 +22,3 @@ public class ClaimFactory {
                 "No Claim found in Exchange properties (" + Constants.CLAIM + "). Ensure EhService.logEntry was executed first."));
     }
 }
-
-

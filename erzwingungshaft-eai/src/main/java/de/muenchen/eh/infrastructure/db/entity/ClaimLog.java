@@ -30,5 +30,3 @@ public class ClaimLog extends BaseEntity implements IClaimEntity {
     private String comment;
 
 }
-
-

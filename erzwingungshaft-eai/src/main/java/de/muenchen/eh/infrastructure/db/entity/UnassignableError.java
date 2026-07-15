@@ -18,5 +18,3 @@ public class UnassignableError extends BaseEntity {
     private String comment;
 
 }
-
-

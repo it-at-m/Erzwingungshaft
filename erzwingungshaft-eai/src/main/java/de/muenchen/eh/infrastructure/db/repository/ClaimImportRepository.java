@@ -2,12 +2,11 @@ package de.muenchen.eh.infrastructure.db.repository;
 
 import de.muenchen.eh.infrastructure.db.entity.ClaimImport;
 import java.util.List;
-import java.util.UUID;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ClaimImportRepository extends CrudRepository<ClaimImport, UUID> {
+public interface ClaimImportRepository extends CrudRepository<ClaimImport, Integer> {
 
     List<ClaimImport> findByIsDataImportTrueAndIsAntragImportTrueAndIsBescheidImportTrueOrderByIdAsc();
 
@@ -16,5 +15,3 @@ public interface ClaimImportRepository extends CrudRepository<ClaimImport, UUID>
     List<ClaimImport> findByGeschaeftspartnerIdAndKassenzeichen(String geschaeftspartnerId, String kassenzeichen);
 
 }
-
-

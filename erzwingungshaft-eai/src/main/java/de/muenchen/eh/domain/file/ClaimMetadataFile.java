@@ -29,4 +29,3 @@ public class ClaimMetadataFile implements Processor {
 
     }
 }
-

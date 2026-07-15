@@ -25,4 +25,3 @@ public enum DocumentType {
     }
 
 }
-

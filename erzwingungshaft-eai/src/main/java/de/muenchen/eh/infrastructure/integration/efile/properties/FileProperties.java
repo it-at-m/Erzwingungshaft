@@ -19,6 +19,3 @@ public class FileProperties {
     private Map<String, String> subjectDataValues;
 
 }
-
-
-

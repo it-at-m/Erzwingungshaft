@@ -38,4 +38,3 @@ public class ImportClaimIdentifierData {
         return getIdentifier().concat(".fix");
     }
 }
-

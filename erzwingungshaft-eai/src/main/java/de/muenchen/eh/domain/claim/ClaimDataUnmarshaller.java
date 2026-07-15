@@ -47,5 +47,3 @@ public class ClaimDataUnmarshaller implements Processor {
         return unmarshalProducer.send(marshalContent);
     }
 }
-
-

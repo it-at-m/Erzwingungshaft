@@ -52,5 +52,3 @@ public class ClaimEfile extends BaseEntity {
     private Claim claim;
 
 }
-
-

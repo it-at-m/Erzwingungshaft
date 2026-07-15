@@ -18,6 +18,3 @@ public class FineProperties {
     private Map<String, String> subjectDataValues;
 
 }
-
-
-

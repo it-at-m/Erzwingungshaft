@@ -9,6 +9,3 @@ public class XtaClientInitializationException extends XtaClientException {
         super(message, cause);
     }
 }
-
-
-

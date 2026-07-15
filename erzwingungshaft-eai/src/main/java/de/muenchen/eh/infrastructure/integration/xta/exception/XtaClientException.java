@@ -13,6 +13,3 @@ public class XtaClientException extends Exception {
         super(message);
     }
 }
-
-
-

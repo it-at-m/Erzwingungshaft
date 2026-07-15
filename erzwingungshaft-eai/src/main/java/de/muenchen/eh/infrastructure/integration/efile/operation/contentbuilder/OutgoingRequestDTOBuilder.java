@@ -4,9 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.muenchen.eakte.api.rest.model.DmsObjektResponse;
 import de.muenchen.eh.domain.claim.ClaimContentWrapper;
+import de.muenchen.eh.infrastructure.common.OffsetDateTimeFormatter;
 import de.muenchen.eh.infrastructure.integration.efile.operation.OperationId;
 import de.muenchen.eh.infrastructure.integration.efile.properties.FineProperties;
-import de.muenchen.eh.infrastructure.common.OffsetDateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +51,3 @@ public class OutgoingRequestDTOBuilder {
     }
 
 }
-
-
-
-

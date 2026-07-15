@@ -431,4 +431,3 @@ public class ImportClaimData {
     private String zentralaktkennung;
 
 }
-

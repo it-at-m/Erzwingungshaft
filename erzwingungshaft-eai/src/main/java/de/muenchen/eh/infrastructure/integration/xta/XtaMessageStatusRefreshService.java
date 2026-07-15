@@ -1,10 +1,10 @@
 package de.muenchen.eh.infrastructure.integration.xta;
 
+import de.muenchen.eh.infrastructure.db.entity.Xta;
+import de.muenchen.eh.infrastructure.db.repository.XtaRepository;
 import de.muenchen.eh.infrastructure.integration.xta.transport.metadata.PartyBuilder;
 import de.muenchen.eh.infrastructure.integration.xta.transport.metadata.PartyIdentifierBuilder;
 import de.muenchen.eh.infrastructure.integration.xta.transport.properties.XtaClientConfiguration;
-import de.muenchen.eh.infrastructure.db.entity.Xta;
-import de.muenchen.eh.infrastructure.db.repository.XtaRepository;
 import de.xoev.transport.xta._211.TransportReport;
 import java.time.Instant;
 import java.util.List;
@@ -63,7 +63,3 @@ public class XtaMessageStatusRefreshService implements Processor {
         }
     }
 }
-
-
-
-

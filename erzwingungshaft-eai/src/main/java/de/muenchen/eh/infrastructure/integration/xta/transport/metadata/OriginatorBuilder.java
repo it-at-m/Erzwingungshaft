@@ -18,6 +18,3 @@ public class OriginatorBuilder {
         return ot;
     }
 }
-
-
-

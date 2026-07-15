@@ -31,5 +31,3 @@ public class Xta extends BaseEntity {
     private Instant updatedAt;
 
 }
-
-
