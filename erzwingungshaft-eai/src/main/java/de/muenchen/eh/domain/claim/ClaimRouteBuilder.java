@@ -32,11 +32,11 @@ public class ClaimRouteBuilder extends BaseRouteBuilder {
                     .process("claimDataUnmarshaller")
                     .process("claimContentDataEnricher")
                     .process("claimXJustizXmlEnricher")
-                    .process("efilesOperationExecutor")
+                    .process("eAPLExecutor")
                     .process("xtaMessage")
                     .log(LoggingLevel.DEBUG, "claim-eh-process completed gpid '${body.claimImport.geschaeftspartnerId}'.").id("claim-eh-process-gpid")
                 .end()
-                .bean("findCollection", "clearCollectionCache");
+                .bean("addCollection", "clearCollectionCache");
 
         from(UNMARSHALL_EH_CLAIM_DATA).routeId("unmarshal-eh-claimdata")
                 .unmarshal().bindy(BindyType.Fixed, ImportClaimData.class)

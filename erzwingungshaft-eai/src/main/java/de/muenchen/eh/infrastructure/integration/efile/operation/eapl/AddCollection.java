@@ -1,4 +1,4 @@
-package de.muenchen.eh.infrastructure.integration.efile.operation;
+package de.muenchen.eh.infrastructure.integration.efile.operation.eapl;
 
 import de.muenchen.eakte.api.rest.model.Objektreferenz;
 import de.muenchen.eakte.api.rest.model.ReadApentryAntwortDTO;
@@ -8,6 +8,8 @@ import de.muenchen.eh.infrastructure.db.entity.ClaimEfile;
 import de.muenchen.eh.infrastructure.db.entity.MessageType;
 import de.muenchen.eh.infrastructure.db.repository.ClaimEfileRepository;
 import de.muenchen.eh.infrastructure.db.service.ClaimService;
+import de.muenchen.eh.infrastructure.integration.efile.operation.OperationId;
+import de.muenchen.eh.infrastructure.integration.efile.operation.OperationIdFactory;
 import de.muenchen.eh.infrastructure.log.LogServiceClaim;
 import de.muenchen.eh.infrastructure.log.StatusProcessingType;
 import java.util.List;
@@ -30,7 +32,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Log4j2
-public class FindCollection extends EfileOperation {
+public class AddCollection extends EAPLOperation {
 
     /*
      * Optimize efile requests with collection cache.
@@ -43,8 +45,8 @@ public class FindCollection extends EfileOperation {
 
     private final ClaimService claimService;
 
-    public FindCollection(OperationIdFactory operationIdFactory, LogServiceClaim logServiceClaim,
-            ClaimEfileRepository claimEfileRepository, ClaimService claimService) {
+    public AddCollection(OperationIdFactory operationIdFactory, LogServiceClaim logServiceClaim,
+                         ClaimEfileRepository claimEfileRepository, ClaimService claimService) {
         super(operationIdFactory, logServiceClaim, claimEfileRepository);
         this.claimService = claimService;
     }

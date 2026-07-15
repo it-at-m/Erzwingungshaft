@@ -1,4 +1,4 @@
-package de.muenchen.eh.infrastructure.integration.efile.operation;
+package de.muenchen.eh.infrastructure.integration.efile.operation.eapl;
 
 import de.muenchen.eakte.api.rest.model.CreateOutgoingAntwortDTO;
 import de.muenchen.eakte.api.rest.model.DmsObjektResponse;
@@ -8,6 +8,8 @@ import de.muenchen.eh.infrastructure.integration.efile.DocumentName;
 import de.muenchen.eh.infrastructure.integration.efile.EfileRouteBuilder;
 import de.muenchen.eh.infrastructure.db.entity.ClaimEfile;
 import de.muenchen.eh.infrastructure.db.repository.ClaimEfileRepository;
+import de.muenchen.eh.infrastructure.integration.efile.operation.OperationId;
+import de.muenchen.eh.infrastructure.integration.efile.operation.OperationIdFactory;
 import de.muenchen.eh.infrastructure.log.Constants;
 import de.muenchen.eh.infrastructure.log.LogServiceClaim;
 import jakarta.annotation.PostConstruct;
@@ -18,7 +20,7 @@ import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
 
 @RequiredArgsConstructor
-abstract class EfileOperation {
+public abstract class EAPLOperation {
 
     @Produce(value = EfileRouteBuilder.MARSHAL_JSON_DMS_CONNECTION)
     protected ProducerTemplate efileConnector;
