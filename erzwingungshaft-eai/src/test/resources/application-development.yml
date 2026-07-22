@@ -7,3 +7,7 @@ xjustiz:
     s3:
       access-key: minio
       secret-key: Test1234
+  interface:
+    file:
+      identifier-input: file://testdata/in/identifier?noop=true
+      identifier-ouput: file://testdata/

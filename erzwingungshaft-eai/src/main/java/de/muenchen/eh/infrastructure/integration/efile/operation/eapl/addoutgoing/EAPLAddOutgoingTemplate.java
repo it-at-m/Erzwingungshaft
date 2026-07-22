@@ -1,6 +1,6 @@
 package de.muenchen.eh.infrastructure.integration.efile.operation.eapl.addoutgoing;
 
-import de.muenchen.eh.infrastructure.integration.efile.operation.eapl.EAPL;
+import de.muenchen.eh.infrastructure.integration.efile.operation.eapl.complete.EAPL;
 import org.apache.camel.Exchange;
 
 /**

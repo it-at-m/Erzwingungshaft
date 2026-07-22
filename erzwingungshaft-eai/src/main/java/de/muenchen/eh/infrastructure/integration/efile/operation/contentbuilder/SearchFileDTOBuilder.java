@@ -1,16 +1,15 @@
 package de.muenchen.eh.infrastructure.integration.efile.operation.contentbuilder;
 
 import de.muenchen.eakte.api.rest.model.SearchFileRequestDTO;
-import de.muenchen.eh.domain.claim.ClaimContentWrapper;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class SearchFileDTOBuilder {
 
-    private final ClaimContentWrapper contentWrapper;
+    private final String cooApentryAddress;
 
-    public static SearchFileDTOBuilder create(ClaimContentWrapper contentWrapper) {
-        return new SearchFileDTOBuilder(contentWrapper);
+    public static SearchFileDTOBuilder create(String cooApentryAddress) {
+        return new SearchFileDTOBuilder(cooApentryAddress);
     }
 
     public SearchFileRequestDTO build() {
@@ -20,9 +19,7 @@ public class SearchFileDTOBuilder {
     private SearchFileRequestDTO createSearchFileRequestDTO() {
 
         SearchFileRequestDTO searchFileRequestDTO = new SearchFileRequestDTO();
-
-        searchFileRequestDTO.setApentry(contentWrapper.getClaimEfile().getCollection());
-
+        searchFileRequestDTO.setApentry(cooApentryAddress);
         return searchFileRequestDTO;
     }
 

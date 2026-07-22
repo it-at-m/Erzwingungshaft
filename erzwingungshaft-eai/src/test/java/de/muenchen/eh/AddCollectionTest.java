@@ -3,30 +3,15 @@ package de.muenchen.eh;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import de.muenchen.eakte.api.rest.model.Objektreferenz;
-import de.muenchen.eakte.api.rest.model.ReadApentryAntwortDTO;
-import de.muenchen.eh.infrastructure.db.repository.ClaimEfileRepository;
-import de.muenchen.eh.infrastructure.db.service.ClaimService;
-import de.muenchen.eh.infrastructure.integration.efile.operation.OperationIdFactory;
-import de.muenchen.eh.infrastructure.integration.efile.operation.eapl.AddCollection;
-import de.muenchen.eh.infrastructure.log.LogServiceClaim;
-import java.lang.reflect.Method;
+import de.muenchen.eh.infrastructure.integration.efile.operation.eapl.GeschaeftspartnerIdFilter;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 class AddCollectionTest {
 
     @Test
     void test_gpIdFilter_matchesBothFormats() throws Exception {
-
-        OperationIdFactory opIdFactory = Mockito.mock(OperationIdFactory.class);
-        LogServiceClaim logServiceClaim = Mockito.mock(LogServiceClaim.class);
-        ClaimEfileRepository claimEfileRepository = Mockito.mock(ClaimEfileRepository.class);
-        ClaimService claimService = Mockito.mock(ClaimService.class);
-
-        AddCollection addCollection = new AddCollection(opIdFactory, logServiceClaim, claimEfileRepository, claimService);
 
         Objektreferenz o1 = new Objektreferenz();
         o1.setObjname("9512.3/SKA-3-2/1000015001-1000020000");
@@ -42,16 +27,7 @@ class AddCollectionTest {
 
         List<Objektreferenz> objektList = Arrays.asList(o1, o2, o3, o4, o5, o6);
 
-        ReadApentryAntwortDTO dto = new ReadApentryAntwortDTO();
-        dto.setGiobjecttype(objektList);
-        addCollection.setCollectionCache(Optional.of(dto));
-
-        // private gpIdFilter call via reflection
-        Method gpFilter = AddCollection.class.getDeclaredMethod("gpIdFilter", List.class, long.class);
-        gpFilter.setAccessible(true);
-
-        @SuppressWarnings("unchecked")
-        List<Objektreferenz> result = (List<Objektreferenz>) gpFilter.invoke(addCollection, objektList, 1000016000L);
+        List<Objektreferenz> result = (List<Objektreferenz>) GeschaeftspartnerIdFilter.gpIdFilter(objektList, 1000016000L);
         assertEquals(4, result.size());
     }
 }

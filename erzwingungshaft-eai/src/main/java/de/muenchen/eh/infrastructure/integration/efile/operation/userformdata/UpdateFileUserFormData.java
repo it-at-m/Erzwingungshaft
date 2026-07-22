@@ -27,9 +27,9 @@ public class UpdateFileUserFormData extends UpdateUserFormData {
     private final ClaimDataRepository claimDataRepository;
     @Nullable private Map<String, String> subjectProperties;
 
-    public UpdateFileUserFormData(LogServiceClaim logServiceClaim, OperationIdFactory operationIdFactory,
+    public UpdateFileUserFormData(LogServiceClaim logServiceClaim, OperationIdFactory completeOperationIdFactory,
             FileProperties properties, ClaimDataRepository claimDataRepository) {
-        super(logServiceClaim, operationIdFactory);
+        super(logServiceClaim, completeOperationIdFactory);
         this.properties = properties;
         this.claimDataRepository = claimDataRepository;
     }

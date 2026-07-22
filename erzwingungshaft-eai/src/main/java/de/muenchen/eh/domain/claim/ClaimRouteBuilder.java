@@ -32,7 +32,7 @@ public class ClaimRouteBuilder extends BaseRouteBuilder {
                     .process("claimDataUnmarshaller")
                     .process("claimContentDataEnricher")
                     .process("claimXJustizXmlEnricher")
-                    .process("eAPLExecutor")
+                    .process("eAPLAddOutGoingExecutor")
                     .process("xtaMessage")
                     .log(LoggingLevel.DEBUG, "claim-eh-process completed gpid '${body.claimImport.geschaeftspartnerId}'.").id("claim-eh-process-gpid")
                 .end()

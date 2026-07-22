@@ -111,6 +111,7 @@ efile:
     jobposition: # Must be configured
     objaddress: # Must be configured
     basenr: # Must be configured
+    departement: # Must be configured
     km-akte-definition: # Must be configured
 #    subject-data-values: # If commented create WARN otherwise INFO Message
 #      gp-name: # Can be configured
@@ -144,6 +145,8 @@ xjustiz:
       common: # Can be configured example : accessKey=${xjustiz.credentials.s3.access-key}&secretKey=${xjustiz.credentials.s3.secret-key}&region=${camel.component.aws2-s3.region}&overrideEndpoint=${camel.component.aws2-s3.override-endpoint}&uriEndpointOverride=${camel.component.aws2-s3.uri-endpoint-override}
       consume: # Must be configured example : aws2-s3://eh-import-antrag?${xjustiz.interface.file.common}
       file-output: # Must be configured example : aws2-s3://eh-backup?${xjustiz.interface.file.common}
+      identifier-input: # Must be configured example
+      identifier-output: # Must be configured example
     pdf:
       consume: # Must be configured exmample : aws2-s3://eh-import-pdf?${xjustiz.interface.file.common}
       file-output: # Must be configured example : aws2-s3://eh-backup?${xjustiz.interface.file.common}

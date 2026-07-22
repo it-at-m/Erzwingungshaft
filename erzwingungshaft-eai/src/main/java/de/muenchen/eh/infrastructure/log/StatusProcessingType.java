@@ -26,9 +26,11 @@ public enum StatusProcessingType {
     EFILE_GESCHAEFTSPARTNERID_COLLECTION_ADDED("New collection file for 'GeschaeftspartnerId' added in efile."),
     EFILE_GESCHAEFTSPARTNERID_COLLECTION_FOUND("Collection file for 'GeschaeftspartnerId' found in efile."),
     EFILE_GESCHAEFTSPARTNERID_COLLECTION_AMBIGUOUS("More than one collection file for 'GeschaeftspartnerId' found in efile."),
-    EFILE_FILE_ADDED_TO_COLLECTION("Case file added to efile collection."),
-    EFILE_FILE_ALREADY_EXISTS_IN_COLLECTION("Case file already exists in efile collection."),
-    EFILE_FINE_ADDED_TO_CASE_FILE("Fine file added to efile case file."),
+    EFILE_FILE_NOT_FOUND("File for 'GeschaeftspartnerId' not found in efile."),
+    EFILE_FILE_AMBIGUOUS("File ambiguous in efile collection."),
+    EFILE_FILE_ADDED_TO_COLLECTION("File added to efile collection."),
+    EFILE_FILE_EXISTS_IN_COLLECTION("File exists in efile collection."),
+    EFILE_FINE_ADDED_TO_FILE("Fine added to efile file."),
     EFILE_OUTGOING_ADDED_TO_FINE("Outgoing file added to efile fine file."),
     EFILE_CONTENT_OBJECT_ANTRAG_ADDED_TO_OUTGOING("Content object 'Antrag' added to efile outgoing."),
     EFILE_CONTENT_OBJECT_URBESCHEID_ADDED_TO_OUTGOING("Content object 'URBESCHEID' added to efile outgoing."),
@@ -37,7 +39,11 @@ public enum StatusProcessingType {
     EFILE_SUBJECT_FILE_DATA_SAVED("GP-Name, GP-Firstname, GP-Birthdate updated in efile file."),
     EFILE_SUBJECT_OWI_DATA_SAVED("'Ordnungswidrigkeitnummer (OWI)' updated in efile fine."),
     EFILE_SUBJECT_DATA_SKIPPED("Subject data attributes (efile.case-file, efile.fine) not defined in properties."),
-    XTA_MESSAGE_ID("XTA message id received.");
+    XTA_MESSAGE_ID("XTA message id received."),
+    FINE_IDENTIFIER_FAILED("EFile fine identifier creation failed."),
+    IDENTIFIER_GESCHAEFTSPARTNERID_KASSENZEICHEN_AMBIGUOUS("More than one entity exists with 'GeschaeftspartnerId' and 'Kassenzeichen'in table identifier"),
+    IDENTIFIER_GESCHAEFTSPARTNERID_KASSENZEICHEN_ENTITY_NOT_EXISTS("No entity with with 'GeschaeftspartnerId' and 'Kassenzeichen' found in table identifier."),
+    IDENTIFIER_GESCHAEFTSPARTNERID_KASSENZEICHEN_BLANK("Identifier not exists.");
 
     private final String descriptor;
 

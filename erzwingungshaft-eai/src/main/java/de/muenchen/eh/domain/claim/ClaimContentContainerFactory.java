@@ -75,7 +75,7 @@ public class ClaimContentContainerFactory {
 
     private NachrichtenkopfContent supplyNachrichtenKopfContent() {
         NachrichtenkopfContent nachrichtenkopfContent = new NachrichtenkopfContent();
-        nachrichtenkopfContent.setAktenzeichen(getClaimImport().getKassenzeichen());
+        nachrichtenkopfContent.setAktenzeichen(getClaimContentWrapper().getEfileIdentifier().getIdentifier());
         return nachrichtenkopfContent;
     }
 
@@ -138,7 +138,7 @@ public class ClaimContentContainerFactory {
 
         Map<Instanztype, Aktenzeichen> auswahlInstanzbehoerden = new TreeMap<>();
         auswahlInstanzbehoerden.put(Instanztype.GERICHT, new Aktenzeichen("neu"));
-        auswahlInstanzbehoerden.put(Instanztype.BETEILIGTER, new Aktenzeichen(claimContentWrapper.getClaimImport().getKassenzeichen()));
+        auswahlInstanzbehoerden.put(Instanztype.BETEILIGTER, new Aktenzeichen(getClaimContentWrapper().getEfileIdentifier().getIdentifier()));
 
         return new GrunddatenContent(new ArrayList<>(List.of(ehBetroffener)), auswahlInstanzbehoerden);
     }
@@ -185,7 +185,8 @@ public class ClaimContentContainerFactory {
         List<Akte> akten = new ArrayList<>();
 
         Identifikation identifikationAkte = new Identifikation(uuidIdentAkte, nummer);
-        FachspezifischeDatenAkte fachspezifischeDatenAkte = FachspezifischeDatenAkte.builder().choiceFreitext("-", false).build();
+        FachspezifischeDatenAkte fachspezifischeDatenAkte = FachspezifischeDatenAkte.builder()
+                .choiceFreitext(getClaimContentWrapper().getEfileIdentifier().getIdentifier(), false).build();
         Akte akte = new Akte(identifikationAkte, null, null, fachspezifischeDatenAkte);
 
         akten.add(akte);

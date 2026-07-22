@@ -1,0 +1,37 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/api/files/search","headers": {
+      "TestCase": {
+        "equalTo": "IdentifierInOutTest.test_4_imports"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "giobjecttype" : [ {
+        "objname" : "9512.4-1000020001-1",
+        "objaddress" : "COO.2150.8819.2.1086080"
+      }, {
+        "objname" : "9512.4-1000020002-2",
+        "objaddress" : "COO.2150.8819.2.1086104"
+      }, {
+        "objname" : "9512.4-1000020003-3",
+        "objaddress" : "COO.2150.8819.2.1086124"
+      }, {
+        "objname" : "9512.4-1000020004-4",
+        "objaddress" : "COO.2150.8819.2.1086130"
+      }, {
+        "objname" : "9512.4-1000020005-5",
+        "objaddress" : "COO.2150.8819.2.1086484"
+      } ]
+    }
+  },
+  "scenarioName": "IdentifierInOutTest_files_search_sequence",
+  "requiredScenarioState": "Started",
+  "newScenarioState": "SECOND"
+}

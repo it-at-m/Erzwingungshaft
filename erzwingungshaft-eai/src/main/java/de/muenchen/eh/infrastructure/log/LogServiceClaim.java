@@ -108,7 +108,7 @@ public class LogServiceClaim {
      * ImportClaimData
      * ...
      *
-     * @DataField(pos = 370, length = 2, trim = true, align = "B", required = true)
+     * @DataField(pos = 370, length = 2, trim = true, align = "L", required = true)
      * private String ehtatstdb;
      * ...
      *

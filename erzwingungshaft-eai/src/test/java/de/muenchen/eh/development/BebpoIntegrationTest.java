@@ -11,6 +11,7 @@ import de.muenchen.eh.TestConstants;
 import de.muenchen.eh.XtaTestContext;
 import de.muenchen.eh.domain.claim.ClaimRouteBuilder;
 import de.muenchen.eh.domain.file.FileImportRouteBuilder;
+import de.muenchen.eh.domain.identifier.IdentifierRouteBuilder;
 import de.muenchen.eh.infrastructure.db.repository.ClaimContentRepository;
 import de.muenchen.eh.infrastructure.db.repository.ClaimDataRepository;
 import de.muenchen.eh.infrastructure.db.repository.ClaimDocumentRepository;
@@ -70,7 +71,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @CamelSpringBootTest
 @SpringBootTest(classes = { Application.class, XtaTestContext.class })
-@ExcludeRoutes({ FileImportRouteBuilder.class, ClaimRouteBuilder.class })
+@ExcludeRoutes({ FileImportRouteBuilder.class, ClaimRouteBuilder.class, IdentifierRouteBuilder.class })
 @ActiveProfiles(profiles = { TestConstants.SPRING_TEST_PROFILE })
 @TestPropertySource(properties = "spring.flyway.enabled=false")
 @TestPropertySource(properties = "spring.sql.init.mode=never")

@@ -10,10 +10,10 @@ import org.apache.camel.dataformat.bindy.annotation.FixedLengthRecord;
 @FixedLengthRecord(length = 3546, paddingChar = ' ', ignoreTrailingChars = true)
 public class ImportClaimIdentifierData {
 
-    @DataField(pos = 1169, length = 20, trim = true, align = "B")
+    @DataField(pos = 1169, length = 20, trim = true, align = "L")
     private String ehkassz;
 
-    @DataField(pos = 3533, length = 10, trim = true, align = "B")
+    @DataField(pos = 3533, length = 10, trim = true, align = "L")
     private String ehgpid;
 
     private String printDate;

@@ -1,0 +1,16 @@
+{
+  "request": {
+    "method": "PUT",
+    "url": "/api/businessDataValue/COO.2150.9169.1.2119717","headers": {
+      "TestCase": {
+        "equalTo": "ReadCreateFilingTest.test_5_claims"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

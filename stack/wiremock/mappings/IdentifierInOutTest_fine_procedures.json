@@ -1,0 +1,20 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/api/procedures","headers": {
+      "TestCase": {
+        "equalTo": "IdentifierInOutTest.test_4_imports"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "objid" : "COO.2150.8819.2.1123247",
+      "objname" : "Bussgeldverfahren (9512.4-5-0025)"
+    }
+  }
+}
