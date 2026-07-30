@@ -1,5 +1,9 @@
 # Release-Notes
 
+## 30.7.2026
+## Aenderung
+- Vorgangsanlage mit Erstellung Identifier und Ausgabedatei fuer die Druckstrasse.
+
 ## 9.7.2026
 ## Aenderung
 - Anpassung an eAkte26 verwende Templates EH-Akte und EH-Vorgang.

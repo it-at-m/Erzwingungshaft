@@ -114,6 +114,7 @@ public class IdentifierInOutTest extends TestContainerConfiguration {
                 .key("d.kvu.euehpkp0.JHJJMMTT.ein")
                 .build();
 
+        Files.createDirectories(Paths.get("testdata/out/"));
         s3InitClient.getObject(getObjectRequest, ResponseTransformer.toFile(outputFile));
 
         assertTrue(Files.exists(outputFile), "File with new generated identifier not found.");
