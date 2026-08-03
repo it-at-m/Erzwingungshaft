@@ -1,26 +1,75 @@
 # Dokumentation
 
 - Die Enterprise Application Integration Komponente (EAI) verarbeitet Anträge aus der Verwaltung, erstellt ein XML im [xJustiz Format](https://xjustiz.justiz.de/) Format und übermittelt die Fälle einzeln über das [Behördenpostfach](https://www.bamf.de/DE/Themen/Digitalisierung/beBPo/beBPo-node.html) an die Justizverwaltung.
-- Die Antragsfälle werden mit der Kombination _GeschäftspartnerId_, _Kassenzeichen_ und _Datum_ eindeutig identifiziert.
-- Die Antrags Metadaten werden in einer Datei im Format Satz-Fester-Länge zusammen mit den erstellten amtlichen Dokumenten im PDF Format der EAI in einem S3 Objektspeicher zur Verarbeitung Verfügung gestellt.
-- Die Antrags Metadaten und PDFs werden auf unterschiedlichen Wegen bereit gestellt und von der EAI aus einem jeweils eigenen S3-Bucket für die Antrags Metadaten und die PDFs gelesen.
-- Die Verarbeitung erfolgt in _zwei Schritten_. Zur Synchronisation der Fallbearbeitung in Schritt 1 + 2 dient eine Datenbank.
-- Die Verabeitung der EAI dokumentiert für jeden einzelnen Antragsfall verschiedene erreichte 'Zustände' ihrer Bearbeitung in eigenen Log-Tabellen. Sollte die Verarbeitung eines Falls auf einen unbekannten Fehler laufen, ist auch dieser zur Nachvollziehbarkeit dort dokumentiert.
-- In _Schritt 1 werden die Antrags Metadaten eingelesen_. Alle eingelesenen Dateien werden zur weiteren EAI Verarbeitung in der Datenbank gespeichert und zur Dokumentation / Fehlerbhandlung und einen eigenen S3 'Backup' verschoben.
+- Die Antragsbearbeitung erfolgt in mehreren asynchron aufeinander folgenden Schritten zwischen der EH-EAI und Fremdsystemen. Der Datenaustausch zwischen Fremdsystem und EH-EAI erfolgt per Dateiaustausch. 
+- Das Bereitstellen von Eingabedateien ist Voraussetzung für den Start des nächsten Verarbeitungsschritts in der Prozesskette. 
+- Die EH-EAI wird per CronJob gestartet und prüft dann jeweils das vorhandensein von Eingabedateien um ggf. einen Verarbeitungschritt in der Prozesskette zu starten.
+- Die Bearbeitung lässt sich in die Schritte _Identifier_, _Einlesen_ und _Antragsbearbeitung_ mit weiteren Subschritten unterteilen : 
+  - (0) Bereitstellen aller erforderlicher E-Akte Einträge für die GeschäftspartnerIds durch eine andere EAI.
+  - (1) Identifier:
+    - (1.1) Erstellen der Eingabedateien (A) für den _Identifier_ in einem Fremdsystem.
+    - (1.2) Einlesen der Datei (A) und Start der Verarbeitung der Einzelfälle.
+    - (1.3) Anlegen eines Vorgangs zum Kassenzeichen in der E-Akte der _GeschäftspartnerId_.
+    - (1.4) Erstellen eines eindeutigen _Identifiers_ auf Basis des angelegten E-Akte-Vorgangs. 
+    - (1.5) Ausgabe des _Identifiers_ in eine Datei (B) für die Erstellung der PDF Dokumente. Das Ausgabeformat entspricht dem Eingabeformat (A) plus dem neuen _Identifier_. 
+    - (1.6) Erstellung von _PDFs_ und _Metadaten_ in einem Fremdsystem mit der Ausgabedatei (B) für (2).
+  - (2) Einlesen Dokumente Antragbearbeitung:
+    - (2.1) Einlesen _Metadaten_.
+    - (2.2) Einlesen _PDFs_.
+  - (3) Antragbearbeitung:
+    - (3.1) Prüfen ob alle Eingangsinformationen pro Fall vorliegen (Antrag-Metadaten, PDF Dokumente).
+    - (3.2) Erstellen xJustiz XML.
+    - (3.3) Dokumentation des Vorgangs in der E-Akte.
+    - (3.4) Versand Justiz Nachricht. 
+- Jeglicher Datenaustausch mit Fremdsystemen erfolgt im Format Satz-Fester-Länge. Die Dateien werden über einen S3 Objektspeicher ausgetauscht.
+- Für den Start des Schritts (2) müssen durch Fremdsysteme die PDFs und eine weitere Datei mit Metadaten erstellt sein.
+- Die Antrags _Metadaten_ und _PDFs_ werden auf unterschiedlichen Wegen und zeitlich asynchron bereit gestellt und von der EAI aus einem jeweils eigenen S3-Bucket gelesen.
+- Die Antragsfälle werden in den Schritten (1), (2) und (3) mit der Kombination _GeschäftspartnerId_, _Kassenzeichen_ eindeutig identifiziert. Für die Zuordnung der Metadaten und PDFs dient zusätzlich ein _Erstelldatum_
+- Zum Logging von Verarbeitungschritten und dem Datenaustasch der Schritte (1) - (3) wird eine Datenbank genutzt.
+  - Die EH-EAI dokumentiert den Stand pro Satz in einer Datenbanktabelle 'Identifier' (1.2 - 1.5).
+  - Der erstellte _Identifier_ wird per Datenbank aus (1) in (3) bei Erstellung des xJustiz Dokuments übernommen.
+  - Die Datenbank dient ebenfalls zur Synchronisation der Schritte (2) und (3).
+  - Die Verabeitung der EAI dokumentiert für jeden einzelnen Antragsfall verschiedene erreichte 'Zustände' der Bearbeitung in eigenen Log-Tabellen. Sollte die Verarbeitung eines Falls auf einen unbekannten Fehler laufen, ist auch dieser zur Nachvollziehbarkeit dort dokumentiert.
+- In (2) werden die Antrags _Metadaten_ und _PDFs_ eingelesen. Alle eingelesenen Dateien werden zur weiteren EAI Verarbeitung in der Datenbank gespeichert und zur Dokumentation / Fehlerbhandlung und einen eigenen S3 'Backup' verschoben.
 - Können PDFs (über die Kombination _GeschäftspartnerId_, _Kassenzeichen_ und _Datum_) keinen Metadaten zugeordnet werden, werden sie als _nicht zuordenbar_ aussortiert.
-- In _Schritt 2 erfolgt nach dem vollständigen Eingang aller Antragsdaten_ (Metadaten + erforderliche PDFs) die eigentliche Verarbeitung.
+- In (3) erfolgt nach dem vollständigen Eingang aller _Antragsdaten (Metadaten, PDFs)_ die eigentliche Verarbeitung.
 - Für die Antrags Verarbeitung muss pro Antrag ein XML im [xJustiz Format](https://xjustiz.justiz.de/) erstellt werden. Dazu dient ein eigenes [xJustiz Projekt](https://github.com/it-at-m/xjustiz) das in der EAI als Maven Artefakt referenziert ist.
 - Vor dem Versand an die Justiz über das [Behördenpostfach](https://www.bamf.de/DE/Themen/Digitalisierung/beBPo/beBPo-node.html) werden die versendeten Dateien pro Fall im Dokumentenmanagment System (DMS) abgelegt.
-- Die EAI wird als CronJob ausgeführt.
+- Die EAI verhält sich wie ein Batchjob und beendet sich von alleine wenn alle Aufgaben erfüllt sind. Sie wird per Cronjob in einer Container Application Plattform gestartet.
 
 Github-Repo: https://github.com/it-at-m/Erzwingungshaft
 
-## Ablauf / Verarbeitungszustände
+## Übersicht
 
+Die EH-EAI ist Teil eines größeren Prozessablaufs bestehend aus mehreren weiteren angrenzenden Systemen. Damit der verbeitet
+Erzwingungsantragsfall in angrenzenden Systemen noch identifizierbar ist, bedarf es einen eindeutigen _Identifiers_.
+Insbesondere für die eingehenden Nachrichten mit der Justiz ist eine sichere Zuordnung der Nachrichten erforderlich.
+Zwar ist die Behandlung von eingehenden bzw. Rückantworten nicht mehr Aufgabe der EH-EAI, mit einem _Identifier_ werden dafür aber die Voraussetzungen, Stichwort _Ende-zu-Ende Beobachtbarkeit_ geschaffen.
+
+Die Nachfolgende Übersicht zeigt vereinfacht, wann die EH-EAI Input eines Fremdsystems voraussetzt und wann sie ein Fremdsystem aufruft. 
+
+| Zeitachse | GeschäftspartnerID | DMS:</br>E-Akte (GeschäftspartnerID)     | DMS:</br> EH-Vorgang (Kassenzeichen)     | Identifier                            | PDF Generierung | Metadaten | Antragsbearbeitung                      | DMS:</br>Outgoing | Ausgehende Justiz Nachrichten            |
+| --- | --- |-------------------------------------------|-------------------------------------------|---------------------------------------| --- | --- |-----------------------------------------|-------------------|------------------------------------------|
+| Fremdsystem | <div style="text-align: center">(X)</div> | <div style="text-align: center">(X)</div> | <div style="text-align: center"></div>    | <div style="text-align: center"></div> | <div style="text-align: center">(X)</div> | <div style="text-align: center">(X)</div> | <div style="text-align: center"></div>  | <div style="text-align: center"></div> | <div style="text-align: center"></div>   |
+| EH-EAI | <div style="text-align: center"></div> | <div style="text-align: center"></div>    | <div style="text-align: center">(X)</div> | <div style="text-align: center">(X)</div> | <div style="text-align: center"></div> | <div style="text-align: center"></div> | <div style="text-align: center">(X)</div> |  <div style="text-align: center">(X)</div> | <div style="text-align: center">(X)</div> | 
+
+
+## Identifier (1)
+Die Behandlung des Identifier (1) muss der Antragsbearbeitung (2-3) als eingeständiger (asynchroner) Prozess vorangestellt werden.
+
+Alle relevanten Informationen zu einem _Geschäftspartner_ werden in der E-Akte des Dokumenten-Management-Sytems (DMS) dokumentiert. Für die Erzwingungshaftvorgänge wird ein eigener 
+_Vorgang_ in der E-Akte des Geschäftspartners angelegt, dessen Bezeichner für die bessere Auffindbarkeit Bestandteil des _Identifiers_ ist.
+Da der _Identifier_ Bestandteil der an die Justiz übermittelten amtlichen Dokumente in PDF Form ist, muss vor der Erstellung der PDFs bereits der _E-Akten Vorgang_ bekannt sein.
+
+Der erstellte _Identifier_ wird in Tabelle 'Identifier' zusammen mit seiner _GeschäftspartnerId_, seinem _Kassenzeichen_ und der eindeutigen DMS Adresse des angelegten EH-Vorgangs persistiert. 
+Auf diese Daten wird bei der Antragsbearbeitung (2-3) wieder zurückgegeriffen.
+Der _Identifier_ wird in das [xJustiz XML](https://xjustiz.justiz.de/) übernommen, die DMS Adresse vereinfacht den Zugriff DMS Objekte.
+
+## Einlesen und Antragsbearbeitung (2 - 3)
 Jeder _Antragsfall_ besteht aus den Komponenten _Metadaten_ und zum Antrag gehörenden _PDF Dokumenten_.
-Für eine erfolgreiche Antragsverarebitung müssen beide Teile zur Verfügung stehen.
+Für eine erfolgreiche Antragsverarbeitung müssen beide Teile zur Verfügung stehen.
 Die Bereitstellung beider Komponenten wird gemeinsam angestoßen, durchläuft aber unterschiedliche Verarbeitungswege, sodaß beide Teile zu unterschiedlichen Zeitpunkten zur Verfügung stehen können.
-Das _Datum_ des Identifier bestehend aus _GeschäftspartnerId_, _Kassenzeichen_ und _Datum_ ist das _Tagesdatum_ an dem die Bereitstellung angestossen wurde.
+In den Dateinamen der Metadaten und der PDFs ist das _Tagesdatum_ ihrer Erstellung enthalten.
 Antragsfälle mit unterschiedlichem Datum und gleicher GeschäftspartnerId und Kassenzeichen werden von der EAI als unterschiedliche Antragsfälle betrachtet.
 
 Die EAI wird als "Batch Job" gestartet und beendet sich nach der Verarbeitung aller vorgefundenen Antragsfälle wieder.
@@ -34,41 +83,9 @@ In diesem Fall können die Metadaten und PDF Dokumente des Antragfalls mit einem
 
 ![Ablauf](EAI_ABLAUF.drawio.png)
 
-| Status                                             | Beschreibung                                                                                                              |
-|----------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------|
-| IMPORT_DATA_FILE_CREATED                           | Raw data line read from original multi-line import file. Claim file (*.fix) generated in newly created 'claim-directory'. |
-| IMPORT_DATA_FILE_IMPORT_FINISHED                   | Generate claim import files finished. Start import-pdfs process.                                                          |
-| IMPORT_ANTRAG_IMPORT_DIRECTORY                     | Antrag PDF is imported and assigned to directory.                                                                         |
-| IMPORT_BESCHEID_IMPORT_DIRECTORY                   | Bescheid PDF is imported and assigned to directory.                                                                       |
-| IMPORT_VERWERFUNG_BESCHEID_IMPORT_DIRECTORY        | Verwerfungbescheid PDF is imported and assigned to directory.                                                             |
-| IMPORT_KOSTEN_BESCHEID_IMPORT_DIRECTORY            | Kostenbescheid PDF is imported and assigned to directory.                                                                 |
-| IMPORT_ANTRAG_IMPORT_DB                            | Antrag PDF is imported and assigned to database.                                                                          |
-| IMPORT_BESCHEID_IMPORT_DB                          | Bescheid PDF is imported and assigned to database.                                                                        |
-| IMPORT_KOSTEN_IMPORT_DB                            | Kostenbescheid PDF is imported and assigned to database.                                                                  |
-| IMPORT_VERWERFUNG_IMPORT_DB                        | Verwerfungsbescheid PDF is imported and assigned to database.                                                             |
-| CLAIM_RAW_DATA_READ                                | Raw data line read from generated claim file.                                                                             |
-| CLAIM_RAW_DATA_UNMARSHALLED                        | Data unmarshalled from claim file line.n                                                                                  |
-| CLAIM_CONTENT_DATA_CREATED                         | Content created for xJustiz message generation.                                                                           |
-| CLAIM_XJUSTIZ_MESSAGE_CREATED                      | xJustiz xml message created.                                                                                              |
-| CLAIM_EH_UUID_UPDATED                              | xJustiz message uuid updated in database.                                                                                 |
-| CLAIM_EH_KASSENZEICHEN_GESCHAEFTSPARTNERID_UPDATED | 'Kassenzeichen' and 'GeschaeftsparterId' updated in database.                                                             |
-| EFILE_GPID_COLLECTION_READ_FROM_DB                 | 'GeschaeftspartnerId' known in efile.                                                                                     |
-| EFILE_GESCHAEFTSPARTNERID_COLLECTION_NOT_FOUND     | Collection file for 'GeschaeftspartnerId' not found in efile.                                                             |
-| EFILE_GESCHAEFTSPARTNERID_COLLECTION_FOUND         | Collection file for 'GeschaeftspartnerId' found in efile.                                                                 |
-| EFILE_GESCHAEFTSPARTNERID_COLLECTION_AMBIGUOUS     | More than one collection file for 'GeschaeftspartnerId' found in efile.                                                   |
-| EFILE_FILE_ADDED_TO_COLLECTION                     | Case file added to efile collection.                                                                                      |
-| EFILE_FILE_ALREADY_EXISTS_IN_COLLECTION            | Case file already exists in efile collection.                                                                             |
-| EFILE_FINE_ADDED_TO_CASE_FILE                      | Fine file added to efile case file.                                                                                       |
-| EFILE_OUTGOING_ADDED_TO_FINE                       | Outgoing file added to efile fine file.                                                                                   |
-| EFILE_CONTENT_OBJECT_ANTRAG_ADDED_TO_OUTGOING      | Content object 'Antrag' added to efile outgoing.                                                                          |
-| EFILE_CONTENT_OBJECT_URBESCHEID_ADDED_TO_OUTGOING  | Content object 'URBESCHEID' added to efile outgoing.                                                                      |
-| EFILE_CONTENT_OBJECT_XML_ADDED_TO_OUTGOING         | Content object 'Verfahrensmitteilung.xml' added to efile outgoing.                                                        |
-| EFILE_OBJECTADDRESSES_SAVED                        | Collection, case file, fine and documents efile objectaddresses saved in database.                                        |
-| EFILE_SUBJECT_FILE_DATA_SAVED                      | GP-Name, GP-Firstname, GP-Birthdate updated in efile file.                                                                |
-| EFILE_SUBJECT_OWI_DATA_SAVED                       | 'Ordnungswidrigkeitnummer (OWI)' updated in efile fine.                                                                   |
-| EFILE_SUBJECT_DATA_SKIPPED                         | Subject data attributes (efile.case-file, efile.fine) not defined in properties.                                          |
-| XTA_MESSAGE_ID                                     | XTA message id received.                                                                                                  |
 
+Antragsbearbeitung durchläuft verschiedene Prozessschritte die in den LogDateien dokumentiert sein können :
+https://github.com/it-at-m/Erzwingungshaft/blob/vorgangsanlage/erzwingungshaft-eai/src/main/java/de/muenchen/eh/infrastructure/log/StatusProcessingType.java
 
 ## Technisches Setup
 
@@ -119,8 +136,10 @@ xjustiz:
   interface:
     file:
       common: # Can be configured example : accessKey=${xjustiz.credentials.s3.access-key}&secretKey=${xjustiz.credentials.s3.secret-key}&region=${camel.component.aws2-s3.region}&overrideEndpoint=${camel.component.aws2-s3.override-endpoint}&uriEndpointOverride=${camel.component.aws2-s3.uri-endpoint-override}
-      consume: # Must be configured example : aws2-s3://eh-import-antrag?${xjustiz.interface.file.common}
+      consume: # Must be configured example : aws2-s3://eh-import-antrag?${xjustiz.interface.file.common}&prefix=ABC
       file-output: # Must be configured example : aws2-s3://eh-backup?${xjustiz.interface.file.common}
+      identifier-input: # Must be configured example : aws2-s3://eh-import-antrag?${xjustiz.interface.file.common}&prefix=DEF
+      identifier-output: # Must be configured example : aws2-s3://int-eheaik-exportehliste?${xjustiz.interface.file.common}
     pdf:
       consume: # Must be configured exmample : aws2-s3://eh-import-pdf?${xjustiz.interface.file.common}
       file-output: # Must be configured example : aws2-s3://eh-backup?${xjustiz.interface.file.common}
@@ -230,10 +249,9 @@ efile:
     joboe: # Must be configured
     jobposition: # Must be configured
     objaddress: # Must be configured
-    subject-data-values:
-      gp-name: # Can be configured
-      gp-first-name: # Can be configured
-      gp-birth-date: # Can be configured
+    basenr: # Must be configured
+    departement: # Must be configured
+    km-akte-definition: # Must be configured
   fine:
     shortname: # Must be configured
     filesubj: # Must be configured
@@ -242,8 +260,7 @@ efile:
     doctemplate: # Must be configured
     subfiletype: # Must be configured
     incattachments: # Must be configured
-#    subject-data-values:      # If commented create WARN otherwise INFO Message
-#      owi-number: # Can be configured
+    eh-vorgang-definition: # Must be configured
 
 ````
 
@@ -340,7 +357,7 @@ efile:
     context-path: api/
     username:
     password:
-    eakte-api-version: openapi/eakte-api-v1.2.4.json
+    eakte-api-version: openapi/eakte-api-v1.2.5.json
   case-file:
     aktenplan-eintrag: 1234/Testakte
     x-anwendung: EH
@@ -348,26 +365,24 @@ efile:
     joboe: COO.2150.9150.1.15756
     jobposition: DocumentManager
     objaddress: COO.2150.9169.1.1632
-    subject-data-values:
-      gp-name: BusinessDataGPSurname
-      gp-first-name: BusinessDataGPFirstname
-      gp-birth-date: BusinessDataGPBirthDate
+    basenr: '0815.'
+    department: 'LOL'
+    km-akte-definition: COO.2150.8801.2.1055475
   fine:
-    shortname: Bussgeldverfahren
+    shortname: Bußgeldverfahren
     filesubj: Bussgeldbescheid
     accdef: 'Zugriffsdefinition für Schriftgutobjekte (allgemein lesbar)'
     outgoing: Ausgang
     doctemplate: 'LHM Schreiben Extern'
     subfiletype: PDF-Dokument
     incattachments: EH-Dokumente
-#    subject-data-values:
-#      owi-number: 'Ordnungswidrigkeiten-Nummer'
+    eh-vorgang-definition: COO.2150.8801.2.1055476
 
 # Custom properties
 xjustiz:
-  version: 3.5.1
+  version: 3.6.2
   xsd:
-    path: xsd/XJustiz-3.5.1-XSD/
+    path: xsd/xjustiz-x-x-x-xsd/
     generated-package-base: de.muenchen.xjustiz.generated
   credentials:
     s3:
@@ -380,8 +395,10 @@ xjustiz:
       import: jpa
     file:
       common: accessKey=${xjustiz.credentials.s3.access-key}&secretKey=${xjustiz.credentials.s3.secret-key}&region=${camel.component.aws2-s3.region}&overrideEndpoint=${camel.component.aws2-s3.override-endpoint}&uriEndpointOverride=${camel.component.aws2-s3.uri-endpoint-override}
-      consume: aws2-s3://eh-import-antrag?${xjustiz.interface.file.common}
+      consume: aws2-s3://eh-import-antrag?${xjustiz.interface.file.common}&prefix=ABC
       file-output: aws2-s3://eh-backup?${xjustiz.interface.file.common}
+      identifier-input: aws2-s3://eh-import-antrag?${xjustiz.interface.file.common}&prefix=DEF
+      identifier-output: aws2-s3://int-eheaik-exportehliste?${xjustiz.interface.file.common}      
     pdf:
       consume: aws2-s3://eh-import-pdf?${xjustiz.interface.file.common}
       file-output: aws2-s3://eh-backup?${xjustiz.interface.file.common}
