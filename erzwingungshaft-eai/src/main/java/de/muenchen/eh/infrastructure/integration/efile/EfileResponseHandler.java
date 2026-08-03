@@ -36,9 +36,9 @@ public class EfileResponseHandler implements Processor {
         }
 
         // Logging
-        if (log.isDebugEnabled()) {
+        if (log.isTraceEnabled()) {
             exchange.getMessage().getHeaders().forEach((k, v) -> log.debug("header[{}] = {}", k, v));
-            log.debug(json);
+            log.trace(json);
         }
 
         // Unmarshall
