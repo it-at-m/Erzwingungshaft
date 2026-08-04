@@ -9,6 +9,7 @@ import de.muenchen.eh.domain.file.FileImportRouteBuilder;
 import de.muenchen.eh.infrastructure.db.entity.EfileIdentifier;
 import de.muenchen.eh.infrastructure.db.repository.EfileIdentifierRepository;
 import de.muenchen.eh.infrastructure.integration.xta.XtaRouteBuilder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -52,7 +53,6 @@ public class IdentifierInOutTest extends TestContainerConfiguration {
         AdviceWith.adviceWith(camelContext, "rest-openapi-eakte", a -> {
             a.weaveById("openapi-client").before()
                     .process(exchange -> exchange.getMessage().setHeader("TestCase", "IdentifierInOutTest.test_4_imports"));
-            ;
         });
 
         AdviceWith.adviceWith(camelContext, "efile-identifier", a -> {
@@ -63,7 +63,6 @@ public class IdentifierInOutTest extends TestContainerConfiguration {
         Path outputFile = Paths.get("testdata/out/d.kvu.euehpkp0.JHJJMMTT.ein");
         Files.deleteIfExists(outputFile);
 
-        camelContext.getShutdownStrategy().setTimeout(36000);
         camelContext.start();
 
         // Start test ...
@@ -73,8 +72,6 @@ public class IdentifierInOutTest extends TestContainerConfiguration {
 
         mockTestEnd.assertIsSatisfied(TimeUnit.MINUTES.toMillis(3));
         assertEquals(1, mockTestEnd.getExchanges().size(), "One happy path implemented.");
-
-        Thread.sleep(5000); // Waiting for database inserts
 
         assertEquals(4, efileIdentifierRepository.count());
 
@@ -118,7 +115,7 @@ public class IdentifierInOutTest extends TestContainerConfiguration {
         s3InitClient.getObject(getObjectRequest, ResponseTransformer.toFile(outputFile));
 
         assertTrue(Files.exists(outputFile), "File with new generated identifier not found.");
-        List<String> lines = Files.lines(outputFile).filter(line -> !line.isBlank()).toList();
+        List<String> lines = Files.lines(outputFile, StandardCharsets.ISO_8859_1).filter(line -> !line.isBlank()).toList();
         assertEquals(2, lines.size(), "Two lines expected.");
         assertEquals(1, lines.stream().filter(line -> line.contains("5793401416631-SKA9512.4-5-0025")).count(), "Identifier expected.");
         assertEquals(1, lines.stream().filter(line -> line.contains("5793401568639-SKA9512.4-5-0025")).count(), "Identifier expected.");

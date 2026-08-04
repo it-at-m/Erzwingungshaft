@@ -97,9 +97,9 @@ xjustiz:
       import: jpa
     file:
       common: accessKey=${xjustiz.credentials.s3.access-key}&secretKey=${xjustiz.credentials.s3.secret-key}&region=${camel.component.aws2-s3.region}&overrideEndpoint=${camel.component.aws2-s3.override-endpoint}&uriEndpointOverride=${camel.component.aws2-s3.uri-endpoint-override}
-      consume: aws2-s3://eh-import-antrag?${xjustiz.interface.file.common}&prefix=D.KVU.EUDG0P0
+      consume: aws2-s3://eh-import-antrag?${xjustiz.interface.file.common}&prefix=D.KVU.EUDG0P0&delay=50000
       file-output: aws2-s3://eh-backup?${xjustiz.interface.file.common}
-      identifier-input: aws2-s3://eh-import-antrag?${xjustiz.interface.file.common}&prefix=d.kvu.euehpkp0
+      identifier-input: aws2-s3://eh-import-antrag?${xjustiz.interface.file.common}&prefix=d.kvu.euehpkp0&delay=50000
       identifier-output: aws2-s3://int-eheaik-exportehliste?${xjustiz.interface.file.common}
     pdf:
       consume: aws2-s3://eh-import-pdf?${xjustiz.interface.file.common}

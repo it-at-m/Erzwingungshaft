@@ -1,6 +1,10 @@
 # Release-Notes
 
-## 30.7.2026
+## 4.8.2026 (Version 0.4.1)
+## Bugfix
+- Encoding des S3-Identifier-Outputs an Fremdsystem ISO-8859-1 angepasst.  
+
+## 30.7.2026 (Version 0.4.0)
 ## Aenderung
 - Vorgangsanlage mit Erstellung Identifier und Ausgabedatei fuer die Druckstrasse.
 

@@ -35,7 +35,7 @@ public class IdentifierRouteBuilder extends RouteBuilder {
                     .process("identifierCreator")
                 .end()
                 .process("identifierOutputContent")
-                .log(LoggingLevel.DEBUG, "identifier-eh-process completed.'.").id("identifier-eh-complete")
+                .log(LoggingLevel.INFO, "identifier-eh-process completed.").id("identifier-eh-complete")
                 .stop();
 
         from(PSCD_IDENTIFIER_CONTENT_UNMARSHALL).routeId("pscd-data-unmarshall")
@@ -48,8 +48,7 @@ public class IdentifierRouteBuilder extends RouteBuilder {
                 .process("eAPLIdentifierExecutor");
 
         from(S3_OUTPUT_UPLOAD).routeId("s3-output")
-                .toD("{{xjustiz.interface.file.identifier-output}}")
-                .to("mock:removeMeEnableDevelopmentMock");
+                .toD("{{xjustiz.interface.file.identifier-output}}");
 
         // spotless:on
 
