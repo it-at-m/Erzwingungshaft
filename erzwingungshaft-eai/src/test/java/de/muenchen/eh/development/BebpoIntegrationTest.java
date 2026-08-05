@@ -21,6 +21,9 @@ import de.muenchen.eh.infrastructure.db.repository.ClaimImportRepository;
 import de.muenchen.eh.infrastructure.db.repository.ClaimLogRepository;
 import de.muenchen.eh.infrastructure.db.repository.ClaimRepository;
 import de.muenchen.eh.infrastructure.db.repository.ClaimXmlRepository;
+import de.muenchen.eh.infrastructure.db.repository.EfileIdentifierRepository;
+import de.muenchen.eh.infrastructure.db.repository.UnassignableErrorRepository;
+import de.muenchen.eh.infrastructure.db.repository.XtaRepository;
 import de.muenchen.eh.infrastructure.integration.xta.XtaRouteBuilder;
 import de.muenchen.eh.infrastructure.integration.xta.transport.ByteArrayDataSource;
 import de.muenchen.eh.infrastructure.integration.xta.transport.StringDataSource;
@@ -100,6 +103,12 @@ class BebpoIntegrationTest {
     private ClaimXmlRepository claimXmlRepository;
     @MockitoBean(name = "entityManagerFactory")
     private EntityManagerFactory entityManagerFactory;
+    @MockitoBean
+    private EfileIdentifierRepository efileIdentifierRepository;
+    @MockitoBean
+    private UnassignableErrorRepository unassignableErrorRepository;
+    @MockitoBean
+    private XtaRepository xtaRepository;
 
     @Produce(XtaRouteBuilder.BEPBO_MANAGEMENT_PORT)
     private ProducerTemplate managementPort;
