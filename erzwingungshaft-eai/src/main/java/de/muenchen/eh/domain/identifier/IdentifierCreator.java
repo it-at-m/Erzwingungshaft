@@ -52,7 +52,7 @@ public class IdentifierCreator implements Processor {
         // Persist result
         uniqueIdentifier.ifPresentOrElse(ident -> {
             efileIdentifierEntity.setIdentifier(ident);
-            efileIdentifierEntity.setOutputFileName(efileIdentifierEntity.getSourceFileName());
+            efileIdentifierEntity.setOutputFileName(efileIdentifierEntity.getSourceFileName().concat("_mitAZ"));
             identifierContentWrapper.getPscdDataExport().setGeschaeftszeicheneakte(ident);
         },
                 () -> {

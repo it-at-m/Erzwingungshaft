@@ -159,7 +159,7 @@ public class ReadCreateFilingTest extends TestContainerConfiguration {
         identifier1000013749.setSourceFileName("d.kvu.euehpkp0.JHJJMMTT.ein,");
         identifier1000013749.setFileLineIndex(0);
         identifier1000013749.setContent("<imported line>");
-        identifier1000013749.setOutputFileName("out/d.kvu.euehpkp0.JHJJMMTT.ein");
+        identifier1000013749.setOutputFileName("out/d.kvu.euehpkp0.JHJJMMTT.ein_mitAZ");
         identifier1000013749.setMessageType(MessageType.INFO);
         identifier1000013749.setMessage("Fine added to efile file.");
         identifierRepository.save(identifier1000013749);

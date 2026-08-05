@@ -60,7 +60,7 @@ public class IdentifierInOutTest extends TestContainerConfiguration {
         });
 
         // Clean up output file
-        Path outputFile = Paths.get("testdata/out/d.kvu.euehpkp0.JHJJMMTT.ein");
+        Path outputFile = Paths.get("testdata/out/d.kvu.euehpkp0.JHJJMMTT.ein_mitAZ");
         Files.deleteIfExists(outputFile);
 
         camelContext.start();
@@ -81,12 +81,12 @@ public class IdentifierInOutTest extends TestContainerConfiguration {
         assertEquals("COO.2150.8819.2.1086484", identifier1000020005.getFileCooAddress());
         assertEquals("COO.2150.8819.2.1123247", identifier1000020005.getFineCooAddress());
         assertEquals("Fine added to efile file.", identifier1000020005.getMessage());
-        assertEquals("d.kvu.euehpkp0.JHJJMMTT.ein", identifier1000020005.getOutputFileName());
+        assertEquals("d.kvu.euehpkp0.JHJJMMTT.ein_mitAZ", identifier1000020005.getOutputFileName());
         assertEquals("", identifier1000020005.getComment());
 
         EfileIdentifier identifier1000020003 = efileIdentifierRepository.findByGeschaeftspartnerId("1000020003").getFirst();
         assertEquals("5793401568639-SKA9512.4-5-0025", identifier1000020003.getIdentifier());
-        assertEquals("d.kvu.euehpkp0.JHJJMMTT.ein", identifier1000020003.getOutputFileName());
+        assertEquals("d.kvu.euehpkp0.JHJJMMTT.ein_mitAZ", identifier1000020003.getOutputFileName());
 
         EfileIdentifier identifier1000024999 = efileIdentifierRepository.findByGeschaeftspartnerId("1000024999").getFirst();
         assertNull(identifier1000024999.getIdentifier());
@@ -108,7 +108,7 @@ public class IdentifierInOutTest extends TestContainerConfiguration {
 
         GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                 .bucket(EH_BUCKET_IDENTIFIER_OUTPUT)
-                .key("d.kvu.euehpkp0.JHJJMMTT.ein")
+                .key("d.kvu.euehpkp0.JHJJMMTT.ein_mitAZ")
                 .build();
 
         Files.createDirectories(Paths.get("testdata/out/"));
