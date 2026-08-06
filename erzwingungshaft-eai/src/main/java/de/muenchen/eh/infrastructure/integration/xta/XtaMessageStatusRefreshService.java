@@ -9,6 +9,7 @@ import de.xoev.transport.xta._211.TransportReport;
 import java.time.Instant;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Log4j2
 public class XtaMessageStatusRefreshService implements Processor {
 
     private final CamelContext camelContext;
@@ -52,14 +54,17 @@ public class XtaMessageStatusRefreshService implements Processor {
 
         Exchange responseTransportReport = managementPort.send(requestTransportReport);
 
-        TransportReport transportReport = responseTransportReport.getMessage().getBody(TransportReport.class);
-        xta.setTransportMessageStatus(transportReport.getMessageStatus().getStatus().intValueExact());
-        xta.setUpdatedAt(Instant.now());
-
-        xtaRepository.save(xta);
-
         if (responseTransportReport.isRouteStop()) {
             exchange.setRouteStop(true);
+        } else {
+            TransportReport transportReport = responseTransportReport.getMessage().getBody(TransportReport.class);
+            if (transportReport != null) {
+                xta.setTransportMessageStatus(transportReport.getMessageStatus().getStatus().intValueExact());
+                xta.setUpdatedAt(Instant.now());
+                xtaRepository.save(xta);
+            } else {
+                log.error("TransportReport == NULL : " + xta.toString());
+            }
         }
     }
 }
