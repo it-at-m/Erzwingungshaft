@@ -1,10 +1,11 @@
 # Release-Notes
 
-## 4.8.2026 (Version 0.4.1)
+## 6.8.2026 (Version 0.4.1)
 ## Bugfix
 - Encoding des S3-Identifier-Outputs an Fremdsystem ISO-8859-1 angepasst.
 - Identifier Ausgabedateiname mit _mitAZ erweitert.
 - XTA Fehler in claim_log persistieren.
+- Retry mit Delay bei TimeOutExceptions ergaenzt.
 
 ## 30.7.2026 (Version 0.4.0)
 ## Aenderung
