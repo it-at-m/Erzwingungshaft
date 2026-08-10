@@ -1,6 +1,6 @@
 # Release-Notes
 
-## 6.8.2026 (Version 0.4.1)
+## 10.8.2026 (Version 0.4.1)
 ## Bugfix
 - Encoding des S3-Identifier-Outputs an Fremdsystem ISO-8859-1 angepasst.
 - Identifier Ausgabedateiname mit _mitAZ erweitert.
