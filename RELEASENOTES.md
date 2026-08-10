@@ -6,6 +6,7 @@
 - Identifier Ausgabedateiname mit _mitAZ erweitert.
 - XTA Fehler in claim_log persistieren.
 - Retry mit Delay bei TimeOutExceptions ergaenzt.
+- Optimiere Aktensuche mit Akten-Collection-Cache.
 
 ## 30.7.2026 (Version 0.4.0)
 ## Aenderung

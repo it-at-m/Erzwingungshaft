@@ -3,11 +3,14 @@ package de.muenchen.eh.infrastructure.integration.efile.operation.eapl;
 import de.muenchen.eakte.api.rest.model.Objektreferenz;
 import de.muenchen.eakte.api.rest.model.SearchFileResponseDTO;
 import de.muenchen.eh.DataWrapper;
+import de.muenchen.eh.domain.identifier.IdentifierContentWrapper;
 import de.muenchen.eh.infrastructure.integration.efile.EfileRouteBuilder;
 import de.muenchen.eh.infrastructure.integration.efile.operation.OperationId;
 import de.muenchen.eh.infrastructure.integration.efile.operation.OperationIdFactory;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.apache.camel.Exchange;
 import org.apache.camel.Produce;
@@ -38,6 +41,8 @@ public class GeschaftspartnerIdEfile {
     @Produce(value = EfileRouteBuilder.MARSHAL_JSON_DMS_CONNECTION)
     private ProducerTemplate efileConnector;
 
+    private final Map<String, SearchFileResponseDTO> collectionsCache = new HashMap<>();
+
     /**
      * Checks whether the eFile contains files for the business partner ID.
      *
@@ -64,16 +69,29 @@ public class GeschaftspartnerIdEfile {
      */
     public Optional<List<Objektreferenz>> checkIfEfileFileWithGpidExists(Exchange exchange, Exchange searchFileExchange, String geschaeftspartnerId) {
 
-        // Check if efile apentry contains file with gpid
-        Exchange createSearchFileResponse = efileConnector.send(searchFileExchange);
+        // If exists read cached collection
+        Objektreferenz collection = (Objektreferenz) exchange.getMessage().getBody(IdentifierContentWrapper.class).getEfile()
+                .get(OperationId.READ_COLLECTIONS.name());
+        String collectionCoo = collection.getObjaddress();
 
-        if (createSearchFileResponse.isRouteStop()) {
-            exchange.setRouteStop(true);
-            return Optional.empty();
+        SearchFileResponseDTO files;
+
+        if (collectionsCache.containsKey(collectionCoo)) {
+            files = collectionsCache.get(collectionCoo);
+        } else {
+            // No cached collection found
+            Exchange createSearchFileResponse = efileConnector.send(searchFileExchange);
+
+            if (createSearchFileResponse.isRouteStop()) {
+                exchange.setRouteStop(true);
+                return Optional.empty();
+            }
+
+            files = createSearchFileResponse.getMessage().getBody(SearchFileResponseDTO.class);
+            collectionsCache.put(collectionCoo, files);
         }
 
-        SearchFileResponseDTO files = createSearchFileResponse.getMessage().getBody(SearchFileResponseDTO.class);
-
+        // Search file in files objektreferenz list
         List<Objektreferenz> filteredFiles = files.getGiobjecttype().stream()
                 .filter(objref -> objref.getObjname().contains("-" + geschaeftspartnerId + "-"))
                 .sorted(Comparator.comparingInt(this::extractTrailingNumber))
