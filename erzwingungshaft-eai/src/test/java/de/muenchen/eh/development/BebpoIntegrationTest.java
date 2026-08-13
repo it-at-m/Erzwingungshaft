@@ -9,21 +9,25 @@ import static org.mockito.Mockito.mock;
 import de.muenchen.eh.Application;
 import de.muenchen.eh.TestConstants;
 import de.muenchen.eh.XtaTestContext;
-import de.muenchen.eh.claim.ClaimRouteBuilder;
-import de.muenchen.eh.claim.xta.XtaRouteBuilder;
-import de.muenchen.eh.claim.xta.transport.ByteArrayDataSource;
-import de.muenchen.eh.claim.xta.transport.StringDataSource;
-import de.muenchen.eh.claim.xta.transport.properties.XtaClientConfiguration;
-import de.muenchen.eh.db.repository.ClaimContentRepository;
-import de.muenchen.eh.db.repository.ClaimDataRepository;
-import de.muenchen.eh.db.repository.ClaimDocumentRepository;
-import de.muenchen.eh.db.repository.ClaimEfileRepository;
-import de.muenchen.eh.db.repository.ClaimImportLogRepository;
-import de.muenchen.eh.db.repository.ClaimImportRepository;
-import de.muenchen.eh.db.repository.ClaimLogRepository;
-import de.muenchen.eh.db.repository.ClaimRepository;
-import de.muenchen.eh.db.repository.ClaimXmlRepository;
-import de.muenchen.eh.file.FileImportRouteBuilder;
+import de.muenchen.eh.domain.claim.ClaimRouteBuilder;
+import de.muenchen.eh.domain.file.FileImportRouteBuilder;
+import de.muenchen.eh.domain.identifier.IdentifierRouteBuilder;
+import de.muenchen.eh.infrastructure.db.repository.ClaimContentRepository;
+import de.muenchen.eh.infrastructure.db.repository.ClaimDataRepository;
+import de.muenchen.eh.infrastructure.db.repository.ClaimDocumentRepository;
+import de.muenchen.eh.infrastructure.db.repository.ClaimEfileRepository;
+import de.muenchen.eh.infrastructure.db.repository.ClaimImportLogRepository;
+import de.muenchen.eh.infrastructure.db.repository.ClaimImportRepository;
+import de.muenchen.eh.infrastructure.db.repository.ClaimLogRepository;
+import de.muenchen.eh.infrastructure.db.repository.ClaimRepository;
+import de.muenchen.eh.infrastructure.db.repository.ClaimXmlRepository;
+import de.muenchen.eh.infrastructure.db.repository.EfileIdentifierRepository;
+import de.muenchen.eh.infrastructure.db.repository.UnassignableErrorRepository;
+import de.muenchen.eh.infrastructure.db.repository.XtaRepository;
+import de.muenchen.eh.infrastructure.integration.xta.XtaRouteBuilder;
+import de.muenchen.eh.infrastructure.integration.xta.transport.ByteArrayDataSource;
+import de.muenchen.eh.infrastructure.integration.xta.transport.StringDataSource;
+import de.muenchen.eh.infrastructure.integration.xta.transport.properties.XtaClientConfiguration;
 import de.xoev.transport.xta._211.ContentType;
 import de.xoev.transport.xta._211.GenericContentContainer;
 import eu.osci.ws._2008._05.transport.X509TokenContainerType;
@@ -70,7 +74,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @CamelSpringBootTest
 @SpringBootTest(classes = { Application.class, XtaTestContext.class })
-@ExcludeRoutes({ FileImportRouteBuilder.class, ClaimRouteBuilder.class })
+@ExcludeRoutes({ FileImportRouteBuilder.class, ClaimRouteBuilder.class, IdentifierRouteBuilder.class })
 @ActiveProfiles(profiles = { TestConstants.SPRING_TEST_PROFILE })
 @TestPropertySource(properties = "spring.flyway.enabled=false")
 @TestPropertySource(properties = "spring.sql.init.mode=never")
@@ -99,6 +103,12 @@ class BebpoIntegrationTest {
     private ClaimXmlRepository claimXmlRepository;
     @MockitoBean(name = "entityManagerFactory")
     private EntityManagerFactory entityManagerFactory;
+    @MockitoBean
+    private EfileIdentifierRepository efileIdentifierRepository;
+    @MockitoBean
+    private UnassignableErrorRepository unassignableErrorRepository;
+    @MockitoBean
+    private XtaRepository xtaRepository;
 
     @Produce(XtaRouteBuilder.BEPBO_MANAGEMENT_PORT)
     private ProducerTemplate managementPort;

@@ -4,22 +4,23 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import de.muenchen.eh.Application;
 import de.muenchen.eh.MetadataNotAvailableTest;
-import de.muenchen.eh.ReadCreateFilingTest;
 import de.muenchen.eh.TestConstants;
+import de.muenchen.eh.TestContainerConfiguration;
 import de.muenchen.eh.XtaTestContext;
-import de.muenchen.eh.db.entity.ClaimDocument;
-import de.muenchen.eh.db.entity.MessageType;
-import de.muenchen.eh.db.repository.ClaimContentRepository;
-import de.muenchen.eh.db.repository.ClaimDataRepository;
-import de.muenchen.eh.db.repository.ClaimDocumentRepository;
-import de.muenchen.eh.db.repository.ClaimEfileRepository;
-import de.muenchen.eh.db.repository.ClaimImportLogRepository;
-import de.muenchen.eh.db.repository.ClaimImportRepository;
-import de.muenchen.eh.db.repository.ClaimLogRepository;
-import de.muenchen.eh.db.repository.ClaimRepository;
-import de.muenchen.eh.db.repository.ClaimXmlRepository;
-import de.muenchen.eh.db.repository.UnassignableErrorRepository;
-import de.muenchen.eh.db.repository.XtaRepository;
+import de.muenchen.eh.domain.identifier.IdentifierRouteBuilder;
+import de.muenchen.eh.infrastructure.db.entity.ClaimDocument;
+import de.muenchen.eh.infrastructure.db.entity.MessageType;
+import de.muenchen.eh.infrastructure.db.repository.ClaimContentRepository;
+import de.muenchen.eh.infrastructure.db.repository.ClaimDataRepository;
+import de.muenchen.eh.infrastructure.db.repository.ClaimDocumentRepository;
+import de.muenchen.eh.infrastructure.db.repository.ClaimEfileRepository;
+import de.muenchen.eh.infrastructure.db.repository.ClaimImportLogRepository;
+import de.muenchen.eh.infrastructure.db.repository.ClaimImportRepository;
+import de.muenchen.eh.infrastructure.db.repository.ClaimLogRepository;
+import de.muenchen.eh.infrastructure.db.repository.ClaimRepository;
+import de.muenchen.eh.infrastructure.db.repository.ClaimXmlRepository;
+import de.muenchen.eh.infrastructure.db.repository.UnassignableErrorRepository;
+import de.muenchen.eh.infrastructure.db.repository.XtaRepository;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -29,6 +30,7 @@ import org.apache.camel.EndpointInject;
 import org.apache.camel.builder.AdviceWith;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
+import org.apache.camel.test.spring.junit5.ExcludeRoutes;
 import org.apache.camel.test.spring.junit5.UseAdviceWith;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -49,6 +51,7 @@ import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 
 @UseAdviceWith
 @SpringBootTest(classes = { Application.class, XtaTestContext.class })
+@ExcludeRoutes({ IdentifierRouteBuilder.class })
 @CamelSpringBootTest
 @EnableAutoConfiguration
 @ActiveProfiles(profiles = { TestConstants.SPRING_TEST_PROFILE, TestConstants.SPRING_INTEGRATION_PROFILE, TestConstants.SPRING_DEVELOPMENT_PROFILE })
@@ -131,7 +134,7 @@ class DevelopmentReadCreateFilingTest {
         // Start test ...
         testEnd.expectedMessageCount(1);
 
-        ReadCreateFilingTest.uploadBucketTestFileConfiguration(s3InitClient);
+        TestContainerConfiguration.uploadToBucketMetadateTestFileConfiguration(s3InitClient);
 
         testEnd.assertIsSatisfied(TimeUnit.MINUTES.toMillis(5));
 

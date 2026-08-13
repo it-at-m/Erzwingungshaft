@@ -3,7 +3,7 @@ package de.muenchen.eh;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import de.muenchen.eh.file.DateExtractor;
+import de.muenchen.eh.domain.file.DateExtractor;
 import org.junit.jupiter.api.Test;
 
 public class DateExtractorTest {

@@ -1,5 +1,17 @@
 # Release-Notes
 
+## 10.8.2026 (Version 0.4.1)
+## Bugfix
+- Encoding des S3-Identifier-Outputs an Fremdsystem ISO-8859-1 angepasst.
+- Identifier Ausgabedateiname mit _mitAZ erweitert.
+- XTA Fehler in claim_log persistieren.
+- Retry mit Delay bei TimeOutExceptions ergaenzt.
+- Optimiere Aktensuche mit Akten-Collection-Cache.
+
+## 30.7.2026 (Version 0.4.0)
+## Aenderung
+- Vorgangsanlage mit Erstellung Identifier und Ausgabedatei fuer die Druckstrasse.
+
 ## 9.7.2026
 ## Aenderung
 - Anpassung an eAkte26 verwende Templates EH-Akte und EH-Vorgang.

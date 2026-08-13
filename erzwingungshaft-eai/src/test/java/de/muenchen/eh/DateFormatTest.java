@@ -2,7 +2,7 @@ package de.muenchen.eh;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import de.muenchen.eh.claim.content.ContentContainerFactoryHelper;
+import de.muenchen.eh.domain.claim.content.ContentContainerFactoryHelper;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Calendar;

@@ -3,17 +3,18 @@ package de.muenchen.eh;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import de.muenchen.eh.claim.ClaimRouteBuilder;
-import de.muenchen.eh.claim.efile.EfileRouteBuilder;
-import de.muenchen.eh.claim.xta.XtaRouteBuilder;
-import de.muenchen.eh.db.entity.ClaimImport;
-import de.muenchen.eh.db.entity.Xta;
-import de.muenchen.eh.db.repository.ClaimImportRepository;
-import de.muenchen.eh.db.repository.XtaRepository;
-import de.muenchen.eh.file.FileImportRouteBuilder;
+import de.muenchen.eh.domain.claim.ClaimRouteBuilder;
+import de.muenchen.eh.domain.file.FileImportRouteBuilder;
+import de.muenchen.eh.infrastructure.db.entity.ClaimImport;
+import de.muenchen.eh.infrastructure.db.entity.Xta;
+import de.muenchen.eh.infrastructure.db.repository.ClaimImportRepository;
+import de.muenchen.eh.infrastructure.db.repository.XtaRepository;
+import de.muenchen.eh.infrastructure.integration.efile.EfileRouteBuilder;
+import de.muenchen.eh.infrastructure.integration.xta.XtaRouteBuilder;
 import de.xoev.transport.xta._211.MessageStatusType;
 import de.xoev.transport.xta._211.TransportReport;
 import java.math.BigInteger;
+import java.util.Optional;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -94,10 +95,10 @@ public class XtaStatusRefreshTest extends TestContainerConfiguration {
 
         camelContext.createProducerTemplate().sendBody(XtaRouteBuilder.BEPBO_REFRESH_MESSAGE_STATUS, null);
 
-        Xta xtaFound = xtaRepository.findById(xta.getId());
+        Optional<Xta> xtaFound = xtaRepository.findById(xta.getId());
 
-        assertEquals(1, xtaFound.getTransportMessageStatus());
-        assertNotNull(xtaFound.getUpdatedAt());
+        assertEquals(1, xtaFound.get().getTransportMessageStatus());
+        assertNotNull(xtaFound.get().getUpdatedAt());
 
     }
 

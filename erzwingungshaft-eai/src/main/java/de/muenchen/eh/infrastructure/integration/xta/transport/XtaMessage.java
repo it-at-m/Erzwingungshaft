@@ -1,0 +1,100 @@
+package de.muenchen.eh.infrastructure.integration.xta.transport;
+
+import de.muenchen.eh.domain.claim.ClaimContentWrapper;
+import de.muenchen.eh.infrastructure.db.entity.MessageType;
+import de.muenchen.eh.infrastructure.db.entity.Xta;
+import de.muenchen.eh.infrastructure.db.repository.XtaRepository;
+import de.muenchen.eh.infrastructure.integration.xta.XtaRouteBuilder;
+import de.muenchen.eh.infrastructure.integration.xta.transport.container.XtaMessageContainer;
+import de.muenchen.eh.infrastructure.integration.xta.transport.metadata.XtaMessageMetaData;
+import de.muenchen.eh.infrastructure.log.Constants;
+import de.muenchen.eh.infrastructure.log.LogServiceClaim;
+import de.muenchen.eh.infrastructure.log.StatusProcessingType;
+import de.xoev.transport.xta._211.GenericContentContainer;
+import eu.osci.ws._2008._05.transport.X509TokenContainerType;
+import eu.osci.ws._2014._10.transport.MessageMetaData;
+import java.util.Collections;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
+import org.apache.camel.Produce;
+import org.apache.camel.ProducerTemplate;
+import org.apache.camel.builder.ExchangeBuilder;
+import org.apache.camel.component.cxf.common.message.CxfConstants;
+import org.apache.cxf.ws.addressing.AttributedURIType;
+import org.springframework.stereotype.Component;
+
+@Component
+@RequiredArgsConstructor
+public class XtaMessage implements Processor {
+
+    private final CamelContext camelContext;
+    private final XtaMessageContainer xtaMessageContainer;
+    private final XtaMessageMetaData xtaMessageMetaData;
+    private final LogServiceClaim logServiceClaim;
+    private final XtaRepository xtaRepository;
+
+    @Produce(XtaRouteBuilder.BEPBO_SEND_PORT)
+    private ProducerTemplate sendPort;
+
+    @Produce(XtaRouteBuilder.BEPBO_MANAGEMENT_PORT)
+    private ProducerTemplate managementPort;
+
+    public void process(Exchange exchange) {
+
+        // Message id
+        Exchange requestMessageId = ExchangeBuilder.anExchange(camelContext)
+                .withBody(Collections.emptyList())
+                .withHeader(CxfConstants.OPERATION_NAME, "createMessageId")
+                .withHeader(CxfConstants.OPERATION_NAMESPACE, "http://xoev.de/transport/xta/211")
+                .withProperty(Constants.CLAIM, exchange.getMessage().getBody(ClaimContentWrapper.class).getClaim())
+                .build();
+
+        Exchange responseMessageId = managementPort.send(requestMessageId);
+
+        if (responseMessageId.isRouteStop()) {
+            exchange.setRouteStop(true);
+            return;
+        }
+
+        AttributedURIType attributedURIType = responseMessageId.getIn().getBody(AttributedURIType.class);
+        ClaimContentWrapper contentWrapper = exchange.getMessage().getBody(ClaimContentWrapper.class);
+        var importClaim = contentWrapper.getClaimImport();
+
+        Xta xta = new Xta();
+        xta.setClaimImportId(importClaim.getId());
+        xta.setMessageId(attributedURIType.getValue());
+
+        logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.XTA_MESSAGE_ID, MessageType.INFO, exchange);
+
+        // Send message
+        GenericContentContainer messageContent = xtaMessageContainer.build(contentWrapper);
+        MessageMetaData messageMetaData = xtaMessageMetaData.build(attributedURIType);
+
+        Exchange requestSend = ExchangeBuilder.anExchange(camelContext)
+                .withBody(List.of(messageContent, messageMetaData, new X509TokenContainerType()))
+                .withHeader("MessageID", attributedURIType.getValue())
+                .withProperty(Constants.CLAIM, exchange.getMessage().getBody(ClaimContentWrapper.class).getClaim())
+                .build();
+
+        Exchange responseSend = sendPort.send(requestSend);
+
+        xta.setSendHttpResponseCode(responseSend.getMessage().getHeader(Exchange.HTTP_RESPONSE_CODE, Integer.class));
+
+        if (responseSend.isRouteStop()) {
+            exchange.setRouteStop(true);
+        }
+
+        /**
+         * Set transport message status to '0' ( = in progress).
+         * All xtaMessages with transport message status '0' will be updated in the last step.
+         * The update is always executed at the very end —regardless of any potential imports— so that
+         * the application can be launched solely to update the message status.
+         */
+        xta.setTransportMessageStatus(0);
+        xtaRepository.save(xta);
+
+    }
+}

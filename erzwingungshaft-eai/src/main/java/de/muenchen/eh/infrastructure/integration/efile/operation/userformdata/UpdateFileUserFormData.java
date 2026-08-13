@@ -1,0 +1,71 @@
+package de.muenchen.eh.infrastructure.integration.efile.operation.userformdata;
+
+import de.muenchen.eh.domain.claim.ClaimContentWrapper;
+import de.muenchen.eh.infrastructure.db.entity.Claim;
+import de.muenchen.eh.infrastructure.db.entity.ClaimData;
+import de.muenchen.eh.infrastructure.db.entity.MessageType;
+import de.muenchen.eh.infrastructure.db.repository.ClaimDataRepository;
+import de.muenchen.eh.infrastructure.integration.efile.operation.OperationIdFactory;
+import de.muenchen.eh.infrastructure.integration.efile.properties.FileProperties;
+import de.muenchen.eh.infrastructure.log.LogServiceClaim;
+import de.muenchen.eh.infrastructure.log.StatusProcessingType;
+import java.util.HashMap;
+import java.util.Map;
+import javax.annotation.Nullable;
+import org.apache.camel.Exchange;
+import org.springframework.stereotype.Component;
+
+@Component
+public class UpdateFileUserFormData extends UpdateUserFormData {
+
+    private static final String USER_FORM_REFERENCE = "lhmdfvpublic@2150.8800:";
+    private static final String NAME_GESCHAEFTSPARTNER = "BusinessDataGPSurname";
+    private static final String FIRST_NAME_GESCHAEFTSPARTNER = "BusinessDataGPFirstname";
+    private static final String BIRTHDATE_GESCHAEFTSPARTNER = "BusinessDataGPBirthDate";
+
+    private final FileProperties properties;
+    private final ClaimDataRepository claimDataRepository;
+    @Nullable private Map<String, String> subjectProperties;
+
+    public UpdateFileUserFormData(LogServiceClaim logServiceClaim, OperationIdFactory completeOperationIdFactory,
+            FileProperties properties, ClaimDataRepository claimDataRepository) {
+        super(logServiceClaim, completeOperationIdFactory);
+        this.properties = properties;
+        this.claimDataRepository = claimDataRepository;
+    }
+
+    @Override
+    protected Map<String, String> userFormValuesBuilder(Exchange exchange) {
+
+        this.subjectExchange = exchange;
+
+        Map<String, String> subjectDataValues = new HashMap<>();
+
+        Claim claim = subjectExchange.getMessage().getBody(ClaimContentWrapper.class).getClaim();
+        ClaimData claimData = claimDataRepository.findByClaimId(claim.getId());
+        subjectProperties = properties.getSubjectDataValues();
+
+        if (subjectProperties != null) {
+            for (Map.Entry<String, String> entry : properties.getSubjectDataValues().entrySet()) {
+
+                if (entry.getValue().equals(NAME_GESCHAEFTSPARTNER)) {
+                    subjectDataValues.put(USER_FORM_REFERENCE + entry.getValue(), claimData.getEhp1name());
+                } else if (entry.getValue().equals(FIRST_NAME_GESCHAEFTSPARTNER)) {
+                    subjectDataValues.put(USER_FORM_REFERENCE + entry.getValue(), claimData.getEhp1vorname());
+                } else if (entry.getValue().equals(BIRTHDATE_GESCHAEFTSPARTNER)) {
+                    subjectDataValues.put(USER_FORM_REFERENCE + entry.getValue(), claimData.getEhp1gebdat());
+                }
+            }
+        }
+        return subjectDataValues;
+    }
+
+    @Override
+    protected void logMessage() {
+        if (subjectProperties != null)
+            logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_SUBJECT_FILE_DATA_SAVED, MessageType.INFO, subjectExchange);
+        else
+            logServiceClaim.writeGenericClaimLogMessage(StatusProcessingType.EFILE_SUBJECT_DATA_SKIPPED, MessageType.WARN, subjectExchange);
+    }
+
+}

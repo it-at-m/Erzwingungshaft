@@ -2,8 +2,10 @@ package de.muenchen.eh;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +24,7 @@ import software.amazon.awssdk.services.s3.model.DeleteBucketRequest;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @Testcontainers
 public class TestContainerConfiguration extends TestHelper {
@@ -29,6 +32,7 @@ public class TestContainerConfiguration extends TestHelper {
     protected static final String EH_BUCKET_BACKUP = "eh-backup";
     protected static final String EH_BUCKET_PDF = "eh-import-pdf";
     protected static final String EH_BUCKET_ANTRAG = "eh-import-antrag";
+    protected static final String EH_BUCKET_IDENTIFIER_OUTPUT = "int-eheaik-exportehliste";
 
     protected static final String METADATA = "D.KVU.EUDG0P0.20240807.EZH";
 
@@ -102,6 +106,56 @@ public class TestContainerConfiguration extends TestHelper {
         s3InitClient.createBucket(CreateBucketRequest.builder().bucket(EH_BUCKET_ANTRAG).build());
         s3InitClient.createBucket(CreateBucketRequest.builder().bucket(EH_BUCKET_BACKUP).build());
         s3InitClient.createBucket(CreateBucketRequest.builder().bucket(EH_BUCKET_PDF).build());
+        s3InitClient.createBucket(CreateBucketRequest.builder().bucket(EH_BUCKET_IDENTIFIER_OUTPUT).build());
+    }
+
+    public static void uploadToBucketMetadateTestFileConfiguration(S3Client s3InitClient) {
+
+        // Initialize S3
+        s3InitClient.putObject(PutObjectRequest.builder().bucket(EH_BUCKET_ANTRAG).key(METADATA).build(),
+                Path.of(new File("testdata/in/metadata/D.KVU.EUDG0P0.20240807.EZH").toURI()));
+
+        // Not assignable to 'Einzelakte'
+        s3InitClient.putObject(
+                PutObjectRequest.builder().bucket(EH_BUCKET_PDF).key("1000809085_5793341761427_20240807_EH.pdf")
+                        .build(),
+                Path.of(new File("testdata/in/pdf/1000809085_5793341761427_20240807_EH.pdf").toURI()));
+
+        s3InitClient.putObject(
+                PutObjectRequest.builder().bucket(EH_BUCKET_PDF).key("1000809085_5793341761427_20240807_URB.pdf")
+                        .build(),
+                Path.of(new File("testdata/in/pdf/1000809085_5793341761427_20240807_URB.pdf").toURI()));
+
+        // Assignable to 'Einzelakte'
+        s3InitClient.putObject(
+                PutObjectRequest.builder().bucket(EH_BUCKET_PDF).key("1000013749_5793303492524_20240807_EH.pdf")
+                        .build(),
+                Path.of(new File("testdata/in/pdf/1000013749_5793303492524_20240807_EH.pdf").toURI()));
+
+        s3InitClient.putObject(
+                PutObjectRequest.builder().bucket(EH_BUCKET_PDF).key("1000013749_5793303492524_20240807_URB.pdf")
+                        .build(),
+                Path.of(new File("testdata/in/pdf/1000013749_5793303492524_20240807_URB.pdf").toURI()));
+
+        // IllegalArgumentException : The mandatory field defined at the position 31
+        s3InitClient.putObject(
+                PutObjectRequest.builder().bucket(EH_BUCKET_PDF).key("1000258309_5793402494421_20240807_EH.pdf")
+                        .build(),
+                Path.of(new File("testdata/in/pdf/1000258309_5793402494421_20240807_EH.pdf").toURI()));
+
+        s3InitClient.putObject(
+                PutObjectRequest.builder().bucket(EH_BUCKET_PDF).key("1000258309_5793402494421_20240807_URB.pdf")
+                        .build(),
+                Path.of(new File("testdata/in/pdf/1000258309_5793402494421_20240807_URB.pdf").toURI()));
+
+    }
+
+    public static void uploadToBucketIdentifierTestFileConfiguration(S3Client s3InitClient) {
+
+        // Initialize S3
+        s3InitClient.putObject(PutObjectRequest.builder().bucket(EH_BUCKET_ANTRAG).key("d.kvu.euehpkp0.JHJJMMTT.ein").build(),
+                Path.of(new File("testdata/in/identifier/d.kvu.euehpkp0.JHJJMMTT.ein").toURI()));
+
     }
 
 }

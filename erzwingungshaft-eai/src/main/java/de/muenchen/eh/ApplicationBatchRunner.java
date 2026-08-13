@@ -1,6 +1,6 @@
 package de.muenchen.eh;
 
-import de.muenchen.eh.claim.xta.XtaRouteBuilder;
+import de.muenchen.eh.infrastructure.integration.xta.XtaRouteBuilder;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;

@@ -1,0 +1,53 @@
+package de.muenchen.eh.infrastructure.integration.efile.operation.contentbuilder;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.muenchen.eakte.api.rest.model.DmsObjektResponse;
+import de.muenchen.eh.domain.claim.ClaimContentWrapper;
+import de.muenchen.eh.infrastructure.common.OffsetDateTimeFormatter;
+import de.muenchen.eh.infrastructure.integration.efile.operation.OperationId;
+import de.muenchen.eh.infrastructure.integration.efile.properties.FineProperties;
+import java.util.HashMap;
+import java.util.Map;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+public class OutgoingRequestDTOBuilder {
+
+    private final FineProperties fineProperties;
+    private final ClaimContentWrapper contentWrapper;
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    public static OutgoingRequestDTOBuilder create(FineProperties fineProperties, ClaimContentWrapper contentWrapper) {
+        return new OutgoingRequestDTOBuilder(fineProperties, contentWrapper);
+    }
+
+    public Map<String, String> buildAsMap() {
+        return createContent();
+    }
+
+    public String buildAsJson() throws JsonProcessingException {
+        return objectMapper.writeValueAsString(createContent());
+    }
+
+    private Map<String, String> createContent() {
+        Map<String, String> params = new HashMap<>();
+
+        DmsObjektResponse fineFileReference = (DmsObjektResponse) contentWrapper.getEfile().get(OperationId.CREATE_FINE.name());
+
+        assert fineFileReference.getObjid() != null;
+        params.put("referrednumber", fineFileReference.getObjid());
+        params.put("filesubj", contentWrapper.getClaimImport().getKassenzeichen());
+        params.put("objterms",
+                (contentWrapper.getClaimImport().getGeschaeftspartnerId().concat(";").concat(contentWrapper.getClaimImport().getKassenzeichen())));
+        params.put("accdef", fineProperties.getAccdef());
+        params.put("doctemplate", fineProperties.getDoctemplate());
+        params.put("outgoingdate", OffsetDateTimeFormatter.formatNow());
+
+        params.put("incattachments", fineProperties.getIncattachments());
+        params.put("shortname", fineProperties.getOutgoing().concat(" ").concat(contentWrapper.getClaimImport().getGeschaeftspartnerId()));
+
+        return params;
+    }
+
+}
