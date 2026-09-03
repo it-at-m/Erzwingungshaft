@@ -57,6 +57,8 @@ public class IdentifierOperationIdFactory extends OperationIdFactory {
         createProcedureDTO.setDefinition(fineProperties.getEhVorgangDefinition());
         createProcedureDTO.setReferrednumber(identifierContentWrapper.getEfileIdentifier().getFileCooAddress());
         createProcedureDTO.setFilesubj(identifierContentWrapper.getEfileIdentifier().getKassenzeichenEfile());
+        createProcedureDTO.setAccdef(fineProperties.getAccdef());
+
         exchange.getMessage().setBody(createProcedureDTO);
         return exchange;
     }
