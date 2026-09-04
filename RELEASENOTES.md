@@ -1,5 +1,10 @@
 # Release-Notes
 
+## 3.9.2026 (Version 0.4.2)
+## Bugfix
+- Zugriffsdefinition Akten ergaenzt.
+- EAkte-GP-Collections mit Bereichsprefix (basenr) filtern.
+
 ## 10.8.2026 (Version 0.4.1)
 ## Bugfix
 - Encoding des S3-Identifier-Outputs an Fremdsystem ISO-8859-1 angepasst.
