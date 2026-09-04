@@ -8,6 +8,7 @@ import de.muenchen.eh.infrastructure.integration.efile.EfileRouteBuilder;
 import de.muenchen.eh.infrastructure.integration.efile.operation.OperationId;
 import de.muenchen.eh.infrastructure.integration.efile.operation.eapl.AbstractEAPLExecute;
 import de.muenchen.eh.infrastructure.integration.efile.operation.eapl.GeschaeftspartnerIdFilter;
+import de.muenchen.eh.infrastructure.integration.efile.properties.FileProperties;
 import de.muenchen.eh.infrastructure.log.LogServiceIdentifier;
 import de.muenchen.eh.infrastructure.log.StatusProcessingType;
 import java.util.List;
@@ -35,10 +36,13 @@ public class IdentifierCollection extends AbstractEAPLExecute {
 
     private final IdentifierOperationIdFactory identifierOperationIdFactory;
     private final LogServiceIdentifier logServiceIdentifier;
+    private final FileProperties fileProperties;
 
-    public IdentifierCollection(IdentifierOperationIdFactory identifierOperationIdFactory, LogServiceIdentifier logServiceIdentifier) {
+    public IdentifierCollection(IdentifierOperationIdFactory identifierOperationIdFactory, LogServiceIdentifier logServiceIdentifier,
+            FileProperties fileProperties) {
         this.identifierOperationIdFactory = identifierOperationIdFactory;
         this.logServiceIdentifier = logServiceIdentifier;
+        this.fileProperties = fileProperties;
     }
 
     @Override
@@ -100,7 +104,17 @@ public class IdentifierCollection extends AbstractEAPLExecute {
             exchange.setRouteStop(true);
             return true;
         }
+
         collectionCache = Optional.ofNullable(efileCollectionResponse.getMessage().getBody(ReadApentryAntwortDTO.class));
+
+        // Filter department collections
+        collectionCache.ifPresent(cacheContent -> {
+            if (cacheContent.getGiobjecttype() != null && fileProperties.getBasenr() != null && !fileProperties.getBasenr().isBlank()) {
+                List<Objektreferenz> collectionsStartWithBasenr = cacheContent.getGiobjecttype().stream()
+                        .filter(col -> (col.getObjname() != null && col.getObjname().startsWith(fileProperties.getBasenr()))).toList();
+                cacheContent.setGiobjecttype(collectionsStartWithBasenr);
+            }
+        });
         return false;
     }
 
