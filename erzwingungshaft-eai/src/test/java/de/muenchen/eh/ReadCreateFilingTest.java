@@ -32,6 +32,7 @@ import de.xoev.transport.xta._211.TransportReport;
 import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -172,6 +173,20 @@ public class ReadCreateFilingTest extends TestContainerConfiguration {
         Thread.sleep(5000); // Waiting for database inserts
 
         // Database
+
+
+        // For pipeline troubleshooting only
+        var list = claimImportRepository.findAll();
+        System.out.println("DEBUG-START");
+        Iterator<ClaimImport> imports = list.iterator();
+        while (imports.hasNext()) {
+            ClaimImport claimImport = imports.next();;
+            System.out.println(claimImport.getGeschaeftspartnerId() + "," + claimImport.getKassenzeichen());
+        }
+        System.out.println("DEBUG-END");
+
+
+
         assertEquals(5, claimImportRepository.count(), "5 imports expected.");
         assertEquals(3, claimRepository.count(),
                 "3 claims expected (gp_id : 1000809085/5793341761427, 1000013749, 1000258309).");

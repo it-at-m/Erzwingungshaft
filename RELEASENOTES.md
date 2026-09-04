@@ -1,6 +1,6 @@
 # Release-Notes
 
-## 3.9.2026 (Version 0.4.2)
+## 4.9.2026 (Version 0.4.2)
 ## Bugfix
 - Zugriffsdefinition Akten ergaenzt.
 - EAkte-GP-Collections mit Bereichsprefix (basenr) filtern.
