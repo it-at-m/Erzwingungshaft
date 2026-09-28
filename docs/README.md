@@ -314,7 +314,7 @@ batch:
   # When PDFs are imported, the `aggregation.completionTimeout` is activated; 
   # this controls the trigger for starting the next route. 
   # Claim processing begins by reading database entries. 
-  # By appropriately configuring AWS S3 [maxMessagesPerPoll](https://camel.apache.org/components/4.22.x/aws2-s3-component.html) 
+  # By appropriately configuring AWS S3 maxMessagesPerPoll (https://camel.apache.org/components/4.22.x/aws2-s3-component.html) 
   # and increasing the `pdf-consume-completion-timeout`, a higher number of claims
   # processed per batch can be achieved in the claim processing route.
   pdf-consume-completion-timeout: 2000
