@@ -1,5 +1,13 @@
 # Release-Notes
 
+## 28.9.2026 (Version 0.4.3)
+## Bugfix
+- Lesen des PayloadSchema aus der application.yml.
+- Reihenfolge geaendert 'XTA Versand' wird vor dem 'Schreiben eAkte' ausgeführt.
+- Klasse geloescht XtaMessageId.
+- Umstellung der Route.import-pdfs auf completionFromBatchConsumer.
+- Starte Verarbeitung von Antraegen ohne einlesen von Metadaten und Pdf Dateien. 
+
 ## 4.9.2026 (Version 0.4.2)
 ## Bugfix
 - Zugriffsdefinition Akten ergaenzt.

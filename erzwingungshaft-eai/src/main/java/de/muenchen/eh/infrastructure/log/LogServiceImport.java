@@ -54,7 +54,11 @@ public class LogServiceImport {
             claimImport.setOutputFile(caseImportEntity.getFileName());
             claimImport.setIsDataImport(true);
 
-            exchange.setProperty(Constants.CLAIM_IMPORT, claimImportRepository.save(claimImport));
+            ClaimImport persistedClaimImport = claimImportRepository.save(claimImport);
+            exchange.setProperty(Constants.CLAIM_IMPORT, persistedClaimImport);
+            // Preload cache so that the entities for the `import-pdfs` route are immediately available without a
+            // re-query, and to avoid a transaction mismatch caused by saving in one route and reading in the next.
+            claimImportCache.put(caseImportEntity.getPathName(), persistedClaimImport);
 
             writeInfoImportLogMessage(StatusProcessingType.IMPORT_DATA_FILE_CREATED, exchange);
 

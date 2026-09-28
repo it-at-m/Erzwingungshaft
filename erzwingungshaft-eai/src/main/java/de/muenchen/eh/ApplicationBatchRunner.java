@@ -1,5 +1,6 @@
 package de.muenchen.eh;
 
+import de.muenchen.eh.domain.claim.ClaimRouteBuilder;
 import de.muenchen.eh.infrastructure.integration.xta.XtaRouteBuilder;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -7,6 +8,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.engine.DefaultInflightRepository;
 import org.apache.camel.model.RouteDefinition;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
@@ -21,11 +23,17 @@ public class ApplicationBatchRunner implements CommandLineRunner {
     private final ApplicationContext springContext;
     private final CamelContext camelContext;
     private final ConfigurableApplicationContext appContext;
+    private final boolean claimEhProcessEnabled;
 
-    public ApplicationBatchRunner(ApplicationContext springContext, CamelContext camelContext, ConfigurableApplicationContext appContext) {
+    public ApplicationBatchRunner(
+            ApplicationContext springContext,
+            CamelContext camelContext,
+            ConfigurableApplicationContext appContext,
+            @Value("${batch.claim-eh-process.enabled:false}") boolean claimEhProcessEnabled) {
         this.springContext = springContext;
         this.camelContext = camelContext;
         this.appContext = appContext;
+        this.claimEhProcessEnabled = claimEhProcessEnabled;
     }
 
     @Override
@@ -49,6 +57,12 @@ public class ApplicationBatchRunner implements CommandLineRunner {
 
         try {
             camelContext.start();
+
+            if (claimEhProcessEnabled) {
+                log.info("Triggering claim-eh-process route directly ...");
+                camelContext.createProducerTemplate().sendBody(ClaimRouteBuilder.PROCESS_CLAIMS, null);
+                log.info("claim-eh-process route triggered.");
+            }
 
             log.info("CamelContext started. Looking for files to import ...");
             waitUntilIdle();
