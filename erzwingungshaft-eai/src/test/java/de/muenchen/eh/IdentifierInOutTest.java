@@ -22,6 +22,7 @@ import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.ExcludeRoutes;
 import org.apache.camel.test.spring.junit5.UseAdviceWith;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -36,6 +37,7 @@ import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 @CamelSpringBootTest
 @EnableAutoConfiguration
 @ActiveProfiles(profiles = { TestConstants.SPRING_TEST_PROFILE })
+@Disabled("A Testcontainers image used in the test is no longer available. The test infrastructure still needs to be adjusted.")
 public class IdentifierInOutTest extends TestContainerConfiguration {
 
     @EndpointInject("mock:test-end")
