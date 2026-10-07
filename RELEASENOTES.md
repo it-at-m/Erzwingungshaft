@@ -1,5 +1,9 @@
 # Release-Notes
 
+## 30.9.2026 (Version 0.4.4)
+## Erweiterung
+- XTA Tabelle um 2 Spalten fuer Laufzettel Rueckantwort erweitert.
+
 ## 4.9.2026 (Version 0.4.2)
 ## Bugfix
 - Zugriffsdefinition Akten ergaenzt.
