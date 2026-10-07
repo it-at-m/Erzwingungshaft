@@ -13,6 +13,7 @@ spring:
     name: '@project.artifactId@'
   main:
     web-application-type: none
+    jvm-args: -Djavax.xml.catalog.catalogs=classpath:META-INF/catalog.xml
   datasource:
     url:     # Must be configured
     username: # Must be configured

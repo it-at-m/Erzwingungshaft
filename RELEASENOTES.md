@@ -1,9 +1,10 @@
 # Release-Notes
 
-## 30.9.2026 (Version 0.4.4)
+## 07.10.2026 (Version 0.4.4)
 ## Erweiterung
 - XTA Tabelle um 2 Spalten fuer Laufzettel Rueckantwort erweitert.
 - GP_Id aus eAKte-Bzeichner-Outgoing entfernt.
+- catalog.xml eingefuehrt.
 
 ## 4.9.2026 (Version 0.4.2)
 ## Bugfix
