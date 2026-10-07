@@ -45,7 +45,7 @@ public class OutgoingRequestDTOBuilder {
         params.put("outgoingdate", OffsetDateTimeFormatter.formatNow());
 
         params.put("incattachments", fineProperties.getIncattachments());
-        params.put("shortname", fineProperties.getOutgoing().concat(" ").concat(contentWrapper.getClaimImport().getGeschaeftspartnerId()));
+        params.put("shortname", fineProperties.getOutgoing());
 
         return params;
     }
