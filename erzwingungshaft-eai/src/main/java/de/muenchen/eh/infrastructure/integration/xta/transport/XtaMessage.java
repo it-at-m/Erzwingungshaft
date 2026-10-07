@@ -7,6 +7,7 @@ import de.muenchen.eh.infrastructure.db.repository.XtaRepository;
 import de.muenchen.eh.infrastructure.integration.xta.XtaRouteBuilder;
 import de.muenchen.eh.infrastructure.integration.xta.transport.container.XtaMessageContainer;
 import de.muenchen.eh.infrastructure.integration.xta.transport.metadata.XtaMessageMetaData;
+import de.muenchen.eh.infrastructure.integration.xta.transport.properties.XtaClientConfiguration;
 import de.muenchen.eh.infrastructure.log.Constants;
 import de.muenchen.eh.infrastructure.log.LogServiceClaim;
 import de.muenchen.eh.infrastructure.log.StatusProcessingType;
@@ -35,6 +36,7 @@ public class XtaMessage implements Processor {
     private final XtaMessageMetaData xtaMessageMetaData;
     private final LogServiceClaim logServiceClaim;
     private final XtaRepository xtaRepository;
+    private final XtaClientConfiguration xtaClientConfiguration;
 
     @Produce(XtaRouteBuilder.BEPBO_SEND_PORT)
     private ProducerTemplate sendPort;
@@ -48,7 +50,7 @@ public class XtaMessage implements Processor {
         Exchange requestMessageId = ExchangeBuilder.anExchange(camelContext)
                 .withBody(Collections.emptyList())
                 .withHeader(CxfConstants.OPERATION_NAME, "createMessageId")
-                .withHeader(CxfConstants.OPERATION_NAMESPACE, "http://xoev.de/transport/xta/211")
+                .withHeader(CxfConstants.OPERATION_NAMESPACE, xtaClientConfiguration.getMessageType().getPayloadSchema())
                 .withProperty(Constants.CLAIM, exchange.getMessage().getBody(ClaimContentWrapper.class).getClaim())
                 .build();
 

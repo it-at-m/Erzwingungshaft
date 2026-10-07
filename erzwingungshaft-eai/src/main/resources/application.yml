@@ -1,5 +1,8 @@
 batch:
   enabled: true
+  claim-eh-process:
+    enabled: false
+  pdf-consume-completion-timeout: 2000
 
 proxy:
   http:

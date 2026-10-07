@@ -19,8 +19,8 @@
   - (3) Antragbearbeitung:
     - (3.1) Prüfen ob alle Eingangsinformationen pro Fall vorliegen (Antrag-Metadaten, PDF Dokumente).
     - (3.2) Erstellen xJustiz XML.
-    - (3.3) Dokumentation des Vorgangs in der E-Akte.
-    - (3.4) Versand Justiz Nachricht. 
+    - (3.3) Versand Justiz Nachricht.
+    - (3.4) Dokumentation des Vorgangs in der E-Akte. 
 - Jeglicher Datenaustausch mit Fremdsystemen erfolgt im Format Satz-Fester-Länge. Die Dateien werden über einen S3 Objektspeicher ausgetauscht.
 - Für den Start des Schritts (2) müssen durch Fremdsysteme die PDFs und eine weitere Datei mit Metadaten erstellt sein.
 - Die Antrags _Metadaten_ und _PDFs_ werden auf unterschiedlichen Wegen und zeitlich asynchron bereit gestellt und von der EAI aus einem jeweils eigenen S3-Bucket gelesen.
@@ -34,7 +34,7 @@
 - Können PDFs (über die Kombination _GeschäftspartnerId_, _Kassenzeichen_ und _Datum_) keinen Metadaten zugeordnet werden, werden sie als _nicht zuordenbar_ aussortiert.
 - In (3) erfolgt nach dem vollständigen Eingang aller _Antragsdaten (Metadaten, PDFs)_ die eigentliche Verarbeitung.
 - Für die Antrags Verarbeitung muss pro Antrag ein XML im [xJustiz Format](https://xjustiz.justiz.de/) erstellt werden. Dazu dient ein eigenes [xJustiz Projekt](https://github.com/it-at-m/xjustiz) das in der EAI als Maven Artefakt referenziert ist.
-- Vor dem Versand an die Justiz über das [Behördenpostfach](https://www.bamf.de/DE/Themen/Digitalisierung/beBPo/beBPo-node.html) werden die versendeten Dateien pro Fall im Dokumentenmanagment System (DMS) abgelegt.
+- Nach dem Versand an die Justiz über das [Behördenpostfach](https://www.bamf.de/DE/Themen/Digitalisierung/beBPo/beBPo-node.html) werden die versendeten Dateien pro Fall im Dokumentenmanagment System (DMS) abgelegt.
 - Die EAI verhält sich wie ein Batchjob und beendet sich von alleine wenn alle Aufgaben erfüllt sind. Sie wird per Cronjob in einer Container Application Plattform gestartet.
 
 Github-Repo: https://github.com/it-at-m/Erzwingungshaft
@@ -306,6 +306,18 @@ bebpo:
 ````
 batch:
   enabled: false
+  # If true, the route for direct claim processing
+  # is triggered by ApplicationBatchRunner immediately
+  # after the CamelContext starts. Default: false.
+  claim-eh-process:
+    enabled: false
+  # When PDFs are imported, the `aggregation.completionTimeout` is activated; 
+  # this controls the trigger for starting the next route. 
+  # Claim processing begins by reading database entries. 
+  # By appropriately configuring AWS S3 maxMessagesPerPoll (https://camel.apache.org/components/4.22.x/aws2-s3-component.html) 
+  # and increasing the `pdf-consume-completion-timeout`, a higher number of claims
+  # processed per batch can be achieved in the claim processing route.
+  pdf-consume-completion-timeout: 2000
 
 proxy:
   http:
