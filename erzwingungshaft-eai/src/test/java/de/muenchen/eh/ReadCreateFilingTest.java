@@ -46,6 +46,7 @@ import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.ExcludeRoutes;
 import org.apache.camel.test.spring.junit5.UseAdviceWith;
 import org.apache.cxf.ws.addressing.AttributedURIType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -92,6 +93,11 @@ public class ReadCreateFilingTest extends TestContainerConfiguration {
 
     @Autowired
     protected CamelContext camelContext;
+
+    @BeforeEach
+    void init() {
+        claimImportRepository.deleteAll();
+    }
 
     @Test
     void test_5_claims() throws Exception {

@@ -38,8 +38,12 @@ public class TestContainerConfiguration extends TestHelper {
 
     private WireMockServer wireMockContainer;
 
+    private static DockerImageName quayMinio = DockerImageName
+            .parse("quay.io/minio/minio:latest")
+            .asCompatibleSubstituteFor("minio/minio");
+
     @Container
-    protected static MinIOContainer minioContainer = new MinIOContainer(DockerImageName.parse("minio/minio:latest"))
+    protected static MinIOContainer minioContainer = new MinIOContainer(quayMinio)
             .withExposedPorts(9000);
 
     static {
