@@ -11,6 +11,9 @@
     <system
             systemId="http://xoev.de/transport/xta/211/XTA-Webservice-Globale-Elemente.xsd"
             uri="classpath:META-INF/schema/XTA-Webservice-Globale-Elemente.xsd"/>
+    <system
+            systemId="http://www.w3.org/2006/03/addressing/ws-addr.xsd"
+            uri="classpath:META-INF/schema/ws-addr.xsd"/>
 
     <!-- OSCI-Schemas (falls referenziert) -->
     <system
