@@ -49,7 +49,7 @@ public class XtaMessageStatusRefreshService implements Processor {
         Exchange requestTransportReport = ExchangeBuilder.anExchange(camelContext)
                 .withBody(List.of(attributedURIType, PartyBuilder.builder().identifier(pt).build().build()))
                 .withHeader(CxfConstants.OPERATION_NAME, "getTransportReport")
-                .withHeader(CxfConstants.OPERATION_NAMESPACE, "http://xoev.de/transport/xta/211")
+                .withHeader(CxfConstants.OPERATION_NAMESPACE, clientConfiguration.getMessageType().getPayloadSchema())
                 .build();
 
         Exchange responseTransportReport = managementPort.send(requestTransportReport);

@@ -32,8 +32,8 @@ public class ClaimRouteBuilder extends BaseRouteBuilder {
                     .process("claimDataUnmarshaller")
                     .process("claimContentDataEnricher")
                     .process("claimXJustizXmlEnricher")
-                    .process("eAPLAddOutGoingExecutor")
                     .process("xtaMessage")
+                    .process("eAPLAddOutGoingExecutor")
                     .log(LoggingLevel.DEBUG, "claim-eh-process completed gpid '${body.claimImport.geschaeftspartnerId}'.").id("claim-eh-process-gpid")
                 .end()
                 .bean("addCollection", "clearCollectionCache");

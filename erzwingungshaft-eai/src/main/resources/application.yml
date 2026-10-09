@@ -1,12 +1,8 @@
 batch:
   enabled: true
-
-proxy:
-  http:
-    host: # Can be configured
-    port: # Can be configured
-    non-proxy-hosts:
-      - # Can be configured
+  claim-eh-process:
+    enabled: false
+  pdf-consume-completion-timeout: 2000
 
 spring:
   application:

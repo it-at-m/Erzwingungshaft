@@ -8,13 +8,15 @@ import org.apache.camel.LoggingLevel;
 import org.apache.camel.model.dataformat.BindyType;
 import org.apache.camel.processor.aggregate.GroupedBodyAggregationStrategy;
 import org.apache.camel.support.processor.idempotent.MemoryIdempotentRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class FileImportRouteBuilder extends BaseRouteBuilder {
 
-    private static final String BUCKET_NAME = "bucket-name";
+    @Value("${batch.pdf-consume-completion-timeout:2000}")
+    protected String pdfConsumeCompletionTimeout;
 
     public static final String CLAIM_IMPORT_DATA_UNMARSHALL = "direct:claimImportDataUnmarshall";
     public static final String S3_UPLOAD = "direct:s3upload";
@@ -34,9 +36,12 @@ public class FileImportRouteBuilder extends BaseRouteBuilder {
                     .bean("logServiceImport", "logClaimImport")
                 .end()
                 .log(LoggingLevel.INFO, "de.muenchen.eh", "'${body.size}' claims imported.")
-                .process(exchange -> {
-                    exchange.getContext().getRouteController().startRoute("import-pdfs");
-                });
+                .onCompletion()
+                    .onCompleteOnly()
+                    .process(exchange -> {
+                        exchange.getContext().getRouteController().startRoute("import-pdfs");
+                     })
+                .end();
 
         from(CLAIM_IMPORT_DATA_UNMARSHALL).routeId("import-data-unmarshall")
                 .unmarshal().bindy(BindyType.Fixed, ImportClaimIdentifierData.class);
@@ -53,9 +58,8 @@ public class FileImportRouteBuilder extends BaseRouteBuilder {
                 .bean("logServiceImport", "logPdfImport")
                 .process("documentImport")
                 .aggregate(constant(true), new GroupedBodyAggregationStrategy())
-                .completionSize(100)
-                .completionTimeout(2000)
-                    .bean("importEntityCache", "clear")
+                    .completionTimeout(pdfConsumeCompletionTimeout)
+                    .bean("importEntityCache", "statistic")
                     .log(LoggingLevel.INFO, "de.muenchen.eh", "'${body.size}' pdf files imported.")
                     .to(ClaimRouteBuilder.PROCESS_CLAIMS).id("process-claims");
         // spotless:on

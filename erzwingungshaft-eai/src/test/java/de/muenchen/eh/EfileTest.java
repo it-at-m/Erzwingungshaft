@@ -15,6 +15,7 @@ import org.apache.camel.builder.AdviceWith;
 import org.apache.camel.support.DefaultExchange;
 import org.apache.camel.test.spring.junit5.CamelSpringBootTest;
 import org.apache.camel.test.spring.junit5.UseAdviceWith;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -28,6 +29,7 @@ import org.springframework.test.context.ActiveProfiles;
 @EnableAutoConfiguration
 @DirtiesContext
 @ActiveProfiles(TestConstants.SPRING_TEST_PROFILE)
+@Disabled("A Testcontainers image used in the test is no longer available. The test infrastructure still needs to be adjusted.")
 class EfileTest extends TestContainerConfiguration {
 
     @Produce(value = EfileRouteBuilder.DMS_CONNECTION)

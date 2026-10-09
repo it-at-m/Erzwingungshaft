@@ -12,7 +12,7 @@
 
     <groupId>de.muenchen.erzwingungshaft</groupId>
     <artifactId>erzwinungshaft-eai</artifactId>
-    <version>0.4.3-SNAPSHOT</version>
+    <version>0.4.6-SNAPSHOT</version>
     <name>erzwingungshaft-eai</name>
     <description>This is the default starting project for a EAI project based on the reference architecture of it@M</description>
     <url>https://github.com/it-at-m/erzwingungshaft</url>
@@ -487,9 +487,11 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <argLine>
-                        @{argLine} -Dfile.encoding=${project.build.sourceEncoding}
+                        @{argLine}
+                        -Dfile.encoding=${project.build.sourceEncoding}
                         -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
                         -Xshare:off
+                        -Djavax.xml.catalog.catalogs=classpath:META-INF/catalog.xml
                     </argLine>
                 </configuration>
             </plugin>

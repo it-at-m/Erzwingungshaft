@@ -1,12 +1,32 @@
 # Release-Notes
 
+## 8.10.2026 (Version 0.4.5)
+### Bugfix
+- 'proxy' Eigenschaft aus application.yml entfernt. Die Klasse ProxyConfiguration ist noch existent.
+- schema/catalog.xml mit -Djavax.xml.catalog.catalogs=... Referenz ersetzt durch META-INF/jax-ws-catalog.xml.
+
+## 07.10.2026 (Version 0.4.4)
+### Erweiterung
+- XTA Tabelle um 2 Spalten fuer Laufzettel Rueckantwort erweitert.
+### Bugfix
+- GP_Id aus eAKte-Bzeichner-Outgoing entfernt.
+- catalog.xml eingefuehrt.
+
+## 28.9.2026 (Version 0.4.3)
+### Bugfix
+- Lesen des PayloadSchema aus der application.yml.
+- Reihenfolge geaendert 'XTA Versand' wird vor dem 'Schreiben eAkte' ausgeführt.
+- Klasse geloescht XtaMessageId.
+- Umstellung der Route.import-pdfs auf completionFromBatchConsumer.
+- Starte Verarbeitung von Antraegen ohne einlesen von Metadaten und Pdf Dateien. 
+
 ## 4.9.2026 (Version 0.4.2)
-## Bugfix
+### Bugfix
 - Zugriffsdefinition Akten ergaenzt.
 - EAkte-GP-Collections mit Bereichsprefix (basenr) filtern.
 
 ## 10.8.2026 (Version 0.4.1)
-## Bugfix
+### Bugfix
 - Encoding des S3-Identifier-Outputs an Fremdsystem ISO-8859-1 angepasst.
 - Identifier Ausgabedateiname mit _mitAZ erweitert.
 - XTA Fehler in claim_log persistieren.
@@ -14,39 +34,39 @@
 - Optimiere Aktensuche mit Akten-Collection-Cache.
 
 ## 30.7.2026 (Version 0.4.0)
-## Aenderung
+### Aenderung
 - Vorgangsanlage mit Erstellung Identifier und Ausgabedatei fuer die Druckstrasse.
 
 ## 9.7.2026
-## Aenderung
+### Aenderung
 - Anpassung an eAkte26 verwende Templates EH-Akte und EH-Vorgang.
 
 ## 27.5.2026
-## Erweiterung
+### Erweiterung
 - Aktualisierung der gmm/xta-message-id Stati hinzugefuegt.
 
 ## 8.5.2026
-## Aenderung
+### Aenderung
 - Upgrade eAkte Version 1.2.5.
 - Umstellung auf Schnittstellen-Verfahrensdaten (eAkte: Name, Vorname, Geburtsdatum).
 
 ## 6.5.2026
-## Aenderung
+### Aenderung
 - Umbennung EH-Antrag und Kassenzeichen in eAkte.
 
 ## 5.5.2026
-## Aenderung
+### Aenderung
 - Kassenzeichen in aktenzeichen.freitext uebernehmen.
 - EMail Betreff konfigurierbar machen.
 - Automatisches anlegen von GpId Bereichen in der eAktewenn nicht vorhanden.
 - Base64 Kodierung beim BebPo Versand entfernt.
 
 ## 2.3.2026
-## Aenderung
+### Aenderung
 - Attachment Dateinamen fuer den Versand an xjustiz angepasst.
 
 ## 23.2.2026
-### Refactoring
+#### Refactoring
 - Anpassung an modularisiertes xJustiz-Artefakt.
 - xjustiz Version 3.5.1 --> 3.6.2
 
