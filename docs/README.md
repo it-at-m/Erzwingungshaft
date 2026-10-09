@@ -92,10 +92,12 @@ https://github.com/it-at-m/Erzwingungshaft/blob/vorgangsanlage/erzwingungshaft-e
 - Die Zugansgdaten zum S3 Objektspeicher und den Buckets müssen bekannt sein.
 - Die Zugansgdaten zum DMS müssen bekannt sein.
 - Die Zugansgdaten zum [Behördenpostfach](https://www.bamf.de/DE/Themen/Digitalisierung/beBPo/beBPo-node.html) müssen bekannt sein.
-- Für die Initialisierung der [Behördenpostfach](https://www.bamf.de/DE/Themen/Digitalisierung/beBPo/beBPo-node.html) Schnittstelle kann ein Proxy konfiguriert werden. Ggf. müssen Non-Proxies definiert werden, damit die übrigen Schnittstellen wie gewünscht erreicht werden.
+- Eine Proxy‑Konfiguration ist nicht zwingend erforderlich. Im Classpath ist eine META-INF/jax-ws-catalog.xml Datei enthalten, die bei der Instanziierung der Behördenpostfach‑Schnittstelle durch CXF nach dem JAX‑WS‑Standard lokale XSD‑Referenzen (aus META-INF/schema/*.xsd) zur Verfügung stellt.
+- Bei Bedarf kann eine Proxy‑Konfiguration weiterhin in der application.yml mittels der Eigenschaft 'proxy' angegeben werden: die Implementierungsklasse ProxyConfiguration.java existiert nach wie vor und ist mit @ConfigurationProperties(prefix = "proxy") annotiert. Die XTA‑Behördenpostfach‑Schnittstelle sollte jedoch in den meisten Fällen auch ohne eine application.yml‑Proxykonfiguration dank der jax-ws-catalog.xml funktionieren.
 - Datenbank Änderungen werden mit flyway verwaltet (https://github.com/it-at-m/refarch / https://refarch.oss.muenchen.de/).
 - Die Maven Plugins cxf-codegen-plugin und openapi-generator-maven-plugin müssen erfolgreich durchlaufen und ihr Maven _target_ Verzeichnis dem Classpath bekannt sein.
 - Zur Ausführung der Tests mit Testcontainern ist eine laufende Docker / Podman Instanz erforderlich.
+
 
 
 ### xJustiz
@@ -268,8 +270,15 @@ efile:
 
 Die Anbindung an das [Behördenpostfach](https://www.bamf.de/DE/Themen/Digitalisierung/beBPo/beBPo-node.html) erfordert die Konfiguration der XTA Schnittstelle.
 
-Je nachdem wo die EAI betrieben wird ist die Konfiguration eines _Proxy_ erforderlich, damit sich die XTA Schnittstelle initialisieren kann ist möglicherweise eine Proxy Konfiguration notwendig.
-Der Proxy wird als System Umgebungsvariable eingrichtet (http.proxyHost usw.). Er wird daher auch bei anderen Schnittstellen Initialisierungen (S3 etc.) berücksichtigt. In diesem Fall kann es nötig sein diese als _nonProxyHosts_ zu berücksichtigen.
+Eine Proxy‑Konfiguration ist nicht zwingend erforderlich: beim Start der CXF‑basieren Behördenpostfach‑Clientinstanz wird 
+die im Classpath befindliche META-INF/jax-ws-catalog.xml verwendet, so dass lokale XSD‑Kopien aus META-INF/schema/ zur 
+Auflösung genutzt werden. Sollte dennoch ein Proxy erforderlich sein (z. B. Netzwerkumgebung oder Unternehmensrichtlinien), 
+kann dieser entweder über Standard‑JVM System‑Properties (z. B. -Dhttp.proxyHost, -Dhttp.proxyPort) gesetzt oder in der application.yml 
+unter 'proxy' konfiguriert werden. Letzteres wird von der vorhandenen ProxyConfiguration.java (annotiert mit @ConfigurationProperties(prefix = "proxy")) unterstützt. Beachte ggf. nonProxyHosts, 
+wenn einige Ziele direkt erreichbar sein müssen.
+
+Der Proxy wird als System Umgebungsvariable eingrichtet (http.proxyHost usw.). Er wird daher auch bei anderen Schnittstellen 
+Initialisierungen (S3 etc.) berücksichtigt. In diesem Fall kann es nötig sein diese als _nonProxyHosts_ zu berücksichtigen.
 
 ````
 proxy:
